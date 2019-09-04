@@ -1,0 +1,57 @@
+# Meeting Agenda
+
+Group:Masthuggis
+Date:3/9 - 19
+Chair: Isak Lindgren
+Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak Lindgren
+
+
+## Objectives (5 min) 
+
+- Bestämma vilket projekt vi ska göra.
+ 
+
+
+## Reports (15 min) from previous meeting
+ - Diskussion om föregående möte.
+
+
+## Discussion items (35 min)
+
+ - Preliminärt GUI med skiss.
+ - Arbetsfördelning framåt.
+ - User stories.
+ 
+
+
+
+## Outcomes and assignments (5 min)
+ - Alla jobbar med Android Studios
+ - Alla jobbar med Gradle.
+ - Matilda XD.
+ - Isak XD.
+ - Joel Stories.
+ - Alla läser lite om MVC vs MVP.
+ - Arvid kollar på domänmodell.
+ - Joel kollar på domänmodell.
+
+User Stories: 
+
+ - Som en användare vill jag hitta all kurslitteratur jag behöver för denna LP.
+ - Som användare vill jag se all tillgänglig kursliterattur på Chalmers.
+ - Som användare vill jag se all tillgänglig kurslitteratur som är relevant för mig.(Filtrering)
+ - Som användare vill jag söka på specifik kurslitteratur.
+ - Som användare vill jag enkelt kunna sälja gammal kurslitteratur.
+ - Som användare vill jag köpa begagnad kurslitteratur.
+ - Som användare vill jag veta jfr.pris med begagnat pris.
+ - Som användare vill jag kunna filtrera på pris/skick/massa go information.
+ - Som användare vill jag kunna komma i kontakt med säljare.
+ - Som användare vill jag kunna ange vilken årskurs/program jag läser och därmed få bra rekommendationer.
+ - Som användare vill jag kunna logga in.
+ - Som användare skulle jag vilja lägga upp "sökesannonser".
+
+## Wrap up
+
+ - Handledning fredag.
+ - Domänmodell.
+ - Möte fredag.
