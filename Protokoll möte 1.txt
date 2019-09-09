@@ -19,14 +19,14 @@ Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak Lindgren
 
 ## Discussion items (35 min)
 
-- Lokalt eller ej.
-- Android eller pc.
+- Ska appen vara lokal eller ej?
+- Android eller desktopapplikation?
 
 
 
 ## Outcomes and assignments (5 min)
-- Använda Firebase.
-- Ska göra en bokbytar-app för android anpassad för Chalmers. Väldefinierat projekt som lätt går att utöka med nya funktioner.
+- Då användning av Firebase inte verkar alltför svårt valde vi att inte göra en lokal applikation, eftersom de flesta av våra app-ideér bygger på att någon slags interaktion mellan olika användare kan ske.
+- Resultatet av våra diskussioner blev en bokbytar-app för android anpassad för Chalmers. Väldefinierat projekt som lätt går att utöka med nya funktioner. Vi skapade också User Stories för att definiera appen.
 
 
 User Stories: 
@@ -47,7 +47,6 @@ User Stories:
 ## Wrap up
 
 - Diskutera GUI, fortsättning med user stories.
-- Prototyp i XD?
-- 
+- Skapa en prototyp i Adobe XD, för att tänka igenom funktionalitet och GUI.
 
-- Möte 12:30 - 15:00 ,4/9 - 19.
+- Nästa möte 12:30 - 15:00, 4/9 - 19.
