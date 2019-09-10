@@ -1,7 +1,7 @@
 # Meeting Agenda
 
 Group:Masthuggis
-Date:3/9 - 19
+Date:4/9 - 19
 Chair: Isak Lindgren
 Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak Lindgren
 
@@ -28,8 +28,8 @@ Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak Lindgren
 ## Outcomes and assignments (5 min)
  - Alla jobbar med Android Studios
  - Alla jobbar med Gradle.
- - Matilda XD.
- - Isak XD.
+ - Matilda jobbar med prototyp i Adobe XD.
+ - Isak jobbar med prototyp i Adobe XD.
  - Joel Stories.
  - Alla läser lite om MVC vs MVP.
  - Arvid kollar på domänmodell.
