@@ -1,5 +1,6 @@
 package com.masthuggis.boki.presenter;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -15,8 +16,10 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
 
     private static final String TAG = "ProductsRecyclerViewAdapter";
     private List<String> products;
+    private Context mContext;
 
-    public ProductsRecyclerViewAdapter(List<String> products) {
+    public ProductsRecyclerViewAdapter(Context context, List<String> products) {
+        this.mContext = context;
         this.products = products;
     }
 
