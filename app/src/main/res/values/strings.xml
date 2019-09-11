@@ -1,3 +1,3 @@
 <resources>
-    <string name="app_name">boki</string>
+    <string CollectionName="app_name">boki</string>
 </resources>
