@@ -11,7 +11,7 @@ public class Book {
     private enum Condition {
         NEW, GOOD, OK;
     }
-
+    private String title;
     private String author;
     private int edition;
     private long isbn;
@@ -24,6 +24,7 @@ public class Book {
     /**
      * Constructor for creating book with information provided by the user.
      *
+     * @param title         Title of the Book. Required information.
      * @param author        Author of the Book, could be more than one. Required information.
      * @param edition       The edition of the book, used to clarify what book is being sold to users. Required information.
      * @param price         The asking price for the book. Required information.
@@ -33,10 +34,13 @@ public class Book {
      * @param userTags      User-defined tags for the book, searchable by other users.
      * @throws IllegalArgumentException if price is negative
      */
-    public Book(String author, int edition, int price, long isbn, int yearPublished, Condition condition,
+    public Book(String title, String author, int edition, int price, long isbn, int yearPublished, Condition condition,
                 List<String> userTags, List<String> preDefinedTags) {
+
         if (price < 0)
             throw new IllegalArgumentException("Price cannot be negative");
+
+        this.title = title;
         this.author = author;
         this.yearPublished = yearPublished; //TODO add way of verifying that yearPublished is not in the future
         this.isbn = isbn;
@@ -58,6 +62,10 @@ public class Book {
         tagList.addAll(preDefinedTags);
         tagList.addAll(userTags);
         return tagList;
+    }
+
+    public String getTitle() {
+        return this.title;
     }
 
     public int getPrice() {
