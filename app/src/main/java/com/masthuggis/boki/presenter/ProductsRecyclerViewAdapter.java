@@ -9,9 +9,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
 
+import java.util.List;
+
 public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder> {
 
     private static final String TAG = "ProductsRecyclerViewAdapter";
+    private List<String> products;
+
+    public ProductsRecyclerViewAdapter(List<String> products) {
+        this.products = products;
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
