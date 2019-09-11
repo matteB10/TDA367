@@ -1,8 +1,10 @@
-package com.masthuggis.boki;
+package com.masthuggis.boki.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.masthuggis.boki.R;
 
 public class MainActivity extends AppCompatActivity {
 
