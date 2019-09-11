@@ -1,0 +1,52 @@
+# Meeting Agenda
+
+Group:Masthuggis
+Date:3/9 - 19
+Chair: Isak Lindgren
+Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak Lindgren
+
+
+## Objectives (5 min) 
+
+- Bestämma vilket projekt vi ska göra.
+ 
+
+
+## Reports (15 min) from previous meeting
+
+- First meeting.
+
+
+## Discussion items (35 min)
+
+- Ska appen vara lokal eller ej?
+- Android eller desktopapplikation?
+
+
+
+## Outcomes and assignments (5 min)
+- Då användning av Firebase inte verkar alltför svårt valde vi att inte göra en lokal applikation, eftersom de flesta av våra app-ideér bygger på att någon slags interaktion mellan olika användare kan ske.
+- Resultatet av våra diskussioner blev en bokbytar-app för android anpassad för Chalmers. Väldefinierat projekt som lätt går att utöka med nya funktioner. Vi skapade också User Stories för att definiera appen.
+
+
+User Stories: 
+
+ - Som en användare vill jag hitta all kurslitteratur jag behöver för denna LP.
+ - Som användare vill jag se all tillgänglig kursliterattur på Chalmers.
+ - Som användare vill jag se all tillgänglig kurslitteratur som är relevant för mig.(Filtrering)
+ - Som användare vill jag söka på specifik kurslitteratur.
+ - Som användare vill jag enkelt kunna sälja gammal kurslitteratur.
+ - Som användare vill jag köpa begagnad kurslitteratur.
+ - Som användare vill jag veta jfr.pris med begagnat pris.
+ - Som användare vill jag kunna filtrera på pris/skick/massa go information.
+ - Som användare vill jag kunna komma i kontakt med säljare.
+ - Som användare vill jag kunna ange vilken årskurs/program jag läser och därmed få bra rekommendationer.
+ - Som användare vill jag kunna logga in.
+ - Som användare skulle jag vilja lägga upp "sökesannonser".
+
+## Wrap up
+
+- Diskutera GUI, fortsättning med user stories.
+- Skapa en prototyp i Adobe XD, för att tänka igenom funktionalitet och GUI.
+
+- Nästa möte 12:30 - 15:00, 4/9 - 19.
