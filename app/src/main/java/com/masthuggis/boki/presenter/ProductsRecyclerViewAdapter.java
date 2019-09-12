@@ -23,6 +23,9 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         this.products = products;
     }
 
+    public ProductsRecyclerViewAdapter(List<String> products){
+        this.products=products;
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
