@@ -19,12 +19,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         BottomNavigationView bottomNav =findViewById(R.id.bottom_navigation);
-
-
-      //  setupTemporaryNavigationToStartPage();
-
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment()).commit();
     }
@@ -60,18 +55,5 @@ public class MainActivity extends AppCompatActivity {
 
     };
 
-  /*  private void setupTemporaryNavigationToStartPage() {
-        Button goToStartButton = findViewById(R.id.goToHomeButton);
-        goToStartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navigateToStartPage();
-            }
-        });
-    }*/
 
-    private void navigateToStartPage() {
-        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-        startActivity(intent);
-    }
 }

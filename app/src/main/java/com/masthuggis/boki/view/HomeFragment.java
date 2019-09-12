@@ -43,14 +43,6 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
         recyclerView.setLayoutManager(layoutManager);
     }
 
-
-  /*  private void initRecyclerView(View v) {
-        RecyclerView recyclerView = v.findViewById(R.id.advertsRecyclerView);
-        ProductsRecyclerViewAdapter adapter = new ProductsRecyclerViewAdapter(adverts);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }*/
-
     private List<String> createMockAdvertsData() {
         // TODO: Use data from local JSON file for development
         List<String> adverts = new ArrayList<>();
