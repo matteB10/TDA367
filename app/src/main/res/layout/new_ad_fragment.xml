@@ -1,15 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView
+    <ImageButton
+        android:id="@+id/to_new_book_imagebutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_new_ad"
-        android:textSize="30sp"
-        android:layout_centerInParent="true"/>
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="144dp"
+        android:background="@drawable/rounded_button"
+        android:contentDescription="@string/to_new_book_desc"
+        app:srcCompat="@mipmap/new_book_foreground"
+        android:foreground="?selectableItemBackgroundBorderless"/>
 
+
+
+    <TextView
+        android:id="@+id/to_new_book_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/to_new_book_imagebutton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp"
+        android:text="@string/singleBook"
+        android:textSize="30sp" />
+
+    <ImageButton
+        android:id="@+id/to_new_collection_imagebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="386dp"
+        android:background="@drawable/rounded_button"
+        android:contentDescription="@string/to_new_book_desc"
+        app:srcCompat="@mipmap/new_collection_foreground"
+        android:foreground="?android:attr/selectableItemBackground"/>
+
+    <TextView
+        android:id="@+id/to_new_collection_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/to_new_collection_imagebutton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp"
+        android:text="@string/newCollection"
+        android:textSize="30sp" />
 
 
 </RelativeLayout>

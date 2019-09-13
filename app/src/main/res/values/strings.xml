@@ -10,5 +10,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
-    <string name="hej">da</string>
+    <string name="singleBook">Lägg upp en enskild bok.</string>
+    <string name="to_new_book_desc">Create new advert.</string>
+    <string name="newCollection">Skapa en samling</string>
 </resources>
