@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.masthuggis.boki.R;
 
-public class CreateAdvert extends AppCompatActivity {
+public class CreateAdActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

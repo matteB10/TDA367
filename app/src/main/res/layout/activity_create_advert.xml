@@ -4,20 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.CreateAdvert">
+    tools:context=".view.CreateAdActivity">
 
     <ScrollView
+        android:id="@+id/createAdScrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="736dp">
+                android:layout_height="1300dp">
 
                 <TextView
                     android:id="@+id/headerTextView"
@@ -25,17 +30,27 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="199dp"
                     android:layout_marginLeft="199dp"
-                    android:layout_marginTop="120dp"
+                    android:layout_marginTop="80dp"
                     android:layout_marginEnd="199dp"
                     android:layout_marginRight="199dp"
-                    android:text="TextView"
+                    android:text="@string/addAdvertHeader"
                     android:textSize="24sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageView
+                    android:id="@+id/addImageView"
+                    android:layout_width="230dp"
+                    android:layout_height="250dp"
+                    android:layout_marginTop="120dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/add_pic" />
+
                 <View
-                    android:id="@+id/view"
+                    android:id="@+id/view5"
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_marginStart="30dp"
@@ -43,10 +58,189 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="30dp"
                     android:layout_marginRight="30dp"
-                    android:background="@color/colorPrimaryDark"
+                    android:background="@color/colorGreyLight"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/headerTextView" />
+                    app:layout_constraintTop_toBottomOf="@+id/addImageView" />
+
+
+                <LinearLayout
+
+                    android:id="@+id/titleLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginRight="30dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view5">
+
+                    <TextView
+                        android:id="@+id/titelTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/addAdvertTitle" />
+
+                    <EditText
+                        android:id="@+id/titleEditText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="@string/titleHint"
+                        android:inputType="textPersonName" />
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:id="@+id/priceLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginRight="30dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/titleLayout">
+
+                    <TextView
+                        android:id="@+id/priceTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/addAdvertPrice" />
+
+                    <EditText
+                        android:id="@+id/priceEditText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="@string/priceHint"
+                        android:inputType="textPersonName" />
+
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:id="@+id/authorLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginRight="30dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/priceLayout">
+
+                    <TextView
+                        android:id="@+id/authorTextView"
+                        android:layout_width="34dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/addAdvertAuthor" />
+
+                    <EditText
+                        android:id="@+id/authorEditText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="@string/authorHint"
+                        android:inputType="textPersonName" />
+
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:id="@+id/ISBNLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginRight="30dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/authorLayout">
+
+                    <TextView
+                        android:id="@+id/ISBNTextView"
+                        android:layout_width="34dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/addAdvertISBN" />
+
+                    <EditText
+                        android:id="@+id/ISBNEditText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="@string/ISBNHint"
+                        android:inputType="textPersonName" />
+
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:id="@+id/otherInfoLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginRight="30dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ISBNLayout">
+
+                    <TextView
+                        android:id="@+id/otherInfoTextView"
+                        android:layout_width="34dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/addAdvertOtherInfo" />
+
+                    <EditText
+                        android:id="@+id/otherInfoEditText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:inputType="textPersonName" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="100dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginRight="30dp"
+                    android:background="@color/colorGreyLight"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ISBNLayout" />
+
 
                 <TextView
                     android:id="@+id/textView"
@@ -55,7 +249,7 @@
                     android:layout_marginStart="30dp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="30dp"
-                    android:text="I vilket skick är din bok?"
+                    android:text="@string/addAdvertCondition"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view" />
@@ -67,10 +261,9 @@
                     android:layout_marginStart="30dp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="20dp"
-
                     android:background="@drawable/button_new_condition"
-                    android:text="NY"
-                    android:textColor="#FFFFFF"
+                    android:text="@string/conditionNew"
+                    android:textColor="@color/colorWhite"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -82,8 +275,8 @@
                     android:layout_marginLeft="130dp"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/button_good_condition"
-                    android:text="BRA"
-                    android:textColor="#FFFFFF"
+                    android:text="@string/conditionGood"
+                    android:textColor="@color/colorWhite"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -95,8 +288,8 @@
                     android:layout_marginLeft="50dp"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/button_ok_condition"
-                    android:text="OK"
-                    android:textColor="#FFFFFF"
+                    android:text="@string/conditionGood"
+                    android:textColor="@color/colorWhite"
                     app:layout_constraintStart_toEndOf="@+id/conditionGoodButton"
                     app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -109,7 +302,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="30dp"
                     android:layout_marginRight="30dp"
-                    android:background="@color/colorPrimaryDark"
+                    android:background="@color/colorGreyLight"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/conditionNewButton" />
@@ -121,7 +314,7 @@
                     android:layout_marginStart="30dp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="20dp"
-                    android:text="Välj ett eller flera ämnen:"
+                    android:text="@string/addAdvertSubjects"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view2" />
@@ -135,7 +328,7 @@
                     android:layout_marginTop="100dp"
                     android:layout_marginEnd="30dp"
                     android:layout_marginRight="30dp"
-                    android:background="@color/colorPrimaryDark"
+                    android:background="@color/colorGreyLight"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -147,7 +340,7 @@
                     android:layout_marginStart="30dp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="20dp"
-                    android:text="Egna taggar (valfritt):"
+                    android:text="@string/addAdvertTags"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view3" />
@@ -160,11 +353,10 @@
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="20dp"
                     android:ems="10"
-                    android:hint="Ex grudat"
+                    android:hint="@string/addAdvertTagHint"
                     android:inputType="textPersonName"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3"
-                    />
+                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
                 <View
                     android:id="@+id/view4"
@@ -175,10 +367,20 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="30dp"
                     android:layout_marginRight="30dp"
-                    android:background="@color/colorPrimaryDark"
+                    android:background="@color/colorGreyLight"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tagsEditText" />
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/createAdButton"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view4" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
