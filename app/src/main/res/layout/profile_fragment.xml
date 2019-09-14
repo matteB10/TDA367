@@ -1,15 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:layout_margin="15dp">
 
     <TextView
+        android:id="@+id/myAds"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_profile"
-        android:textSize="30sp"
-        android:layout_centerInParent="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
 
+        android:paddingTop="@dimen/padding_top"
+        android:text="@string/title_profile"
+        android:textSize="36sp" />
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="@dimen/button_height"
+
+        android:layout_height="@dimen/button_width"
+        android:layout_marginTop="@dimen/padding_top"
+        android:contentDescription="@string/back"
+
+        android:scaleType="fitCenter"
+
+        app:srcCompat="?attr/actionModeCloseDrawable" />
+
+    <ImageButton
+        android:id="@+id/settingsButton"
+        android:layout_width="@dimen/button_height"
+
+        android:layout_height="@dimen/button_width"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+
+        android:layout_marginTop="@dimen/padding_top"
+        android:contentDescription="@string/settings"
+        android:scaleType="fitCenter"
+
+        app:srcCompat="@mipmap/cogwheelsilhouette" />
+
+    <ImageButton
+        android:id="@+id/myBooksButton"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/myAds"
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginTop="@dimen/padding_top"
+        android:background="#FFFFFF"
+
+        android:contentDescription="@string/mybooks"
+        android:tint="#020202"
+        app:srcCompat="@mipmap/openbookicon" />
+
+    <ImageButton
+        android:id="@+id/myCollectionsButton"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/myBooksButton"
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginTop="20dp"
+        android:background="#ffffff"
+
+        android:contentDescription="@string/mycollections"
+        app:srcCompat="@mipmap/collectionicon" />
 
 
 </RelativeLayout>
