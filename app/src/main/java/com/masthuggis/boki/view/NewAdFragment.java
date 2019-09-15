@@ -13,8 +13,6 @@ import androidx.fragment.app.Fragment;
 import com.masthuggis.boki.R;
 
 public class NewAdFragment extends Fragment {
-    private ImageButton newBookButton;
-    private ImageButton newCollectionButton;
     private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
 
 
@@ -22,8 +20,8 @@ public class NewAdFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.new_ad_fragment, container, false);
 
-        newCollectionButton= (ImageButton)v.findViewById(R.id.to_new_collection_imagebutton);
-        newBookButton = (ImageButton)v.findViewById(R.id.to_new_book_imagebutton);
+        ImageButton newCollectionButton = (ImageButton) v.findViewById(R.id.to_new_collection_imagebutton);
+        ImageButton newBookButton = (ImageButton) v.findViewById(R.id.to_new_book_imagebutton);
         newCollectionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -34,11 +32,16 @@ public class NewAdFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+                //TODO
+                // Öppna ny vy för att skapa ny bok.
+
             }
         });
         newCollectionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO
+                // Öppna ny vy för att skapa ny samling.
 
             }
         });
