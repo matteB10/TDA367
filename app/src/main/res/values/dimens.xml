@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="button_height">66dp</dimen>
-    <dimen name="button_width">53dp</dimen>
-
+    <dimen name="button_height">140dp</dimen>
+    <dimen name="button_width">140dp</dimen>
     <dimen name="padding_top">40dp</dimen>
+
+    <dimen name="heading_size">40sp</dimen>
+    <dimen name="subheading_size">25sp</dimen>
+
+
 </resources>
