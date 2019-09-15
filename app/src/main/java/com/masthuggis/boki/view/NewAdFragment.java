@@ -33,7 +33,7 @@ public class NewAdFragment extends Fragment {
             public void onClick(View view) {
 
                 //TODO
-                // Öppna ny vy för att skapa ny bok.
+                // Öppna ny vy för att skapa ny bok. Samt skapa presenter för detta.
 
             }
         });
