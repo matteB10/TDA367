@@ -1,0 +1,48 @@
+# Meeting Agenda
+
+Group: Masthuggis
+Date:10/9 - 19
+Chair: Isak Lindgren
+Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak Lindgren, Elin Melander
+
+
+##Objectives
+-	Diskutera vilket språk applikationen ska använda primärt.
+-	Prioritera user stories/tidsbedöma.
+-	Lägga fram DoD/Acceptance Criteria på US.
+-	Namn på projektet. 
+
+
+##Förra mötet
+
+-	Möte med handledare.
+-	Rekommenderade att vi skriver mer utförliga protokoll, vi bestämmer en egen struktur för dessa då vi tycker att exempelmodellen var aningen otydlig.
+-	Språket i programmeringen är på engelska, rapporten valfri. Vilket språk ska applikationen vara i? (Interface)
+-	Skriv lite på rapporterna varje vecka.
+-	Från handledaren ” Till fredag - Domänmodell klar, klassdiagram, utvecklingsmiljö, ett antal user stories.”
+
+## Diskussion
+    Språk.
+-	Matilda och Joel vill ha applikationens gränssnitt på svenska. Elin tycker att den ska vara på engelska. Arvid och Isak tycker inte att det spelar så stor roll. Majoriteten av målgruppen har svenska som modersmål och därför kommer gränssnittet även vara på svenska då de flesta egna kommentarerna i applikationen kommer att vara på svenska. Eventuellt kan vi lägga till fler språkmöjligheter om tid finns. 
+
+Vad ska vi göra idag?
+-	Börja med domänmodell, svåraste steget och viktigast för veckan då mycket övrigt arbete hänger på att denna är någorlunda färdig. 
+-	Prioritera user stories/tidsbedöma dem. Detta för att vet var vi ska börja när utvecklingen börjar.
+-	Definition of Done/ Acceptance Criteria. Detta är också viktigt för att veta hur vi ska kunna börja utveckla appen. Hjälper oss att dra igång med första sprinten och tidsbedöma varje User Story.
+-	Namn på projektet. Kan anses vara en liten sak, men samtidigt något som hela tiden återkommer vid diskussioner och måste vara färdigt till på måndag.
+
+
+
+
+
+##Outcomes
+-	Appens gränssnitt kommer att vara på svenska, eventuellt övriga språk om tiden räcker till.
+-	Prioritera user stories/gör en tidsbedömning.
+-	Bestäm Definition of Done.
+-	Acceptance Criterias på högst prioriterade user stories ska göras färdiga.
+
+-	Till nästa gång:
+A,J,I och M jobbar med Definition of Done, Acceptance Criteria och med tidsbedömning av User Stories.
+Elin fixar presentation inför måndag och renskriver UML/domänmodell.
+-	Fortsatt arbete med pappersprototyp.
+-	Möte på onsdag 12-15.
