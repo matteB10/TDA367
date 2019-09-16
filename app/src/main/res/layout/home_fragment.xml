@@ -12,13 +12,6 @@
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="196dp"
         tools:layout_editor_absoluteY="361dp" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/title_home"
-        android:textSize="30sp"
-        android:layout_centerInParent="true"/>
-
 
 
 </RelativeLayout>
