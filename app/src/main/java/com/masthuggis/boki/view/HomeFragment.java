@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.backend.BackendDataFetcher;
+import com.masthuggis.boki.backend.BookRepository;
+import com.masthuggis.boki.model.Book;
 import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 

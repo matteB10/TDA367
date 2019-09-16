@@ -27,6 +27,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    //Json-simple, for parsing .json-files into Strings
+    implementation 'com.github.cliftonlabs:json-simple:3.1.0'
 
     // Glide - for loading, caching and working with images
     implementation 'com.github.bumptech.glide:glide:4.9.0'
@@ -34,4 +36,5 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.navigation:navigation-fragment:2.1.0'
     implementation 'androidx.navigation:navigation-ui:2.1.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
 }

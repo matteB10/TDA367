@@ -8,9 +8,10 @@ import java.util.List;
  */
 
 public class Book {
-    private enum Condition {
+    public enum Condition {
         NEW, GOOD, OK;
     }
+
     private String title;
     private String author;
     private int edition;
@@ -67,6 +68,7 @@ public class Book {
     public String getTitle() {
         return this.title;
     }
+
 
     public int getPrice() {
         return this.price;
