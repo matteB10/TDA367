@@ -28,8 +28,9 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext())
+        ViewHolder v = new ViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.advert_listitem, parent, false));
+        return v;
     }
 
     @Override
@@ -44,15 +45,26 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
 
     public class ViewHolder extends RecyclerView.ViewHolder implements RowView {
 
-        TextView nameTextView;
-        TextView priceTextView;
-        ImageView imageView;
+        private TextView nameTextView;
+        private TextView priceTextView;
+        private ImageView imageView;
+        private int rowIndex;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.name);
             priceTextView = itemView.findViewById(R.id.price);
             imageView = itemView.findViewById(R.id.imageView);
+            setupOnPressActionFor(itemView);
+        }
+
+        private void setupOnPressActionFor(View v) {
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    presenter.onRowPressed(rowIndex);
+                }
+            });
         }
 
         @Override
@@ -68,6 +80,11 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         @Override
         public void setImageUrl(String url) {
             // TODO: implement func to show image
+        }
+
+        @Override
+        public void setRowIndex(int index) {
+            this.rowIndex = index;
         }
     }
 

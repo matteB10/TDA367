@@ -1,10 +1,8 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.model.Advert;
-import com.masthuggis.boki.view.RowView;
+import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.masthuggis.boki.view.RowView;
 
 public class HomePresenter {
     private View view;
@@ -19,11 +17,17 @@ public class HomePresenter {
         rowView.setTitle("Linjär algebra");
         rowView.setPrice(200);
         rowView.setImageUrl("");
+        rowView.setRowIndex(position);
     }
 
     public int getNumRows() {
         // TODO: get lenght from repo
         return 3;
+    }
+
+    public void onRowPressed(int rowIndex) {
+        // TODO: navigate to new screen with fetched mvp
+        Log.d("PRINT", "Row index pressed " + rowIndex);
     }
 
     public interface View {
