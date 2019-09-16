@@ -49,24 +49,22 @@
 
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/padding_top"
+        android:background="#00FFFFFF"
 
-        android:background="#00E91E63"
         android:contentDescription="@string/mybooks"
-        android:scaleType="centerCrop"
-        app:srcCompat="" />
+        app:srcCompat="@mipmap/new_book_round" />
 
     <ImageButton
         android:id="@+id/myCollectionsButton"
         android:layout_width="@dimen/button_width"
         android:layout_height="@dimen/button_height"
         android:layout_below="@+id/myBooksButton"
-
         android:layout_centerHorizontal="true"
+
         android:layout_marginTop="50dp"
         android:background="#00FFFFFF"
         android:contentDescription="@string/mycollections"
-        android:scaleType="centerCrop"
-        app:srcCompat="" />
+        app:srcCompat="@mipmap/new_collection_round" />
 
 
 
