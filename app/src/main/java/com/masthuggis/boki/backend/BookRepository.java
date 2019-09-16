@@ -1,6 +1,5 @@
 package com.masthuggis.boki.backend;
 
-
 import android.content.Context;
 import com.masthuggis.boki.model.Book;
 import org.json.JSONArray;
@@ -17,7 +16,6 @@ import java.util.List;
 
 public class BookRepository {
     private static JSONObject booksJsonObj;
-
 
     /**
      * Method that fetches all books from the local .json.file and returns them as a list of book
@@ -106,19 +104,13 @@ public class BookRepository {
             preDefinedTags = getPreDefinedTags(object);
             userTags = getUserTags(object);
             return new Book(title,author,edition,price,isbn,yearPublished,condition,preDefinedTags,userTags);
-
         } catch (JSONException exception) {
             exception.printStackTrace();
             return null;
         }
     }
 
-    /**
-     * Method for getting the data in the preDefinedTags-JSONArray of a JSONObject converted to a
-     * usable list of strings.
-     * @param object the JSONObject which we want to use in order to create a Book-Object.
-     * @return a List of Strings containing the pre-defined tags of the book.
-     */
+
     private static List<String> getPreDefinedTags(JSONObject object) {
         try {
             JSONArray tagsArray = object.getJSONArray("preDefinedTags");
@@ -133,12 +125,7 @@ public class BookRepository {
         }
     }
 
-    /**
-     * Method for getting the data in the userTags-JSONArray of a JSONObject converted to a
-     * usable list of strings.
-     * @param object the JSONObject which tags we want to extract as a List of Strings
-     * @return a list of Strings, each Sting being a user-defined tag of the JSONObject.
-     */
+
     private static List<String> getUserTags(JSONObject object) {
         try {
             JSONArray tagsArray = object.getJSONArray("userTags");
@@ -152,7 +139,6 @@ public class BookRepository {
             return null;
         }
     }
-
 }
 
 

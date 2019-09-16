@@ -14,19 +14,6 @@ import java.nio.file.Paths;
  * The .json-file must be placed in the assets-folder of the application
  */
 public class BackendDataFetcher {
-    /**
-     *
-     * @param resource, URL to file, can probably use getClass.getResource("file.json") or something
-     * @return the contents of the file in the form of a String, returns empty String if method failed
-     */
-    public static String readJsonFile(URL resource) {
-        try {
-            return new String(Files.readAllBytes(Paths.get(resource.toURI())));
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
 
     /**
      * Converts the contents of a json-file into a String via a Context-object.
