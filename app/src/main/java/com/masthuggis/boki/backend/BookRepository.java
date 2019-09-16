@@ -53,6 +53,7 @@ public class BookRepository {
      * @param object the JSON-object which key-value pairs are read and converted into
      *               the fields of the new Book-object.
      */
+
     private static Book createBookFromJSONObject(JSONObject object) {
         String title;
         String author;
