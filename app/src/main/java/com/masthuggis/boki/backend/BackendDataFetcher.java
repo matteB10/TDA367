@@ -1,6 +1,7 @@
 package com.masthuggis.boki.backend;
 
 import android.content.Context;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -17,11 +18,12 @@ public class BackendDataFetcher {
 
     /**
      * Converts the contents of a json-file into a String via a Context-object.
+     *
      * @param context the Context-object required to load the .json-file via the assets-folder
      * @return the contents of the loaded .json-file formatted as a String.
      */
 
-     static String loadJSONFromAsset(Context context) {
+    static String loadJSONFromAsset(Context context) {
         String json = null;
         try {
             InputStream inputStream = context.getAssets().open("mockBooks.json");

@@ -1,10 +1,13 @@
 package com.masthuggis.boki.backend;
 
 import android.content.Context;
+
 import com.masthuggis.boki.model.Book;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +24,7 @@ public class BookRepository {
      * Method that fetches all books from the local .json.file and returns them as a list of book
      * objects. Might be smarter to move the books-variable and make it a local variable for
      * the sake of performance.
+     *
      * @param context the Context of the activity used to access the json-file through the assets.
      * @return a list of all the book objects that have been created from the json-file.
      */
@@ -52,7 +56,7 @@ public class BookRepository {
      *               the fields of the new Book-object.
      */
 
-    private static Book createBookFromJSONObject(JSONObject object) {
+    private static Book createBookWithoutTags(JSONObject object) {
         String title;
         String author;
         int edition;
@@ -69,7 +73,7 @@ public class BookRepository {
             yearPublished = object.getInt("yearPublished");
             String conditionString = object.getString("condition");
             condition = Book.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
-            return new Book(title,author,edition,price,isbn,yearPublished,condition,null,null);
+            return new Book(title, author, edition, price, isbn, yearPublished, condition, null, null);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -80,6 +84,7 @@ public class BookRepository {
      * Creates a book object given a JSONObject from the local file.
      * This version DOES create a Book complete with both User defined and preDefined Tags,
      * might impact performance.
+     *
      * @param object the JSONObject used to create a Book-object
      * @return a Book with fields corresponding to the key-value pairs of the JSONObject.
      */
@@ -103,7 +108,7 @@ public class BookRepository {
             condition = Book.Condition.valueOf(object.getString("condition")); //Shorthand
             preDefinedTags = getPreDefinedTags(object);
             userTags = getUserTags(object);
-            return new Book(title,author,edition,price,isbn,yearPublished,condition,preDefinedTags,userTags);
+            return new Book(title, author, edition, price, isbn, yearPublished, condition, preDefinedTags, userTags);
         } catch (JSONException exception) {
             exception.printStackTrace();
             return null;
