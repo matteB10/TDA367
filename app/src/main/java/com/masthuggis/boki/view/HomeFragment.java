@@ -22,48 +22,34 @@ import java.util.List;
 public class HomeFragment extends Fragment implements HomePresenter.View {
 
     private HomePresenter presenter;
-    private List<String> adverts;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.home_fragment, container, false);
 
         this.presenter = new HomePresenter(this);
-        this.adverts = createMockAdvertsData();
-        initRec(v);
+        setupList(v);
+
         return v;
 
     }
 
-    private void initRec(View v) {
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.advertsRecyclerView);
-        ProductsRecyclerViewAdapter adapter = new ProductsRecyclerViewAdapter(adverts);
+    private void setupList(View v) {
+        RecyclerView recyclerView = v.findViewById(R.id.advertsRecyclerView);
+        ProductsRecyclerViewAdapter adapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
         recyclerView.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
     }
 
-    private List<String> createMockAdvertsData() {
-        // TODO: Use data from local JSON file for development
-        List<String> adverts = new ArrayList<>();
-        adverts.add("Grundläggande datorteknik");
-        adverts.add("Linjär Algebra");
-        adverts.add("Diskret Matematik");
-        return adverts;
+    @Override
+    public void hideLoadingScreen() {
+        // TODO: implement loading screen and hide everything else
     }
 
     @Override
     public void showLoadingScreen() {
-
+        // TODO: display the screen again
     }
 
-    @Override
-    public void hideLoadingScreen() {
-
-    }
-
-    @Override
-    public void setProductItems() {
-
-    }
 }
