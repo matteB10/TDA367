@@ -7,7 +7,7 @@ import java.util.List;
  * Has additional fields for a Collection collectionName and collectionPrice.
  */
 
-public class CollectionAdvert implements Advertisement {
+public class CollectionAdvert {
     private final List<Advert> adverts;
     private String collectionName;
     private User seller;

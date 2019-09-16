@@ -1,0 +1,43 @@
+{
+  "books": [
+    {
+      "title": "Test",
+      "author": "Me",
+      "edition": 1,
+      "isbn": 0,
+      "yearPublished": 2019,
+      "price": 200,
+      "condition": "GOOD"
+    }, {
+      "title": "Calculus",
+      "author": "A.ADAMS",
+      "edition": 8,
+      "isbn" : 0,
+      "yearPublished" : 2017,
+      "price" : 450,
+      "condition" : "OK"
+    }, {
+      "title" : "Algebra och Diskret Matematik",
+      "author" : "Stefan Lemurell",
+      "edition" : 1,
+      "isbn" : 0,
+      "yearPublished" : 2016,
+      "price" : 250,
+      "condition" : "GOOD"
+    }, {
+      "title" : "Clean Code",
+      "author" : "Robert C. Martin",
+      "edition" : 1,
+      "isbn" : "9780132350884",
+      "yearPublished" : 2008,
+      "price" : 200,
+      "condition" : "NEW",
+      "preDefinedTags" : [
+        "IT/Data"
+      ],
+      "userTags" : [
+        "Programmering", "Objektorientering", "Software Engineering", "Programvaruteknik"
+      ]
+    }
+  ]
+}

@@ -13,6 +13,10 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.backend.BackendDataFetcher;
+import com.masthuggis.boki.backend.BookRepository;
+import com.masthuggis.boki.model.Advert;
+import com.masthuggis.boki.model.Book;
 import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 
@@ -46,9 +50,13 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
     private List<String> createMockAdvertsData() {
         // TODO: Use data from local JSON file for development
         List<String> adverts = new ArrayList<>();
+        List<Advert> advertList = BookRepository.getAllAdverts(getContext());
         adverts.add("Grundläggande datorteknik");
         adverts.add("Linjär Algebra");
         adverts.add("Diskret Matematik");
+        for(Advert advert : advertList) {
+            adverts.add(advert.getName());
+        }
         return adverts;
     }
 
