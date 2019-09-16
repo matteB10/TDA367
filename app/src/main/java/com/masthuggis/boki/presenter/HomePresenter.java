@@ -2,27 +2,32 @@ package com.masthuggis.boki.presenter;
 
 import android.util.Log;
 
+import com.masthuggis.boki.backend.BookRepository;
+import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.view.RowView;
+
+import java.util.List;
 
 public class HomePresenter {
     private View view;
+    private List<Advert> adverts;
 
     public HomePresenter(View view) {
         this.view = view;
+        this.adverts = BookRepository.getAllAdverts();
     }
 
     public void onBindRepositoryRowViewAtPosition(int position, RowView rowView) {
-        // TODO: get adverts from repository.
-        //Repository repo = repositories.get(position);
-        rowView.setTitle("Linjär algebra");
-        rowView.setPrice(200);
-        rowView.setImageUrl("");
+        Advert a = adverts.get(position);
         rowView.setRowIndex(position);
+        rowView.setTitle(a.getName());
+        rowView.setPrice(a.getPrice());
+        // TODO: handle image
+        rowView.setImageUrl("");
     }
 
     public int getNumRows() {
-        // TODO: get lenght from repo
-        return 3;
+        return BookRepository.getAllAdverts().size();
     }
 
     public void onRowPressed(int rowIndex) {

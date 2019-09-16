@@ -2,6 +2,7 @@ package com.masthuggis.boki.backend;
 
 import android.content.Context;
 
+import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Book;
 
@@ -29,8 +30,8 @@ public class BookRepository {
      * @return a list of all the Advert objects that have been created from the json-file.
      */
 
-    public static List<Advert> getAllAdverts(Context context) {
-        String json = BackendDataFetcher.loadJSONFromAsset(context);
+    public static List<Advert> getAllAdverts() {
+        String json = BackendDataFetcher.loadJSONFromAsset(Boki.getAppContext());
         List<Advert> books = new ArrayList<>();
         try {
             JSONObject booksObject = new JSONObject(json);
