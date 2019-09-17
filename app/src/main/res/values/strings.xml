@@ -36,7 +36,6 @@
     <string name="createAdButton">Lägg upp annons</string>
 
 
-
     <string name="addAdvertHeader">Lägg till en bok</string>
     <string name="addAdvertCondition">I vilket skick är din bok?</string>
     <string name="addAdvertSubjects">Välj ett eller flera ämnen:</string>
@@ -48,5 +47,5 @@
     <string name="conditionNew">NY</string>
     <string name="conditionOk">OK</string>
 
->>>>>>> Added all neccessary fields to view for createAdvertActivity
+    >>>>>>> Added all neccessary fields to view for createAdvertActivity
 </resources>
