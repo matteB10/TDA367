@@ -8,26 +8,31 @@ import java.net.URL;
  * Only required fields are a User object and a date when advert was created.
  * All other information gathered from object being sold.
  */
-public abstract class Advert {
-    private User seller;
+public class Advert implements Advertisement {
+    private int userId;
     private String datePublished;
+    private iBook bookForSale;
     private String name;
     private URL imgUrl;
-    private long id;
-    private int price;
 
-    public Advert(User seller, String datePublished, String name, URL imgUrl, long id, int price) {
-        this.seller = seller;
+
+    public Advert(String datePublished, String name, URL imgUrl, int id) {
+        this.userId = userId;
         this.datePublished = datePublished;
         this.name = name;
         this.imgUrl = imgUrl;
-        this.id = id;
-        this.price = price;
+        this.userId = id;
     }
 
+    public Advert(int userId,String datePublished,iBook book){
+        this.userId = userId;
+        this.datePublished=datePublished;
+        this.bookForSale=book;
+        this.name = book.getTitle();
+        int i= book.getPrice();
+    }
     //Default Constructor
     public Advert() {
-        this.seller = null;
         this.datePublished = null;
         this.name = "Standard Advert";
         try {
@@ -35,45 +40,47 @@ public abstract class Advert {
         } catch (MalformedURLException exception) {
             exception.printStackTrace();
         }
-        this.id = 0;
-        this.price = 0;
+        this.userId = 0;
     }
 
     public Advert(String datePublished, String name, int price) {
         this.datePublished = datePublished;
         this.name = name;
-        this.price = price;
     }
 
 
     public Advert(String datePublished, String name, int price, URL imgUrl) {
         this.datePublished = datePublished;
         this.name = name;
-        this.price = price;
         this.imgUrl = imgUrl;
     }
 
-    public User getSeller() {
-        return this.seller;
+    public int getUserId() {
+        return this.userId;
     }
 
     public String getDatePublished() {
         return this.datePublished;
     }
 
+    @Override
+    public URL getImgURL() {
+        return this.imgUrl;
+    }
+
+    @Override
     public String getName() {
-        return name;
+        return this.name;
     }
 
-    public URL getImgUrl() {
-        return imgUrl;
-    }
-
-    public long getId() {
-        return id;
-    }
-
+    @Override
     public int getPrice() {
-        return price;
+        return this.bookForSale.getPrice();
     }
+
+    public iBook getBookForSale() {
+        return this.bookForSale;
+    }
+
+
 }

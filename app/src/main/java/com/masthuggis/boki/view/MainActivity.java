@@ -11,9 +11,14 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.api.Backend;
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.backend.BackendDataFetcher;
+import com.masthuggis.boki.model.Book;
 
 public class MainActivity extends AppCompatActivity {
+
+ //   private BackendDataFetcher backendDataFetcher = new BackendDataFetcher();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +27,9 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNav =findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment()).commit();
+      /*  backendDataFetcher.addNewBook(new Book("testTitle","testAuthor",1,666,1234567890,
+                1337, Book.Condition.GOOD,null,null));*/
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {

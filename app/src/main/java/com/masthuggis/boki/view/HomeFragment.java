@@ -6,24 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.backend.BackendDataFetcher;
-import com.masthuggis.boki.backend.BookRepository;
-import com.masthuggis.boki.model.Advert;
-import com.masthuggis.boki.model.Book;
 import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class HomeFragment extends Fragment implements HomePresenter.View {
 

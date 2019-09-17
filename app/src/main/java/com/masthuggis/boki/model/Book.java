@@ -9,7 +9,7 @@ import java.util.List;
  * Represents a Book with common administrative information.
  */
 
-public class Book extends Advert {
+public class Book implements iBook {
     public enum Condition {
         NEW, GOOD, OK;
     }
@@ -22,6 +22,7 @@ public class Book extends Advert {
     private Condition condition;
     private final List<String> preDefinedTags;
     private List<String> userTags;
+    private int price;
 
     /**
      * Constructor for creating book with information provided by the user.
@@ -36,8 +37,7 @@ public class Book extends Advert {
      * @throws IllegalArgumentException if price is negative
      */
 
-    public Book(User seller, String datePublished, String name, URL imgUrl, long id, int price, String title, String author, int edition, long isbn, int yearPublished, Condition condition, List<String> preDefinedTags, List<String> userTags) {
-        super(seller, datePublished, name, imgUrl, id, price);
+    public Book(User seller, String datePublished, String name, URL imgUrl, long id, String title, String author, int edition, long isbn, int yearPublished, Condition condition, List<String> preDefinedTags, List<String> userTags) {
         this.title = title;
         this.author = author;
         this.edition = edition;
@@ -48,12 +48,34 @@ public class Book extends Advert {
         this.userTags = userTags;
     }
 
-    public Book(String datePublished, String title, int price, String author, int edition, long isbn, Condition condition, List<String> preDefinedTags, List<String> userTags) {
-        super(datePublished, title, price);
+    public Book(String datePublished, String title, String author, int edition, long isbn, Condition condition, List<String> preDefinedTags, List<String> userTags) {
         this.title = title;
         this.author = author;
         this.edition = edition;
         this.isbn = isbn;
+        this.condition = condition;
+        this.preDefinedTags = preDefinedTags;
+        this.userTags = userTags;
+    }
+    public Book( String title, String author, int edition, int price, long isbn,int yearPublished,Condition condition, List<String> preDefinedTags,List<String> userTags){
+        this.title = title;
+        this.author =author;
+        this.edition = edition;
+        this.price = price;
+        this.isbn = isbn;
+        this.yearPublished =yearPublished;
+        this.condition = condition;
+        this.userTags = userTags;
+        this. preDefinedTags = preDefinedTags;
+    }
+
+    public Book(int UID,String title, String author, int edition, long isbn, int yearPublished, Condition condition, List<String> preDefinedTags, List<String> userTags) {
+
+        this.title = title;
+        this.author = author;
+        this.edition = edition;
+        this.isbn = isbn;
+        this.yearPublished = yearPublished;
         this.condition = condition;
         this.preDefinedTags = preDefinedTags;
         this.userTags = userTags;
@@ -102,5 +124,10 @@ public class Book extends Advert {
 
     public List<String> getUserTags() {
         return userTags;
+    }
+
+    @Override
+    public int getPrice() {
+        return this.price;
     }
 }
