@@ -46,7 +46,7 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
         recyclerView.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 30, true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
     }
 
     @Override
