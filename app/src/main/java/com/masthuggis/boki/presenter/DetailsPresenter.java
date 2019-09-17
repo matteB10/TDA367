@@ -20,6 +20,7 @@ public class DetailsPresenter {
 
     private void setupView() {
         view.setName(advertisement.getName());
+        view.setPrice(advertisement.getPrice());
         if (advertisement.getImgURL() != null) {
             view.setImageUrl(advertisement.getImgURL().toString());
         }
@@ -27,6 +28,7 @@ public class DetailsPresenter {
 
     public interface View {
         void setName(String name);
+        void setPrice(int price);
         void setImageUrl(String url);
     }
 }
