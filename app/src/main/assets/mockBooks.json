@@ -1,7 +1,7 @@
 {
   "books": [
     {
-      "title": "Test",
+      "title": "Diskret Matematik",
       "author": "Me",
       "edition": 1,
       "isbn": 0,
@@ -17,13 +17,29 @@
       "price" : 450,
       "condition" : "OK"
     }, {
-      "title" : "Algebra och Diskret Matematik",
+      "title" : "Linjär Algebra",
       "author" : "Stefan Lemurell",
       "edition" : 1,
       "isbn" : 0,
       "yearPublished" : 2016,
       "price" : 250,
       "condition" : "GOOD"
+    }, {
+      "title" : "Arikitektur",
+      "author" : "Stefan Lemurell",
+      "edition" : 1,
+      "isbn" : 0,
+      "yearPublished" : 2016,
+      "price" : 300,
+      "condition" : "GOOD"
+    }, {
+      "title" : "Design",
+      "author" : "Stefan Lemurell",
+      "edition" : 1,
+      "isbn" : 0,
+      "yearPublished" : 2016,
+      "price" : 250,
+      "condition" : "OK"
     }, {
       "title" : "Clean Code",
       "author" : "Robert C. Martin",
