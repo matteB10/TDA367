@@ -45,8 +45,10 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
         // TODO: implement loading screen and hide everything else
     }
 
+
+
     @Override
-    public void showDetailsScreen(long id) {
+    public void showDetailsScreen(String id) {
         Intent intent = new Intent(getContext(), DetailsActivity.class);
         intent.putExtra("advertID", id);
         startActivity(intent);
