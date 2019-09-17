@@ -26,7 +26,6 @@ public class BookRepository {
      * Method that fetches all books from the local .json.file and returns them as a list of Advert
      * objects. Returns a new list for every method call.
      *
-     * @param context the Context of the activity used to access the json-file through the assets.
      * @return a list of all the Advert objects that have been created from the json-file.
      */
 
