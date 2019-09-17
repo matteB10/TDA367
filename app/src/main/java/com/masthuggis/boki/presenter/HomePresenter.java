@@ -2,33 +2,33 @@ package com.masthuggis.boki.presenter;
 
 import android.util.Log;
 
-import com.masthuggis.boki.backend.BookRepository;
-import com.masthuggis.boki.model.Advert;
+import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.view.RowView;
 
 import java.util.List;
 
 public class HomePresenter {
     private View view;
-    private List<Advert> adverts;
+    private List<Advertisement> adverts;
 
     public HomePresenter(View view) {
         this.view = view;
-        this.adverts = BookRepository.getAllAdverts();
+        this.adverts = Repository.getInstance().getAllAds();
     }
 
     public void onBindRepositoryRowViewAtPosition(int position, RowView rowView) {
-        Advert a = adverts.get(position);
+        Advertisement a = adverts.get(position);
         rowView.setRowIndex(position);
         rowView.setTitle(a.getName());
         rowView.setPrice(a.getPrice());
-        if (a.getImgUrl() != null) {
-            rowView.setImageUrl(a.getImgUrl().toString());
+        if (a.getImgURL() != null) {
+            rowView.setImageUrl(a.getImgURL().toString());
         }
     }
 
     public int getNumRows() {
-        return BookRepository.getAllAdverts().size();
+        return Repository.getInstance().getAllAds().size();
     }
 
     public void onRowPressed(int rowIndex) {
