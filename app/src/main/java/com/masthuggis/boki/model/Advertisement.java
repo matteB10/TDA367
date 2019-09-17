@@ -14,4 +14,5 @@ public interface Advertisement {
     URL getImgURL();
     String getName();
     int getPrice();
+    String getUUID();
 }
