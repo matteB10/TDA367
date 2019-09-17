@@ -5,28 +5,37 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.TestLooperManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.presenter.DetailsPresenter;
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity implements DetailsPresenter.View {
+    private DetailsPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        // TODO: get book from repositiory (presenter will do it)
-        // TODO: setup MVP structure
         Intent intent = getIntent();
         String advertID = intent.getExtras().getString("advertID");
-        Advertisement ad = Repository.getInstance().getAdFromId(advertID);
+        if (advertID != null || advertID == "") {
+            presenter = new DetailsPresenter(this, advertID);
+        }
+    }
 
+    @Override
+    public void setName(String name) {
+        TextView nameTextView = findViewById(R.id.detailsName);
+        nameTextView.setText(name);
+    }
 
-        TextView testTextView = findViewById(R.id.detailsID);
-        testTextView.setText((advertID));
-
+    @Override
+    public void setImageUrl(String url) {
+        // TODO: fetch img, cache it and set it
     }
 }

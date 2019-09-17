@@ -179,10 +179,10 @@ public class Repository implements iRepository {
      * @return
      */
     @Override
-    public Advertisement getAdFromId(String UUID) {
+    public Advertisement getAdFromId(String name) {
 
         for (Advertisement ad : temporaryListOfAllAds) {
-            if (ad.getUUID().equals(UUID)) {
+            if (ad.getName().equals(name)) {
                 return ad;
             }
         }

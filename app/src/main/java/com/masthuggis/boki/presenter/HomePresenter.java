@@ -22,7 +22,7 @@ public class HomePresenter {
 
     public void onBindRepositoryRowViewAtPosition(int position, RowView rowView) {
         Advertisement a = adverts.get(position);
-        rowView.setId(a.getUUID());
+        rowView.setId(a.getName());
         rowView.setTitle(a.getName());
         rowView.setPrice(a.getPrice());
         if (a.getImgURL() != null) {
