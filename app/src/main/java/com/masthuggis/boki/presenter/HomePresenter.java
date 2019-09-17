@@ -1,9 +1,8 @@
 package com.masthuggis.boki.presenter;
 
-import android.content.Intent;
 import android.util.Log;
 
-import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.backend.iRepository;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.view.RowView;
 
@@ -11,11 +10,13 @@ import java.util.List;
 
 public class HomePresenter {
     private View view;
+    private iRepository modelRepository;
     private List<Advertisement> adverts;
 
-    public HomePresenter(View view) {
+    public HomePresenter(View view, iRepository modelRepository) {
         this.view = view;
-        this.adverts = Repository.getInstance().getAllAds();
+        this.modelRepository = modelRepository;
+        this.adverts = modelRepository.getAllAds();
     }
 
     public void onBindRepositoryRowViewAtPosition(int position, RowView rowView) {
@@ -29,7 +30,7 @@ public class HomePresenter {
     }
 
     public int getNumRows() {
-        return Repository.getInstance().getAllAds().size();
+        return modelRepository.getAllAds().size();
     }
 
     public void onRowPressed(long idOfRowPressed) {
