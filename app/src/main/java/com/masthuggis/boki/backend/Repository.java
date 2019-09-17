@@ -17,7 +17,7 @@ import java.util.List;
  * Data is fetched using the BackendDataFetcher class.
  */
 
-public class BookRepository {
+public class Repository {
     private static JSONObject booksJsonObj;
 
     /**
@@ -30,7 +30,7 @@ public class BookRepository {
      */
 
     public static List<Book> getAllBooks(Context context) {
-        String json = BackendDataFetcher.loadJSONFromAsset(context);
+        String json = BackendDataFetcher.getInstance().getMockBooks(context);
         List<Book> books = new ArrayList<>();
         try {
             JSONObject booksObject = new JSONObject(json);

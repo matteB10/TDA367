@@ -6,25 +6,25 @@ package com.masthuggis.boki.model;
  * All other information gathered from object being sold.
  */
 public class Advert implements Advertisement {
-    private User seller;
+    private int userId;
     private String datePublished;
-    private Book bookForSale;
+    private iBook bookForSale;
 
-    public Advert(User seller, String datePublished, Book bookForSale) {
-        this.seller = seller;
+    public Advert(int userId, String datePublished, iBook bookForSale) {
+        this.userId = userId;
         this.datePublished = datePublished;
         this.bookForSale = bookForSale;
     }
 
-    public User getSeller() {
-        return this.seller;
+    public int getUserId() {
+        return this.userId;
     }
 
     public String getDatePublished() {
         return this.datePublished;
     }
 
-    public Book getBookForSale() {
+    public iBook getBookForSale() {
         return this.bookForSale;
     }
 

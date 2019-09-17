@@ -29,17 +29,28 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
  * Utility class with functionality for Fetching data from Backend in form of a .json-file.
  * The .json-file must be placed in the assets-folder of the application
  */
-public class BackendDataFetcher {
+public class BackendDataFetcher implements iBackend {
 
     /**
-     * Converts the contents of a json-file into a String via a Context-object.
+     * Singleton that converts the contents of a json-file into a String via a Context-object.
      *
      * @param context the Context-object required to load the .json-file via the assets-folder
      * @return the contents of the loaded .json-file formatted as a String.
      */
+    private static BackendDataFetcher instance;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    static String loadJSONFromAsset(Context context) {
+    private BackendDataFetcher() {
+
+    }
+
+    public static BackendDataFetcher getInstance() {
+        if(instance == null)
+            instance = new BackendDataFetcher();
+        return instance;
+    }
+
+    public String getMockBooks(Context context) {
         String json = null;
         try {
             InputStream inputStream = context.getAssets().open("mockBooks.json");
