@@ -7,10 +7,10 @@ import java.util.List;
  * Has additional fields for a Collection collectionName and collectionPrice.
  */
 
-public class CollectionAdvert implements Advertisement {
+public abstract class CollectionAdvert implements Advertisement {
     private final List<Advert> adverts;
     private String collectionName;
-    private User seller;
+    private int seller;
     private String datePublished;
     private int collectionPrice;
 
@@ -25,7 +25,7 @@ public class CollectionAdvert implements Advertisement {
      * @param datePublished   Date the CollectionAdvert was created.
      * @throws IllegalArgumentException if price is negative.
      */
-    public CollectionAdvert(List<Advert> adverts, User seller, String collectionName, int collectionPrice, String datePublished) {
+    public CollectionAdvert(List<Advert> adverts, int seller, String collectionName, int collectionPrice, String datePublished) {
         if (collectionPrice < 0)
             throw new IllegalArgumentException("Collection Price cannot be negative!");
         this.adverts = adverts;

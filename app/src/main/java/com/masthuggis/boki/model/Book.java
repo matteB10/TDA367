@@ -7,7 +7,7 @@ import java.util.List;
  * Represents a Book with common administrative information.
  */
 
-public class Book {
+public class Book implements iBook{
     public enum Condition {
         NEW, GOOD, OK;
     }
