@@ -7,7 +7,9 @@ import androidx.test.runner.AndroidJUnit4;
 
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.iRepository;
+import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.presenter.HomePresenter;
+import com.masthuggis.boki.view.RowView;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,8 +27,8 @@ public class HomeFragmentTest {
     public void numAdvertsShow_IsSameAsRepository() {
         HomePresenter.View view = createHomeView();
         iRepository repository = Repository.getInstance();
-
         HomePresenter presenter = new HomePresenter(view, repository);
+
         int numItems = repository.getAllAds().size();
 
         assertEquals(presenter.getNumRows(), numItems);
