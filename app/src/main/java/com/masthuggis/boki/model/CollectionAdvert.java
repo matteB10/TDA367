@@ -40,7 +40,7 @@ public class CollectionAdvert implements Advertisement {
         return this.datePublished;
     }
 
-    public User getSeller() {
+    public int getUserID() {
         return this.seller;
     }
 
