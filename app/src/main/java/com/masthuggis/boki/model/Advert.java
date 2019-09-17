@@ -1,32 +1,92 @@
 package com.masthuggis.boki.model;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.UUID;
+
 /**
  * Represents an Advert.
  * Only required fields are a User object and a date when advert was created.
  * All other information gathered from object being sold.
  */
 public class Advert implements Advertisement {
-    private User seller;
+    private int userId;
     private String datePublished;
-    private Book bookForSale;
+    private iBook bookForSale;
+    private String name;
+    private URL imgUrl;
+    private String uniqueID = UUID.randomUUID().toString();
 
-    public Advert(User seller, String datePublished, Book bookForSale) {
-        this.seller = seller;
+
+
+    public Advert(String datePublished, String name, URL imgUrl, int id) {
+        this.userId = userId;
         this.datePublished = datePublished;
-        this.bookForSale = bookForSale;
+        this.name = name;
+        this.imgUrl = imgUrl;
+        this.userId = id;
     }
 
-    public User getSeller() {
-        return this.seller;
+    public Advert(int userId,String datePublished,iBook book){
+        this.userId = userId;
+        this.datePublished=datePublished;
+        this.bookForSale=book;
+        this.name = book.getTitle();
+        int i= book.getPrice();
+    }
+    //Default Constructor
+    public Advert() {
+        this.datePublished = null;
+        this.name = "Standard Advert";
+        try {
+            this.imgUrl = new URL("https://dsvmninsg3s3x.cloudfront.net/uploads/2017/08/0134154363.jpg");
+        } catch (MalformedURLException exception) {
+            exception.printStackTrace();
+        }
+        this.userId = 0;
+    }
+
+    public Advert(String datePublished, String name, int price) {
+        this.datePublished = datePublished;
+        this.name = name;
+    }
+
+
+    public Advert(String datePublished, String name, int price, URL imgUrl) {
+        this.datePublished = datePublished;
+        this.name = name;
+        this.imgUrl = imgUrl;
+    }
+
+    public int getUserId() {
+        return this.userId;
     }
 
     public String getDatePublished() {
         return this.datePublished;
     }
 
-    public Book getBookForSale() {
-        return this.bookForSale;
+    @Override
+    public URL getImgURL() {
+        return this.imgUrl;
     }
 
+    @Override
+    public String getName() {
+        return this.name;
+    }
 
+    @Override
+    public int getPrice() {
+        return this.bookForSale.getPrice();
+    }
+
+    @Override
+    public String getUUID() {
+       return this.uniqueID;
+    }
+
+    public iBook getBookForSale() {
+        return this.bookForSale;
+    }
 }

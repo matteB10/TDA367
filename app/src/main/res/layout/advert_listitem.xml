@@ -1,19 +1,47 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/parentLayout"
+
+
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+android:layout_height="wrap_content"
+android:id="@+id/parentLayout"
+android:orientation="horizontal"
+android:padding="10dp"
+    android:background="@drawable/card_background"
+    android:elevation="3dp"
+    >
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="11dp"
-        android:layout_marginLeft="11dp"
-        android:layout_marginTop="11dp"
-        android:text="Advert Name" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/diskret"
+             />
+
+        <TextView
+            android:id="@+id/detailsID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Linjär Algebra"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="200 kr"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</LinearLayout>

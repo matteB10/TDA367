@@ -1,0 +1,95 @@
+# Meeting Agenda
+
+Group:Masthuggis (grupp 8)
+Date: 16/9 - 19
+Chair: Matilda Blomquist
+Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak Lindgren, Elin Melander
+
+
+## Objectives (5 min) 
+
+- Logotyp/appikon
+- Tester
+- Javadoc
+- Kodstil 
+- Androidversion
+- Standardmått i olika vyer
+- Klassdiagram
+- Firebase/json
+
+
+## Reports (15 min) from previous meeting
+
+ - Presentation förbereda oss inför imorgon?
+
+
+## Discussion items (35 min)
+
+
+Logotyp/Appikon
+
+ - Elin har gjort en logotyp som kan användas som app-ikon som hon visar upp för gruppen. 
+ - Vi gör en liknande variant av denna som kan användas i appen, t ex på startsidan.
+
+Tester
+
+ - Vad ska vi skriva tester på? JUnit tester för alla modell-klasser. Typ vy-byte kan testas manuellt i emulatorn.
+en testklass per klass som testas. 
+
+Kodstil
+
+- Joel tycker inte att javadoc är nödvändigt och att koden borde skrivas så att den är förståerlig (helst utan kommentarer).
+Alla håller med om att det ibland blir kommentarer för kommenterandets skull. Isak tycker att man kan kommentera klassen och vad
+den är tänkt att göra. 
+
+- Minimum är bestämt till att göra en övergripande kommentar om vad klassen gör, och kommentera komplexa metoder.
+
+- Elin och Matilda gillar mellanrum i koden. Vi diskuterade om komponentnamn ska finnas med i komponent-id:n i xml-filer. 
+Övriga variabler ej specificerade närmare
+
+
+Skapa en fil med standardmått i olika vyer
+
+- Vi kan ange standardmått i xml-filen dimen i projektet för att enkelt kunna välja samma storlek på komponenter som återkommer
+i applikationen. Här bör vi även speca upp olika text storlekar osv. 
+- Avstånd måste också anges, kan detta också anges i dimensionsfilen. 
+
+Klassdiagram
+
+Vi diskuterade hur inläsning av Adverts och CollectionAdverts ska ske från databas/json-fil. Vi insåg att detta blev ganska
+krångligt, då läsningen och skapandet av objekt blir svårt. Därför togs beslutet att inte implementera 
+funktionalitet för att skapa samlingsannonser med flera böcker. 
+
+Firebase/json
+
+- Ska vi sätta upp firebase direkt? hur mycket energi ska vi lägga på att hantera json-filer eftersom mycket av det vi tänkt göra 
+bygger på att firebase fungerar. Vi kom därför fram till att försöka implementera firebase lite tidigare än vi först tänkt
+för att resterande delar av applikationen ska kunna fortsätta utvecklas. 
+
+Android version
+
+Efter handledarmöte ändrades androidversion till en nyare (API 26), delvis för att vi trodde att vi behövde en nyare version för en
+lösning av läsning från json-fil. Eftersom en gruppmedlem har en äldre telefon med API 25 ändrar vi nu istället till version 25.
+
+
+## Outcomes and assignments (5 min)
+
+- Elin och Matilda anger standardmått i dimensionsfilen
+- Elin fortsätter jobba med app-ikonen, och profilsidorna
+- Färdigställa designmodell/klassdiagram
+- Alla fortsätter jobba med de tasks som de valt på trello-tavlan.
+- Gå igenom presentationen innan vi går skiljs åt. 
+- Matilda fortsätter med skapa annons-flödet
+- Joel fortsätter med startsidan och hur annonser ska läggas upp.
+- Isak och Arvid kollar på hur firebase sätts upp
+
+
+
+## Wrap up
+
+ - Handledning fredag.
+ - Presentation tisdag.
+ - Nästa möte: Fredag 20/9 10.00
+
+ 
+
