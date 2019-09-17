@@ -2,6 +2,7 @@ package com.masthuggis.boki.model;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.UUID;
 
 /**
  * Represents an Advert.
@@ -14,6 +15,8 @@ public class Advert implements Advertisement {
     private iBook bookForSale;
     private String name;
     private URL imgUrl;
+    private String uniqueID = UUID.randomUUID().toString();
+
 
 
     public Advert(String datePublished, String name, URL imgUrl, int id) {
@@ -78,9 +81,12 @@ public class Advert implements Advertisement {
         return this.bookForSale.getPrice();
     }
 
+    @Override
+    public String getUUID() {
+       return this.uniqueID;
+    }
+
     public iBook getBookForSale() {
         return this.bookForSale;
     }
-
-
 }
