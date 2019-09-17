@@ -10,8 +10,8 @@ import org.json.JSONObject;
 import java.util.List;
 
 public interface iRepository {
-
     Advertisement createAdvert(JSONObject jsonObject);
     User createUser();
     List<Advertisement> getAllAds();
+    Advertisement getAdFromId(String UUID);
 }

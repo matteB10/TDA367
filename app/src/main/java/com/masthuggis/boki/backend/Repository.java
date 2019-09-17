@@ -178,7 +178,7 @@ public class Repository implements iRepository {
      * @param UUID
      * @return
      */
-
+    @Override
     public Advertisement getAdFromId(String UUID) {
 
         for (Advertisement ad : temporaryListOfAllAds) {

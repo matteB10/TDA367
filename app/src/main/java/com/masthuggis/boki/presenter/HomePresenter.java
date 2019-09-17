@@ -2,6 +2,7 @@ package com.masthuggis.boki.presenter;
 
 import android.util.Log;
 
+import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.iRepository;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.view.RowView;
@@ -13,9 +14,9 @@ public class HomePresenter {
     private iRepository modelRepository;
     private List<Advertisement> adverts;
 
-    public HomePresenter(View view, iRepository modelRepository) {
+    public HomePresenter(View view) {
         this.view = view;
-        this.modelRepository = modelRepository;
+        this.modelRepository = Repository.getInstance();
         this.adverts = modelRepository.getAllAds();
     }
 

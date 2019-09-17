@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
@@ -25,7 +24,7 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
                              ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.home_fragment, container, false);
 
-        this.presenter = new HomePresenter(this, Repository.getInstance());
+        this.presenter = new HomePresenter(this);
         setupList(v);
 
         return v;
@@ -45,8 +44,6 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
     public void hideLoadingScreen() {
         // TODO: implement loading screen and hide everything else
     }
-
-
 
     @Override
     public void showDetailsScreen(String id) {

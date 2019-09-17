@@ -27,7 +27,7 @@ public class HomeFragmentTest {
     public void numAdvertsShow_IsSameAsRepository() {
         HomePresenter.View view = createHomeView();
         iRepository repository = Repository.getInstance();
-        HomePresenter presenter = new HomePresenter(view, repository);
+        HomePresenter presenter = new HomePresenter(view);
 
         int numItems = repository.getAllAds().size();
 
