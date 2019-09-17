@@ -22,7 +22,9 @@ public class HomePresenter {
         rowView.setRowIndex(position);
         rowView.setTitle(a.getName());
         rowView.setPrice(a.getPrice());
-        rowView.setImageUrl(a.getImgUrl().toString());
+        if (a.getImgUrl() != null) {
+            rowView.setImageUrl(a.getImgUrl().toString());
+        }
     }
 
     public int getNumRows() {

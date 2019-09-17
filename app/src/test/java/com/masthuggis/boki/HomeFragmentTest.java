@@ -10,7 +10,7 @@ public class HomeFragmentTest {
     public void numAdvertsShow_IsCorrect() {
         HomePresenter.View view = createHomeView();
         HomePresenter presenter = new HomePresenter(view);
-        // TODO: wait for Arvid and co. 
+        // TODO: wait for Arvid and co.
     }
 
     private HomePresenter.View createHomeView() {
