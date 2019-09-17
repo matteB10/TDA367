@@ -46,7 +46,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         private TextView nameTextView;
         private TextView priceTextView;
         private ImageView imageView;
-        private long id;
+        private String id;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -81,9 +81,11 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         }
 
         @Override
-        public void setId(long id) {
-            this.id = id;
+        public void setId(String id) {
+            this.id =id;
         }
+
+
     }
 
 }

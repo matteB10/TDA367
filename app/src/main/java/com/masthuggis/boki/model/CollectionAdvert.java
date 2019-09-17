@@ -2,6 +2,7 @@ package com.masthuggis.boki.model;
 
 import java.util.List;
 
+//todo delete collectionadvert?
 /**
  * Represents an Advert that is itself a collection of Advert-objects.
  * Has additional fields for a Collection collectionName and collectionPrice.

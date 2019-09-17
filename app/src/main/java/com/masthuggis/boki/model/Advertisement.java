@@ -7,11 +7,10 @@ import java.net.URL;
  */
 public interface Advertisement {
     int getUserId();
-
     iBook getBookForSale();
-
     String getDatePublished();
     URL getImgURL();
     String getName();
     int getPrice();
+    String getUUID();
 }

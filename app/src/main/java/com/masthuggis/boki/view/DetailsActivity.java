@@ -8,6 +8,8 @@ import android.os.TestLooperManager;
 import android.widget.TextView;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.model.Advertisement;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -19,10 +21,12 @@ public class DetailsActivity extends AppCompatActivity {
         // TODO: get book from repositiory (presenter will do it)
         // TODO: setup MVP structure
         Intent intent = getIntent();
-        long advertID = intent.getExtras().getLong("advertID");
+        String advertID = intent.getExtras().getString("advertID");
+        Advertisement ad = Repository.getInstance().getAdFromId(advertID);
+
 
         TextView testTextView = findViewById(R.id.detailsID);
-        testTextView.setText(Long.toString(advertID));
+        testTextView.setText((advertID));
 
     }
 }
