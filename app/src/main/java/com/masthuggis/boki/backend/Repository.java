@@ -2,7 +2,9 @@ package com.masthuggis.boki.backend;
 
 import android.content.Context;
 
+import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.Book;
+import com.masthuggis.boki.model.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,8 +19,21 @@ import java.util.List;
  * Data is fetched using the BackendDataFetcher class.
  */
 
-public class Repository {
+public class Repository implements iRepository {
     private static JSONObject booksJsonObj;
+    private static Repository singleton = null;
+
+
+    private Repository() {
+    }
+
+    public static Repository getInstance() {
+        if (singleton == null) {
+            return new Repository();
+        } else {
+            return singleton;
+        }
+    }
 
     /**
      * Method that fetches all books from the local .json.file and returns them as a list of book
@@ -29,15 +44,16 @@ public class Repository {
      * @return a list of all the book objects that have been created from the json-file.
      */
 
-    public static List<Book> getAllBooks(Context context) {
+    @Override
+    public List<Advertisement> getAllAds(Context context) {
         String json = BackendDataFetcher.getInstance().getMockBooks(context);
-        List<Book> books = new ArrayList<>();
+        List<Advertisement> books = new ArrayList<>();
         try {
             JSONObject booksObject = new JSONObject(json);
             JSONArray booksArray = booksObject.getJSONArray("books"); //Array in json file must be named "books"
             for (int i = 0; i < booksArray.length(); i++) {
                 //Needs some way to create a book from the data that is fetched from each JSON-object
-                books.add(createBook(booksArray.getJSONObject(i)));
+                books.add(createBookWithoutTags(booksArray.getJSONObject(i)));
             }
         } catch (JSONException exception) {
             exception.printStackTrace();
@@ -56,7 +72,7 @@ public class Repository {
      *               the fields of the new Book-object.
      */
 
-    private static Book createBookWithoutTags(JSONObject object) {
+    private Advertisement createBookWithoutTags(JSONObject object) {
         String title;
         String author;
         int edition;
@@ -69,11 +85,11 @@ public class Repository {
             author = object.getString("author");
             edition = object.getInt("edition");
             price = object.getInt("price");
-            isbn = object.getInt("isbn");
+            isbn = object.getLong("isbn");
             yearPublished = object.getInt("yearPublished");
             String conditionString = object.getString("condition");
             condition = Book.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
-            return new Book(title, author, edition, price, isbn, yearPublished, condition, null, null);
+            return AdFactory.createAd(123, "test date", title, author, edition, isbn, yearPublished, price, condition, null, null);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -88,7 +104,8 @@ public class Repository {
      * @param object the JSONObject used to create a Book-object
      * @return a Book with fields corresponding to the key-value pairs of the JSONObject.
      */
-    private static Book createBook(JSONObject object) {
+    @Override
+    public Advertisement createAdvert(JSONObject object) {
         String title;
         String author;
         int edition;
@@ -103,17 +120,24 @@ public class Repository {
             author = object.getString("author");
             edition = object.getInt("edition");
             price = object.getInt("price");
-            isbn = object.getInt("isbn");
+            isbn = object.getLong("isbn");
             yearPublished = object.getInt("yearPublished");
             condition = Book.Condition.valueOf(object.getString("condition")); //Shorthand
             preDefinedTags = getPreDefinedTags(object);
             userTags = getUserTags(object);
-            return new Book(title, author, edition, price, isbn, yearPublished, condition, preDefinedTags, userTags);
+            return AdFactory.createAd(123, "test date", title, author, edition, isbn, yearPublished, price, condition, preDefinedTags, userTags);
         } catch (JSONException exception) {
             exception.printStackTrace();
             return null;
         }
     }
+
+    @Override
+    public User createUser() {
+        return new User();
+    }
+
+
 
 
     private static List<String> getPreDefinedTags(JSONObject object) {
@@ -144,6 +168,8 @@ public class Repository {
             return null;
         }
     }
+
+
 }
 
 
