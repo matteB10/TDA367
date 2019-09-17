@@ -85,7 +85,7 @@ public class CreateAdActivity extends AppCompatActivity {
     private void setImageView(Bitmap bitmap) {
         imageViewDisplay.setImageBitmap(bitmap);
         //TODO: fix better solution for setting image in portrait
-        imageViewDisplay.setRotation(90);
+        //imageViewDisplay.setRotation(90);
     }
 
     private Bitmap decodeBitmap() {
