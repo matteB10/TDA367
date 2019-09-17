@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.api.Backend;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.backend.BackendDataFetcher;
 import com.masthuggis.boki.model.Book;
