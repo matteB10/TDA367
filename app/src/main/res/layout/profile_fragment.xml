@@ -6,66 +6,36 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:layout_margin="15dp">
 
     <TextView
         android:id="@+id/myAds"
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
-
-
-        android:text="@string/title_profile"
-        android:textSize="@dimen/heading_size"/>
-
-    <TextView
-        android:id="@+id/myBooks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/myBooksButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="0dp"
-        android:text="@string/mybooks"
-        android:textSize="@dimen/subheading_size"/>
-
-    <TextView
-        android:id="@+id/myCollections"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/myCollectionsButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="0dp"
-        android:text="@string/mycollections"
-        android:textSize="@dimen/subheading_size"/>
-
-    <ImageButton
-        android:id="@+id/myBooksButton"
-        android:layout_width="@dimen/button_width"
-        android:layout_height="@dimen/button_height"
-        android:layout_below="@+id/myAds"
-
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/padding_top"
-        android:background="#00FFFFFF"
+        android:text="@string/title_profile"
+        android:textSize="@dimen/headingFontsize" />
 
-        android:contentDescription="@string/mybooks"
-        app:srcCompat="@mipmap/new_book_round" />
-
-    <ImageButton
-        android:id="@+id/myCollectionsButton"
-        android:layout_width="@dimen/button_width"
-        android:layout_height="@dimen/button_height"
-        android:layout_below="@+id/myBooksButton"
-        android:layout_centerHorizontal="true"
-
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_below="@+id/myAds"
         android:layout_marginTop="50dp"
-        android:background="#00FFFFFF"
-        android:contentDescription="@string/mycollections"
-        app:srcCompat="@mipmap/new_collection_round" />
+        android:background="?android:attr/listDivider" />
 
+
+    <GridView
+        android:id="@+id/gridView_myAds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider"
+        android:layout_marginTop="0dp"
+
+        />
 
 
 </RelativeLayout>

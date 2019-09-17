@@ -5,6 +5,5 @@ package com.masthuggis.boki.model;
  */
 public interface Advertisement {
     User getSeller();
-
     String getDatePublished();
 }
