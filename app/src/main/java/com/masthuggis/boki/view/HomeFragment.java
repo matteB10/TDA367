@@ -20,6 +20,7 @@ import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Book;
 import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
+import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
         recyclerView.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 30, true));
     }
 
     @Override
