@@ -19,4 +19,34 @@
     <string name="singleBook">Lägg upp en enskild bok.</string>
     <string name="to_new_book_desc">Create new advert.</string>
     <string name="newCollection">Skapa en samling</string>
+
+    <string name="hej">da</string>
+
+
+    <string name="addAdvertTitle">*Titel</string>
+    <string name="addAdvertPrice">*Pris</string>
+    <string name="addAdvertAuthor">*Författare</string>
+    <string name="addAdvertISBN">ISBN</string>
+    <string name="addAdvertOtherInfo">Övrig information:</string>
+
+    <string name="titleHint">Ange titel</string>
+    <string name="authorHint">Ange författare</string>
+    <string name="priceHint">t ex 300kr</string>
+    <string name="ISBNHint">t ex  9789147016976</string>
+    <string name="createAdButton">Lägg upp annons</string>
+
+
+
+    <string name="addAdvertHeader">Lägg till en bok</string>
+    <string name="addAdvertCondition">I vilket skick är din bok?</string>
+    <string name="addAdvertSubjects">Välj ett eller flera ämnen:</string>
+    <string name="addAdvertTags">Egna taggar (valfritt):</string>
+    <string name="addAdvertTagHint">t ex Envariabelanalys</string>
+
+
+    <string name="conditionGood">BRA</string>
+    <string name="conditionNew">NY</string>
+    <string name="conditionOk">OK</string>
+
+>>>>>>> Added all neccessary fields to view for createAdvertActivity
 </resources>
