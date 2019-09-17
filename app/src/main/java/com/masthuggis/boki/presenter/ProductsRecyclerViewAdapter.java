@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.view.RowView;
 
-import java.util.List;
-
 public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder> {
 
     private HomePresenter presenter;
@@ -48,11 +46,11 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         private TextView nameTextView;
         private TextView priceTextView;
         private ImageView imageView;
-        private int rowIndex;
+        private long id;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            nameTextView = itemView.findViewById(R.id.name);
+            nameTextView = itemView.findViewById(R.id.detailsID);
             priceTextView = itemView.findViewById(R.id.price);
             imageView = itemView.findViewById(R.id.imageView);
             setupOnPressActionFor(itemView);
@@ -62,7 +60,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    presenter.onRowPressed(rowIndex);
+                    presenter.onRowPressed(id);
                 }
             });
         }
@@ -83,8 +81,8 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         }
 
         @Override
-        public void setRowIndex(int index) {
-            this.rowIndex = index;
+        public void setId(long id) {
+            this.id = id;
         }
     }
 

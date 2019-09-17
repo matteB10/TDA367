@@ -7,7 +7,7 @@
     tools:context=".view.DetailsActivity">
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/detailsID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Details View"
