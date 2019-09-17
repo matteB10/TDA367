@@ -3,4 +3,22 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+
+    <color name="colorTeal">#50A18E</color>
+    <color name="colorTealLight">#63C7B0</color>
+    <color name="colorTealDark">#4A9483</color>
+    <color name="colorCoral">#F26E50</color>
+    <color name="colorCoralLight">#FF8A70</color>
+    <color name="colorCoralDark">#DB5A3D</color>
+    <color name="colorYellow">#FFC527</color>
+    <color name="colorYellowLight">#FFD359</color>
+    <color name="colorYellowDark">#F5BA18</color>
+    <color name="colorGreyDark">#707070</color>
+    <color name="colorGreyLight">#A2A6A7</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+
+
+
 </resources>
