@@ -4,5 +4,5 @@ public interface RowView {
     void setTitle(String name);
     void setPrice(int price);
     void setImageUrl(String url);
-    void setRowIndex(int index);
+    void setId(long id);
 }

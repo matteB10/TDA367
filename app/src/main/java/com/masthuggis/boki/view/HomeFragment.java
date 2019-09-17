@@ -1,5 +1,6 @@
 package com.masthuggis.boki.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,13 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
     @Override
     public void hideLoadingScreen() {
         // TODO: implement loading screen and hide everything else
+    }
+
+    @Override
+    public void showDetailsScreen(long id) {
+        Intent intent = new Intent(getContext(), DetailsActivity.class);
+        intent.putExtra("advertID", id);
+        startActivity(intent);
     }
 
     @Override

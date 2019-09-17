@@ -1,5 +1,6 @@
 package com.masthuggis.boki.presenter;
 
+import android.content.Intent;
 import android.util.Log;
 
 import com.masthuggis.boki.backend.Repository;
@@ -19,7 +20,7 @@ public class HomePresenter {
 
     public void onBindRepositoryRowViewAtPosition(int position, RowView rowView) {
         Advertisement a = adverts.get(position);
-        rowView.setRowIndex(position);
+        rowView.setId(a.getUserId());
         rowView.setTitle(a.getName());
         rowView.setPrice(a.getPrice());
         if (a.getImgURL() != null) {
@@ -31,13 +32,16 @@ public class HomePresenter {
         return Repository.getInstance().getAllAds().size();
     }
 
-    public void onRowPressed(int rowIndex) {
+    public void onRowPressed(long idOfRowPressed) {
         // TODO: navigate to new screen with fetched mvp
-        Log.d("PRINT", "Row index pressed " + rowIndex);
+        // Question: Should presenter do navigation or some navigationManager?
+        Log.d("PRINT", "Row id pressed " + idOfRowPressed);
+        view.showDetailsScreen(idOfRowPressed);
     }
 
     public interface View {
         void showLoadingScreen();
         void hideLoadingScreen();
+        void showDetailsScreen(long id);
     }
 }
