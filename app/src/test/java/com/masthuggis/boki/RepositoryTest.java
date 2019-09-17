@@ -1,7 +1,7 @@
 package com.masthuggis.boki;
 
 
-public class BookRepositoryTest {
+public class RepositoryTest {
 
 
 

@@ -24,6 +24,8 @@ import java.util.List;
 public class Repository implements iRepository {
     private static JSONObject booksJsonObj;
     private static Repository singleton = null;
+    private final List<Advertisement> temporaryListOfAllAds = new ArrayList<>();
+    private final List<RepositoryObserver> observers = new ArrayList<>();
 
 
     private Repository() {
@@ -90,7 +92,9 @@ public class Repository implements iRepository {
             yearPublished = object.getInt("yearPublished");
             String conditionString = object.getString("condition");
             condition = Book.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
-            return AdFactory.createAd(123, "test date", title, author, edition, isbn, yearPublished, price, condition, null, null);
+            Advertisement ad = AdFactory.createAd(123, "test date", title, author, edition, isbn, yearPublished, price, condition, null, null);
+            temporaryListOfAllAds.add(ad);
+            return ad;
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -124,7 +128,9 @@ public class Repository implements iRepository {
             condition = Book.Condition.valueOf(object.getString("condition")); //Shorthand
             preDefinedTags = getPreDefinedTags(object);
             userTags = getUserTags(object);
-            return AdFactory.createAd(123, "test date", title, author, edition, isbn, yearPublished, price, condition, preDefinedTags, userTags);
+            Advertisement ad = AdFactory.createAd(123, "test date", title, author, edition, isbn, yearPublished, price, condition, preDefinedTags, userTags);
+            temporaryListOfAllAds.add(ad);
+            return ad;
         } catch (JSONException exception) {
             exception.printStackTrace();
             return null;
@@ -135,8 +141,6 @@ public class Repository implements iRepository {
     public User createUser() {
         return new User();
     }
-
-
 
 
     private static List<String> getPreDefinedTags(JSONObject object) {
@@ -168,7 +172,32 @@ public class Repository implements iRepository {
         }
     }
 
+    /**
+     *
+     * Temporary method for getting ad from unique ID.
+     * @param UUID
+     * @return
+     */
 
+    public Advertisement getAdFromId(String UUID) {
+
+        for (Advertisement ad : temporaryListOfAllAds) {
+            if (ad.getUUID().equals(UUID)) {
+                return ad;
+            }
+        }
+        return null;
+    }
+
+    //TODO FOR LATER IMPLEMENTATION
+
+    private void updateObservers() {
+        observers.forEach(observer -> observer.update());
+    }
+
+    private void addObserver(RepositoryObserver observer) {
+        observers.add(observer);
+    }
 }
 
 
