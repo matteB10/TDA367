@@ -4,7 +4,7 @@ package com.masthuggis.boki.model;
  * Interface defining common functionality of Advertisements.
  */
 public interface Advertisement {
-    User getSeller();
+   User getSeller();
 
     String getDatePublished();
 }

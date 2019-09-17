@@ -16,7 +16,7 @@ public class Advert implements Advertisement {
         this.bookForSale = bookForSale;
     }
 
-    public User getSeller() {
+     public User getSeller() {
         return this.seller;
     }
 
