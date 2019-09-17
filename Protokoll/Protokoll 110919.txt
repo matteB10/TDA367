@@ -1,0 +1,72 @@
+# Meeting Agenda
+Group: Masthuggis
+Date:11/9 - 19
+Chair: Isak Lindgren
+Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak
+Lindgren, Elin Melander
+
+##Objectives
+- Besluta arbetsuppgifter framåt. Till på måndag och efter det.
+- Se till så att alla är uppdaterade gällande vad som gäller resten av
+veckan och inför måndag.
+
+##Förra möte (10 min)
+- Alla delade med sig om vad de gjort sedan igår (10/9).
+- Elin visade powerpoint inför måndag, övriga visade och förklarade
+strukturen på Trello gällande Sprint.
+
+## Diskussion (30 min)
+
+- Namn
+Gruppen bestämde sig för namnet ”Boki”.
+Domänmodell
+
+- Efter synpunkter på domänmodellen av handledaren åtgärdades småsaker
+som tex. pilar.
+
+- Handledaren påpekade att kopplingen mellan konversation och annons kan
+vara onödig. Något som gruppen gemensamt kom överens om att den inte är
+då vi vill att samtliga konversationer ska vara centrerade och skapade
+genom en annons. Dvs. applikationens primära syfte är att förmedla
+böcker och inte vara en chatt.
+Presentation
+
+- Elin visade powerpointen hon gjort. Domänmodellen i presentationen
+justerades utifrån tidigare diskussion.
+
+- Vilken Androidversion kör vi?
+
+- Valet föll på IceCreamSandwich( för att gruppen ansåg att den täcker
+tillräckligt stor andel av användarna samtidigt som den är tillräckligt
+modern.
+
+Arbete framåt
+
+- Att få till en grund på git som alla kan utgå ifrån anser alla vara
+nästa steg. Först diskuterades att direkt dela upp de första user
+storiesen för att flera direkt skulle kunna börja programmera modulärt.
+Efter lite diskussion bestämdes det istället att det ska sättas upp ett
+tydligt grundexempel på en MVP-struktur som alla kan ha som bas att
+utgå ifrån då de olika user storiesen delas upp.
+
+Zeplin
+
+- Elin har hittat ett program, Zeplin, som kan generera FXML-filer ur
+Adobe XD. Hon och Matilda vill gärna prova det.
+
+##Outcomes
+
+- Matilda sätter upp repository.
+
+- När repository och MVP-bas är gjorda kan alla börja signa upp sig på
+tasks.
+
+- Matilda och Elin kollar om det går att generera XML-filer ur Adobe XD
+genom Zeplin.
+
+- De som är tillgängliga imorgon förmiddag sätter upp detta imorgon på
+skolan.
+
+##Till nästa gång:
+
+- Vi ses på fredag med handledaren.
