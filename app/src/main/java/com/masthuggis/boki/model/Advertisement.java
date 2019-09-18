@@ -1,16 +1,28 @@
 package com.masthuggis.boki.model;
 
 import java.net.URL;
+import java.util.Date;
+import java.util.Iterator;
 
 /**
  * Interface defining common functionality of Advertisements.
  */
 public interface Advertisement {
-    int getUserId();
-    iBook getBookForSale();
-    String getDatePublished();
-    URL getImgURL();
-    String getName();
+
+
+    Date getDatePublished();
+
+    Iterator<String> getImgURLs();
+
+    String getTitle();
+
     int getPrice();
-    String getUUID();
+
+    String getUniqueOwnerID();
+
+    String getDescription();
+    Iterator <String> getTags();
+    Advert.Condition getConditon();
+
+
 }

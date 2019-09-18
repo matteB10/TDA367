@@ -1,8 +1,8 @@
 package com.masthuggis.boki.model;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.UUID;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Represents an Advert.
@@ -10,83 +10,70 @@ import java.util.UUID;
  * All other information gathered from object being sold.
  */
 public class Advert implements Advertisement {
-    private int userId;
-    private String datePublished;
-    private iBook bookForSale;
-    private String name;
-    private URL imgUrl;
-    private String uniqueID = UUID.randomUUID().toString();
+
+    public enum Condition {
+        NEW, GOOD, OK, BAD,UNDEFINED
+    }
+
+    private Date datePublished;
+    private String uniqueOwnerID;
+    private String title;
+    private List<String> imgURLs;
+    private String description;
+    private int price;
+    private Condition condition;
 
 
-
-    public Advert(String datePublished, String name, URL imgUrl, int id) {
-        this.userId = userId;
+    public Advert(Date datePublished, String uniqueOwnerID, String title, List<String> imgURLs, String description, int price,Condition condition) {
         this.datePublished = datePublished;
-        this.name = name;
-        this.imgUrl = imgUrl;
-        this.userId = id;
+        this.uniqueOwnerID = uniqueOwnerID;
+        this.title = title;
+        this.imgURLs = imgURLs;
+        imgURLs.add("TEST");
+        this.description = description;
+        this.price = price;
+        this.condition = condition;
     }
 
-    public Advert(int userId,String datePublished,iBook book){
-        this.userId = userId;
-        this.datePublished=datePublished;
-        this.bookForSale=book;
-        this.name = book.getTitle();
-        int i= book.getPrice();
-    }
-    //Default Constructor
-    public Advert() {
-        this.datePublished = null;
-        this.name = "Standard Advert";
-        try {
-            this.imgUrl = new URL("https://dsvmninsg3s3x.cloudfront.net/uploads/2017/08/0134154363.jpg");
-        } catch (MalformedURLException exception) {
-            exception.printStackTrace();
-        }
-        this.userId = 0;
-    }
-
-    public Advert(String datePublished, String name, int price) {
-        this.datePublished = datePublished;
-        this.name = name;
-    }
-
-
-    public Advert(String datePublished, String name, int price, URL imgUrl) {
-        this.datePublished = datePublished;
-        this.name = name;
-        this.imgUrl = imgUrl;
-    }
-
-    public int getUserId() {
-        return this.userId;
-    }
-
-    public String getDatePublished() {
+    public Date getDatePublished() {
         return this.datePublished;
     }
 
     @Override
-    public URL getImgURL() {
-        return this.imgUrl;
+    public Iterator<String> getImgURLs() {
+        return this.imgURLs.iterator();
     }
 
     @Override
-    public String getName() {
-        return this.name;
+    public String getTitle() {
+        return this.title;
     }
+
 
     @Override
     public int getPrice() {
-        return this.bookForSale.getPrice();
+        return this.price;
     }
 
     @Override
-    public String getUUID() {
-       return this.uniqueID;
+    public String getUniqueOwnerID() {
+        return this.uniqueOwnerID;
     }
 
-    public iBook getBookForSale() {
-        return this.bookForSale;
+    @Override
+    public String getDescription() {
+        return this.description;
     }
+
+    @Override
+    public Iterator<String> getTags() {
+        return null;
+    }
+
+    @Override
+    public Condition getConditon() {
+        return this.condition;
+    }
+
+
 }
