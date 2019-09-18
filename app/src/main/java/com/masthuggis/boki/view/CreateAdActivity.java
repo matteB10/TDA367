@@ -12,34 +12,50 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
+import android.widget.ToggleButton;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.presenter.CreateAdPresenter;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CreateAdActivity extends AppCompatActivity {
+public class CreateAdActivity extends AppCompatActivity implements CreateAdPresenter.View {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    ImageView imageViewDisplay;
+
     String currentImagePath;
+    CreateAdPresenter presenter;
+
+    ImageView imageViewDisplay;
+    EditText title;
+    EditText price;
+    EditText author;
+    EditText ISBN;
+    EditText description;
+    RadioGroup conditionToggleGroup;
+    Button conditionGood;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_advert);
+        presenter = new CreateAdPresenter(this);
+        conditionToggleGroup = (RadioGroup) findViewById(R.id.conditionToggleGroup);
+        conditionGood = (Button) findViewById(R.id.conditionGoodButton);
+        conditionToggleGroup.check(conditionGood.getId());
 
         imageViewDisplay = (ImageView) findViewById(R.id.addImageView);
 
-        imageViewDisplay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dispatchTakePictureIntent();
-            }
-        });
+
     }
 
     private void dispatchTakePictureIntent() {
@@ -54,6 +70,7 @@ public class CreateAdActivity extends AppCompatActivity {
             if (imageFile != null) {
                 Uri imageURI = FileProvider.getUriForFile(this, "com.masthuggis.boki.fileprovider",
                         imageFile);
+                System.out.println(imageURI);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -111,5 +128,29 @@ public class CreateAdActivity extends AppCompatActivity {
         return bitmap;
 
     }
+
+
+
+
+    private void setOnClickListeners(){
+        setImageViewListener();
+
+    }
+
+    @Override
+    public void deleteTag(String tag) {
+
+    }
+
+    private void setImageViewListener(){
+        imageViewDisplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
+
+    }
+
 }
 
