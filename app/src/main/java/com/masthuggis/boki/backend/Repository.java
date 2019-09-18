@@ -1,11 +1,8 @@
 package com.masthuggis.boki.backend;
 
-import android.content.Context;
-
+import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.Boki;
-import com.masthuggis.boki.model.Advert;
-import com.masthuggis.boki.model.Book;
 import com.masthuggis.boki.model.User;
 
 import org.json.JSONArray;
@@ -13,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -82,7 +80,7 @@ public class Repository implements iRepository {
         int price;
         long isbn;
         int yearPublished;
-        Book.Condition condition;
+        Advert.Condition condition;
         try { //Should use a factory-method instead
             title = object.getString("title");
             author = object.getString("author");
@@ -91,8 +89,9 @@ public class Repository implements iRepository {
             isbn = object.getLong("isbn");
             yearPublished = object.getInt("yearPublished");
             String conditionString = object.getString("condition");
-            condition = Book.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
-            Advertisement ad = AdFactory.createAd(123, "test date", title, author, edition, isbn, yearPublished, price, condition, null, null);
+            condition = Advert.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
+            List<String> imgURLS = new ArrayList<>();
+            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", title,imgURLS, "Description", price, condition);
             temporaryListOfAllAds.add(ad);
             return ad;
         } catch (JSONException e) {
@@ -115,7 +114,7 @@ public class Repository implements iRepository {
         int price;
         long isbn;
         int yearPublished;
-        Book.Condition condition;
+        Advert.Condition condition;
         List<String> preDefinedTags;
         List<String> userTags;
         try {
@@ -125,10 +124,11 @@ public class Repository implements iRepository {
             price = object.getInt("price");
             isbn = object.getLong("isbn");
             yearPublished = object.getInt("yearPublished");
-            condition = Book.Condition.valueOf(object.getString("condition")); //Shorthand
+            condition = Advert.Condition.valueOf(object.getString("condition")); //Shorthand
             preDefinedTags = getPreDefinedTags(object);
             userTags = getUserTags(object);
-            Advertisement ad = AdFactory.createAd(123, "test date", title, author, edition, isbn, yearPublished, price, condition, preDefinedTags, userTags);
+            List<String> imgURLS = new ArrayList<>();
+            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", title,imgURLS, "Description", price, condition);
             temporaryListOfAllAds.add(ad);
             return ad;
         } catch (JSONException exception) {
@@ -173,8 +173,8 @@ public class Repository implements iRepository {
     }
 
     /**
-     *
      * Temporary method for getting ad from unique ID.
+     *
      * @param UUID
      * @return
      */
@@ -182,7 +182,7 @@ public class Repository implements iRepository {
     public Advertisement getAdFromId(String UUID) {
 
         for (Advertisement ad : temporaryListOfAllAds) {
-            if (ad.getUUID().equals(UUID)) {
+            if (ad.getTitle().equals(UUID)) {
                 return ad;
             }
         }
