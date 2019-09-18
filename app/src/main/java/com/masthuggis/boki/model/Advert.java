@@ -19,6 +19,7 @@ public class Advert implements Advertisement {
     private String uniqueOwnerID;
     private String title;
     private List<String> imgURLs;
+    private String imageURL;
     private String description;
     private int price;
     private Condition condition;
@@ -29,6 +30,17 @@ public class Advert implements Advertisement {
         this.uniqueOwnerID = uniqueOwnerID;
         this.title = title;
         this.imgURLs = imgURLs;
+        imgURLs.add("TEST");
+        this.description = description;
+        this.price = price;
+        this.condition = condition;
+    }
+    //Alternative constructor with only one image allowed
+    public Advert(Date datePublished, String uniqueOwnerID, String title, String imgURL, String description, int price,Condition condition) {
+        this.datePublished = datePublished;
+        this.uniqueOwnerID = uniqueOwnerID;
+        this.title = title;
+        this.imageURL = imgURL;
         imgURLs.add("TEST");
         this.description = description;
         this.price = price;

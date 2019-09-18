@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,8 +39,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     ImageView imageViewDisplay;
     EditText title;
     EditText price;
-    EditText author;
-    EditText ISBN;
     EditText description;
     RadioGroup conditionToggleGroup;
     Button conditionGood;
@@ -54,6 +54,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         conditionToggleGroup.check(conditionGood.getId());
 
         imageViewDisplay = (ImageView) findViewById(R.id.addImageView);
+        setListeners();
 
 
     }
@@ -95,6 +96,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap bitmap = decodeBitmap();
             setImageView(bitmap);
+            presenter.imageURIChanged(currentImagePath);
         }
 
     }
@@ -132,8 +134,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
 
 
-    private void setOnClickListeners(){
+    private void setListeners(){
         setImageViewListener();
+        setTitleListener();
+        setPriceListener();
+        setDescriptionListener();
 
     }
 
@@ -150,6 +155,64 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             }
         });
 
+    }
+
+    private void setTitleListener(){
+        title = (EditText) findViewById(R.id.titleEditText);
+        title.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                presenter.titleChanged(title.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
+    private void setPriceListener(){
+        price = (EditText) findViewById(R.id.priceEditText);
+        price.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                presenter.priceChanged(price.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
+    private void setDescriptionListener(){
+        description = (EditText) findViewById(R.id.otherInfoEditText);
+        description.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                presenter.descriptionChanged(description.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
 }

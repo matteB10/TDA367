@@ -9,6 +9,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -139,6 +143,19 @@ public class Repository implements iRepository {
         }
     }
 
+    /**
+     * Creates an advertisement given input from createAdvertPresenter
+     *
+     * @param t,d,p,c needed to create advert
+     * @return an Advertisement
+     */
+    public Advertisement createAdvert(String t, String d, int p, Advert.Condition c, List<String> tags, String imageURL) {
+
+        Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", t,imageURL, "Description", p, c);
+            temporaryListOfAllAds.add(ad);
+            return ad;
+    }
+
     @Override
     public User createUser() {
         return new User();
@@ -178,7 +195,7 @@ public class Repository implements iRepository {
      *
      * Temporary method for getting ad from unique ID.
      *
-     * @param UUID
+     * @param
      * @return
      */
     @Override

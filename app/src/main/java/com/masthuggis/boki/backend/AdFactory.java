@@ -14,6 +14,11 @@ public class AdFactory {
 
         return new Advert(datePublished,uniqueOwnerID,title,imgURLs,description,price,condition);
     }
+    public static Advert createAd(Date datePublished, String uniqueOwnerID, String title, String imgURLs, String description, int price, Advert.Condition condition) {
+
+
+        return new Advert(datePublished,uniqueOwnerID,title,imgURLs,description,price,condition);
+    }
 
 
 }
