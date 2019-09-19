@@ -37,10 +37,10 @@ public class Repository implements iRepository {
 
     public static Repository getInstance() {
         if (singleton == null) {
-            return new Repository();
-        } else {
-            return singleton;
+            singleton = new Repository();
         }
+        return singleton;
+
     }
 
     /**
@@ -97,7 +97,7 @@ public class Repository implements iRepository {
             String conditionString = object.getString("condition");
             condition = Advert.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
             List<String> imgURLS = new ArrayList<>();
-            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", title,imgURLS, "Description", price, condition);
+            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", title, imgURLS, "Description", price, condition);
             temporaryListOfAllAds.add(ad);
             return ad;
         } catch (JSONException e) {
@@ -134,7 +134,7 @@ public class Repository implements iRepository {
             preDefinedTags = getPreDefinedTags(object);
             userTags = getUserTags(object);
             List<String> imgURLS = new ArrayList<>();
-            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", title,imgURLS, "Description", price, condition);
+            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", title, imgURLS, "Description", price, condition);
             temporaryListOfAllAds.add(ad);
             return ad;
         } catch (JSONException exception) {
@@ -147,13 +147,15 @@ public class Repository implements iRepository {
      * Creates an advertisement given input from createAdvertPresenter
      *
      * @param t,d,p,c needed to create advert
-     * @return an Advertisement
      */
-    public Advertisement createAdvert(String t, String d, int p, Advert.Condition c, List<String> tags, String imageURL) {
+    public void createAdvert(String t, String d, int p, Advert.Condition c, List<String> tags, String imageURL) {
 
-        Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", t,imageURL, "Description", p, c);
-            temporaryListOfAllAds.add(ad);
-            return ad;
+        Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", t, imageURL, "Description", p, c);
+        temporaryListOfAllAds.add(ad);
+    }
+
+    public List<Advertisement> getTemporaryListOfAllAds() {
+        return temporaryListOfAllAds;
     }
 
     @Override
@@ -192,7 +194,6 @@ public class Repository implements iRepository {
     }
 
     /**
-     *
      * Temporary method for getting ad from unique ID.
      *
      * @param

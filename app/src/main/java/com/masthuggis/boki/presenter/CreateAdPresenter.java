@@ -6,6 +6,7 @@ import com.masthuggis.boki.model.Advert;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreateAdPresenter{
@@ -52,10 +53,16 @@ public class CreateAdPresenter{
     }
 
     public void tagsChanged(String tag){
+        if(tags == null){
+            tags = new ArrayList<>();
+        }
         if(isNewTag(tag)){
             tags.add(tag);
+        }else{
+            tags.remove(tag);
         }
     }
+
     public void conditionChanged(Advert.Condition condition){
         this.condition = condition;
 
