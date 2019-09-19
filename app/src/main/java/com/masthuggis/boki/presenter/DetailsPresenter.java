@@ -19,10 +19,10 @@ public class DetailsPresenter {
     }
 
     private void setupView() {
-        view.setName(advertisement.getName());
+        view.setName(advertisement.getTitle());
         view.setPrice(advertisement.getPrice());
-        if (advertisement.getImgURL() != null) {
-            view.setImageUrl(advertisement.getImgURL().toString());
+        if (advertisement.getImgURLs().next() != null) {
+            view.setImageUrl(advertisement.getImgURLs().next());
         }
     }
 

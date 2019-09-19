@@ -11,35 +11,52 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
+import android.widget.ToggleButton;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.presenter.CreateAdPresenter;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CreateAdActivity extends AppCompatActivity {
+public class CreateAdActivity extends AppCompatActivity implements CreateAdPresenter.View {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    ImageView imageViewDisplay;
+
     String currentImagePath;
+    CreateAdPresenter presenter;
+
+    ImageView imageViewDisplay;
+    EditText title;
+    EditText price;
+    EditText description;
+    RadioGroup conditionToggleGroup;
+    Button conditionGood;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_advert);
+        presenter = new CreateAdPresenter(this);
+        conditionToggleGroup = (RadioGroup) findViewById(R.id.conditionToggleGroup);
+        conditionGood = (Button) findViewById(R.id.conditionGoodButton);
+        conditionToggleGroup.check(conditionGood.getId());
 
         imageViewDisplay = (ImageView) findViewById(R.id.addImageView);
+        setListeners();
 
-        imageViewDisplay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dispatchTakePictureIntent();
-            }
-        });
+
     }
 
     private void dispatchTakePictureIntent() {
@@ -54,6 +71,7 @@ public class CreateAdActivity extends AppCompatActivity {
             if (imageFile != null) {
                 Uri imageURI = FileProvider.getUriForFile(this, "com.masthuggis.boki.fileprovider",
                         imageFile);
+                System.out.println(imageURI);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -78,6 +96,7 @@ public class CreateAdActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap bitmap = decodeBitmap();
             setImageView(bitmap);
+            presenter.imageURIChanged(currentImagePath);
         }
 
     }
@@ -111,5 +130,90 @@ public class CreateAdActivity extends AppCompatActivity {
         return bitmap;
 
     }
+
+
+
+
+    private void setListeners(){
+        setImageViewListener();
+        setTitleListener();
+        setPriceListener();
+        setDescriptionListener();
+
+    }
+
+    @Override
+    public void deleteTag(String tag) {
+
+    }
+
+    private void setImageViewListener(){
+        imageViewDisplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
+
+    }
+
+    private void setTitleListener(){
+        title = (EditText) findViewById(R.id.titleEditText);
+        title.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                presenter.titleChanged(title.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
+    private void setPriceListener(){
+        price = (EditText) findViewById(R.id.priceEditText);
+        price.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                presenter.priceChanged(price.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
+    private void setDescriptionListener(){
+        description = (EditText) findViewById(R.id.otherInfoEditText);
+        description.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                presenter.descriptionChanged(description.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
+
 }
 

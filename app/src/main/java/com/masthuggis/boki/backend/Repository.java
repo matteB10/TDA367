@@ -1,19 +1,23 @@
 package com.masthuggis.boki.backend;
 
-import android.content.Context;
-
+import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.Boki;
-import com.masthuggis.boki.model.Advert;
-import com.masthuggis.boki.model.Book;
 import com.masthuggis.boki.model.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static com.google.gson.internal.bind.TypeAdapters.UUID;
 
 /**
  * Class providing the functionality to convert data from backend into Book-objects to be used
@@ -82,7 +86,7 @@ public class Repository implements iRepository {
         int price;
         long isbn;
         int yearPublished;
-        Book.Condition condition;
+        Advert.Condition condition;
         try { //Should use a factory-method instead
             title = object.getString("title");
             author = object.getString("author");
@@ -91,8 +95,9 @@ public class Repository implements iRepository {
             isbn = object.getLong("isbn");
             yearPublished = object.getInt("yearPublished");
             String conditionString = object.getString("condition");
-            condition = Book.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
-            Advertisement ad = AdFactory.createAd(123, "test date", title, author, edition, isbn, yearPublished, price, condition, null, null);
+            condition = Advert.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
+            List<String> imgURLS = new ArrayList<>();
+            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", title,imgURLS, "Description", price, condition);
             temporaryListOfAllAds.add(ad);
             return ad;
         } catch (JSONException e) {
@@ -115,7 +120,7 @@ public class Repository implements iRepository {
         int price;
         long isbn;
         int yearPublished;
-        Book.Condition condition;
+        Advert.Condition condition;
         List<String> preDefinedTags;
         List<String> userTags;
         try {
@@ -125,16 +130,30 @@ public class Repository implements iRepository {
             price = object.getInt("price");
             isbn = object.getLong("isbn");
             yearPublished = object.getInt("yearPublished");
-            condition = Book.Condition.valueOf(object.getString("condition")); //Shorthand
+            condition = Advert.Condition.valueOf(object.getString("condition")); //Shorthand
             preDefinedTags = getPreDefinedTags(object);
             userTags = getUserTags(object);
-            Advertisement ad = AdFactory.createAd(123, "test date", title, author, edition, isbn, yearPublished, price, condition, preDefinedTags, userTags);
+            List<String> imgURLS = new ArrayList<>();
+            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", title,imgURLS, "Description", price, condition);
             temporaryListOfAllAds.add(ad);
             return ad;
         } catch (JSONException exception) {
             exception.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * Creates an advertisement given input from createAdvertPresenter
+     *
+     * @param t,d,p,c needed to create advert
+     * @return an Advertisement
+     */
+    public Advertisement createAdvert(String t, String d, int p, Advert.Condition c, List<String> tags, String imageURL) {
+
+        Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", t,imageURL, "Description", p, c);
+            temporaryListOfAllAds.add(ad);
+            return ad;
     }
 
     @Override
@@ -175,14 +194,15 @@ public class Repository implements iRepository {
     /**
      *
      * Temporary method for getting ad from unique ID.
-     * @param UUID
+     *
+     * @param
      * @return
      */
     @Override
     public Advertisement getAdFromId(String name) {
 
         for (Advertisement ad : temporaryListOfAllAds) {
-            if (ad.getName().equals(name)) {
+            if (ad.getTitle().equals(name)) {
                 return ad;
             }
         }

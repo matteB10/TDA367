@@ -8,7 +8,8 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.masthuggis.boki.model.Book;
+import com.masthuggis.boki.model.Advert;
+import com.masthuggis.boki.model.Advertisement;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,124 +33,6 @@ public class BackendDataFetcher implements iBackend {
      */
     private static BackendDataFetcher instance;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-  /*  FirebaseUser user = new FirebaseUser() {
-        @Override
-        public void writeToParcel(Parcel parcel, int i) {
-
-        }
-
-        @NonNull
-        @Override
-        public String getUid() {
-            return "EliteIsak";
-        }
-
-        @NonNull
-        @Override
-        public String getProviderId() {
-            return null;
-        }
-
-        @Override
-        public boolean isAnonymous() {
-            return false;
-        }
-
-        @Nullable
-        @Override
-        public List<String> getProviders() {
-            return null;
-        }
-
-        @NonNull
-        @Override
-        public List<? extends UserInfo> getProviderData() {
-            return null;
-        }
-
-        @NonNull
-        @Override
-        public FirebaseUser zza(@NonNull List<? extends UserInfo> list) {
-            return null;
-        }
-
-        @Override
-        public FirebaseUser zzce() {
-            return null;
-        }
-
-        @NonNull
-        @Override
-        public FirebaseApp zzcc() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public String getDisplayName() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public Uri getPhotoUrl() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public String getEmail() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public String getPhoneNumber() {
-            return null;
-        }
-
-        @Override
-        public boolean isEmailVerified() {
-            return false;
-        }
-
-        @Nullable
-        @Override
-        public String zzcf() {
-            return null;
-        }
-
-        @NonNull
-        @Override
-        public zzcz zzcg() {
-            return null;
-        }
-
-        @Override
-        public void zza(@NonNull zzcz zzcz) {
-
-        }
-
-        @NonNull
-        @Override
-        public String zzch() {
-            return null;
-        }
-
-        @NonNull
-        @Override
-        public String zzci() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public FirebaseUserMetadata getMetadata() {
-            return null;
-        }
-    };*/
-
-
     private BackendDataFetcher() {
 
     }
@@ -161,7 +44,7 @@ public class BackendDataFetcher implements iBackend {
     }
 
     public String getMockBooks(Context context) {
-        String json = null;
+        String json;
         try {
             InputStream inputStream = context.getAssets().open("mockBooks.json");
             int size = inputStream.available();
@@ -179,23 +62,24 @@ public class BackendDataFetcher implements iBackend {
 
     /**
      * This is strictly testing for later implementation of Firebase.
-     * @param book
+     * @param advert
      */
 
-    public void addNewBook(Book book) {
+   /* public void addNewadvert(Advertisement advert) {
         Map<String, Object> data = new HashMap<>();
-        data.put("Title", book.getTitle());
-        data.put("Author", book.getAuthor());
-        data.put("Edition", book.getEdition());
-        data.put("ISBN", book.getIsbn());
-        data.put("Year Published", book.getYearPublished());
-       // data.put("Price", book.getPrice());
-        data.put("Condition", book.getCondition());
-        data.put("Pre Defined Tags", book.getPreDefinedTags());
-        data.put("User tags", book.getUserTags());
+        data.put("Title", advert.getTitle());
+        data.put()
+        data.put("Author", advert.getAuthor());
+        data.put("Edition", advert.getEdition());
+        data.put("ISBN", advert.getIsbn());
+        data.put("Year Published", advert.getYearPublished());
+       // data.put("Price", advert.getPrice());
+        data.put("Condition", advert.getCondition());
+        data.put("Pre Defined Tags", advert.getPreDefinedTags());
+        data.put("User tags", advert.getUserTags());
 
 
-        db.collection("books").document("randomID")
+        db.collection("adverts").document("randomID")
                 .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -209,5 +93,5 @@ public class BackendDataFetcher implements iBackend {
                     }
                 });
 
-    }
+    }*/
 }
