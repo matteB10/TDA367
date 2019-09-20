@@ -1,4 +1,4 @@
-package com.masthuggis.boki.presenter;
+package com.masthuggis.boki.utils;
 
 import java.util.regex.Pattern;
 

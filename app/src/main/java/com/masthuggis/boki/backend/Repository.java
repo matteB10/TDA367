@@ -25,7 +25,7 @@ import static com.google.gson.internal.bind.TypeAdapters.UUID;
  * Data is fetched using the BackendDataFetcher class.
  */
 
-public class Repository implements iRepository {
+public class Repository  {
     private static JSONObject booksJsonObj;
     private static Repository singleton = null;
     private final List<Advertisement> temporaryListOfAllAds = new ArrayList<>();
@@ -51,7 +51,6 @@ public class Repository implements iRepository {
      */
 
 
-    @Override
     public List<Advertisement> getAllAds() {
         String json = BackendDataFetcher.getInstance().getMockBooks(Boki.getAppContext());
         List<Advertisement> books = new ArrayList<>();
@@ -112,7 +111,6 @@ public class Repository implements iRepository {
      * @param object the JSONObject used to create a Book-object
      * @return a Book with fields corresponding to the key-value pairs of the JSONObject.
      */
-    @Override
     public Advertisement createAdvert(JSONObject object) {
         String title;
         String author;
@@ -157,7 +155,6 @@ public class Repository implements iRepository {
         return temporaryListOfAllAds;
     }
 
-    @Override
     public User createUser() {
         return new User();
     }
@@ -198,7 +195,6 @@ public class Repository implements iRepository {
      * @param
      * @return
      */
-    @Override
     public Advertisement getAdFromId(String name) {
 
         for (Advertisement ad : temporaryListOfAllAds) {

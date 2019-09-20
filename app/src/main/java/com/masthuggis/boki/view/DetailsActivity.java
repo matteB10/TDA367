@@ -3,8 +3,11 @@ package com.masthuggis.boki.view;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.TestLooperManager;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +29,17 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         if (advertID != null || advertID == "") {
             presenter = new DetailsPresenter(this, advertID);
         }
+        Button contactOwnerButton = findViewById(R.id.contactOwnerButton);
+        contactOwnerButton.setOnClickListener(view -> {
+            //TODO HÄR SKA CHATTEN ÖPPNAS TYP
+            if (contactOwnerButton.getText() == "+46738083104") {
+             //   Intent intent = new Intent(Intent.ACTION_DIAL);
+               // intent.setData(Uri.parse(contactOwnerButton.getText().toString()));
+               // startActivity(intent);
+            } else {
+                contactOwnerButton.setText("+46738083104");
+            }
+        });
     }
 
     @Override
@@ -43,5 +57,11 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     @Override
     public void setImageUrl(String url) {
         // TODO: fetch img, cache it and set it
+    }
+
+    @Override
+    public void setDescription(String description) {
+        TextView textView = findViewById(R.id.details_description);
+        textView.setText(description);
     }
 }

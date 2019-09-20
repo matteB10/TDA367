@@ -1,19 +1,15 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.backend.iRepository;
 import com.masthuggis.boki.model.Advertisement;
 
 public class DetailsPresenter {
     private View view;
-    private iRepository modelRepository;
     private Advertisement advertisement;
 
     public DetailsPresenter(View view, String advertID) {
         this.view = view;
-        this.modelRepository = Repository.getInstance();
-        modelRepository.getAllAds();
-        this.advertisement = modelRepository.getAdFromId(advertID);
+        this.advertisement = Repository.getInstance().getAdFromId(advertID);
 
         setupView();
     }
@@ -21,6 +17,7 @@ public class DetailsPresenter {
     private void setupView() {
         view.setName(advertisement.getTitle());
         view.setPrice(advertisement.getPrice());
+        view.setDescription(advertisement.getDescription());
         if (advertisement.getImgURLs().next() != null) {
             view.setImageUrl(advertisement.getImgURLs().next());
         }
@@ -30,5 +27,6 @@ public class DetailsPresenter {
         void setName(String name);
         void setPrice(int price);
         void setImageUrl(String url);
+        void setDescription(String description);
     }
 }
