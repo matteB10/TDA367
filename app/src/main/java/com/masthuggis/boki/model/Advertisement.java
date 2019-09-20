@@ -12,7 +12,7 @@ public interface Advertisement {
 
     Date getDatePublished();
 
-    Iterator<String> getImgURLs();
+    String getImgURL();
 
     String getTitle();
 

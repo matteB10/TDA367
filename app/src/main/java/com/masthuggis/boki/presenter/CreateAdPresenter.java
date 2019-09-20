@@ -52,7 +52,7 @@ public class CreateAdPresenter{
     }
 
     public void imageURIChanged(String imageURI){
-        this.imageUri = convertURIStringToURLString(imageURI);
+        this.imageUri = imageURI;
     }
 
     public void tagsChanged(String tag){
@@ -94,7 +94,7 @@ public class CreateAdPresenter{
     public void createAdvert(){
         createUniqueAdvertID();
         tags = new ArrayList<>();
-        Repository.getInstance().createAdvert(id,title,description,price, Advert.Condition.GOOD,tags,"http://java.sun.com/j2se/1.3/");
+        Repository.getInstance().createAdvert(id,title,description,price, Advert.Condition.GOOD,tags,imageUri);
     }
 
     private void createUniqueAdvertID(){

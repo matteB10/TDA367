@@ -22,12 +22,14 @@ public class HomePresenter {
         rowView.setId(a.getUniqueID());
         rowView.setTitle(a.getTitle());
         rowView.setPrice(a.getPrice());
-        if (a.getImgURLs().next() != null) {
-            rowView.setImageUrl(a.getImgURLs().next());
+        if (a.getImgURL() != null) {
+            rowView.setImageUrl(a.getImgURL());
         }
     }
 
     public int getNumRows() {
+
+        // TODO Måste eventuellt sätta upp en observer på all ads här?
         return Repository.getInstance().getAllAds().size();
     }
 

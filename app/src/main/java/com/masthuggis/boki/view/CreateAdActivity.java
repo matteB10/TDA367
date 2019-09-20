@@ -72,6 +72,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
                 System.out.println(imageURI);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
             }
 
         }
