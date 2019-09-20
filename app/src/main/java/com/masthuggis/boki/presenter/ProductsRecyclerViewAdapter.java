@@ -1,6 +1,7 @@
 package com.masthuggis.boki.presenter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +78,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
 
         @Override
         public void setImageUrl(String url) {
-            // TODO: implement func to show image
+            imageView.setImageURI(Uri.parse(url));
         }
 
         @Override

@@ -26,7 +26,7 @@ public class Advert implements Advertisement {
     private Condition condition;
 
 
-    public Advert(Date datePublished, String uniqueOwnerID, String title, List<String> imgURLs, String description, int price,Condition condition) {
+    public Advert(Date datePublished, String uniqueOwnerID,String uniqueAdID, String title, List<String> imgURLs, String description, int price,Condition condition) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.title = title;
@@ -35,6 +35,7 @@ public class Advert implements Advertisement {
         this.description = description;
         this.price = price;
         this.condition = condition;
+        this.uniqueAdID = uniqueAdID;
     }
     //Alternative constructor with only one image allowed
     public Advert(Date datePublished, String uniqueOwnerID, String id, String title, String imgURL, String description, int price,Condition condition) {
@@ -53,8 +54,8 @@ public class Advert implements Advertisement {
     }
 
     @Override
-    public Iterator<String> getImgURLs() {
-        return this.imgURLs.iterator();
+    public String getImgURL() {
+        return this.imageURL;
     }
 
     @Override
@@ -86,6 +87,11 @@ public class Advert implements Advertisement {
     @Override
     public Condition getConditon() {
         return this.condition;
+    }
+
+    @Override
+    public String getUniqueID() {
+        return this.uniqueAdID;
     }
 
 

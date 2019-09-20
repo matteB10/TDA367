@@ -22,9 +22,11 @@ public class DetailsPresenter {
         view.setName(advertisement.getTitle());
         view.setPrice(advertisement.getPrice());
         view.setDescription(advertisement.getDescription());
+        if (advertisement.getImgURL() != null) {
+            view.setImageUrl(advertisement.getImgURL());}
         view.setCondition(advertisement.getConditon().toString());
-        if (advertisement.getImgURLs().next() != null) {
-            view.setImageUrl(advertisement.getImgURLs().next());
+        if (advertisement.getImgURL() != null) {
+            view.setImageUrl(advertisement.getImgURL());
         }
     }
 

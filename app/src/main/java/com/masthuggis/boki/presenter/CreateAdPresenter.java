@@ -37,9 +37,9 @@ public class CreateAdPresenter{
 
     //arbitrary length, can be changed
     public void titleChanged(String title){
-        if (title.length() > 6) {
+
             this.title = title;
-        }
+
     }
     public void priceChanged(String price){
         if(FormHelper.getInstance().isValidPrice(price)){
@@ -52,7 +52,7 @@ public class CreateAdPresenter{
     }
 
     public void imageURIChanged(String imageURI){
-        this.imageUri = convertURIStringToURLString(imageURI);
+        this.imageUri = imageURI;
     }
 
     public void tagsChanged(String tag){
@@ -92,7 +92,9 @@ public class CreateAdPresenter{
         return URLString;
     }
     public void createAdvert(){
-        Repository.getInstance().createAdvert(id,title,description,price,condition,tags,imageUri);
+        createUniqueAdvertID();
+        tags = new ArrayList<>();
+        Repository.getInstance().createAdvert(id,title,description,price, Advert.Condition.GOOD,tags,imageUri);
     }
 
     private void createUniqueAdvertID(){

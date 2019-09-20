@@ -1,23 +1,12 @@
 package com.masthuggis.boki.backend;
 
 import android.content.Context;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.masthuggis.boki.model.Advert;
-import com.masthuggis.boki.model.Advertisement;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 /**
  * Utility class with functionality for Fetching data from Backend in form of a .json-file.

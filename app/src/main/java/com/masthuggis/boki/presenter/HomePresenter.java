@@ -19,15 +19,17 @@ public class HomePresenter {
 
     public void onBindRepositoryRowViewAtPosition(int position, RowView rowView) {
         Advertisement a = adverts.get(position);
-        rowView.setId(a.getTitle());
+        rowView.setId(a.getUniqueID());
         rowView.setTitle(a.getTitle());
         rowView.setPrice(a.getPrice());
-        if (a.getImgURLs().next() != null) {
-            rowView.setImageUrl(a.getImgURLs().next());
+        if (a.getImgURL() != null) {
+            rowView.setImageUrl(a.getImgURL());
         }
     }
 
     public int getNumRows() {
+
+        // TODO Måste eventuellt sätta upp en observer på all ads här?
         return Repository.getInstance().getAllAds().size();
     }
 

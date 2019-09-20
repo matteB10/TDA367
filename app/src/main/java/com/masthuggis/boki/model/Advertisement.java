@@ -12,7 +12,7 @@ public interface Advertisement {
 
     Date getDatePublished();
 
-    Iterator<String> getImgURLs();
+    String getImgURL();
 
     String getTitle();
 
@@ -23,6 +23,7 @@ public interface Advertisement {
     String getDescription();
     Iterator <String> getTags();
     Advert.Condition getConditon();
+    String getUniqueID();
 
 
 }
