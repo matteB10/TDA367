@@ -5,10 +5,6 @@ import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;
 
-import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.backend.iRepository;
-import com.masthuggis.boki.presenter.HomePresenter;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

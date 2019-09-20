@@ -1,6 +1,6 @@
 package com.masthuggis.boki;
 
-import com.masthuggis.boki.presenter.FormHelper;
+import com.masthuggis.boki.utils.FormHelper;
 
 import static org.junit.Assert.*;
 
