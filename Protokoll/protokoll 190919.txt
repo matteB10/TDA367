@@ -1,0 +1,41 @@
+# Meeting Agenda
+
+Group:Masthuggis (grupp 8)
+Date: 19/9 - 19
+Chair: Elin Melander
+Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak Lindgren, Elin Melander
+
+
+## Objectives 
+
+- gå igenom vad som har gjort hittils och uppdatera trello därefter.
+- firebase
+- klassdiagram
+
+## Reports (15 min) from previous meeting
+-tester? vi har hittat få saker att testa, men det har skapats några testklasser, så vi bygger vidare på dessa och har detta i åtanke när vi går vidare. 
+
+
+## Discussion items 
+klassdiagram
+- går igenom det klassdiagram som har gjorts. Diskuterar om vi behöver en Boki-klass som någon typ av main klass, men har svårt att hitta fördelarna och vad vi skulle ha denna till. 
+
+
+uppdatering Trello
+- går igenom vilka userstories vi redan har klarat, och vad vi behöver för att klara de återstående i sprint backlogen.
+behöver vi firebase för att lösa userstory nummer2? eller går det att lösa med en json-fil för tillfället.
+-uppdaterar alla om vad som har gjorts och behöver göras. 
+-uppdaterar tasks med bättre förklaringar.
+
+Kod kommentarer
+Diskuterar hur vi ska göra med kommentarer i koden. För och nackdelar med längre kommentarer i toppen av samtliga klasser. Vi kommer fram till att det räcker med kortare kommentarer just nu så kan vi senare se över vad som behöver kommenteras för att göra koden lättläslig. 
+
+Firebase vs json
+Tanken från början var att hårdkoda in ett json biliotek innan vi introducerade firebase. Men just nu är frågan om det är enklare att introducera firebase redan nu.
+Det kom till den punkten där vi ansera att det bliev lite för krångligt att lösa json-biblioteket för att senare lösa problemen med firebase.  
+Diskuterar om det kan bli ett problem med att introducera firebase redan nu, då vi eventuellt kommer behöva flera olika strukturer när vi senare lägger till olika features. 
+Resultatet av diskutionen är att vi nu satsar på Firebas och lägger skrotar json på hyllan. json-biblioteket ligger kvar tillsvidare, då vi fortfarande kan använda denna för att testa vissa delar av appen.
+
+
+## Outcomes and assignments 
+-Trello är uppdaterad och vi kommer nu att försöka arbeta utefter det som vi task som var och en har tagit sig för. 
