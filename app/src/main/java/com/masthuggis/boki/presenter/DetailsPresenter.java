@@ -1,6 +1,10 @@
 package com.masthuggis.boki.presenter;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.masthuggis.boki.R;
 import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 
 public class DetailsPresenter {
@@ -18,6 +22,7 @@ public class DetailsPresenter {
         view.setName(advertisement.getTitle());
         view.setPrice(advertisement.getPrice());
         view.setDescription(advertisement.getDescription());
+        view.setCondition(advertisement.getConditon().toString());
         if (advertisement.getImgURLs().next() != null) {
             view.setImageUrl(advertisement.getImgURLs().next());
         }
@@ -28,5 +33,17 @@ public class DetailsPresenter {
         void setPrice(int price);
         void setImageUrl(String url);
         void setDescription(String description);
+        void setCondition(String condition);
+    }
+    private void calcConditionBackgroundColor(){
+        switch (advertisement.getConditon()){
+            //TODO: get access to res/colors to return right color depending on condition
+            case NEW:
+                break;
+            case GOOD:
+                break;
+            case OK:
+               break;
+        }
     }
 }
