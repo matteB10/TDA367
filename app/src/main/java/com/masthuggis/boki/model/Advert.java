@@ -12,11 +12,12 @@ import java.util.List;
 public class Advert implements Advertisement {
 
     public enum Condition {
-        NEW, GOOD, OK, BAD,UNDEFINED
+        NEW, GOOD, OK,UNDEFINED
     }
 
     private Date datePublished;
     private String uniqueOwnerID;
+    private String uniqueAdID;
     private String title;
     private List<String> imgURLs;
     private String imageURL;
@@ -36,9 +37,10 @@ public class Advert implements Advertisement {
         this.condition = condition;
     }
     //Alternative constructor with only one image allowed
-    public Advert(Date datePublished, String uniqueOwnerID, String title, String imgURL, String description, int price,Condition condition) {
+    public Advert(Date datePublished, String uniqueOwnerID, String id, String title, String imgURL, String description, int price,Condition condition) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
+        this.uniqueAdID = id;
         this.title = title;
         this.imageURL = imgURL;
         this.description = description;

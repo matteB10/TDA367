@@ -2,6 +2,7 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advert;
+import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -13,6 +14,7 @@ public class CreateAdPresenter{
 
 
     private View view;
+    private String id;
     private String title;
     private String description;
     private int price;
@@ -67,9 +69,6 @@ public class CreateAdPresenter{
         this.condition = condition;
 
     }
-    public void createAdvert(){
-        Repository.getInstance().createAdvert(title,description,price,condition,tags,imageUri);
-    }
 
 
     private boolean isNewTag(String tag){
@@ -90,6 +89,17 @@ public class CreateAdPresenter{
             URLString = "";
         }
         return URLString;
+    }
+    public void createAdvert(){
+        Repository.getInstance().createAdvert(id,title,description,price,condition,tags,imageUri);
+    }
+
+    private void createUniqueAdvertID(){
+       id = UniqueIdCreator.getInstance().getUniqueID();
+    }
+
+    public String getId(){
+        return id;
     }
 
     //Getters for testing purpose

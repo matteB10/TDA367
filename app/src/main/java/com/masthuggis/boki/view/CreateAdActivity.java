@@ -3,6 +3,7 @@ package com.masthuggis.boki.view;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import android.app.ApplicationErrorReport;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -42,6 +43,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     EditText description;
     RadioGroup conditionToggleGroup;
     Button conditionGood;
+    Button publishAdButton;
 
 
     @Override
@@ -139,6 +141,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setTitleListener();
         setPriceListener();
         setDescriptionListener();
+        setCreateAdvertListener();
 
     }
 
@@ -196,7 +199,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         });
     }
     private void setDescriptionListener(){
-        description = (EditText) findViewById(R.id.otherInfoEditText);
+        description = (EditText) findViewById(R.id.descriptionEditText);
         description.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -213,6 +216,18 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
             }
         });
+    }
+    private void setCreateAdvertListener(){
+        publishAdButton = (Button) findViewById(R.id.publishAdButton);
+        publishAdButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CreateAdActivity.this, DetailsActivity.class);
+                intent.putExtra("advertID", presenter.getId());
+                CreateAdActivity.this.startActivity(intent);
+            }
+        });
+
     }
 
 }

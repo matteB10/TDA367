@@ -146,11 +146,10 @@ public class Repository implements iRepository {
     /**
      * Creates an advertisement given input from createAdvertPresenter
      *
-     * @param t,d,p,c needed to create advert
      */
-    public void createAdvert(String t, String d, int p, Advert.Condition c, List<String> tags, String imageURL) {
+    public void createAdvert(String id, String title, String description, int price, Advert.Condition condition, List<String> tags, String imageURL) {
 
-        Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", t, imageURL, "Description", p, c);
+        Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID",id, title, imageURL, description, price, condition);
         temporaryListOfAllAds.add(ad);
     }
 
