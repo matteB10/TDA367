@@ -19,7 +19,7 @@ public class HomePresenter {
 
     public void onBindRepositoryRowViewAtPosition(int position, RowView rowView) {
         Advertisement a = adverts.get(position);
-        rowView.setId(a.getTitle());
+        rowView.setId(a.getUniqueID());
         rowView.setTitle(a.getTitle());
         rowView.setPrice(a.getPrice());
         if (a.getImgURLs().next() != null) {

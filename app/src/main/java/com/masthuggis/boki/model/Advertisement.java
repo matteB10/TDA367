@@ -23,6 +23,7 @@ public interface Advertisement {
     String getDescription();
     Iterator <String> getTags();
     Advert.Condition getConditon();
+    String getUniqueID();
 
 
 }
