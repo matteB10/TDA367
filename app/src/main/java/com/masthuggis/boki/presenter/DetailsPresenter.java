@@ -21,6 +21,7 @@ public class DetailsPresenter {
     private void setupView() {
         view.setName(advertisement.getTitle());
         view.setPrice(advertisement.getPrice());
+        view.setDescription(advertisement.getDescription());
         if (advertisement.getImgURLs().next() != null) {
             view.setImageUrl(advertisement.getImgURLs().next());
         }
@@ -30,5 +31,6 @@ public class DetailsPresenter {
         void setName(String name);
         void setPrice(int price);
         void setImageUrl(String url);
+        void setDescription(String description);
     }
 }

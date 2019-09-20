@@ -3,17 +3,17 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/home_vector"
         android:title="@string/title_home" />
 
     <item
         android:id="@+id/navigation_favorites"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/star_vector"
         android:title="@string/title_favorites" />
 
     <item
         android:id="@+id/navigation_new_ad"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/addbutton_vector"
         android:title="@string/title_new_ad" />
     <item
         android:id="@+id/navigation_messages"
@@ -21,7 +21,7 @@
         android:title="@string/title_messages" />
     <item
         android:id="@+id/navigation_profile"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/profile_vector"
         android:title="@string/title_profile" />
 
 
