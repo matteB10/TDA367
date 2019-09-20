@@ -6,9 +6,11 @@ import com.masthuggis.boki.model.Advert;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreateAdPresenter{
+
 
     private View view;
     private String title;
@@ -25,9 +27,9 @@ public class CreateAdPresenter{
     }
 
     public interface View{
-
+        public void aMethod();
         //TODO: create methods for future same page error messages in view
-        void deleteTag(String tag);
+
     }
 
     //arbitrary length, can be changed
@@ -45,15 +47,22 @@ public class CreateAdPresenter{
     public void descriptionChanged(String description){
         this.description = description;
     }
+
     public void imageURIChanged(String imageURI){
         this.imageUri = convertURIStringToURLString(imageURI);
     }
 
     public void tagsChanged(String tag){
+        if(tags == null){
+            tags = new ArrayList<>();
+        }
         if(isNewTag(tag)){
             tags.add(tag);
+        }else{
+            tags.remove(tag);
         }
     }
+
     public void conditionChanged(Advert.Condition condition){
         this.condition = condition;
 
@@ -81,6 +90,35 @@ public class CreateAdPresenter{
             URLString = "";
         }
         return URLString;
+    }
+
+    //Getters for testing purpose
+    public View getView() {
+        return view;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public Advert.Condition getCondition() {
+        return condition;
     }
 
 

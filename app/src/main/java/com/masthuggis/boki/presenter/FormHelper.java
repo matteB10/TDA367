@@ -11,11 +11,11 @@ public class FormHelper{
     private static FormHelper formHelper;
 
     private static final Pattern validDigits = Pattern.compile("[0-9]+");
-    private static final Pattern validPrice = Pattern.compile("[0-9]{4}");
+    private static final Pattern validPrice = Pattern.compile("^[0-9]{1,4}$");
     private static final Pattern validEmail =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-    private static final Pattern validMobilePhone = Pattern.compile("[0-9]{10}");
-    private static final Pattern validMobilePhoneWithFormat = Pattern.compile("[0-9]{3}+-[0-9]{7}");
+    private static final Pattern validMobilePhone = Pattern.compile("^[0-9]{10}$");
+    private static final Pattern validMobilePhoneWithFormat = Pattern.compile("^[0-9]{3}+-[0-9]{7}$");
 
 
     private FormHelper(){}

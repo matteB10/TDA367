@@ -41,7 +41,6 @@ public class Advert implements Advertisement {
         this.uniqueOwnerID = uniqueOwnerID;
         this.title = title;
         this.imageURL = imgURL;
-        imgURLs.add("TEST");
         this.description = description;
         this.price = price;
         this.condition = condition;

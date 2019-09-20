@@ -143,7 +143,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     @Override
-    public void deleteTag(String tag) {
+    public void aMethod() {
 
     }
 
