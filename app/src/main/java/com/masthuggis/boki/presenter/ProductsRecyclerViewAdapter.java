@@ -23,6 +23,10 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         this.presenter = presenter;
     }
 
+    public void addDecorator(RecyclerView.ItemDecoration decorator) {
+        this.addDecorator(decorator);
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

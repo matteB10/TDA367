@@ -15,9 +15,11 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 import com.masthuggis.boki.presenter.ProfilePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
+import com.masthuggis.boki.utils.HeaderDecoration;
 
 public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     private ProfilePresenter presenter = new ProfilePresenter(this);
+    private RecyclerView recyclerView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -27,12 +29,34 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     }
 
     private void setupList(View v) {
-        RecyclerView recyclerView = v.findViewById(R.id.profileRecyclerView);
+        recyclerView = v.findViewById(R.id.profileRecyclerView);
+        setupAdapter();
+        setupListLayout();
+        setupListHeader();
+    }
+
+    private void setupAdapter() {
         ProductsRecyclerViewAdapter adapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void setupListLayout() {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
+    }
+
+    private void setupListHeader() {
+        View headerView = createHeader("Mina böcker");
+        HeaderDecoration headerDecoration = new HeaderDecoration(headerView, false, 0, 0, 2);
+        recyclerView.addItemDecoration(headerDecoration);
+    }
+
+    private View createHeader(String title) {
+        View header = getLayoutInflater().inflate(R.layout.recycler_header, null);
+        TextView titleTextView = header.findViewById(R.id.recyclerHeaderTitle);
+        titleTextView.setText(title);
+        return header;
     }
 
     @Override
