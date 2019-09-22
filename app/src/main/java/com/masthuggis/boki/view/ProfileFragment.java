@@ -33,9 +33,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
 
     private void setupHeader(View v) {
         Button settingsButton = v.findViewById(R.id.profileSettingsButton);
-        settingsButton.setOnClickListener(view -> {
-
-        });
+        settingsButton.setOnClickListener(view -> presenter.onSettingsButtonPressed());
     }
 
     private void setupList(View v) {
@@ -83,6 +81,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
 
     @Override
     public void showSettingsScreen() {
-        //Intent intent = new Intent(getContext(), this.);
+        Intent intent = new Intent(getContext(), SettingsActivity.class);
+        startActivity(intent);
     }
 }

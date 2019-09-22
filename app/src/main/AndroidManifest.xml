@@ -10,9 +10,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.DetailsActivity"></activity>
+        <activity android:name=".view.SettingsActivity"></activity>
+        <activity android:name=".view.DetailsActivity" />
         <activity android:name=".view.HomeFragment" />
-        <activity android:name=".view.CreateAdActivity"></activity>
+        <activity android:name=".view.CreateAdActivity" />
         <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,14 +33,14 @@
         </provider>
     </application>
     <uses-feature
-        android:name="android.hardware.camera.autofocus"
-        android:required="false" />
-
-    <uses-feature
         android:name="android.hardware.camera.any"
         android:required="true" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>
