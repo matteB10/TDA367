@@ -8,9 +8,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 import com.masthuggis.boki.presenter.ProfilePresenter;
+import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
 public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     private ProfilePresenter presenter = new ProfilePresenter(this);
@@ -23,6 +27,17 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
         return v;
     }
 
+    private void setupList(View v) {
+        /*
+        RecyclerView recyclerView = v.findViewById(R.id.advertsRecyclerView);
+        ProductsRecyclerViewAdapter adapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
+        recyclerView.setAdapter(adapter);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
+        */
+    }
+
     @Override
     public void setIsUserLoggedIn(boolean isUserLoggedIn) {
         if (isUserLoggedIn) {
@@ -33,7 +48,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     }
 
     @Override
-    public void updateItemsOnSale() {
-
+    public void updateItemsOnSale(ThumbnailView items) {
+        // TODO: update list
     }
 }

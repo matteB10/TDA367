@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.view.RowView;
+import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.List;
 
@@ -17,13 +17,13 @@ public class HomePresenter {
         this.adverts = Repository.getInstance().getAllAds();
     }
 
-    public void onBindRepositoryRowViewAtPosition(int position, RowView rowView) {
+    public void onBindRepositoryRowViewAtPosition(int position, ThumbnailView thumbnailView) {
         Advertisement a = adverts.get(position);
-        rowView.setId(a.getTitle());
-        rowView.setTitle(a.getTitle());
-        rowView.setPrice(a.getPrice());
+        thumbnailView.setId(a.getTitle());
+        thumbnailView.setTitle(a.getTitle());
+        thumbnailView.setPrice(a.getPrice());
         if (a.getImgURLs().next() != null) {
-            rowView.setImageUrl(a.getImgURLs().next());
+            thumbnailView.setImageUrl(a.getImgURLs().next());
         }
     }
 

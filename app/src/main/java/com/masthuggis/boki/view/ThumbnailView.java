@@ -1,6 +1,6 @@
 package com.masthuggis.boki.view;
 
-public interface RowView {
+public interface ThumbnailView {
     void setTitle(String name);
     void setPrice(int price);
     void setImageUrl(String url);

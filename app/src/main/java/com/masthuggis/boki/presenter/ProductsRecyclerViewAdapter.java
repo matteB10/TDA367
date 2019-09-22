@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.view.RowView;
+import com.masthuggis.boki.view.ThumbnailView;
 
 public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder> {
 
@@ -41,7 +41,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         presenter.onBindRepositoryRowViewAtPosition(position, holder);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements RowView {
+    public class ViewHolder extends RecyclerView.ViewHolder implements ThumbnailView {
 
         private TextView nameTextView;
         private TextView priceTextView;
