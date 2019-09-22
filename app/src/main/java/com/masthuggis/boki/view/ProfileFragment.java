@@ -58,13 +58,6 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
     }
 
-    private View createHeader(String title) {
-        View header = getLayoutInflater().inflate(R.layout.profile_recycler_header, null);
-        TextView titleTextView = header.findViewById(R.id.recyclerHeaderTitle);
-        titleTextView.setText(title);
-        return header;
-    }
-
     @Override
     public void setIsUserLoggedIn(boolean isUserLoggedIn) {
         if (isUserLoggedIn) {
