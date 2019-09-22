@@ -27,7 +27,7 @@ public class HomePresenter {
         }
     }
 
-    public int getNumRows() {
+    public int getNumAdverts() {
         return Repository.getInstance().getAllAds().size();
     }
 

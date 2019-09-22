@@ -33,7 +33,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
 
     @Override
     public int getItemCount() {
-        return presenter.getNumRows();
+        return presenter.getNumAdverts();
     }
 
     @Override

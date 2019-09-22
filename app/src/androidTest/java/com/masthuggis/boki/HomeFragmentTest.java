@@ -24,7 +24,7 @@ public class HomeFragmentTest {
 
         int numItems = Repository.getInstance().getAllAds().size();
 
-        assertEquals(presenter.getNumRows(), numItems);
+        assertEquals(presenter.getNumAdverts(), numItems);
     }
 
     private HomePresenter.View createHomeView() {

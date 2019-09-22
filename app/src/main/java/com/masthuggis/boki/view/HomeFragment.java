@@ -18,17 +18,13 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
 public class HomeFragment extends Fragment implements HomePresenter.View {
 
-    private HomePresenter presenter;
+    private HomePresenter presenter = new HomePresenter(this);
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.home_fragment, container, false);
-
-        this.presenter = new HomePresenter(this);
         setupList(v);
-
         return v;
-
     }
 
     private void setupList(View v) {
