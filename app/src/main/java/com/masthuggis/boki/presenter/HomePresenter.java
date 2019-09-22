@@ -8,7 +8,7 @@ import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.List;
 
-public class HomePresenter {
+public class HomePresenter implements IProductsPresenter {
     private View view;
     private List<Advertisement> adverts;
 
@@ -17,7 +17,7 @@ public class HomePresenter {
         this.adverts = Repository.getInstance().getAllAds();
     }
 
-    public void onBindRepositoryRowViewAtPosition(int position, ThumbnailView thumbnailView) {
+    public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
         Advertisement a = adverts.get(position);
         thumbnailView.setId(a.getTitle());
         thumbnailView.setTitle(a.getTitle());
@@ -27,7 +27,7 @@ public class HomePresenter {
         }
     }
 
-    public int getNumAdverts() {
+    public int getItemCount() {
         return Repository.getInstance().getAllAds().size();
     }
 

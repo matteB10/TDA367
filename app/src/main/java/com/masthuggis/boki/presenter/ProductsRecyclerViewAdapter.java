@@ -15,10 +15,10 @@ import com.masthuggis.boki.view.ThumbnailView;
 
 public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder> {
 
-    private HomePresenter presenter;
+    private IProductsPresenter presenter;
     private Context mContext;
 
-    public ProductsRecyclerViewAdapter(Context context, HomePresenter presenter) {
+    public ProductsRecyclerViewAdapter(Context context, IProductsPresenter presenter) {
         this.mContext = context;
         this.presenter = presenter;
     }
@@ -33,12 +33,12 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
 
     @Override
     public int getItemCount() {
-        return presenter.getNumAdverts();
+        return presenter.getItemCount();
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        presenter.onBindRepositoryRowViewAtPosition(position, holder);
+        presenter.onBindThumbnailViewAtPosition(position, holder);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements ThumbnailView {
