@@ -29,10 +29,14 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     }
 
     private void setupList(View v) {
-        recyclerView = v.findViewById(R.id.profileRecyclerView);
+        setupRecycler(v);
         setupAdapter();
         setupListLayout();
-        setupListHeader();
+    }
+
+    private void setupRecycler(View v) {
+        recyclerView = v.findViewById(R.id.profileRecyclerView);
+        recyclerView.setNestedScrollingEnabled(false);
     }
 
     private void setupAdapter() {
@@ -46,14 +50,8 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
     }
 
-    private void setupListHeader() {
-        View headerView = createHeader("Mina böcker");
-        HeaderDecoration headerDecoration = new HeaderDecoration(headerView, false, 0, 0, 2);
-        recyclerView.addItemDecoration(headerDecoration);
-    }
-
     private View createHeader(String title) {
-        View header = getLayoutInflater().inflate(R.layout.recycler_header, null);
+        View header = getLayoutInflater().inflate(R.layout.profile_recycler_header, null);
         TextView titleTextView = header.findViewById(R.id.recyclerHeaderTitle);
         titleTextView.setText(title);
         return header;
