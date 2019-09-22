@@ -1,9 +1,11 @@
 package com.masthuggis.boki.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,8 +26,16 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.profile_fragment,container,false);
+        setupHeader(v);
         setupList(v);
         return v;
+    }
+
+    private void setupHeader(View v) {
+        Button settingsButton = v.findViewById(R.id.profileSettingsButton);
+        settingsButton.setOnClickListener(view -> {
+
+        });
     }
 
     private void setupList(View v) {
@@ -69,5 +79,10 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     @Override
     public void updateItemsOnSale(ThumbnailView items) {
         // TODO: update list
+    }
+
+    @Override
+    public void showSettingsScreen() {
+        //Intent intent = new Intent(getContext(), this.);
     }
 }

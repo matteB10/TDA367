@@ -19,6 +19,10 @@ public class ProfilePresenter implements IProductsPresenter {
         this.userItemsOnSale = repository.getTemporaryListOfAllAds();
     }
 
+    public void onSettingsButtonPressed() {
+        view.showSettingsScreen();
+    }
+
     @Override
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
         Advertisement a = userItemsOnSale.get(position);
@@ -43,5 +47,6 @@ public class ProfilePresenter implements IProductsPresenter {
     public interface View {
         void setIsUserLoggedIn(boolean isUserLoggedIn);
         void updateItemsOnSale(ThumbnailView items);
+        void showSettingsScreen();
     }
 }
