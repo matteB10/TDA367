@@ -52,6 +52,9 @@ public class Advert implements Advertisement {
 
     @Override
     public Iterator<String> getImgURLs() {
+        if (this.imageURL == null) {
+            return null;
+        }
         return this.imgURLs.iterator();
     }
 

@@ -15,6 +15,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.google.gson.internal.bind.TypeAdapters.UUID;
@@ -25,7 +26,7 @@ import static com.google.gson.internal.bind.TypeAdapters.UUID;
  * Data is fetched using the BackendDataFetcher class.
  */
 
-public class Repository  {
+public class Repository implements RepositoryObserver {
     private static JSONObject booksJsonObj;
     private static Repository singleton = null;
     private final List<Advertisement> temporaryListOfAllAds = new ArrayList<>();
@@ -134,6 +135,7 @@ public class Repository  {
             List<String> imgURLS = new ArrayList<>();
             Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", title, imgURLS, "Description", price, condition);
             temporaryListOfAllAds.add(ad);
+            userAdvertsForSaleUpdate(temporaryListOfAllAds.iterator());
             return ad;
         } catch (JSONException exception) {
             exception.printStackTrace();
@@ -147,9 +149,9 @@ public class Repository  {
      * @param t,d,p,c needed to create advert
      */
     public void createAdvert(String t, String d, int p, Advert.Condition c, List<String> tags, String imageURL) {
-
         Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", t, imageURL, "Description", p, c);
         temporaryListOfAllAds.add(ad);
+        userAdvertsForSaleUpdate(temporaryListOfAllAds.iterator());
     }
 
     public List<Advertisement> getTemporaryListOfAllAds() {
@@ -206,14 +208,14 @@ public class Repository  {
         return null;
     }
 
-    //TODO FOR LATER IMPLEMENTATION
-
-    private void updateObservers() {
-        observers.forEach(observer -> observer.update());
+    public void addObserver(RepositoryObserver observer) {
+        observers.add(observer);
     }
 
-    private void addObserver(RepositoryObserver observer) {
-        observers.add(observer);
+    @Override
+    public void userAdvertsForSaleUpdate(Iterator<Advertisement> advertsForSale) {
+        // TODO: change from temp list to actual user list
+        observers.forEach(observer -> observer.userAdvertsForSaleUpdate(getTemporaryListOfAllAds().iterator()));
     }
 }
 

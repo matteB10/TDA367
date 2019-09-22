@@ -19,9 +19,12 @@ import com.masthuggis.boki.presenter.ProfilePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 import com.masthuggis.boki.utils.HeaderDecoration;
 
+import java.util.Iterator;
+
 public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     private ProfilePresenter presenter = new ProfilePresenter(this);
     private RecyclerView recyclerView;
+    private ProductsRecyclerViewAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -48,7 +51,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     }
 
     private void setupAdapter() {
-        ProductsRecyclerViewAdapter adapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
+        adapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
         recyclerView.setAdapter(adapter);
     }
 
@@ -68,8 +71,8 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     }
 
     @Override
-    public void updateItemsOnSale(ThumbnailView items) {
-        // TODO: update list
+    public void updateItemsOnSale() {
+        adapter.notifyDataSetChanged();
     }
 
     @Override

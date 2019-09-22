@@ -1,13 +1,16 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.view.ThumbnailView;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class ProfilePresenter implements IProductsPresenter {
+public class ProfilePresenter implements IProductsPresenter, RepositoryObserver {
     private View view;
     private List<Advertisement> userItemsOnSale;
     private Repository repository;
@@ -17,6 +20,8 @@ public class ProfilePresenter implements IProductsPresenter {
         this.repository = Repository.getInstance();
         // TODO: for now using temp data, later use real advertisment of the actual user
         this.userItemsOnSale = repository.getTemporaryListOfAllAds();
+
+        repository.addObserver(this);
     }
 
     public void onSettingsButtonPressed() {
@@ -29,8 +34,10 @@ public class ProfilePresenter implements IProductsPresenter {
         thumbnailView.setId(a.getTitle());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
-        if (a.getImgURLs().next() != null) {
-            thumbnailView.setImageUrl(a.getImgURLs().next());
+        if (a.getImgURLs() != null) {
+            if (a.getImgURLs().hasNext()) {
+                thumbnailView.setImageUrl(a.getImgURLs().next());
+            }
         }
     }
 
@@ -41,12 +48,26 @@ public class ProfilePresenter implements IProductsPresenter {
 
     @Override
     public void onRowPressed(String uniqueIDoFAdvert) {
+        // TODO
+    }
 
+    @Override
+    public void userAdvertsForSaleUpdate(Iterator<Advertisement> advertsForSale) {
+        updateUserItemsOnSale(advertsForSale);
+        view.updateItemsOnSale();
+    }
+
+    private void updateUserItemsOnSale(Iterator<Advertisement> advertsForSale) {
+        List<Advertisement> updatedAdverts = new ArrayList<>();
+        while (advertsForSale.hasNext()) {
+            updatedAdverts.add(advertsForSale.next());
+        }
+        userItemsOnSale = updatedAdverts;
     }
 
     public interface View {
         void setIsUserLoggedIn(boolean isUserLoggedIn);
-        void updateItemsOnSale(ThumbnailView items);
+        void updateItemsOnSale();
         void showSettingsScreen();
     }
 }

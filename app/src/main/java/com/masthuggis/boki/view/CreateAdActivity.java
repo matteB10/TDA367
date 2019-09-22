@@ -139,7 +139,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setTitleListener();
         setPriceListener();
         setDescriptionListener();
-
+        setCreateAdvertListener();
     }
 
     @Override
@@ -213,6 +213,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
             }
         });
+    }
+
+    private void setCreateAdvertListener() {
+        Button createAdvertButton = findViewById(R.id.publishAdButton);
+        createAdvertButton.setOnClickListener(view -> presenter.createAdvert());
     }
 
 }
