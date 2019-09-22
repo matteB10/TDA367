@@ -22,20 +22,17 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.profile_fragment,container,false);
-        TextView headerTextView = v.findViewById(R.id.profileHeaderTextView);
-        headerTextView.setText("It's working!");
+        setupList(v);
         return v;
     }
 
     private void setupList(View v) {
-        /*
-        RecyclerView recyclerView = v.findViewById(R.id.advertsRecyclerView);
+        RecyclerView recyclerView = v.findViewById(R.id.profileRecyclerView);
         ProductsRecyclerViewAdapter adapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
         recyclerView.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
-        */
     }
 
     @Override
