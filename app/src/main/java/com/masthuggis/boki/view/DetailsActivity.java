@@ -1,6 +1,8 @@
 package com.masthuggis.boki.view;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -9,10 +11,12 @@ import android.os.TestLooperManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.presenter.DetailsPresenter;
 
@@ -57,6 +61,8 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     @Override
     public void setImageUrl(String url) {
         // TODO: fetch img, cache it and set it
+        ImageView imageView = (ImageView)findViewById(R.id.detailsImage);
+        imageView.setImageURI(Uri.parse(url));
     }
 
     @Override
@@ -64,4 +70,13 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         TextView textView = findViewById(R.id.details_description);
         textView.setText(description);
     }
+    @Override
+    public void setCondition(String condition){
+        TextView textView = findViewById(R.id.conditionTextView);
+        textView.setText(condition);
+        //TODO:fix change color background
+    }
+
+
+
 }

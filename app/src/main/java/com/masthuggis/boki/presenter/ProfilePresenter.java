@@ -34,12 +34,11 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         thumbnailView.setId(a.getTitle());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
-        if (a.getImgURLs() != null) {
-            if (a.getImgURLs().hasNext()) {
-                thumbnailView.setImageUrl(a.getImgURLs().next());
+        if (a.getImgURL() != null) {
+                thumbnailView.setImageUrl(a.getImgURL());
             }
         }
-    }
+
 
     @Override
     public int getItemCount() {

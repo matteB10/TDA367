@@ -3,8 +3,10 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.utils.FormHelper;
+import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ public class CreateAdPresenter{
 
 
     private View view;
+    private String id;
     private String title;
     private String description;
     private int price;
@@ -34,9 +37,9 @@ public class CreateAdPresenter{
 
     //arbitrary length, can be changed
     public void titleChanged(String title){
-        if (title.length() > 6) {
+
             this.title = title;
-        }
+
     }
     public void priceChanged(String price){
         if(FormHelper.getInstance().isValidPrice(price)){
@@ -49,7 +52,7 @@ public class CreateAdPresenter{
     }
 
     public void imageURIChanged(String imageURI){
-        this.imageUri = convertURIStringToURLString(imageURI);
+        this.imageUri = imageURI;
     }
 
     public void tagsChanged(String tag){
@@ -66,9 +69,6 @@ public class CreateAdPresenter{
     public void conditionChanged(Advert.Condition condition){
         this.condition = condition;
 
-    }
-    public void createAdvert(){
-        Repository.getInstance().createAdvert(title,description,price,condition,tags,imageUri);
     }
 
 
@@ -90,6 +90,19 @@ public class CreateAdPresenter{
             URLString = "";
         }
         return URLString;
+    }
+    public void createAdvert(){
+        createUniqueAdvertID();
+        tags = new ArrayList<>();
+        Repository.getInstance().createAdvert(id,title,description,price, Advert.Condition.GOOD,tags,imageUri);
+    }
+
+    private void createUniqueAdvertID(){
+       id = UniqueIdCreator.getInstance().getUniqueID();
+    }
+
+    public String getId(){
+        return id;
     }
 
     //Getters for testing purpose

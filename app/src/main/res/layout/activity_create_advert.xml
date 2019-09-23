@@ -135,11 +135,12 @@
 
     </LinearLayout>
 
+
     <LinearLayout
 
-        android:id="@+id/authorLayout"
+        android:id="@+id/descriptionLayout"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_marginStart="30dp"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
@@ -151,80 +152,14 @@
         app:layout_constraintTop_toBottomOf="@+id/priceLayout">
 
         <TextView
-            android:id="@+id/authorTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/addAdvertAuthor" />
-
-        <EditText
-            android:id="@+id/authorEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="@string/authorHint"
-            android:inputType="textPersonName" />
-
-    </LinearLayout>
-
-    <LinearLayout
-
-        android:id="@+id/ISBNLayout"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginRight="30dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/authorLayout">
-
-        <TextView
-            android:id="@+id/ISBNTextView"
-            android:layout_width="34dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/addAdvertISBN" />
-
-        <EditText
-            android:id="@+id/ISBNEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:hint="@string/ISBNHint"
-            android:inputType="textPersonName" />
-
-    </LinearLayout>
-
-    <LinearLayout
-
-        android:id="@+id/otherInfoLayout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginRight="30dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ISBNLayout">
-
-        <TextView
-            android:id="@+id/otherInfoTextView"
+            android:id="@+id/descriptionTextView"
             android:layout_width="34dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/addAdvertOtherInfo" />
 
         <EditText
-            android:id="@+id/otherInfoEditText"
+            android:id="@+id/descriptionEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -245,7 +180,7 @@
         android:background="@color/colorGreyLight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ISBNLayout" />
+        app:layout_constraintTop_toBottomOf="@id/descriptionLayout" />
 
 
     <TextView

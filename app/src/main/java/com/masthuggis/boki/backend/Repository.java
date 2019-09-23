@@ -1,24 +1,19 @@
 package com.masthuggis.boki.backend;
 
+import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.model.User;
+import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
-import static com.google.gson.internal.bind.TypeAdapters.UUID;
 
 /**
  * Class providing the functionality to convert data from backend into Book-objects to be used
@@ -53,20 +48,23 @@ public class Repository implements RepositoryObserver {
 
 
     public List<Advertisement> getAllAds() {
+
         String json = BackendDataFetcher.getInstance().getMockBooks(Boki.getAppContext());
-        List<Advertisement> books = new ArrayList<>();
-        try {
-            JSONObject booksObject = new JSONObject(json);
-            JSONArray booksArray = booksObject.getJSONArray("books"); //Array in json file must be named "books"
-            for (int i = 0; i < booksArray.length(); i++) {
-                //Needs some way to create a book from the data that is fetched from each JSON-object
-                books.add(createBookWithoutTags(booksArray.getJSONObject(i)));
+        if (temporaryListOfAllAds.size() < 12) {
+            try {
+                JSONObject booksObject = new JSONObject(json);
+                JSONArray booksArray = booksObject.getJSONArray("books"); //Array in json file must be named "books"
+                for (int i = 0; i < booksArray.length(); i++) {
+                    //Needs some way to create a book from the data that is fetched from each JSON-object
+                    createBookWithoutTags(booksArray.getJSONObject(i));
+                }
+            } catch (JSONException exception) {
+                exception.printStackTrace();
             }
-        } catch (JSONException exception) {
-            exception.printStackTrace();
         }
-        return books;
+        return temporaryListOfAllAds;
     }
+
 
     /**
      * Should probably use som form of factory for creating books in order to make the method
@@ -97,7 +95,7 @@ public class Repository implements RepositoryObserver {
             String conditionString = object.getString("condition");
             condition = Advert.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
             List<String> imgURLS = new ArrayList<>();
-            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", title, imgURLS, "Description", price, condition);
+            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18),"uniqueOwnerID", UniqueIdCreator.getUniqueID(), title, imgURLS, "Description", price, condition);
             temporaryListOfAllAds.add(ad);
             return ad;
         } catch (JSONException e) {
@@ -106,52 +104,16 @@ public class Repository implements RepositoryObserver {
         }
     }
 
-    /**
-     * Creates a book object given a JSONObject from the local file.
-     *
-     * @param object the JSONObject used to create a Book-object
-     * @return a Book with fields corresponding to the key-value pairs of the JSONObject.
-     */
-    public Advertisement createAdvert(JSONObject object) {
-        String title;
-        String author;
-        int edition;
-        int price;
-        long isbn;
-        int yearPublished;
-        Advert.Condition condition;
-        List<String> preDefinedTags;
-        List<String> userTags;
-        try {
-            title = object.getString("title");
-            author = object.getString("author");
-            edition = object.getInt("edition");
-            price = object.getInt("price");
-            isbn = object.getLong("isbn");
-            yearPublished = object.getInt("yearPublished");
-            condition = Advert.Condition.valueOf(object.getString("condition")); //Shorthand
-            preDefinedTags = getPreDefinedTags(object);
-            userTags = getUserTags(object);
-            List<String> imgURLS = new ArrayList<>();
-            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", title, imgURLS, "Description", price, condition);
-            temporaryListOfAllAds.add(ad);
-            userAdvertsForSaleUpdate(temporaryListOfAllAds.iterator());
-            return ad;
-        } catch (JSONException exception) {
-            exception.printStackTrace();
-            return null;
-        }
-    }
 
     /**
      * Creates an advertisement given input from createAdvertPresenter
-     *
-     * @param t,d,p,c needed to create advert
      */
-    public void createAdvert(String t, String d, int p, Advert.Condition c, List<String> tags, String imageURL) {
-        Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", t, imageURL, "Description", p, c);
-        temporaryListOfAllAds.add(ad);
+    public void createAdvert(String id, String title, String description, int price, Advert.Condition condition, List<String> tags, String imageURL) {
+
+        Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", id, title, imageURL, description, price, condition);
         userAdvertsForSaleUpdate(temporaryListOfAllAds.iterator());
+
+        temporaryListOfAllAds.add(ad);
     }
 
     public List<Advertisement> getTemporaryListOfAllAds() {
@@ -193,15 +155,15 @@ public class Repository implements RepositoryObserver {
     }
 
     /**
-     * Temporary method for getting ad from unique ID.
+     * Method for getting ad from unique ID.
      *
      * @param
      * @return
      */
-    public Advertisement getAdFromId(String name) {
+    public Advertisement getAdFromId(String id) {
 
         for (Advertisement ad : temporaryListOfAllAds) {
-            if (ad.getTitle().equals(name)) {
+            if (ad.getUniqueID().equals(id)) {
                 return ad;
             }
         }

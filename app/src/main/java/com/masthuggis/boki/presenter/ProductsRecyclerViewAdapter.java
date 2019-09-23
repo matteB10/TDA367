@@ -1,6 +1,7 @@
 package com.masthuggis.boki.presenter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.view.ThumbnailView;
 
 public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder> {
@@ -81,12 +83,17 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
 
         @Override
         public void setImageUrl(String url) {
-            // TODO: implement func to show image
+            imageView.setImageURI(Uri.parse(url));
         }
 
         @Override
         public void setId(String id) {
             this.id =id;
+        }
+
+        @Override
+        public void setCondition(Advert.Condition conditon) {
+
         }
 
 

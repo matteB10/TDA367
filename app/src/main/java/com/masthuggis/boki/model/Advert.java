@@ -12,11 +12,12 @@ import java.util.List;
 public class Advert implements Advertisement {
 
     public enum Condition {
-        NEW, GOOD, OK, BAD,UNDEFINED
+        NEW, GOOD, OK,UNDEFINED
     }
 
     private Date datePublished;
     private String uniqueOwnerID;
+    private String uniqueAdID;
     private String title;
     private List<String> imgURLs;
     private String imageURL;
@@ -25,7 +26,7 @@ public class Advert implements Advertisement {
     private Condition condition;
 
 
-    public Advert(Date datePublished, String uniqueOwnerID, String title, List<String> imgURLs, String description, int price,Condition condition) {
+    public Advert(Date datePublished, String uniqueOwnerID,String uniqueAdID, String title, List<String> imgURLs, String description, int price,Condition condition) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.title = title;
@@ -34,11 +35,13 @@ public class Advert implements Advertisement {
         this.description = description;
         this.price = price;
         this.condition = condition;
+        this.uniqueAdID = uniqueAdID;
     }
     //Alternative constructor with only one image allowed
-    public Advert(Date datePublished, String uniqueOwnerID, String title, String imgURL, String description, int price,Condition condition) {
+    public Advert(Date datePublished, String uniqueOwnerID, String id, String title, String imgURL, String description, int price,Condition condition) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
+        this.uniqueAdID = id;
         this.title = title;
         this.imageURL = imgURL;
         this.description = description;
@@ -51,11 +54,8 @@ public class Advert implements Advertisement {
     }
 
     @Override
-    public Iterator<String> getImgURLs() {
-        if (this.imageURL == null) {
-            return null;
-        }
-        return this.imgURLs.iterator();
+    public String getImgURL() {
+        return this.imageURL;
     }
 
     @Override
@@ -87,6 +87,11 @@ public class Advert implements Advertisement {
     @Override
     public Condition getConditon() {
         return this.condition;
+    }
+
+    @Override
+    public String getUniqueID() {
+        return this.uniqueAdID;
     }
 
 
