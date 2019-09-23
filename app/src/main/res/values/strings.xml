@@ -8,9 +8,9 @@
 
     <string name="back">Tillbaka</string>
     <string name="settings">Inställningar</string>
-    <string name="mybooks">Mina Böcker</string>
+    <string name="myBooks">Mina Böcker</string>
 
-    <string name="mycollections">Mina Samlingar</string>
+    <string name="myCollections">Mina Samlingar</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -47,10 +47,14 @@
     <string name="conditionGood">BRA</string>
     <string name="conditionNew">NY</string>
     <string name="conditionOk">OK</string>
+
+    <!-- login and signup activity-->
     <string name="email">E-post</string>
     <string name="password">Lösenord</string>
-    <string name="Login">Logga in</string>
-    <string name="signup">Skapa en användare</string>
+    <string name="reenterPassword">Ange lösenord igen</string>
+    <string name="login">Logga in</string>
+    <string name="signup">Skapa användare</string>
+    <string name="forgotPassword">Glömt lösenord?</string>
 
-    >>>>>>> Added all neccessary fields to view for createAdvertActivity
+
 </resources>

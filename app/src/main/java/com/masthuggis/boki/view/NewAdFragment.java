@@ -21,8 +21,8 @@ public class NewAdFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.new_ad_fragment, container, false);
 
-        ImageButton newCollectionButton = (ImageButton) v.findViewById(R.id.to_new_collection_imagebutton);
-        ImageButton newBookButton = (ImageButton) v.findViewById(R.id.to_new_book_imagebutton);
+        ImageButton newCollectionButton = v.findViewById(R.id.to_new_collection_imagebutton);
+        ImageButton newBookButton = v.findViewById(R.id.to_new_book_imagebutton);
         newCollectionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

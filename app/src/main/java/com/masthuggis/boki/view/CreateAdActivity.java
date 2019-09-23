@@ -49,11 +49,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_advert);
         presenter = new CreateAdPresenter(this);
-        conditionToggleGroup = (RadioGroup) findViewById(R.id.conditionToggleGroup);
-        conditionGood = (Button) findViewById(R.id.conditionGoodButton);
+        conditionToggleGroup = findViewById(R.id.conditionToggleGroup);
+        conditionGood = findViewById(R.id.conditionGoodButton);
         conditionToggleGroup.check(conditionGood.getId());
 
-        imageViewDisplay = (ImageView) findViewById(R.id.addImageView);
+        imageViewDisplay = findViewById(R.id.addImageView);
         setListeners();
 
 
@@ -91,7 +91,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        imageViewDisplay = (ImageView) findViewById(R.id.addImageView);
+        imageViewDisplay = findViewById(R.id.addImageView);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap bitmap = decodeBitmap();
@@ -158,7 +158,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void setTitleListener(){
-        title = (EditText) findViewById(R.id.titleEditText);
+        title = findViewById(R.id.titleEditText);
         title.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -177,7 +177,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         });
     }
     private void setPriceListener(){
-        price = (EditText) findViewById(R.id.priceEditText);
+        price = findViewById(R.id.priceEditText);
         price.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -196,7 +196,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         });
     }
     private void setDescriptionListener(){
-        description = (EditText) findViewById(R.id.otherInfoEditText);
+        description = findViewById(R.id.otherInfoEditText);
         description.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

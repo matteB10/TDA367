@@ -1,29 +1,29 @@
 package com.masthuggis.boki.view;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.masthuggis.boki.R;
 
 public class MainActivity extends AppCompatActivity {
 
- //   private BackendDataFetcher backendDataFetcher = new BackendDataFetcher();
+    //   private BackendDataFetcher backendDataFetcher = new BackendDataFetcher();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        BottomNavigationView bottomNav =findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
       /*  backendDataFetcher.addNewBook(new Book("testTitle","testAuthor",1,666,1234567890,
                 1337, Book.Condition.GOOD,null,null));*/
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             Fragment selectedFragment = null;
 
-            switch(menuItem.getItemId()){
+            switch (menuItem.getItemId()) {
                 case R.id.navigation_favorites:
                     selectedFragment = new FavoritesFragment();
                     break;
@@ -49,13 +49,11 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,selectedFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
             return true;
 
 
         }
 
     };
-
-
 }
