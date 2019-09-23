@@ -9,6 +9,12 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.model.Advert;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,9 +27,6 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNav =findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment()).commit();
-      /*  backendDataFetcher.addNewBook(new Book("testTitle","testAuthor",1,666,1234567890,
-                1337, Book.Condition.GOOD,null,null));*/
-
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {

@@ -4,12 +4,9 @@ import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.utils.FormHelper;
-import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CreateAdPresenter{
@@ -24,7 +21,7 @@ public class CreateAdPresenter{
 
     public CreateAdPresenter(View view){
         this.view = view;
-        this.advertisement = Repository.getInstance().createAdvert();
+        this.advertisement = Repository.getInstance().storeAdvertInFirebase();
     }
 
     public interface View{

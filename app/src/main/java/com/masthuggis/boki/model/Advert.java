@@ -47,6 +47,7 @@ public class Advert implements Advertisement {
         this.uniqueAdID = id;
         this.title = title;
         this.imageURL = imgURL;
+        imgURLs.add("TEST");
         this.description = description;
         this.price = price;
         this.condition = condition;
@@ -133,9 +134,9 @@ public class Advert implements Advertisement {
     }
 
 
-    private boolean isNewTag(String tag){
-        for(String s : tags){
-            if(s.equals(tag)){
+    private boolean isNewTag(String tag) {
+        for (String s : tags) {
+            if (s.equals(tag)) {
                 return false;
             }
         }

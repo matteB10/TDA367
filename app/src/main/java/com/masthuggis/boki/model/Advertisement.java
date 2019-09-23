@@ -22,15 +22,23 @@ public interface Advertisement {
     String getUniqueOwnerID();
 
     String getDescription();
+
     List<String> getTags();
+
     Advert.Condition getConditon();
+
     String getUniqueID();
 
     void setTitle(String title);
+
     void setImgURI(String URI);
+
     void setPrice(int price);
+
     void setDescription(String description);
+
     void tagsChanged(String tag);
+
     void setCondition(Advert.Condition condition);
 
 

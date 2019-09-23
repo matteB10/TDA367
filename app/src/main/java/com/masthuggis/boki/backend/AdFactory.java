@@ -21,9 +21,9 @@ public class AdFactory {
         return new Advert(datePublished, uniqueOwnerID, id, title, imgURLs, description, price, condition);
     }
 
-    public static Advertisement createAd(){
+    public static Advertisement createAd() {
         String uniqueAdId = UniqueIdCreator.getUniqueID();
-        return new Advert(new Date(),"",uniqueAdId,"","","",0,Advert.Condition.UNDEFINED);
+        return new Advert(new Date(), "", uniqueAdId, "", "", "", 0, Advert.Condition.UNDEFINED);
     }
 
 

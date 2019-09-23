@@ -18,17 +18,22 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
 public class HomeFragment extends Fragment implements HomePresenter.View {
 
-    private HomePresenter presenter = new HomePresenter(this);
+    private HomePresenter presenter;
+    private View view;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.home_fragment, container, false);
-        setupList(v);
+
+        this.presenter = new HomePresenter(this);
+        this.view = v;
+
         return v;
+
     }
 
-    private void setupList(View v) {
-        RecyclerView recyclerView = v.findViewById(R.id.advertsRecyclerView);
+    private void setupList() {
+        RecyclerView recyclerView = view.findViewById(R.id.advertsRecyclerView);
         ProductsRecyclerViewAdapter adapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
         recyclerView.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
@@ -52,5 +57,11 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
     public void showLoadingScreen() {
         // TODO: display the screen again
     }
+
+    @Override
+    public void showThumbnails() {
+        setupList();
+    }
+
 
 }

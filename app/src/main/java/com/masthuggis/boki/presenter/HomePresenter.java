@@ -1,8 +1,10 @@
 package com.masthuggis.boki.presenter;
 
 import android.util.Log;
+import android.view.View;
 
 import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.backend.advertisementCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.view.ThumbnailView;
 
@@ -14,22 +16,33 @@ public class HomePresenter implements IProductsPresenter {
 
     public HomePresenter(View view) {
         this.view = view;
-        this.adverts = Repository.getInstance().getAllAds();
+        Repository.getInstance().fetchAdvertsFromUserID("testUserID", new advertisementCallback() {
+            @Override
+            public void onCallback(List<Advertisement> advertisements) {
+                adverts = advertisements;
+                view.showThumbnails();
+            }
+        });
     }
 
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
         Advertisement a = adverts.get(position);
+        thumbnailView.setId(a.getTitle());
+        thumbnailView.setTitle(a.getTitle());
+        thumbnailView.setPrice(a.getPrice());
+        if (a.getImgURL() != null)
+            thumbnailView.setImageUrl(a.getImgURL());
         thumbnailView.setId(a.getUniqueID());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
         if (a.getImgURL() != null) {
-                thumbnailView.setImageUrl(a.getImgURL());
+            thumbnailView.setImageUrl(a.getImgURL());
 
         }
     }
 
     public int getItemCount() {
-        return Repository.getInstance().getAllAds().size();
+        return adverts.size();
     }
 
     public void onRowPressed(String uniqueIDoFAdvert) {
@@ -41,7 +54,11 @@ public class HomePresenter implements IProductsPresenter {
 
     public interface View {
         void showLoadingScreen();
+
+        void showThumbnails();
+
         void hideLoadingScreen();
+
         void showDetailsScreen(String id);
     }
 }
