@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -90,7 +91,7 @@ public class BackendDataFetcher implements iBackend {
     }
 
 
-    public void readFirebaseData(advertisementDBCallback advertisementDBCallback, String userID) {
+    public void readUserIDAdverts(advertisementDBCallback advertisementDBCallback, String userID) {
         CollectionReference users = db.collection("users");
         users.document(userID).collection("adverts").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -108,4 +109,21 @@ public class BackendDataFetcher implements iBackend {
             }
         });
     }
+
+    //Fetch data for all adverts from all user
+    //Not currently possible to attach listeners to subcollections, but possible to query so-called "Collection groups"
+    public void readAllAdvertData(advertisementDBCallback advertisementDBCallback) {
+        List<Map<String,Object>> advertDataList = new ArrayList<>();
+        db.collectionGroup("adverts").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
+                for (DocumentSnapshot snapshot : adverts) {
+                    advertDataList.add(snapshot.getData());
+                }
+                advertisementDBCallback.onCallBack(advertDataList);
+            }
+        });
+    }
+
 }

@@ -3,9 +3,7 @@ package com.masthuggis.boki.backend;
 import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.model.User;
-import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -226,11 +224,11 @@ public class Repository implements RepositoryObserver {
     //Uses custom interface for a callback from async query in the firebase db.
     public void fetchAdvertsFromUserID(String userID, advertisementCallback advertisementCallback) {
         List<Advertisement> userIDAdverts = new ArrayList<>();
-        BackendDataFetcher.getInstance().readFirebaseData(new advertisementDBCallback() {
+        BackendDataFetcher.getInstance().readUserIDAdverts(new advertisementDBCallback() {
             @Override
             public void onCallBack(List<Map<String, Object>> advertDataList) {
                 for (Map<String, Object> dataMap : advertDataList) {
-                    userIDAdverts.add(retrieveAdvert(dataMap,userID));
+                    userIDAdverts.add(retrieveAdvertWithUserID(dataMap, userID));
                 }
                 advertisementCallback.onCallback(userIDAdverts);
             }
@@ -240,20 +238,42 @@ public class Repository implements RepositoryObserver {
 
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
+        List<Advertisement> allAdverts = new ArrayList<>();
+        BackendDataFetcher.getInstance().readAllAdvertData(new advertisementDBCallback() {
+            @Override
+            public void onCallBack(List<Map<String, Object>> advertDataList) {
+                for (Map<String, Object> dataMap : advertDataList) {
+                    allAdverts.add(retriveAdvert(dataMap));
+                }
+                advertisementCallback.onCallback(allAdverts);
+            }
+        });
 
     }
 
 
+    private Advertisement retriveAdvert(Map<String, Object> dataMap) {
+        String title = (String) dataMap.get("title");
+        String description = (String) dataMap.get("description");
+        long price = (long) dataMap.get("price");
+        List<String> imgURLs = (List<String>) dataMap.get("imageURLs");
+        List<String> tags = (List<String>) dataMap.get("tags");
+        String uniqueOwnerID = (String) dataMap.get("uniqueOwnerID");
+//        Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
+
+        return AdFactory.createAd(null, uniqueOwnerID, "uniqueID", title, imgURLs, description, 123, null);
+    }
+
     //Creates an Advert object with data given in form of a Key-Value Map
     //Very hardcoded, "Magic-string" implementation, but should be okay
-    private Advertisement retrieveAdvert(Map<String, Object> dataMap, String uniqueUserID) {
+    private Advertisement retrieveAdvertWithUserID(Map<String, Object> dataMap, String uniqueUserID) {
         //Date datePublished = dataMap.get("datePublished"); //Oklart
         String title = (String) dataMap.get("title");
         String description = (String) dataMap.get("description");
         long price = (long) dataMap.get("price");
         List<String> imgURLs = (List<String>) dataMap.get("imageURLs");
         List<String> tags = (List<String>) dataMap.get("tags");
-        //TODO implement Date and Condition into Firebase in a neat fashion
+        //TODO implement Date into Firebase in a neat fashion
         return AdFactory.createAd(null, uniqueUserID, "uniqueAdID", title, imgURLs, description, 23, null);
 
     }
