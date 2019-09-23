@@ -39,7 +39,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private EditText title;
     private EditText price;
     private EditText description;
-    private RadioGroup conditionToggleGroup;
     private Button conditionNew;
     private Button conditionGood;
     private Button conditionOK;
@@ -52,6 +51,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setContentView(R.layout.activity_create_advert);
         presenter = new CreateAdPresenter(this);
         imageViewDisplay = (ImageView) findViewById(R.id.addImageView);
+        disablePublishAdButton();
         setListeners();
 
 
@@ -167,8 +167,17 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     @Override
-    public void aMethod() {
+    public void enablePublishButton() {
+        publishAdButton.setEnabled(true);
+        publishAdButton.setBackgroundColor(getResources().getColor(R.color.colorTeal));
 
+    }
+
+
+    private void disablePublishAdButton(){
+        publishAdButton = findViewById(R.id.publishAdButton);
+        publishAdButton.setEnabled(false);
+        publishAdButton.setBackgroundColor(getResources().getColor(R.color.colorGreyLight));
     }
 
     private void setImageViewListener() {
@@ -248,10 +257,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             public void onClick(View view) {
                 Intent intent = new Intent(CreateAdActivity.
                         this, DetailsActivity.class);
-                presenter.createAdvert();
                 intent.putExtra("advertID", presenter.getId());
+                presenter.publishAdvert();
                 startActivity(intent);
-                //CreateAdActivity.this.startActivity(intent);
             }
         });
 

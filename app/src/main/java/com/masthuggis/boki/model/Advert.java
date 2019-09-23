@@ -1,5 +1,6 @@
 package com.masthuggis.boki.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 public class Advert implements Advertisement {
 
     public enum Condition {
-        NEW, GOOD, OK,UNDEFINED
+        NEW, GOOD, OK, UNDEFINED
     }
 
     private Date datePublished;
@@ -24,9 +25,10 @@ public class Advert implements Advertisement {
     private String description;
     private int price;
     private Condition condition;
+    private List<String> tags = new ArrayList<>();
 
 
-    public Advert(Date datePublished, String uniqueOwnerID,String uniqueAdID, String title, List<String> imgURLs, String description, int price,Condition condition) {
+    public Advert(Date datePublished, String uniqueOwnerID, String uniqueAdID, String title, List<String> imgURLs, String description, int price, Condition condition) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.title = title;
@@ -37,8 +39,9 @@ public class Advert implements Advertisement {
         this.condition = condition;
         this.uniqueAdID = uniqueAdID;
     }
+
     //Alternative constructor with only one image allowed
-    public Advert(Date datePublished, String uniqueOwnerID, String id, String title, String imgURL, String description, int price,Condition condition) {
+    public Advert(Date datePublished, String uniqueOwnerID, String id, String title, String imgURL, String description, int price, Condition condition) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.uniqueAdID = id;
@@ -80,8 +83,8 @@ public class Advert implements Advertisement {
     }
 
     @Override
-    public Iterator<String> getTags() {
-        return null;
+    public List<String> getTags() {
+        return this.tags;
     }
 
     @Override
@@ -94,5 +97,49 @@ public class Advert implements Advertisement {
         return this.uniqueAdID;
     }
 
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public void setImgURI(String URI) {
+        this.imageURL = URI;
+    }
+
+    @Override
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public void tagsChanged(String tag) {
+        if (isNewTag(tag)) {
+            tags.add(tag);
+        } else {
+            tags.remove(tag);
+        }
+    }
+
+
+    @Override
+    public void setCondition(Condition condition) {
+        this.condition = condition;
+    }
+
+
+    private boolean isNewTag(String tag){
+        for(String s : tags){
+            if(s.equals(tag)){
+                return false;
+            }
+        }
+        return true;
+    }
 
 }

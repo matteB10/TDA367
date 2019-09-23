@@ -15,7 +15,7 @@ import org.junit.Test;
 public class CreateAdPresenterTest {
 
     class MockView implements CreateAdPresenter.View {
-        public void aMethod() {
+        public void enablePublishButton() {
 
         }
     }
@@ -89,8 +89,8 @@ public class CreateAdPresenterTest {
         assertNull(presenter.getCondition());
         presenter.conditionChanged(Advert.Condition.GOOD);
         assertEquals(Advert.Condition.GOOD, presenter.getCondition());
-        presenter.conditionChanged(Advert.Condition.BAD);
-        assertEquals(Advert.Condition.BAD, presenter.getCondition());
+        presenter.conditionChanged(Advert.Condition.NEW);
+        assertEquals(Advert.Condition.NEW, presenter.getCondition());
     }
     @Test
     public void testCreateAdvert(){
@@ -102,7 +102,7 @@ public class CreateAdPresenterTest {
         presenter.descriptionChanged("info");
         presenter.titleChanged("calculus");
         int numberOfAds = Repository.getInstance().getTemporaryListOfAllAds().size();
-        presenter.createAdvert();
+        presenter.publishAdvert();
         assertEquals((numberOfAds + 1), Repository.getInstance().getTemporaryListOfAllAds().size());
 
     }

@@ -23,7 +23,7 @@ import java.util.List;
 
 public class Repository implements RepositoryObserver {
     private static JSONObject booksJsonObj;
-    private static Repository singleton = null;
+    private static Repository repository;
     private final List<Advertisement> temporaryListOfAllAds = new ArrayList<>();
     private final List<RepositoryObserver> observers = new ArrayList<>();
 
@@ -32,36 +32,53 @@ public class Repository implements RepositoryObserver {
     }
 
     public static Repository getInstance() {
-        if (singleton == null) {
-            singleton = new Repository();
+        if (repository == null) {
+            repository = new Repository();
         }
-        return singleton;
+        return repository;
 
     }
+
+
 
     /**
      * Method that fetches all books from the local .json.file and returns them as a list of Advert
      * objects. Returns a new list for every method call.
-     *
-     * @return a list of all the Advert objects that have been created from the json-file.
      */
 
+    private void readFromBackend(){
+        String json = BackendDataFetcher.getInstance().getMockBooks(Boki.getAppContext());
+        try {
+            JSONObject booksObject = new JSONObject(json);
+            JSONArray booksArray = booksObject.getJSONArray("books"); //Array in json file must be named "books"
+            for (int i = 0; i < booksArray.length(); i++) {
+                //Needs some way to create a book from the data that is fetched from each JSON-object
+                createBookWithoutTags(booksArray.getJSONObject(i));
+            }
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    /**
+     * Used during developement, just needed to be called once. Reads from json
+     * and adds Adverts to temporary list.
+     * @return
+     */
 
     public List<Advertisement> getAllAds() {
-
-        String json = BackendDataFetcher.getInstance().getMockBooks(Boki.getAppContext());
-        if (temporaryListOfAllAds.size() < 12) {
-            try {
-                JSONObject booksObject = new JSONObject(json);
-                JSONArray booksArray = booksObject.getJSONArray("books"); //Array in json file must be named "books"
-                for (int i = 0; i < booksArray.length(); i++) {
-                    //Needs some way to create a book from the data that is fetched from each JSON-object
-                    createBookWithoutTags(booksArray.getJSONObject(i));
-                }
-            } catch (JSONException exception) {
-                exception.printStackTrace();
-            }
+        //Only during developement, hard coded value from number of ads in Json-file
+        if(temporaryListOfAllAds.size()<12){
+            readFromBackend();
         }
+        return temporaryListOfAllAds;
+    }
+
+    /**
+     * Should be used for now instead of getAllAdds()
+     * @return temporaryListOfAllAds
+     */
+    public List<Advertisement> getTemporaryListOfAllAds() {
         return temporaryListOfAllAds;
     }
 
@@ -87,11 +104,7 @@ public class Repository implements RepositoryObserver {
         Advert.Condition condition;
         try { //Should use a factory-method instead
             title = object.getString("title");
-            author = object.getString("author");
-            edition = object.getInt("edition");
             price = object.getInt("price");
-            isbn = object.getLong("isbn");
-            yearPublished = object.getInt("yearPublished");
             String conditionString = object.getString("condition");
             condition = Advert.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
             List<String> imgURLS = new ArrayList<>();
@@ -106,19 +119,32 @@ public class Repository implements RepositoryObserver {
 
 
     /**
-     * Creates an advertisement given input from createAdvertPresenter
+     * Creates a new Advertisement given input from user
      */
-    public void createAdvert(String id, String title, String description, int price, Advert.Condition condition, List<String> tags, String imageURL) {
-
-        Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", id, title, imageURL, description, price, condition);
+    public void createAdvert(String userID, String adID, String title, String description, int price, Advert.Condition condition, List<String> tags, String imageURL) {
+        Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), userID, adID, title, imageURL, description, price, condition);
         userAdvertsForSaleUpdate(temporaryListOfAllAds.iterator());
 
         temporaryListOfAllAds.add(ad);
     }
 
-    public List<Advertisement> getTemporaryListOfAllAds() {
-        return temporaryListOfAllAds;
+    /**
+     * Creates a new empty Advertisement, used during creation of a new ad
+     * @return an empty Advertisement
+     */
+    public Advertisement createAdvert(){
+        return AdFactory.createAd();
+
     }
+
+    /**
+     * @param advertisement gets saved into temporary list
+     *
+     */
+    public void saveAdvert(Advertisement advertisement){
+        temporaryListOfAllAds.add(advertisement);
+    }
+
 
     public User createUser() {
         return new User();
