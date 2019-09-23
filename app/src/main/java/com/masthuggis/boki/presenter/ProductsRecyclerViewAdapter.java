@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.view.RowView;
 
 public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder> {
@@ -84,6 +85,11 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         @Override
         public void setId(String id) {
             this.id =id;
+        }
+
+        @Override
+        public void setCondition(Advert.Condition conditon) {
+
         }
 
 

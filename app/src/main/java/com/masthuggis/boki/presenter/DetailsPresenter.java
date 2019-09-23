@@ -25,9 +25,7 @@ public class DetailsPresenter {
         if (advertisement.getImgURL() != null) {
             view.setImageUrl(advertisement.getImgURL());}
         view.setCondition(advertisement.getConditon().toString());
-        if (advertisement.getImgURL() != null) {
-            view.setImageUrl(advertisement.getImgURL());
-        }
+
     }
 
     public interface View {
