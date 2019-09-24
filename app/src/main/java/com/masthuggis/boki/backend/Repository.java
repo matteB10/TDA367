@@ -3,7 +3,6 @@ package com.masthuggis.boki.backend;
 import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.model.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -94,7 +93,7 @@ public class Repository {
         String description = advertisement.getDescription();
         String imgURL = advertisement.getImgURL();
         long price = advertisement.getPrice();
-        Advert.Condition condition = advertisement.getConditon();
+        Advert.Condition condition = advertisement.getCondition();
         List<String> tags = advertisement.getTags();
         String uniqueOwnerID = advertisement.getUniqueOwnerID();
         String uniqueAdID = advertisement.getUniqueID();

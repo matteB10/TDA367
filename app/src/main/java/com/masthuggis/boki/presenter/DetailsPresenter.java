@@ -51,14 +51,13 @@ public class DetailsPresenter {
         void setConditionNew();
         void setConditionOk();
 
-        //void setCondition(String condition);
     }
 
     //TODO kommentera detta.
 
     private void setCondition(){
-        switch (advertisement.getConditon()){
-            //TODO: get access to res/colors to return right color depending on condition
+        switch (advertisement.getCondition()){
+
             case NEW:
                 view.setConditionNew();
                 break;

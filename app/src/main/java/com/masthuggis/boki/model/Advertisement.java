@@ -25,7 +25,7 @@ public interface Advertisement {
 
     List<String> getTags();
 
-    Advert.Condition getConditon();
+    Advert.Condition getCondition();
 
     String getUniqueID();
 

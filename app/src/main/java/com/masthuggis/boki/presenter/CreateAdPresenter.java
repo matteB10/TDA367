@@ -7,7 +7,6 @@ import com.masthuggis.boki.utils.FormHelper;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
 /**
  * Presenter class handling the createAdActivity. Validates input from
@@ -43,6 +42,11 @@ public class CreateAdPresenter{
         }
     }
 
+    /**
+     * If price is parsable to an int, price is updated in advert.
+     * @param price
+     */
+
     public void priceChanged(String price) {
         if (FormHelper.getInstance().isValidPrice(price)) {
             advertisement.setPrice(Integer.parseInt(price));
@@ -77,8 +81,13 @@ public class CreateAdPresenter{
 
     }
 
+    /**
+     * Controls that minimal required user input is entered.
+     * Valid title is all chars, length is arbitrary
+     * @return
+     */
     private boolean allFieldsValid() {
-        return (advertisement.getTitle().length() > 2 && validPrice && advertisement.getConditon() !=
+        return (advertisement.getTitle().length() > 2 && validPrice && advertisement.getCondition() !=
                 Advert.Condition.UNDEFINED);
         //TODO: expand validation to image URI
     }
@@ -104,39 +113,13 @@ public class CreateAdPresenter{
         Repository.getInstance().saveAdvert(advertisement);
         advertisement = null;
     }
-
-    public String getId() {
+    public String getId(){
         return advertisement.getUniqueID();
     }
 
-    //Getters for testing purpose
-    public View getView() {
-        return view;
+    //Getter for testing purpose
+    public Advertisement getAdvertisement(){
+        return advertisement;
     }
-
-    public String getTitle() {
-        return advertisement.getTitle();
-    }
-
-    public String getDescription() {
-        return advertisement.getDescription();
-    }
-
-    public long getPrice() {
-        return advertisement.getPrice();
-    }
-
-    public String getImageUri() {
-        return advertisement.getImgURL();
-    }
-
-    public List<String> getTags() {
-        return advertisement.getTags();
-    }
-
-    public Advert.Condition getCondition() {
-        return advertisement.getConditon();
-    }
-
 
 }

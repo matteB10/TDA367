@@ -34,14 +34,14 @@ public class FormHelper{
      * @return true if input string only contains digits
      */
      public boolean isValidNumber(String input){
-        return validDigits.matcher(input).find();
+        return validDigits.matcher(input).matches();
     }
     /**
      * @param input the string to be validated
      * @return true if input string matching e-mail format (letters + @ + letters + . + letters)
      */
      public boolean isValidEmail(String input){
-        return validEmail.matcher(input).find();
+        return validEmail.matcher(input).matches();
     }
     /**
      * @param input the string to be validated
@@ -49,14 +49,14 @@ public class FormHelper{
      */
      public boolean isValidMobile(String input){
 
-         return validMobilePhone.matcher(input).find() || validMobilePhoneWithFormat.matcher(input).find();
+         return validMobilePhone.matcher(input).matches() || validMobilePhoneWithFormat.matcher(input).matches();
     }
     /**
      * @param input the string to be validated
      * @return true if input string matching mobile phone format (10 digits)
      */
     public boolean isValidPrice(String input){
-        return validPrice.matcher(input).find();
+        return validPrice.matcher(input).matches();
     }
 
 

@@ -89,7 +89,7 @@ public class Advert implements Advertisement {
     }
 
     @Override
-    public Condition getConditon() {
+    public Condition getCondition() {
         return this.condition;
     }
 
