@@ -30,7 +30,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
         Intent intent = getIntent();
         String advertID = intent.getExtras().getString("advertID");
-        if (advertID != null || advertID == "") {
+        if (advertID != null) {
             presenter = new DetailsPresenter(this, advertID);
         }
         Button contactOwnerButton = findViewById(R.id.contactOwnerButton);
@@ -76,21 +76,21 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         TextView textView = findViewById(R.id.conditionTextView);
         textView.setText(getResources().getString(R.string.conditionNew));
         ConstraintLayout layout = findViewById(R.id.conditionConstraintLayout);
-        layout.setBackgroundColor(getResources().getColor(R.color.colorCoral));
+        layout.setBackground(getResources().getDrawable(R.drawable.button_new_condition));
     }
     @Override
     public void setConditionGood(){
         TextView textView = findViewById(R.id.conditionTextView);
         textView.setText(getResources().getString(R.string.conditionGood));
         ConstraintLayout layout = findViewById(R.id.conditionConstraintLayout);
-        layout.setBackgroundColor(getResources().getColor(R.color.colorTeal));
+        layout.setBackground(getResources().getDrawable(R.drawable.button_good_condition));
     }
     @Override
     public void setConditionOk(){
         TextView textView = findViewById(R.id.conditionTextView);
         textView.setText(getResources().getString(R.string.conditionOk));
         ConstraintLayout layout = findViewById(R.id.conditionConstraintLayout);
-        layout.setBackgroundColor(getResources().getColor(R.color.colorYellow));
+        layout.setBackground(getResources().getDrawable(R.drawable.button_ok_condition));
     }
 
 
