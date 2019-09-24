@@ -6,6 +6,9 @@ import android.os.Bundle;
 
 import com.masthuggis.boki.R;
 
+/**
+ * Settings page that will be used for program-wide settings.
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     @Override
