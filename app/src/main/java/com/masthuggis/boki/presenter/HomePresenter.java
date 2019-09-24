@@ -20,12 +20,9 @@ public class HomePresenter implements IProductsPresenter {
 
     public HomePresenter(View view) {
         this.view = view;
-        Repository.getInstance().fetchAllAdverts(new advertisementCallback() {
-            @Override
-            public void onCallback(List<Advertisement> advertisements) {
-                adverts = advertisements;
-                view.showThumbnails();
-            }
+        Repository.getInstance().fetchAllAdverts(advertisements -> {
+            adverts = advertisements;
+            view.showThumbnails();
         });
     }
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
