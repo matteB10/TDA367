@@ -40,11 +40,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(RegisterActivity.this, ProfileFragment.class));
-            finish();
-        }
-
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
         btnSignUp = (Button) findViewById(R.id.signupButton);
