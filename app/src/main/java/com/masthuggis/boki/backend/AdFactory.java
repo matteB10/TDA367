@@ -7,6 +7,9 @@ import com.masthuggis.boki.utils.UniqueIdCreator;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Factory class for creating Advertisements. Provides a few ways to create new Advertisements.
+ */
 public class AdFactory {
 
 

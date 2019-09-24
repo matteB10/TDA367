@@ -1,11 +1,16 @@
 package com.masthuggis.boki.presenter;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import com.masthuggis.boki.R;
 import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
+
+/**
+ * DetailsPresenter is the presenter class for the view called DetailsActivity.
+ *
+ * Validates input from the user to
+ *
+ * It is the layer between the view and model and should therefore
+ */
+
 
 public class DetailsPresenter {
     private View view;
@@ -17,6 +22,11 @@ public class DetailsPresenter {
 
         setupView();
     }
+
+    /**
+     * @setupView Provides a way for the view to show the values of the model. Is called from the single
+     * constructor of the class.
+     */
 
     private void setupView() {
         view.setName(advertisement.getTitle());
@@ -43,6 +53,8 @@ public class DetailsPresenter {
 
         //void setCondition(String condition);
     }
+
+    //TODO kommentera detta.
 
     private void setCondition(){
         switch (advertisement.getConditon()){

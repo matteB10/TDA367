@@ -10,6 +10,10 @@ import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.List;
 
+/**
+ * HomePresenter is the presenter class for the view called HomeFragment.
+ *
+ */
 public class HomePresenter implements IProductsPresenter {
     private View view;
     private List<Advertisement> adverts;
@@ -24,7 +28,6 @@ public class HomePresenter implements IProductsPresenter {
             }
         });
     }
-
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
         Advertisement a = adverts.get(position);
         thumbnailView.setId(a.getUniqueID());
