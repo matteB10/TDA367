@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.FirebaseAuthCredentialsProvider;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -132,6 +133,10 @@ public class BackendDataFetcher implements iBackend {
         if(advertID != null)
             return db.collection("users").document(userID).collection("adverts").document(advertID).getId();
         return db.collection("users").document(userID).getId();
+    }
+
+    private void test() {
+
     }
 
 }

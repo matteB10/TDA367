@@ -23,12 +23,12 @@ public class Advert implements Advertisement {
     private List<String> imgURLs;
     private String imageURL;
     private String description;
-    private int price;
+    private long price;
     private Condition condition;
     private List<String> tags = new ArrayList<>();
 
 
-    /**public Advert(Date datePublished, String uniqueOwnerID, String uniqueAdID, String title, List<String> imgURLs, String description, int price, Condition condition) {
+    /**public Advert(Date datePublished, String uniqueOwnerID, String uniqueAdID, String title, List<String> imgURLs, String description, long price, Condition condition) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.title = title;
@@ -42,7 +42,7 @@ public class Advert implements Advertisement {
      */
 
     //Alternative constructor with only one image allowed
-    public Advert(Date datePublished, String uniqueOwnerID, String id, String title, String imgURL, String description, int price, Condition condition) {
+    public Advert(Date datePublished, String uniqueOwnerID, String id, String title, String imgURL, String description, long price, Condition condition) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.uniqueAdID = id;
@@ -69,7 +69,7 @@ public class Advert implements Advertisement {
 
 
     @Override
-    public int getPrice() {
+    public long getPrice() {
         return this.price;
     }
 

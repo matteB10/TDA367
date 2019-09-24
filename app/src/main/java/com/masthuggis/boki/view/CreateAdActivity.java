@@ -26,6 +26,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * An acitivity for creating a new advertisement
+ * through user input.
+ */
+
 public class CreateAdActivity extends AppCompatActivity implements CreateAdPresenter.View {
 
 
@@ -38,9 +43,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private EditText title;
     private EditText price;
     private EditText description;
-    private Button conditionNew;
-    private Button conditionGood;
-    private Button conditionOK;
+    private Button conditionNewButton;
+    private Button conditionGoodButton;
+    private Button conditionOKButton;
     private Button publishAdButton;
 
 
@@ -77,6 +82,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
     }
 
+    /**
+     * Creates an empty file and specifies unique file name.
+     * @return
+     * @throws IOException
+     */
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -101,10 +111,12 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     private void setImageView(Bitmap bitmap) {
         imageViewDisplay.setImageBitmap(bitmap);
-        //TODO: fix better solution for setting image in portrait
-        //imageViewDisplay.setRotation(90);
     }
 
+    /**
+     * Helper method to decode bitmap 
+     * @return
+     */
     private Bitmap decodeBitmap() {
         // Get the dimensions of the View
         int imageWidth = imageViewDisplay.getWidth();
@@ -136,31 +148,40 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setPriceListener();
         setDescriptionListener();
         setCreateAdvertListener();
-        setToggleGroupListener();
+        setConditionGroupListener();
 
     }
 
-    private void setToggleGroupListener() {
-        conditionGood = (Button)findViewById(R.id.conditionGoodButton);
-        conditionGood.setOnClickListener(new View.OnClickListener() {
+    private void setConditionGroupListener() {
+        conditionGoodButton = findViewById(R.id.conditionGoodButton);
+        conditionGoodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //TODO FIX STYLING
                 presenter.conditionChanged(Advert.Condition.GOOD);
+                conditionGoodButton.setPressed(true);
+                conditionOKButton.setPressed(false);
+                conditionNewButton.setPressed(false);
             }
         });
-        conditionNew= (Button) findViewById(R.id.conditionNewButton);
-        conditionNew.setOnClickListener(new View.OnClickListener() {
+        conditionNewButton = findViewById(R.id.conditionNewButton);
+        conditionNewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 presenter.conditionChanged(Advert.Condition.NEW);
+                conditionNewButton.setPressed(true);
+                conditionGoodButton.setPressed(false);
+                conditionOKButton.setPressed(false);
             }
         });
-        conditionOK = (Button) findViewById(R.id.conditionOkButton);
-        conditionOK.setOnClickListener(new View.OnClickListener() {
+        conditionOKButton = findViewById(R.id.conditionOkButton);
+        conditionOKButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 presenter.conditionChanged(Advert.Condition.OK);
+                conditionOKButton.setPressed(true);
+                conditionGoodButton.setPressed(false);
+                conditionNewButton.setPressed(false);
             }
         });
     }

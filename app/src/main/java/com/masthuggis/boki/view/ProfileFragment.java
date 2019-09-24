@@ -17,6 +17,10 @@ import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 import com.masthuggis.boki.presenter.ProfilePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
+/**
+ * Profile page used for displaying the adverts that the user have published. Also have an settings
+ * button to navigate to the app-wide settings.
+ */
 public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     private ProfilePresenter presenter = new ProfilePresenter(this);
     private RecyclerView recyclerView;

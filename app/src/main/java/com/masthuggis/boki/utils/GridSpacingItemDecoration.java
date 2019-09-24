@@ -5,6 +5,11 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * Decorator used to setup the layout of the recycler used for displaying a list of thumbnails.
+ * With this decorator we can for example set the number of columns to two and setting the spacing
+ * between the cells.
+ */
 public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
     private int spanCount;

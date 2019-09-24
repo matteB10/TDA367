@@ -13,8 +13,12 @@ import androidx.fragment.app.Fragment;
 
 import com.masthuggis.boki.R;
 
+/**
+ * NewAdFragment is the fragment of the view that shows how the user different options to create a new
+ * advertisement.
+ */
+
 public class NewAdFragment extends Fragment {
-    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.8F);
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,

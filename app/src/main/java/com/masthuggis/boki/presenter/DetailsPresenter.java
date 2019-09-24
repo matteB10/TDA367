@@ -1,11 +1,16 @@
 package com.masthuggis.boki.presenter;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import com.masthuggis.boki.R;
 import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
+
+/**
+ * DetailsPresenter is the presenter class for the view called DetailsActivity.
+ *
+ * Validates input from the user to
+ *
+ * It is the layer between the view and model and should therefore
+ */
+
 
 public class DetailsPresenter {
     private View view;
@@ -13,10 +18,15 @@ public class DetailsPresenter {
 
     public DetailsPresenter(View view, String advertID) {
         this.view = view;
-        this.advertisement = Repository.getInstance().getAdFromId(advertID);
+        this.advertisement = Repository.getInstance().getAdFromAdID(advertID);
 
         setupView();
     }
+
+    /**
+     * @setupView Provides a way for the view to show the values of the model. Is called from the single
+     * constructor of the class.
+     */
 
     private void setupView() {
         view.setName(advertisement.getTitle());
@@ -24,21 +34,27 @@ public class DetailsPresenter {
         view.setDescription(advertisement.getDescription());
         setCondition();
         if (advertisement.getImgURL() != null) {
-            view.setImageUrl(advertisement.getImgURL());}
-
-
+            view.setImageUrl(advertisement.getImgURL());
+        }
 
     }
 
     public interface View {
         void setName(String name);
-        void setPrice(int price);
+
+        void setPrice(long price);
+
         void setImageUrl(String url);
+
         void setDescription(String description);
         void setConditionGood();
         void setConditionNew();
         void setConditionOk();
+
+        //void setCondition(String condition);
     }
+
+    //TODO kommentera detta.
 
     private void setCondition(){
         switch (advertisement.getConditon()){

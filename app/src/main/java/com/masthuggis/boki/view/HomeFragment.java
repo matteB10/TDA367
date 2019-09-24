@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,10 @@ import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
+/**
+ * Home page displaying all the adverts that have been published to the market.
+ * Will also include filter and sort buttons in the future.
+ */
 public class HomeFragment extends Fragment implements HomePresenter.View {
 
     private HomePresenter presenter;
@@ -23,13 +28,9 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.home_fragment, container, false);
-
+        this.view = inflater.inflate(R.layout.home_fragment, container, false);
         this.presenter = new HomePresenter(this);
-        this.view = v;
-
-        return v;
-
+        return view;
     }
 
     private void setupList() {
@@ -43,7 +44,14 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
 
     @Override
     public void hideLoadingScreen() {
-        // TODO: implement loading screen and hide everything else
+        TextView loadingTextView = view.findViewById(R.id.homeLoadingTextView);
+        loadingTextView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showLoadingScreen() {
+        TextView loadingTextView = view.findViewById(R.id.homeLoadingTextView);
+        loadingTextView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -53,10 +61,6 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
         startActivity(intent);
     }
 
-    @Override
-    public void showLoadingScreen() {
-        // TODO: display the screen again
-    }
 
     @Override
     public void showThumbnails() {
