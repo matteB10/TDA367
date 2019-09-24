@@ -28,6 +28,7 @@ public class Repository implements RepositoryObserver {
     private static Repository repository;
     private final List<Advertisement> temporaryListOfAllAds = new ArrayList<>();
     private final List<RepositoryObserver> observers = new ArrayList<>();
+    private List<Advertisement> localAdList = new ArrayList<>();
 
     private Repository() {
     }
@@ -204,9 +205,18 @@ public class Repository implements RepositoryObserver {
         return null;
     }
 
+    //Same functionality as above method but based off of firebase
+    public Advertisement getAdFromAdID(String ID) {
+        for (Advertisement ad : localAdList) {
+            if (ad.getUniqueID().equals(ID))
+                return ad;
+        }
+        return null;
+    }
+
     //THIS METHOD CREATES AN ADVERT IN THE FIRESTORE DATABASE
     //Arguments should be fetched from fields when creating advert
-    public void storeAdvertInFirebase(Date datePublished, String uniqueOwnerID, String title, List<String> imgURLs,
+    public void storeAdvertInFirebase(Date datePublished, String uniqueOwnerID, String title, String imgURL,
                                       String description, int price, Advert.Condition condition, List<String> tags) {
         HashMap<String, Object> data = new HashMap<>();
         data.put("title", title);
@@ -214,14 +224,14 @@ public class Repository implements RepositoryObserver {
         data.put("uniqueOwnerID", uniqueOwnerID);
         data.put("condition", condition);
         data.put("price", price);
-        data.put("imageURLs", imgURLs);
+        data.put("imgURL", imgURL);
         data.put("tags", tags);
         BackendDataFetcher.getInstance().writeAdvertToFirebase(data);
     }
 
 
     //Fetches adverts from a user given a specific userID
-    //Uses custom interface for a callback from async query in the firebase db.
+    //The userID can be any string that isn't null or empty
     public void fetchAdvertsFromUserID(String userID, advertisementCallback advertisementCallback) {
         List<Advertisement> userIDAdverts = new ArrayList<>();
         BackendDataFetcher.getInstance().readUserIDAdverts(new advertisementDBCallback() {
@@ -233,7 +243,6 @@ public class Repository implements RepositoryObserver {
                 advertisementCallback.onCallback(userIDAdverts);
             }
         }, userID);
-
     }
 
 
@@ -245,6 +254,7 @@ public class Repository implements RepositoryObserver {
                 for (Map<String, Object> dataMap : advertDataList) {
                     allAdverts.add(retriveAdvert(dataMap));
                 }
+                localAdList = allAdverts; //Saves all fetched adverts in local list
                 advertisementCallback.onCallback(allAdverts);
             }
         });
@@ -256,12 +266,12 @@ public class Repository implements RepositoryObserver {
         String title = (String) dataMap.get("title");
         String description = (String) dataMap.get("description");
         long price = (long) dataMap.get("price");
-        List<String> imgURLs = (List<String>) dataMap.get("imageURLs");
+        String imgURL = (String) dataMap.get("imgURLs");
         List<String> tags = (List<String>) dataMap.get("tags");
         String uniqueOwnerID = (String) dataMap.get("uniqueOwnerID");
-//        Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
+        Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
 
-        return AdFactory.createAd(null, uniqueOwnerID, "uniqueID", title, imgURLs, description, 123, null);
+        return AdFactory.createAd(null, uniqueOwnerID, "uniqueID", title, imgURL, description, 123, null);
     }
 
     //Creates an Advert object with data given in form of a Key-Value Map
@@ -271,13 +281,16 @@ public class Repository implements RepositoryObserver {
         String title = (String) dataMap.get("title");
         String description = (String) dataMap.get("description");
         long price = (long) dataMap.get("price");
-        List<String> imgURLs = (List<String>) dataMap.get("imageURLs");
+        String imgURL = (String) dataMap.get("imgURL");
         List<String> tags = (List<String>) dataMap.get("tags");
         //TODO implement Date into Firebase in a neat fashion
-        return AdFactory.createAd(null, uniqueUserID, "uniqueAdID", title, imgURLs, description, 23, null);
+        return AdFactory.createAd(null, uniqueUserID, "uniqueAdID", title, imgURL, description, 23, null);
 
     }
 
+    public String getFireBaseID(String userID, String advertID) {
+        return BackendDataFetcher.getInstance().getfireBaseID(userID, advertID);
+    }
 
     //TODO FOR LATER IMPLEMENTATION
     public void addObserver(RepositoryObserver observer) {

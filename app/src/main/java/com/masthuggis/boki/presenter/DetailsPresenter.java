@@ -13,7 +13,7 @@ public class DetailsPresenter {
 
     public DetailsPresenter(View view, String advertID) {
         this.view = view;
-        this.advertisement = Repository.getInstance().getAdFromId(advertID);
+        this.advertisement = Repository.getInstance().getAdFromAdID(advertID);
 
         setupView();
     }
@@ -24,7 +24,7 @@ public class DetailsPresenter {
         view.setDescription(advertisement.getDescription());
         if (advertisement.getImgURL() != null) {
             view.setImageUrl(advertisement.getImgURL());}
-        view.setCondition(advertisement.getConditon().toString());
+        view.setCondition(advertisement.getConditon().toString()); //TODO Find out why this is throwing a NullPointer
 
     }
 

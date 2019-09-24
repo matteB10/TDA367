@@ -91,7 +91,7 @@ public class BackendDataFetcher implements iBackend {
     }
 
 
-    public void readUserIDAdverts(advertisementDBCallback advertisementDBCallback, String userID) {
+    void readUserIDAdverts(advertisementDBCallback advertisementDBCallback, String userID) {
         CollectionReference users = db.collection("users");
         users.document(userID).collection("adverts").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -112,7 +112,7 @@ public class BackendDataFetcher implements iBackend {
 
     //Fetch data for all adverts from all user
     //Not currently possible to attach listeners to subcollections, but possible to query so-called "Collection groups"
-    public void readAllAdvertData(advertisementDBCallback advertisementDBCallback) {
+    void readAllAdvertData(advertisementDBCallback advertisementDBCallback) {
         List<Map<String,Object>> advertDataList = new ArrayList<>();
         db.collectionGroup("adverts").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -124,6 +124,14 @@ public class BackendDataFetcher implements iBackend {
                 advertisementDBCallback.onCallBack(advertDataList);
             }
         });
+    }
+
+
+    //Small method for manually testing if firebase returns the correct ID's for users and adverts
+    public String getfireBaseID(String userID, String advertID) {
+        if(advertID != null)
+            return db.collection("users").document(userID).collection("adverts").document(advertID).getId();
+        return db.collection("users").document(userID).getId();
     }
 
 }

@@ -23,16 +23,6 @@ public class HomePresenter implements IProductsPresenter {
                 view.showThumbnails();
             }
         });
-
-        //Currently works fetching with any userID that isn't an empty string nor null
-        /*
-        Repository.getInstance().fetchAdvertsFromUserID("testUserID", new advertisementCallback() {
-            @Override
-            public void onCallback(List<Advertisement> advertisements) {
-                adverts = advertisements;
-                view.showThumbnails();
-            }
-        });*/
     }
 
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
