@@ -10,8 +10,13 @@ import java.util.List;
 public class AdFactory {
 
 
+    /*public static Advertisement createAd(Date datePublished, String uniqueOwnerID, String uniqueAdID, String title, String description, long price, Advert.Condition condition) {
 
-    public static Advertisement createAd(Date datePublished, String uniqueOwnerID, String id, String title, String imgURLs, String description, int price, Advert.Condition condition) {
+
+        return new Advert(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition);
+    }*/
+
+    public static Advertisement createAd(Date datePublished, String uniqueOwnerID, String id, String title, String imgURLs, String description, long price, Advert.Condition condition) {
 
         return new Advert(datePublished, uniqueOwnerID, id, title, imgURLs, description, price, condition);
     }

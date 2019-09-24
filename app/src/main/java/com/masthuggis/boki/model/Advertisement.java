@@ -17,7 +17,7 @@ public interface Advertisement {
 
     String getTitle();
 
-    int getPrice();
+    long getPrice();
 
     String getUniqueOwnerID();
 

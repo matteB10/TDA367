@@ -37,9 +37,9 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         contactOwnerButton.setOnClickListener(view -> {
             //TODO HÄR SKA CHATTEN ÖPPNAS TYP
             if (contactOwnerButton.getText() == "+46738083104") {
-             //   Intent intent = new Intent(Intent.ACTION_DIAL);
-               // intent.setData(Uri.parse(contactOwnerButton.getText().toString()));
-               // startActivity(intent);
+                //   Intent intent = new Intent(Intent.ACTION_DIAL);
+                // intent.setData(Uri.parse(contactOwnerButton.getText().toString()));
+                // startActivity(intent);
             } else {
                 contactOwnerButton.setText("+46738083104");
             }
@@ -53,15 +53,15 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
     @Override
-    public void setPrice(int price) {
+    public void setPrice(long price) {
         TextView textView = findViewById(R.id.detailsPrice);
-        textView.setText(Integer.toString(price) + " kr");
+        textView.setText(Long.toString(price) + " kr");
     }
 
     @Override
     public void setImageUrl(String url) {
         // TODO: fetch img, cache it and set it
-        ImageView imageView = (ImageView)findViewById(R.id.detailsImage);
+        ImageView imageView = (ImageView) findViewById(R.id.detailsImage);
         imageView.setImageURI(Uri.parse(url));
     }
 
@@ -70,6 +70,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         TextView textView = findViewById(R.id.details_description);
         textView.setText(description);
     }
+
     @Override
     public void setConditionNew(){
         TextView textView = findViewById(R.id.conditionTextView);
@@ -91,7 +92,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         ConstraintLayout layout = findViewById(R.id.conditionConstraintLayout);
         layout.setBackgroundColor(getResources().getColor(R.color.colorYellow));
     }
-
 
 
 

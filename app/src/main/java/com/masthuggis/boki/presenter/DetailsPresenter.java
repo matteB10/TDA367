@@ -13,7 +13,7 @@ public class DetailsPresenter {
 
     public DetailsPresenter(View view, String advertID) {
         this.view = view;
-        this.advertisement = Repository.getInstance().getAdFromId(advertID);
+        this.advertisement = Repository.getInstance().getAdFromAdID(advertID);
 
         setupView();
     }
@@ -24,20 +24,24 @@ public class DetailsPresenter {
         view.setDescription(advertisement.getDescription());
         setCondition();
         if (advertisement.getImgURL() != null) {
-            view.setImageUrl(advertisement.getImgURL());}
-
-
+            view.setImageUrl(advertisement.getImgURL());
+        }
 
     }
 
     public interface View {
         void setName(String name);
-        void setPrice(int price);
+
+        void setPrice(long price);
+
         void setImageUrl(String url);
+
         void setDescription(String description);
         void setConditionGood();
         void setConditionNew();
         void setConditionOk();
+
+        //void setCondition(String condition);
     }
 
     private void setCondition(){
