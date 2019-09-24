@@ -12,6 +12,7 @@ import java.util.List;
 
 public class HomePresenter implements IProductsPresenter {
     private View view;
+    private List<Advertisement> adverts;
 
     public HomePresenter(View view) {
         this.view = view;
@@ -22,7 +23,6 @@ public class HomePresenter implements IProductsPresenter {
     }
 
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
-        Repository.getInstance().getAllAds()
         Advertisement a = adverts.get(position);
         thumbnailView.setId(a.getUniqueID());
         thumbnailView.setTitle(a.getTitle());

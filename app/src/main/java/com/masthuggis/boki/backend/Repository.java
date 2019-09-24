@@ -23,7 +23,7 @@ import java.util.Map;
  * Data is fetched using the BackendDataFetcher class.
  */
 
-public class Repository implements RepositoryObserver {
+public class Repository {
     private static JSONObject booksJsonObj;
     private static Repository repository;
     private final List<Advertisement> temporaryListOfAllAds = new ArrayList<>();
@@ -180,7 +180,6 @@ public class Repository implements RepositoryObserver {
 
     }
 
-
     public String getFireBaseID(String userID, String advertID) {
         return BackendDataFetcher.getInstance().getFireBaseID(userID, advertID);
     }
@@ -190,8 +189,7 @@ public class Repository implements RepositoryObserver {
         observers.add(observer);
     }
 
-    @Override
-    public void userAdvertsForSaleUpdate(Iterator<Advertisement> advertsForSale) {
+    private void userAdvertsForSaleUpdate() {
         // TODO: change from temp list to actual user list
         observers.forEach(observer -> observer.userAdvertsForSaleUpdate(getTemporaryListOfAllAds().iterator()));
     }
