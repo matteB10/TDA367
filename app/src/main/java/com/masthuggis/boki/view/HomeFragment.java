@@ -16,6 +16,10 @@ import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
+/**
+ * Home page displaying all the adverts that have been published to the market.
+ * Will also include filter and sort buttons in the future.
+ */
 public class HomeFragment extends Fragment implements HomePresenter.View {
 
     private HomePresenter presenter;
