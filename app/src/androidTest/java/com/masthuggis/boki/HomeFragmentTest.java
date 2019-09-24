@@ -1,15 +1,9 @@
 package com.masthuggis.boki;
 
-import android.content.Context;
-
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.backend.iRepository;
-import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.presenter.HomePresenter;
-import com.masthuggis.boki.view.RowView;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,12 +20,11 @@ public class HomeFragmentTest {
     @Test
     public void numAdvertsShow_IsSameAsRepository() {
         HomePresenter.View view = createHomeView();
-        iRepository repository = Repository.getInstance();
         HomePresenter presenter = new HomePresenter(view);
 
-        int numItems = repository.getAllAds().size();
+        int numItems = Repository.getInstance().getAllAds().size();
 
-        assertEquals(presenter.getNumRows(), numItems);
+        assertEquals(presenter.getItemCount(), numItems);
     }
 
     private HomePresenter.View createHomeView() {
@@ -47,9 +40,10 @@ public class HomeFragmentTest {
             }
 
             @Override
-            public void showDetailsScreen(long id) {
+            public void showDetailsScreen(String id) {
 
             }
+
         };
     }
 }

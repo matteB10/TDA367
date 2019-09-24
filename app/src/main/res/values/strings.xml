@@ -28,7 +28,7 @@
     <string name="addAdvertPrice">*Pris</string>
     <string name="addAdvertAuthor">*Författare</string>
     <string name="addAdvertISBN">ISBN</string>
-    <string name="addAdvertOtherInfo">Övrig information:</string>
+    <string name="addAdvertOtherInfo">Beskrivning:</string>
 
     <string name="titleHint">Ange titel</string>
     <string name="authorHint">Ange författare</string>

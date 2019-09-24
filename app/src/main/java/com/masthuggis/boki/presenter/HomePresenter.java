@@ -3,35 +3,45 @@ package com.masthuggis.boki.presenter;
 import android.util.Log;
 
 import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.backend.iRepository;
+import com.masthuggis.boki.backend.advertisementCallback;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.view.RowView;
+import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.List;
 
-public class HomePresenter {
+public class HomePresenter implements IProductsPresenter {
     private View view;
-    private iRepository modelRepository;
     private List<Advertisement> adverts;
 
     public HomePresenter(View view) {
         this.view = view;
-        this.modelRepository = Repository.getInstance();
-        this.adverts = modelRepository.getAllAds();
+        Repository.getInstance().fetchAdvertsFromUserID("testUserID", new advertisementCallback() {
+            @Override
+            public void onCallback(List<Advertisement> advertisements) {
+                adverts = advertisements;
+                view.showThumbnails();
+            }
+        });
     }
 
-    public void onBindRepositoryRowViewAtPosition(int position, RowView rowView) {
+    public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
         Advertisement a = adverts.get(position);
-        rowView.setId(a.getTitle());
-        rowView.setTitle(a.getTitle());
-        rowView.setPrice(a.getPrice());
-        if (a.getImgURLs().next() != null) {
-            rowView.setImageUrl(a.getImgURLs().next());
+        thumbnailView.setId(a.getTitle());
+        thumbnailView.setTitle(a.getTitle());
+        thumbnailView.setPrice(a.getPrice());
+        if (a.getImgURL() != null)
+            thumbnailView.setImageUrl(a.getImgURL());
+        thumbnailView.setId(a.getUniqueID());
+        thumbnailView.setTitle(a.getTitle());
+        thumbnailView.setPrice(a.getPrice());
+        if (a.getImgURL() != null) {
+            thumbnailView.setImageUrl(a.getImgURL());
+
         }
     }
 
-    public int getNumRows() {
-        return modelRepository.getAllAds().size();
+    public int getItemCount() {
+        return adverts.size();
     }
 
     public void onRowPressed(String uniqueIDoFAdvert) {
@@ -43,7 +53,11 @@ public class HomePresenter {
 
     public interface View {
         void showLoadingScreen();
+
+        void showThumbnails();
+
         void hideLoadingScreen();
+
         void showDetailsScreen(String id);
     }
 }

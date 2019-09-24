@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
       /*  backendDataFetcher.addNewBook(new Book("testTitle","testAuthor",1,666,1234567890,
                 1337, Book.Condition.GOOD,null,null));*/
 
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment()).commit();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {

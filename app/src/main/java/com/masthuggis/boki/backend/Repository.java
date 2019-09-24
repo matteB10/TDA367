@@ -1,23 +1,20 @@
 package com.masthuggis.boki.backend;
 
+import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.model.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-
-import static com.google.gson.internal.bind.TypeAdapters.UUID;
+import java.util.Map;
 
 /**
  * Class providing the functionality to convert data from backend into Book-objects to be used
@@ -25,23 +22,22 @@ import static com.google.gson.internal.bind.TypeAdapters.UUID;
  * Data is fetched using the BackendDataFetcher class.
  */
 
-public class Repository implements iRepository {
+public class Repository implements RepositoryObserver {
     private static JSONObject booksJsonObj;
-    private static Repository singleton = null;
+    private static Repository repository;
     private final List<Advertisement> temporaryListOfAllAds = new ArrayList<>();
     private final List<RepositoryObserver> observers = new ArrayList<>();
-
 
     private Repository() {
     }
 
     public static Repository getInstance() {
-        if (singleton == null) {
-            return new Repository();
-        } else {
-            return singleton;
+        if (repository == null) {
+            repository = new Repository();
         }
+        return repository;
     }
+
 
     /**
      * Method that fetches all books from the local .json.file and returns them as a list of Advert
@@ -50,23 +46,44 @@ public class Repository implements iRepository {
      * @return a list of all the Advert objects that have been created from the json-file.
      */
 
-
-    @Override
-    public List<Advertisement> getAllAds() {
+    private void readFromBackend() {
         String json = BackendDataFetcher.getInstance().getMockBooks(Boki.getAppContext());
-        List<Advertisement> books = new ArrayList<>();
         try {
             JSONObject booksObject = new JSONObject(json);
             JSONArray booksArray = booksObject.getJSONArray("books"); //Array in json file must be named "books"
             for (int i = 0; i < booksArray.length(); i++) {
                 //Needs some way to create a book from the data that is fetched from each JSON-object
-                books.add(createBookWithoutTags(booksArray.getJSONObject(i)));
+                createBookWithoutTags(booksArray.getJSONObject(i));
             }
         } catch (JSONException exception) {
             exception.printStackTrace();
         }
-        return books;
     }
+
+    /**
+     * Used during developement, just needed to be called once. Reads from json
+     * and adds Adverts to temporary list.
+     *
+     * @return
+     */
+
+    public List<Advertisement> getAllAds() {
+        //Only during developement, hard coded value from number of ads in Json-file
+        if (temporaryListOfAllAds.size() < 12) {
+            readFromBackend();
+        }
+        return temporaryListOfAllAds;
+    }
+
+    /**
+     * Should be used for now instead of getAllAdds()
+     *
+     * @return temporaryListOfAllAds
+     */
+    public List<Advertisement> getTemporaryListOfAllAds() {
+        return temporaryListOfAllAds;
+    }
+
 
     /**
      * Should probably use som form of factory for creating books in order to make the method
@@ -97,7 +114,7 @@ public class Repository implements iRepository {
             String conditionString = object.getString("condition");
             condition = Advert.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
             List<String> imgURLS = new ArrayList<>();
-            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", title,imgURLS, "Description", price, condition);
+            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", "UniqueAdID", title, imgURLS, "Description", price, condition);
             temporaryListOfAllAds.add(ad);
             return ad;
         } catch (JSONException e) {
@@ -106,57 +123,36 @@ public class Repository implements iRepository {
         }
     }
 
+
     /**
-     * Creates a book object given a JSONObject from the local file.
-     *
-     * @param object the JSONObject used to create a Book-object
-     * @return a Book with fields corresponding to the key-value pairs of the JSONObject.
+     * Creates a new Advertisement given input from user
      */
-    @Override
-    public Advertisement createAdvert(JSONObject object) {
-        String title;
-        String author;
-        int edition;
-        int price;
-        long isbn;
-        int yearPublished;
-        Advert.Condition condition;
-        List<String> preDefinedTags;
-        List<String> userTags;
-        try {
-            title = object.getString("title");
-            author = object.getString("author");
-            edition = object.getInt("edition");
-            price = object.getInt("price");
-            isbn = object.getLong("isbn");
-            yearPublished = object.getInt("yearPublished");
-            condition = Advert.Condition.valueOf(object.getString("condition")); //Shorthand
-            preDefinedTags = getPreDefinedTags(object);
-            userTags = getUserTags(object);
-            List<String> imgURLS = new ArrayList<>();
-            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", title,imgURLS, "Description", price, condition);
-            temporaryListOfAllAds.add(ad);
-            return ad;
-        } catch (JSONException exception) {
-            exception.printStackTrace();
-            return null;
-        }
+    public void storeAdvertInFirebase(String userID, String adID, String title, String description, int price, Advert.Condition condition, List<String> tags, String imageURL) {
+        Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), userID, adID, title, imageURL, description, price, condition);
+        userAdvertsForSaleUpdate(temporaryListOfAllAds.iterator());
+
+        temporaryListOfAllAds.add(ad);
     }
 
     /**
-     * Creates an advertisement given input from createAdvertPresenter
+     * Creates a new empty Advertisement, used during creation of a new ad
      *
-     * @param t,d,p,c needed to create advert
-     * @return an Advertisement
+     * @return an empty Advertisement
      */
-    public Advertisement createAdvert(String t, String d, int p, Advert.Condition c, List<String> tags, String imageURL) {
+    public Advertisement storeAdvertInFirebase() {
+        return AdFactory.createAd();
 
-        Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", t,imageURL, "Description", p, c);
-            temporaryListOfAllAds.add(ad);
-            return ad;
     }
 
-    @Override
+
+    /**
+     * @param advertisement gets saved into temporary list
+     */
+    public void saveAdvert(Advertisement advertisement) {
+        temporaryListOfAllAds.add(advertisement);
+    }
+
+
     public User createUser() {
         return new User();
     }
@@ -192,31 +188,83 @@ public class Repository implements iRepository {
     }
 
     /**
-     *
-     * Temporary method for getting ad from unique ID.
+     * Method for getting ad from unique ID.
      *
      * @param
      * @return
      */
-    @Override
-    public Advertisement getAdFromId(String name) {
+    public Advertisement getAdFromId(String id) {
 
         for (Advertisement ad : temporaryListOfAllAds) {
-            if (ad.getTitle().equals(name)) {
+            if (ad.getUniqueID().equals(id)) {
                 return ad;
             }
         }
         return null;
     }
 
-    //TODO FOR LATER IMPLEMENTATION
-
-    private void updateObservers() {
-        observers.forEach(observer -> observer.update());
+    //THIS METHOD CREATES AN ADVERT IN THE FIRESTORE DATABASE
+    //Arguments should be fetched from fields when creating advert
+    public void storeAdvertInFirebase(Date datePublished, String uniqueOwnerID, String title, List<String> imgURLs,
+                                      String description, int price, Advert.Condition condition, List<String> tags) {
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("title", title);
+        data.put("description", description);
+        data.put("uniqueOwnerID", uniqueOwnerID);
+        data.put("condition", condition);
+        data.put("price", price);
+        data.put("imageURLs", imgURLs);
+        data.put("tags", tags);
+        BackendDataFetcher.getInstance().writeAdvertToFirebase(data);
     }
 
-    private void addObserver(RepositoryObserver observer) {
+
+    //Fetches adverts from a user given a specific userID
+    //Uses custom interface for a callback from async query in the firebase db.
+    public void fetchAdvertsFromUserID(String userID, advertisementCallback advertisementCallback) {
+        List<Advertisement> userIDAdverts = new ArrayList<>();
+        BackendDataFetcher.getInstance().readFirebaseData(new advertisementDBCallback() {
+            @Override
+            public void onCallBack(List<Map<String, Object>> advertDataList) {
+                for (Map<String, Object> dataMap : advertDataList) {
+                    userIDAdverts.add(retrieveAdvert(dataMap,userID));
+                }
+                advertisementCallback.onCallback(userIDAdverts);
+            }
+        }, userID);
+
+    }
+
+
+    public void fetchAllAdverts(advertisementCallback advertisementCallback) {
+
+    }
+
+
+    //Creates an Advert object with data given in form of a Key-Value Map
+    //Very hardcoded, "Magic-string" implementation, but should be okay
+    private Advertisement retrieveAdvert(Map<String, Object> dataMap, String uniqueUserID) {
+        //Date datePublished = dataMap.get("datePublished"); //Oklart
+        String title = (String) dataMap.get("title");
+        String description = (String) dataMap.get("description");
+        long price = (long) dataMap.get("price");
+        List<String> imgURLs = (List<String>) dataMap.get("imageURLs");
+        List<String> tags = (List<String>) dataMap.get("tags");
+        //TODO implement Date and Condition into Firebase in a neat fashion
+        return AdFactory.createAd(null, uniqueUserID, "uniqueAdID", title, imgURLs, description, 23, null);
+
+    }
+
+
+    //TODO FOR LATER IMPLEMENTATION
+    public void addObserver(RepositoryObserver observer) {
         observers.add(observer);
+    }
+
+    @Override
+    public void userAdvertsForSaleUpdate(Iterator<Advertisement> advertsForSale) {
+        // TODO: change from temp list to actual user list
+        observers.forEach(observer -> observer.userAdvertsForSaleUpdate(getTemporaryListOfAllAds().iterator()));
     }
 }
 

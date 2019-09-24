@@ -2,75 +2,80 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advert;
+import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.utils.FormHelper;
 
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.List;
 
 public class CreateAdPresenter{
 
+    private Advertisement advertisement;
+
+
     private View view;
-    private String title;
-    private String description;
-    private int price;
-    private String imageUri;
-    private List<String> tags;
-    private Advert.Condition condition;
+    private boolean validPrice;
 
 
 
     public CreateAdPresenter(View view){
         this.view = view;
+        this.advertisement = Repository.getInstance().storeAdvertInFirebase();
     }
 
     public interface View{
+         void enablePublishButton();
 
         //TODO: create methods for future same page error messages in view
-        void deleteTag(String tag);
+
     }
 
-    //arbitrary length, can be changed
     public void titleChanged(String title){
-        if (title.length() > 6) {
-            this.title = title;
+        advertisement.setTitle(title);
+        if(allFieldsValid()){
+            view.enablePublishButton();
+
         }
     }
     public void priceChanged(String price){
         if(FormHelper.getInstance().isValidPrice(price)){
-            this.price = Integer.parseInt(price);
+            advertisement.setPrice(Integer.parseInt(price));
+            validPrice = true;
+        }else{
+            validPrice = false;
+        }
+        if(allFieldsValid()) {
+            view.enablePublishButton();
         }
     }
     //cannot check for valid input, all input is valid
     public void descriptionChanged(String description){
-        this.description = description;
+        advertisement.setDescription(description);
     }
     public void imageURIChanged(String imageURI){
-        this.imageUri = convertURIStringToURLString(imageURI);
+        advertisement.setImgURI(imageURI);
+
     }
 
     public void tagsChanged(String tag){
-        if(isNewTag(tag)){
-            tags.add(tag);
-        }
+        advertisement.tagsChanged(tag);
     }
+
     public void conditionChanged(Advert.Condition condition){
-        this.condition = condition;
-
-    }
-    public void createAdvert(){
-        Repository.getInstance().createAdvert(title,description,price,condition,tags,imageUri);
-    }
-
-
-    private boolean isNewTag(String tag){
-        for(String s : tags){
-            if(s.equals(tag)){
-                return false;
-            }
+        advertisement.setCondition(condition);
+        if(allFieldsValid()) {
+            view.enablePublishButton();
         }
-        return true;
+
     }
+
+    private boolean allFieldsValid(){
+        return (advertisement.getTitle().length() > 2 && validPrice && advertisement.getConditon() !=
+        Advert.Condition.UNDEFINED);
+        //TODO: expand validation to image URI
+    }
+
     //TODO: Maybe put a standard URL to some image in the catch block
     private String convertURIStringToURLString(String URI){
         String URLString;
@@ -81,6 +86,49 @@ public class CreateAdPresenter{
             URLString = "";
         }
         return URLString;
+    }
+
+
+    /**
+     * Called on click on button in createAdActivity
+     * saves advert in temp list and resets current ad in presenter
+     */
+    public void publishAdvert(){
+        Repository.getInstance().saveAdvert(advertisement);
+        advertisement = null;
+    }
+
+    public String getId(){
+        return advertisement.getUniqueID();
+    }
+
+    //Getters for testing purpose
+    public View getView() {
+        return view;
+    }
+
+    public String getTitle() {
+        return advertisement.getTitle();
+    }
+
+    public String getDescription() {
+        return advertisement.getDescription();
+    }
+
+    public int getPrice() {
+        return advertisement.getPrice();
+    }
+
+    public String getImageUri() {
+        return advertisement.getImgURL();
+    }
+
+    public List<String> getTags() {
+        return advertisement.getTags();
+    }
+
+    public Advert.Condition getCondition() {
+        return advertisement.getConditon();
     }
 
 

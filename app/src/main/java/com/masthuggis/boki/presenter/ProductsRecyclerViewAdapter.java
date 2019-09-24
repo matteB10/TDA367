@@ -1,6 +1,7 @@
 package com.masthuggis.boki.presenter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +12,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.view.RowView;
+import com.masthuggis.boki.model.Advert;
+import com.masthuggis.boki.view.ThumbnailView;
 
 public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder> {
 
-    private HomePresenter presenter;
+    private IProductsPresenter presenter;
     private Context mContext;
 
-    public ProductsRecyclerViewAdapter(Context context, HomePresenter presenter) {
+    public ProductsRecyclerViewAdapter(Context context, IProductsPresenter presenter) {
         this.mContext = context;
         this.presenter = presenter;
+    }
+
+    public void addDecorator(RecyclerView.ItemDecoration decorator) {
+        this.addDecorator(decorator);
     }
 
     @NonNull
@@ -33,15 +39,15 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
 
     @Override
     public int getItemCount() {
-        return presenter.getNumRows();
+        return presenter.getItemCount();
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        presenter.onBindRepositoryRowViewAtPosition(position, holder);
+        presenter.onBindThumbnailViewAtPosition(position, holder);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements RowView {
+    public class ViewHolder extends RecyclerView.ViewHolder implements ThumbnailView {
 
         private TextView nameTextView;
         private TextView priceTextView;
@@ -77,12 +83,17 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
 
         @Override
         public void setImageUrl(String url) {
-            // TODO: implement func to show image
+            imageView.setImageURI(Uri.parse(url));
         }
 
         @Override
         public void setId(String id) {
             this.id =id;
+        }
+
+        @Override
+        public void setCondition(Advert.Condition conditon) {
+
         }
 
 

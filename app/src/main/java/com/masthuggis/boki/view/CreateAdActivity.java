@@ -1,10 +1,6 @@
 package com.masthuggis.boki.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -17,31 +13,35 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
-import android.widget.ToggleButton;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CreateAdActivity extends AppCompatActivity implements CreateAdPresenter.View {
 
+
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    String currentImagePath;
-    CreateAdPresenter presenter;
+    private String currentImagePath;
+    private CreateAdPresenter presenter;
 
-    ImageView imageViewDisplay;
-    EditText title;
-    EditText price;
-    EditText description;
-    RadioGroup conditionToggleGroup;
-    Button conditionGood;
+    private ImageView imageViewDisplay;
+    private EditText title;
+    private EditText price;
+    private EditText description;
+    private Button conditionNew;
+    private Button conditionGood;
+    private Button conditionOK;
+    private Button publishAdButton;
 
 
     @Override
@@ -49,11 +49,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_advert);
         presenter = new CreateAdPresenter(this);
-        conditionToggleGroup = findViewById(R.id.conditionToggleGroup);
-        conditionGood = findViewById(R.id.conditionGoodButton);
-        conditionToggleGroup.check(conditionGood.getId());
-
-        imageViewDisplay = findViewById(R.id.addImageView);
+        imageViewDisplay = (ImageView) findViewById(R.id.addImageView);
+        disablePublishAdButton();
         setListeners();
 
 
@@ -74,6 +71,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
                 System.out.println(imageURI);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
             }
 
         }
@@ -91,7 +89,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        imageViewDisplay = findViewById(R.id.addImageView);
+        imageViewDisplay = (ImageView) findViewById(R.id.addImageView);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap bitmap = decodeBitmap();
@@ -132,22 +130,56 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
 
-
-
-    private void setListeners(){
+    private void setListeners() {
         setImageViewListener();
         setTitleListener();
         setPriceListener();
         setDescriptionListener();
+        setCreateAdvertListener();
+        setToggleGroupListener();
 
+    }
+
+    private void setToggleGroupListener() {
+        conditionGood = (Button)findViewById(R.id.conditionGoodButton);
+        conditionGood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO FIX STYLING
+                presenter.conditionChanged(Advert.Condition.GOOD);
+            }
+        });
+        conditionNew= (Button) findViewById(R.id.conditionNewButton);
+        conditionNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.conditionChanged(Advert.Condition.NEW);
+            }
+        });
+        conditionOK = (Button) findViewById(R.id.conditionOkButton);
+        conditionOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.conditionChanged(Advert.Condition.OK);
+            }
+        });
     }
 
     @Override
-    public void deleteTag(String tag) {
+    public void enablePublishButton() {
+        publishAdButton.setEnabled(true);
+        publishAdButton.setBackgroundColor(getResources().getColor(R.color.colorTeal));
 
     }
 
-    private void setImageViewListener(){
+
+    private void disablePublishAdButton(){
+        publishAdButton = findViewById(R.id.publishAdButton);
+        publishAdButton.setEnabled(false);
+        publishAdButton.setBackgroundColor(getResources().getColor(R.color.colorGreyLight));
+    }
+
+    private void setImageViewListener() {
         imageViewDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,8 +189,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     }
 
-    private void setTitleListener(){
-        title = findViewById(R.id.titleEditText);
+    private void setTitleListener() {
+        title = (EditText) findViewById(R.id.titleEditText);
         title.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -176,8 +208,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             }
         });
     }
-    private void setPriceListener(){
-        price = findViewById(R.id.priceEditText);
+
+    private void setPriceListener() {
+        price = (EditText) findViewById(R.id.priceEditText);
         price.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -195,8 +228,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             }
         });
     }
-    private void setDescriptionListener(){
-        description = findViewById(R.id.otherInfoEditText);
+
+    private void setDescriptionListener() {
+        description = (EditText) findViewById(R.id.descriptionEditText);
         description.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -215,5 +249,19 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         });
     }
 
-}
+    private void setCreateAdvertListener() {
+        publishAdButton = (Button) findViewById(R.id.publishAdButton);
+        publishAdButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CreateAdActivity.
+                        this, DetailsActivity.class);
+                intent.putExtra("advertID", presenter.getId());
+                presenter.publishAdvert();
+                startActivity(intent);
+            }
+        });
 
+    }
+
+}
