@@ -77,8 +77,8 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         }
 
         @Override
-        public void setPrice(int price) {
-            priceTextView.setText(Integer.toString(price) + " kr");
+        public void setPrice(long price) {
+            priceTextView.setText(Long.toString(price) + " kr");
         }
 
         @Override

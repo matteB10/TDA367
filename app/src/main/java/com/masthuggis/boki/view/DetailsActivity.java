@@ -53,9 +53,9 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
     @Override
-    public void setPrice(int price) {
+    public void setPrice(long price) {
         TextView textView = findViewById(R.id.detailsPrice);
-        textView.setText(Integer.toString(price) + " kr");
+        textView.setText(Long.toString(price) + " kr");
     }
 
     @Override

@@ -115,7 +115,7 @@ public class CreateAdPresenter{
         return advertisement.getDescription();
     }
 
-    public int getPrice() {
+    public long getPrice() {
         return advertisement.getPrice();
     }
 

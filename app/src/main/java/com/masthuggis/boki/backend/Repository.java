@@ -127,7 +127,7 @@ public class Repository implements RepositoryObserver {
 
 
     /**
-     * Creates a new Advertisement given input from user
+     * Creates an Advertisement-object with input given from the user and stores it in a local list of Ads
      */
     public void storeAdvertInFirebase(String userID, String adID, String title, String description, int price, Advert.Condition condition, List<String> tags, String imageURL) {
         Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), userID, adID, title, imageURL, description, price, condition);
@@ -214,8 +214,11 @@ public class Repository implements RepositoryObserver {
         return null;
     }
 
-    //THIS METHOD CREATES AN ADVERT IN THE FIRESTORE DATABASE
-    //Arguments should be fetched from fields when creating advert
+    /**
+     * Creates an advert-object in the firebase database with input given by the user
+     * Input is parsed to a HashMap which is used by the BackendDataFetcher to write the data to firebase
+     *
+     */
     public void storeAdvertInFirebase(Date datePublished, String uniqueOwnerID, String title, String imgURL,
                                       String description, int price, Advert.Condition condition, List<String> tags) {
         HashMap<String, Object> data = new HashMap<>();
@@ -271,7 +274,7 @@ public class Repository implements RepositoryObserver {
         String uniqueOwnerID = (String) dataMap.get("uniqueOwnerID");
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
 
-        return AdFactory.createAd(null, uniqueOwnerID, "uniqueID", title, imgURL, description, 123, condition);
+        return AdFactory.createAd(null, uniqueOwnerID, "uniqueID", title, imgURL, description, price, condition);
     }
 
     //Creates an Advert object with data given in form of a Key-Value Map
@@ -285,7 +288,7 @@ public class Repository implements RepositoryObserver {
         List<String> tags = (List<String>) dataMap.get("tags");
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         //TODO implement Date into Firebase in a neat fashion
-        return AdFactory.createAd(null, uniqueUserID, "uniqueAdID", title, imgURL, description, 23, Advert.Condition.OK);
+        return AdFactory.createAd(null, uniqueUserID, "uniqueAdID", title, imgURL, description, price, Advert.Condition.OK);
 
     }
 

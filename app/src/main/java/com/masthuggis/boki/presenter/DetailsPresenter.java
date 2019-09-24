@@ -30,7 +30,7 @@ public class DetailsPresenter {
 
     public interface View {
         void setName(String name);
-        void setPrice(int price);
+        void setPrice(long price);
         void setImageUrl(String url);
         void setDescription(String description);
         void setCondition(String condition);
