@@ -2,6 +2,7 @@ package com.masthuggis.boki.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public class Advert implements Advertisement {
     private String uniqueOwnerID;
     private String uniqueAdID;
     private String title;
-    private List<String> imgURLs = new ArrayList<>();
+    private List<String> imgURLs;
     private String imageURL;
     private String description;
     private int price;
@@ -32,6 +33,7 @@ public class Advert implements Advertisement {
         this.uniqueOwnerID = uniqueOwnerID;
         this.title = title;
         this.imgURLs = imgURLs;
+        imgURLs.add("TEST"); //Gives nullPointerException when loading all adverts???
         this.description = description;
         this.price = price;
         this.condition = condition;

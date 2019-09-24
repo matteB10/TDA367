@@ -35,6 +35,11 @@ public class HomeFragmentTest {
             }
 
             @Override
+            public void showThumbnails() {
+
+            }
+
+            @Override
             public void hideLoadingScreen() {
 
             }

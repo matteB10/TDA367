@@ -14,8 +14,9 @@ public class HomePresenter implements IProductsPresenter {
     private List<Advertisement> adverts;
 
     public HomePresenter(View view) {
+        Repository.getInstance().storeAdvertInFirebase();
         this.view = view;
-        Repository.getInstance().fetchAdvertsFromUserID("testUserID", new advertisementCallback() {
+        Repository.getInstance().fetchAllAdverts(new advertisementCallback() {
             @Override
             public void onCallback(List<Advertisement> advertisements) {
                 adverts = advertisements;
