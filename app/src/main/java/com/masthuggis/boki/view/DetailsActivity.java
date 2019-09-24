@@ -71,11 +71,27 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         textView.setText(description);
     }
     @Override
-    public void setCondition(String condition){
+    public void setConditionNew(){
         TextView textView = findViewById(R.id.conditionTextView);
-        textView.setText(condition);
-        //TODO:fix change color background
+        textView.setText(getResources().getString(R.string.conditionNew));
+        ConstraintLayout layout = findViewById(R.id.conditionConstraintLayout);
+        layout.setBackgroundColor(getResources().getColor(R.color.colorCoral));
     }
+    @Override
+    public void setConditionGood(){
+        TextView textView = findViewById(R.id.conditionTextView);
+        textView.setText(getResources().getString(R.string.conditionGood));
+        ConstraintLayout layout = findViewById(R.id.conditionConstraintLayout);
+        layout.setBackgroundColor(getResources().getColor(R.color.colorTeal));
+    }
+    @Override
+    public void setConditionOk(){
+        TextView textView = findViewById(R.id.conditionTextView);
+        textView.setText(getResources().getString(R.string.conditionOk));
+        ConstraintLayout layout = findViewById(R.id.conditionConstraintLayout);
+        layout.setBackgroundColor(getResources().getColor(R.color.colorYellow));
+    }
+
 
 
 
