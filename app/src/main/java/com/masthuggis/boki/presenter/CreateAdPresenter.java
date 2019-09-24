@@ -9,6 +9,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+/**
+ * Presenter class handling the createAdActivity. Validates input from
+ * user and saves in textfields if activity is temporary terminated.
+ */
+
 public class CreateAdPresenter{
 
     private Advertisement advertisement;
@@ -21,7 +26,7 @@ public class CreateAdPresenter{
 
     public CreateAdPresenter(View view){
         this.view = view;
-        this.advertisement = Repository.getInstance().storeAdvertInFirebase();
+        this.advertisement = Repository.getInstance().createAdvert();
     }
 
     public interface View{

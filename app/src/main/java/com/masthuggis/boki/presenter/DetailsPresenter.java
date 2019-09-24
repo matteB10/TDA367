@@ -13,7 +13,7 @@ public class DetailsPresenter {
 
     public DetailsPresenter(View view, String advertID) {
         this.view = view;
-        this.advertisement = Repository.getInstance().getAdFromAdID(advertID);
+        this.advertisement = Repository.getInstance().getAdFromId(advertID);
 
         setupView();
     }
@@ -22,9 +22,11 @@ public class DetailsPresenter {
         view.setName(advertisement.getTitle());
         view.setPrice(advertisement.getPrice());
         view.setDescription(advertisement.getDescription());
+        setCondition();
         if (advertisement.getImgURL() != null) {
             view.setImageUrl(advertisement.getImgURL());}
-        view.setCondition(advertisement.getConditon().toString()); //TODO Find out why all Adverts gets the Condition GOOD
+
+
 
     }
 
@@ -33,17 +35,24 @@ public class DetailsPresenter {
         void setPrice(int price);
         void setImageUrl(String url);
         void setDescription(String description);
-        void setCondition(String condition);
+        void setConditionGood();
+        void setConditionNew();
+        void setConditionOk();
     }
-    private void calcConditionBackgroundColor(){
+
+    private void setCondition(){
         switch (advertisement.getConditon()){
             //TODO: get access to res/colors to return right color depending on condition
             case NEW:
+                view.setConditionNew();
                 break;
             case GOOD:
+                view.setConditionGood();
                 break;
             case OK:
-               break;
+                view.setConditionOk();
         }
+
     }
+
 }

@@ -114,8 +114,7 @@ public class Repository implements RepositoryObserver {
             yearPublished = object.getInt("yearPublished");
             String conditionString = object.getString("condition");
             condition = Advert.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
-            List<String> imgURLS = new ArrayList<>();
-            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", "UniqueAdID", title, imgURLS, "Description", price, condition);
+            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", "UniqueAdID", title, "imgURL", "Description", price, condition);
             temporaryListOfAllAds.add(ad);
             return ad;
         } catch (JSONException e) {
@@ -140,7 +139,7 @@ public class Repository implements RepositoryObserver {
      *
      * @return an empty Advertisement
      */
-    public Advertisement storeAdvertInFirebase() {
+    public Advertisement createAdvert() {
         return AdFactory.createAd();
 
     }
@@ -153,10 +152,6 @@ public class Repository implements RepositoryObserver {
         temporaryListOfAllAds.add(advertisement);
     }
 
-
-    public User createUser() {
-        return new User();
-    }
 
 
     private static List<String> getPreDefinedTags(JSONObject object) {
