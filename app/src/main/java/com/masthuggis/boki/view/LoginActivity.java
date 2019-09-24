@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                                                         Toast.LENGTH_LONG).show();
                                                 Log.v("error", task.getResult().toString());
                                             } else {
-                                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                                Intent intent = new Intent(LoginActivity.this, ProfileFragment.class);
                                                 startActivity(intent);
                                                 finish();
                                             }
