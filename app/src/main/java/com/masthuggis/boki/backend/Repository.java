@@ -69,7 +69,7 @@ public class Repository {
      */
     public void storeAdvertInFirebase(String userID, String adID, String title, String description, int price, Advert.Condition condition, List<String> tags, String imageURL) {
         Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), userID, adID, title, imageURL, description, price, condition);
-        userAdvertsForSaleUpdate(temporaryListOfAllAds.iterator());
+        userAdvertsForSaleUpdate(temporaryListOfAllAds);
 
         temporaryListOfAllAds.add(ad);
     }
@@ -189,9 +189,9 @@ public class Repository {
         observers.add(observer);
     }
 
-    private void userAdvertsForSaleUpdate() {
+    private void userAdvertsForSaleUpdate(List<Advertisement> updatedList) {
         // TODO: change from temp list to actual user list
-        observers.forEach(observer -> observer.userAdvertsForSaleUpdate(getTemporaryListOfAllAds().iterator()));
+        observers.forEach(observer -> observer.userAdvertsForSaleUpdate(updatedList.iterator()));
     }
 
     /**
@@ -200,7 +200,6 @@ public class Repository {
      *
      * @return a list of all the Advert objects that have been created from the json-file.
      */
-
     private void readFromBackend() {
         String json = BackendDataFetcher.getInstance().getMockBooks(Boki.getAppContext());
         try {
