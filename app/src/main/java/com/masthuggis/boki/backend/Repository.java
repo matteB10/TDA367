@@ -40,28 +40,6 @@ public class Repository implements RepositoryObserver {
         return repository;
     }
 
-
-    /**
-     * Method that fetches all books from the local .json.file and returns them as a list of Advert
-     * objects. Returns a new list for every method call.
-     *
-     * @return a list of all the Advert objects that have been created from the json-file.
-     */
-
-    private void readFromBackend() {
-        String json = BackendDataFetcher.getInstance().getMockBooks(Boki.getAppContext());
-        try {
-            JSONObject booksObject = new JSONObject(json);
-            JSONArray booksArray = booksObject.getJSONArray("books"); //Array in json file must be named "books"
-            for (int i = 0; i < booksArray.length(); i++) {
-                //Needs some way to create a book from the data that is fetched from each JSON-object
-                createBookWithoutTags(booksArray.getJSONObject(i));
-            }
-        } catch (JSONException exception) {
-            exception.printStackTrace();
-        }
-    }
-
     /**
      * Used during developement, just needed to be called once. Reads from json
      * and adds Adverts to temporary list.
@@ -86,45 +64,6 @@ public class Repository implements RepositoryObserver {
         return temporaryListOfAllAds;
     }
 
-
-    /**
-     * Should probably use som form of factory for creating books in order to make the method
-     * call less tedious.
-     * Does NOT create book-objects with tags in this version, user defined or not, DO NOT USE
-     * if all fields of the Book are required, faster performance-wise than creating a full
-     * Book-object with related tags.
-     *
-     * @param object the JSON-object which key-value pairs are read and converted into
-     *               the fields of the new Book-object.
-     */
-
-    private Advertisement createBookWithoutTags(JSONObject object) {
-        String title;
-        String author;
-        int edition;
-        int price;
-        long isbn;
-        int yearPublished;
-        Advert.Condition condition;
-        try { //Should use a factory-method instead
-            title = object.getString("title");
-            author = object.getString("author");
-            edition = object.getInt("edition");
-            price = object.getInt("price");
-            isbn = object.getLong("isbn");
-            yearPublished = object.getInt("yearPublished");
-            String conditionString = object.getString("condition");
-            condition = Advert.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
-            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", "UniqueAdID", title, "imgURL", "Description", price, condition);
-            temporaryListOfAllAds.add(ad);
-            return ad;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-
     /**
      * Creates an Advertisement-object with input given from the user and stores it in a local list of Ads
      */
@@ -145,7 +84,6 @@ public class Repository implements RepositoryObserver {
 
     }
 
-
     /**
      * @param advertisement gets saved into temporary list as well as in firebase
      */
@@ -164,36 +102,6 @@ public class Repository implements RepositoryObserver {
 
     }
 
-
-
-    private static List<String> getPreDefinedTags(JSONObject object) {
-        try {
-            JSONArray tagsArray = object.getJSONArray("preDefinedTags");
-            List<String> preDefinedTags = new ArrayList<>();
-            for (int i = 0; i < tagsArray.length(); i++) {
-                preDefinedTags.add(tagsArray.getString(i));
-            }
-            return preDefinedTags;
-        } catch (JSONException exception) {
-            exception.printStackTrace();
-            return null;
-        }
-    }
-
-
-    private static List<String> getUserTags(JSONObject object) {
-        try {
-            JSONArray tagsArray = object.getJSONArray("userTags");
-            List<String> userTags = new ArrayList<>();
-            for (int i = 0; i < tagsArray.length(); i++) {
-                userTags.add(tagsArray.getString(i));
-            }
-            return userTags;
-        } catch (JSONException exception) {
-            exception.printStackTrace();
-            return null;
-        }
-    }
 
     /**
      * Method for getting ad from unique ID.
@@ -273,6 +181,111 @@ public class Repository implements RepositoryObserver {
     }
 
 
+    public String getFireBaseID(String userID, String advertID) {
+        return BackendDataFetcher.getInstance().getFireBaseID(userID, advertID);
+    }
+
+    //TODO FOR LATER IMPLEMENTATION
+    public void addObserver(RepositoryObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void userAdvertsForSaleUpdate(Iterator<Advertisement> advertsForSale) {
+        // TODO: change from temp list to actual user list
+        observers.forEach(observer -> observer.userAdvertsForSaleUpdate(getTemporaryListOfAllAds().iterator()));
+    }
+
+    /**
+     * Method that fetches all books from the local .json.file and returns them as a list of Advert
+     * objects. Returns a new list for every method call.
+     *
+     * @return a list of all the Advert objects that have been created from the json-file.
+     */
+
+    private void readFromBackend() {
+        String json = BackendDataFetcher.getInstance().getMockBooks(Boki.getAppContext());
+        try {
+            JSONObject booksObject = new JSONObject(json);
+            JSONArray booksArray = booksObject.getJSONArray("books"); //Array in json file must be named "books"
+            for (int i = 0; i < booksArray.length(); i++) {
+                //Needs some way to create a book from the data that is fetched from each JSON-object
+                createBookWithoutTags(booksArray.getJSONObject(i));
+            }
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Should probably use som form of factory for creating books in order to make the method
+     * call less tedious.
+     * Does NOT create book-objects with tags in this version, user defined or not, DO NOT USE
+     * if all fields of the Book are required, faster performance-wise than creating a full
+     * Book-object with related tags.
+     *
+     * @param object the JSON-object which key-value pairs are read and converted into
+     *               the fields of the new Book-object.
+     */
+
+    private Advertisement createBookWithoutTags(JSONObject object) {
+        String title;
+        String author;
+        int edition;
+        int price;
+        long isbn;
+        int yearPublished;
+        Advert.Condition condition;
+        try { //Should use a factory-method instead
+            title = object.getString("title");
+            author = object.getString("author");
+            edition = object.getInt("edition");
+            price = object.getInt("price");
+            isbn = object.getLong("isbn");
+            yearPublished = object.getInt("yearPublished");
+            String conditionString = object.getString("condition");
+            condition = Advert.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
+            Advertisement ad = AdFactory.createAd(new Date(19, 9, 18), "UniqueOwnerID", "UniqueAdID", title, "imgURL", "Description", price, condition);
+            temporaryListOfAllAds.add(ad);
+            return ad;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static List<String> getPreDefinedTags(JSONObject object) {
+        try {
+            JSONArray tagsArray = object.getJSONArray("preDefinedTags");
+            List<String> preDefinedTags = new ArrayList<>();
+            for (int i = 0; i < tagsArray.length(); i++) {
+                preDefinedTags.add(tagsArray.getString(i));
+            }
+            return preDefinedTags;
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
+
+    private static List<String> getUserTags(JSONObject object) {
+        try {
+            JSONArray tagsArray = object.getJSONArray("userTags");
+            List<String> userTags = new ArrayList<>();
+            for (int i = 0; i < tagsArray.length(); i++) {
+                userTags.add(tagsArray.getString(i));
+            }
+            return userTags;
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
+
+
     private Advertisement retriveAdvert(Map<String, Object> dataMap) {
         String title = (String) dataMap.get("title");
         String description = (String) dataMap.get("description");
@@ -303,20 +316,6 @@ public class Repository implements RepositoryObserver {
 
     }
 
-    public String getFireBaseID(String userID, String advertID) {
-        return BackendDataFetcher.getInstance().getFireBaseID(userID, advertID);
-    }
-
-    //TODO FOR LATER IMPLEMENTATION
-    public void addObserver(RepositoryObserver observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void userAdvertsForSaleUpdate(Iterator<Advertisement> advertsForSale) {
-        // TODO: change from temp list to actual user list
-        observers.forEach(observer -> observer.userAdvertsForSaleUpdate(getTemporaryListOfAllAds().iterator()));
-    }
 }
 
 
