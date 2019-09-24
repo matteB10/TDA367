@@ -48,6 +48,13 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
     @Override
     public void hideLoadingScreen() {
         // TODO: implement loading screen and hide everything else
+        
+    }
+
+    @Override
+    public void showLoadingScreen() {
+        // TODO: display the screen again
+
     }
 
     @Override
@@ -57,10 +64,6 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
         startActivity(intent);
     }
 
-    @Override
-    public void showLoadingScreen() {
-        // TODO: display the screen again
-    }
 
     @Override
     public void showThumbnails() {

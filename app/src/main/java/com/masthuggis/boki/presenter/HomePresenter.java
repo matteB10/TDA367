@@ -16,8 +16,10 @@ public class HomePresenter implements IProductsPresenter {
 
     public HomePresenter(View view) {
         this.view = view;
+        view.showLoadingScreen();
         Repository.getInstance().fetchAllAdverts(advertisements -> {
             adverts = advertisements;
+            view.hideLoadingScreen();
             view.showThumbnails();
         });
     }
