@@ -28,7 +28,7 @@ public class Advert implements Advertisement {
     private List<String> tags = new ArrayList<>();
 
 
-    public Advert(Date datePublished, String uniqueOwnerID, String uniqueAdID, String title, List<String> imgURLs, String description, int price, Condition condition) {
+    /**public Advert(Date datePublished, String uniqueOwnerID, String uniqueAdID, String title, List<String> imgURLs, String description, int price, Condition condition) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.title = title;
@@ -39,6 +39,7 @@ public class Advert implements Advertisement {
         this.condition = condition;
         this.uniqueAdID = uniqueAdID;
     }
+     */
 
     //Alternative constructor with only one image allowed
     public Advert(Date datePublished, String uniqueOwnerID, String id, String title, String imgURL, String description, int price, Condition condition) {
