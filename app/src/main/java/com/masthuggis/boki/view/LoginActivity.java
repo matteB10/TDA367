@@ -33,8 +33,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         PD = new ProgressDialog(this);
-        PD.setMessage("Laddar...");
-        PD.setCancelable(true);
         PD.setCanceledOnTouchOutside(false);
         auth = FirebaseAuth.getInstance();
 
