@@ -33,7 +33,7 @@ public class Advert implements Advertisement {
         this.uniqueOwnerID = uniqueOwnerID;
         this.title = title;
         this.imgURLs = imgURLs;
-        imgURLs.add("TEST");
+        imgURLs.add("TEST"); //Gives nullPointerException when loading all adverts???
         this.description = description;
         this.price = price;
         this.condition = condition;
@@ -47,7 +47,6 @@ public class Advert implements Advertisement {
         this.uniqueAdID = id;
         this.title = title;
         this.imageURL = imgURL;
-        imgURLs.add("TEST");
         this.description = description;
         this.price = price;
         this.condition = condition;
