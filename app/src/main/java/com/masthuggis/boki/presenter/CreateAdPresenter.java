@@ -9,7 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-public class CreateAdPresenter{
+public class CreateAdPresenter {
 
     private Advertisement advertisement;
 
@@ -18,71 +18,73 @@ public class CreateAdPresenter{
     private boolean validPrice;
 
 
-
-    public CreateAdPresenter(View view){
+    public CreateAdPresenter(View view) {
         this.view = view;
         this.advertisement = Repository.getInstance().storeAdvertInFirebase();
     }
 
-    public interface View{
-         void enablePublishButton();
+    public interface View {
+        void enablePublishButton();
 
         //TODO: create methods for future same page error messages in view
 
     }
 
-    public void titleChanged(String title){
+    public void titleChanged(String title) {
         advertisement.setTitle(title);
-        if(allFieldsValid()){
+        if (allFieldsValid()) {
             view.enablePublishButton();
 
         }
     }
-    public void priceChanged(String price){
-        if(FormHelper.getInstance().isValidPrice(price)){
+
+    public void priceChanged(String price) {
+        if (FormHelper.getInstance().isValidPrice(price)) {
             advertisement.setPrice(Integer.parseInt(price));
             validPrice = true;
-        }else{
+        } else {
             validPrice = false;
         }
-        if(allFieldsValid()) {
+        if (allFieldsValid()) {
             view.enablePublishButton();
         }
     }
+
     //cannot check for valid input, all input is valid
-    public void descriptionChanged(String description){
+    public void descriptionChanged(String description) {
         advertisement.setDescription(description);
     }
-    public void imageURIChanged(String imageURI){
+
+    public void imageURIChanged(String imageURI) {
         advertisement.setImgURI(imageURI);
 
     }
 
-    public void tagsChanged(String tag){
+    public void tagsChanged(String tag) {
         advertisement.tagsChanged(tag);
     }
 
-    public void conditionChanged(Advert.Condition condition){
+    public void conditionChanged(Advert.Condition condition) {
         advertisement.setCondition(condition);
-        if(allFieldsValid()) {
+        if (allFieldsValid()) {
             view.enablePublishButton();
         }
 
     }
 
-    private boolean allFieldsValid(){
+    private boolean allFieldsValid() {
         return (advertisement.getTitle().length() > 2 && validPrice && advertisement.getConditon() !=
-        Advert.Condition.UNDEFINED);
+                Advert.Condition.UNDEFINED);
         //TODO: expand validation to image URI
     }
 
     //TODO: Maybe put a standard URL to some image in the catch block
-    private String convertURIStringToURLString(String URI){
+    private String convertURIStringToURLString(String URI) {
         String URLString;
         try {
             URL url = new URL(URI);
             URLString = url.toString();
-        }catch (MalformedURLException e){
+        } catch (MalformedURLException e) {
             URLString = "";
         }
         return URLString;
@@ -93,12 +95,12 @@ public class CreateAdPresenter{
      * Called on click on button in createAdActivity
      * saves advert in temp list and resets current ad in presenter
      */
-    public void publishAdvert(){
+    public void publishAdvert() {
         Repository.getInstance().saveAdvert(advertisement);
         advertisement = null;
     }
 
-    public String getId(){
+    public String getId() {
         return advertisement.getUniqueID();
     }
 

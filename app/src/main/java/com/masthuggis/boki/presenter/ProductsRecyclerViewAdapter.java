@@ -88,7 +88,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
 
         @Override
         public void setId(String id) {
-            this.id =id;
+            this.id = id;
         }
 
         @Override

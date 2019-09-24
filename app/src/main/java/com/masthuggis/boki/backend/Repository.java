@@ -148,10 +148,21 @@ public class Repository implements RepositoryObserver {
 
 
     /**
-     * @param advertisement gets saved into temporary list
+     * @param advertisement gets saved into temporary list as well as in firebase
      */
+    //TODO make sure it actually stores the advertisement in firebase, doesn't currently work
     public void saveAdvert(Advertisement advertisement) {
-        temporaryListOfAllAds.add(advertisement);
+        localAdList.add(advertisement); //Saves in a temporary list
+        String title = advertisement.getTitle();
+        String description = advertisement.getDescription();
+        String imgURL = advertisement.getImgURL();
+        long price = advertisement.getPrice();
+        Advert.Condition condition = advertisement.getConditon();
+        List<String> tags = advertisement.getTags();
+        String uniqueOwnerID = advertisement.getUniqueOwnerID();
+        String uniqueAdID = advertisement.getUniqueID();
+        storeAdvertInFirebase(null, "tempUserID", uniqueAdID, title, imgURL, description, price, condition, tags);
+
     }
 
 
@@ -217,10 +228,9 @@ public class Repository implements RepositoryObserver {
     /**
      * Creates an advert-object in the firebase database with input given by the user
      * Input is parsed to a HashMap which is used by the BackendDataFetcher to write the data to firebase
-     *
      */
-    public void storeAdvertInFirebase(Date datePublished, String uniqueOwnerID, String title, String imgURL,
-                                      String description, int price, Advert.Condition condition, List<String> tags) {
+    public void storeAdvertInFirebase(Date datePublished, String uniqueOwnerID, String uniqueAdID, String title, String imgURL,
+                                      String description, long price, Advert.Condition condition, List<String> tags) {
         HashMap<String, Object> data = new HashMap<>();
         data.put("title", title);
         data.put("description", description);
@@ -229,12 +239,15 @@ public class Repository implements RepositoryObserver {
         data.put("price", price);
         data.put("imgURL", imgURL);
         data.put("tags", tags);
+        data.put("uniqueAdID", uniqueAdID);
         BackendDataFetcher.getInstance().writeAdvertToFirebase(data);
     }
 
 
-    //Fetches adverts from a user given a specific userID
-    //The userID can be any string that isn't null or empty
+    /**
+     * Gets all adverts in firebase that belong to a specific userID
+     * userID can be any string that isn't null nor an empty string
+     */
     public void fetchAdvertsFromUserID(String userID, advertisementCallback advertisementCallback) {
         List<Advertisement> userIDAdverts = new ArrayList<>();
         BackendDataFetcher.getInstance().readUserIDAdverts(new advertisementDBCallback() {
@@ -269,17 +282,19 @@ public class Repository implements RepositoryObserver {
         String title = (String) dataMap.get("title");
         String description = (String) dataMap.get("description");
         long price = (long) dataMap.get("price");
-        String imgURL = (String) dataMap.get("imgURLs");
+        String imgURL = (String) dataMap.get("imgURL");
         List<String> tags = (List<String>) dataMap.get("tags");
         String uniqueOwnerID = (String) dataMap.get("uniqueOwnerID");
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
-
-        return AdFactory.createAd(null, uniqueOwnerID, "uniqueID", title, imgURL, description, price, condition);
+        String uniqueAdID = (String) dataMap.get("uniqueAdID");
+        return AdFactory.createAd(null, uniqueOwnerID, uniqueAdID, title, imgURL, description, price, condition);
     }
 
-    //Creates an Advert object with data given in form of a Key-Value Map
-    //Very hardcoded, "Magic-string" implementation, but should be okay
-    private Advertisement retrieveAdvertWithUserID(Map<String, Object> dataMap, String uniqueUserID) {
+    /**
+     * Creates an Advertisement-object with AdFactory given a Key-Value map of the data required and a specific uniqueUserID
+     * Called from fetchAdvertsFromUserID
+     */
+    private Advertisement retrieveAdvertWithUserID(Map<String, Object> dataMap, String uniqueOwnerID) {
         //Date datePublished = dataMap.get("datePublished"); //Oklart
         String title = (String) dataMap.get("title");
         String description = (String) dataMap.get("description");
@@ -287,8 +302,9 @@ public class Repository implements RepositoryObserver {
         String imgURL = (String) dataMap.get("imgURL");
         List<String> tags = (List<String>) dataMap.get("tags");
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
+        String uniqueAdID = (String) dataMap.get("uniqueAdID");
         //TODO implement Date into Firebase in a neat fashion
-        return AdFactory.createAd(null, uniqueUserID, "uniqueAdID", title, imgURL, description, price, Advert.Condition.OK);
+        return AdFactory.createAd(null, uniqueOwnerID, uniqueAdID, title, imgURL, description, price, condition);
 
     }
 

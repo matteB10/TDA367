@@ -23,27 +23,33 @@ public class DetailsPresenter {
         view.setPrice(advertisement.getPrice());
         view.setDescription(advertisement.getDescription());
         if (advertisement.getImgURL() != null) {
-            view.setImageUrl(advertisement.getImgURL());}
+            view.setImageUrl(advertisement.getImgURL());
+        }
         view.setCondition(advertisement.getConditon().toString()); //TODO Find out why all Adverts gets the Condition GOOD
 
     }
 
     public interface View {
         void setName(String name);
+
         void setPrice(long price);
+
         void setImageUrl(String url);
+
         void setDescription(String description);
+
         void setCondition(String condition);
     }
-    private void calcConditionBackgroundColor(){
-        switch (advertisement.getConditon()){
+
+    private void calcConditionBackgroundColor() {
+        switch (advertisement.getConditon()) {
             //TODO: get access to res/colors to return right color depending on condition
             case NEW:
                 break;
             case GOOD:
                 break;
             case OK:
-               break;
+                break;
         }
     }
 }

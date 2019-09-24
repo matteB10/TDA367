@@ -37,9 +37,9 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         contactOwnerButton.setOnClickListener(view -> {
             //TODO HÄR SKA CHATTEN ÖPPNAS TYP
             if (contactOwnerButton.getText() == "+46738083104") {
-             //   Intent intent = new Intent(Intent.ACTION_DIAL);
-               // intent.setData(Uri.parse(contactOwnerButton.getText().toString()));
-               // startActivity(intent);
+                //   Intent intent = new Intent(Intent.ACTION_DIAL);
+                // intent.setData(Uri.parse(contactOwnerButton.getText().toString()));
+                // startActivity(intent);
             } else {
                 contactOwnerButton.setText("+46738083104");
             }
@@ -61,7 +61,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     @Override
     public void setImageUrl(String url) {
         // TODO: fetch img, cache it and set it
-        ImageView imageView = (ImageView)findViewById(R.id.detailsImage);
+        ImageView imageView = (ImageView) findViewById(R.id.detailsImage);
         imageView.setImageURI(Uri.parse(url));
     }
 
@@ -70,13 +70,13 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         TextView textView = findViewById(R.id.details_description);
         textView.setText(description);
     }
+
     @Override
-    public void setCondition(String condition){
+    public void setCondition(String condition) {
         TextView textView = findViewById(R.id.conditionTextView);
         textView.setText(condition);
         //TODO:fix change color background
     }
-
 
 
 }
