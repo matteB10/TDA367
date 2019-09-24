@@ -128,7 +128,7 @@ public class BackendDataFetcher implements iBackend {
 
 
     //Small method for manually testing if firebase returns the correct ID's for users and adverts
-    public String getfireBaseID(String userID, String advertID) {
+    String getfireBaseID(String userID, String advertID) {
         if(advertID != null)
             return db.collection("users").document(userID).collection("adverts").document(advertID).getId();
         return db.collection("users").document(userID).getId();

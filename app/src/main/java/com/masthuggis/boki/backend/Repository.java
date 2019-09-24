@@ -207,7 +207,7 @@ public class Repository implements RepositoryObserver {
 
     //Same functionality as above method but based off of firebase
     public Advertisement getAdFromAdID(String ID) {
-        for (Advertisement ad : localAdList) {
+        for (Advertisement ad : localAdList) { //Here all conditions of the adverts are null
             if (ad.getUniqueID().equals(ID))
                 return ad;
         }
@@ -271,7 +271,7 @@ public class Repository implements RepositoryObserver {
         String uniqueOwnerID = (String) dataMap.get("uniqueOwnerID");
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
 
-        return AdFactory.createAd(null, uniqueOwnerID, "uniqueID", title, imgURL, description, 123, null);
+        return AdFactory.createAd(null, uniqueOwnerID, "uniqueID", title, imgURL, description, 123, condition);
     }
 
     //Creates an Advert object with data given in form of a Key-Value Map
@@ -283,8 +283,9 @@ public class Repository implements RepositoryObserver {
         long price = (long) dataMap.get("price");
         String imgURL = (String) dataMap.get("imgURL");
         List<String> tags = (List<String>) dataMap.get("tags");
+        Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         //TODO implement Date into Firebase in a neat fashion
-        return AdFactory.createAd(null, uniqueUserID, "uniqueAdID", title, imgURL, description, 23, null);
+        return AdFactory.createAd(null, uniqueUserID, "uniqueAdID", title, imgURL, description, 23, condition);
 
     }
 
