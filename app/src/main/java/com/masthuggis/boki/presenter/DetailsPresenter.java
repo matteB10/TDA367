@@ -1,10 +1,6 @@
 package com.masthuggis.boki.presenter;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import com.masthuggis.boki.R;
 import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 
 public class DetailsPresenter {
@@ -13,7 +9,7 @@ public class DetailsPresenter {
 
     public DetailsPresenter(View view, String advertID) {
         this.view = view;
-        this.advertisement = Repository.getInstance().getAdFromId(advertID);
+        this.advertisement = Repository.getInstance().getAdFromAdID(advertID);
 
         setupView();
     }

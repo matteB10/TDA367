@@ -3,7 +3,6 @@ package com.masthuggis.boki.view;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,11 +21,11 @@ public class RegisterActivity extends AppCompatActivity {
 
     private EditText inputEmail;
     private EditText inputPassword;
-    private FirebaseAuth auth;
     private Button btnSignUp;
     private Button btnLogin;
-    private ProgressDialog PD;
 
+    private FirebaseAuth auth;
+    private ProgressDialog PD;
 
 
     @Override
@@ -42,7 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+            startActivity(new Intent(RegisterActivity.this, ProfileFragment.class));
             finish();
         }
 
@@ -53,38 +52,38 @@ public class RegisterActivity extends AppCompatActivity {
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 final String email = inputEmail.getText().toString();
                 final String password = inputPassword.getText().toString();
 
                 try {
-                    if (password.length() > 0 && email.length() > 0) {
-                        PD.show();
-                        auth.createUserWithEmailAndPassword(email, password)
+                    if(password.length() >0 && email.length() > 0 ){
+
+                        auth.createUserWithEmailAndPassword(email,password)
                                 .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (!task.isSuccessful()) {
-                                            Toast.makeText(
-                                                    RegisterActivity.this,
-                                                    "Authentication Failed",
-                                                    Toast.LENGTH_LONG).show();
-                                            Log.v("error", task.getResult().toString());
-                                        } else {
-                                            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                                            startActivity(intent);
-                                            finish();
-                                        }
-                                        PD.dismiss();
-                                    }
-                                });
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(
+                                            RegisterActivity.this,
+                                            "registred Succesfully",
+                                            Toast.LENGTH_LONG).show();
+                                }else{
+                                    Toast.makeText(
+                                            RegisterActivity.this,
+                                            task.getException().getMessage(), // show whatever firebase is telling us
+                                            Toast.LENGTH_LONG).show();
+                                }
+
+                            }
+                        });
                     } else {
                         Toast.makeText(
                                 RegisterActivity.this,
                                 "Fill All Fields",
                                 Toast.LENGTH_LONG).show();
                     }
-                } catch (Exception e) {
+                } catch (Exception e){
                     e.printStackTrace();
                 }
             }
@@ -93,10 +92,10 @@ public class RegisterActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                Intent intent = new Intent (RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
             }
         });
-
 
     }
 }

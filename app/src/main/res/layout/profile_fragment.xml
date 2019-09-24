@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -46,6 +47,19 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/signinButton"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:text="@string/login"
+                    android:textSize="8sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/profileSettingsButton"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@+id/profileHeaderTextView"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView

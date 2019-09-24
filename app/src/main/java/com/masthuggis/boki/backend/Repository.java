@@ -3,7 +3,6 @@ package com.masthuggis.boki.backend;
 import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.model.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;

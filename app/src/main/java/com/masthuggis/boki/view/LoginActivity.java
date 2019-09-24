@@ -22,8 +22,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText inputEmail;
     private EditText inputPassword;
-    private Button btnSignUp;
-    private Button btnLogin;
+    private Button signupButton;
+    private Button singinButton;
+
     private FirebaseAuth auth;
     private ProgressDialog PD;
 
@@ -32,16 +33,30 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
         PD = new ProgressDialog(this);
+        PD.setMessage("Loading...");
         PD.setCanceledOnTouchOutside(false);
         auth = FirebaseAuth.getInstance();
 
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
-        btnLogin = (Button) findViewById(R.id.signinButton);
+        signupButton = (Button) findViewById(R.id.signupButton);
+        singinButton = (Button) findViewById(R.id.signinButton);
 
-        btnLogin = findViewById(R.id.signinButton);
-        btnLogin.setOnClickListener(new View.OnClickListener() {
+
+        signupButton = findViewById(R.id.signupButton);
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity( intent);
+            }
+        });
+
+
+        singinButton = findViewById(R.id.signinButton);
+        singinButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     final String email = inputEmail.getText().toString();
@@ -75,4 +90,5 @@ public class LoginActivity extends AppCompatActivity {
                 }
         });
     }
+
 }

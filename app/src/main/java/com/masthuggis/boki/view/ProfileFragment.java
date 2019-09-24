@@ -27,6 +27,17 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
         View v = inflater.inflate(R.layout.profile_fragment,container,false);
         setupHeader(v);
         setupList(v);
+
+
+        Button signinButton = v.findViewById(R.id.signinButton);
+        signinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return v;
     }
 
