@@ -24,7 +24,7 @@ public class DetailsPresenter {
         view.setDescription(advertisement.getDescription());
         if (advertisement.getImgURL() != null) {
             view.setImageUrl(advertisement.getImgURL());}
-        view.setCondition(advertisement.getConditon().toString()); //TODO Find out why this is throwing a NullPointer
+        view.setCondition(advertisement.getConditon().toString()); //TODO Find out why all Adverts gets the Condition GOOD
 
     }
 

@@ -245,7 +245,7 @@ public class Repository implements RepositoryObserver {
         }, userID);
     }
 
-
+    //TODO Fix bug where fields of all adverts get the data from the advert that is fetched first
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
         List<Advertisement> allAdverts = new ArrayList<>();
         BackendDataFetcher.getInstance().readAllAdvertData(new advertisementDBCallback() {
@@ -285,12 +285,12 @@ public class Repository implements RepositoryObserver {
         List<String> tags = (List<String>) dataMap.get("tags");
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         //TODO implement Date into Firebase in a neat fashion
-        return AdFactory.createAd(null, uniqueUserID, "uniqueAdID", title, imgURL, description, 23, condition);
+        return AdFactory.createAd(null, uniqueUserID, "uniqueAdID", title, imgURL, description, 23, Advert.Condition.OK);
 
     }
 
     public String getFireBaseID(String userID, String advertID) {
-        return BackendDataFetcher.getInstance().getfireBaseID(userID, advertID);
+        return BackendDataFetcher.getInstance().getFireBaseID(userID, advertID);
     }
 
     //TODO FOR LATER IMPLEMENTATION

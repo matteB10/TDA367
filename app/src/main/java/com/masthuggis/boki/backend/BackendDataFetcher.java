@@ -75,7 +75,7 @@ public class BackendDataFetcher implements iBackend {
         String uniqueOwnerID = (String) data.get("uniqueOwnerID");
         String title = (String) data.get("title");
 
-        db.collection("users").document(uniqueOwnerID).collection("adverts").document(title)
+        db.collection("users").document(uniqueOwnerID).collection("adverts").document()
                 .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -128,7 +128,7 @@ public class BackendDataFetcher implements iBackend {
 
 
     //Small method for manually testing if firebase returns the correct ID's for users and adverts
-    String getfireBaseID(String userID, String advertID) {
+    String getFireBaseID(String userID, String advertID) {
         if(advertID != null)
             return db.collection("users").document(userID).collection("adverts").document(advertID).getId();
         return db.collection("users").document(userID).getId();
