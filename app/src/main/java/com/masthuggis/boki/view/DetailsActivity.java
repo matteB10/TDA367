@@ -21,7 +21,8 @@ import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.presenter.DetailsPresenter;
 
 /**
- * The view shown when an advert is pressed.
+ * The view showing details of a specific advertisement.
+ *
  */
 public class DetailsActivity extends AppCompatActivity implements DetailsPresenter.View {
     private DetailsPresenter presenter;
