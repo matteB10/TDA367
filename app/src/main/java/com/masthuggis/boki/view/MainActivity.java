@@ -18,7 +18,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
- //   private BackendDataFetcher backendDataFetcher = new BackendDataFetcher();
+ //   private BackendDataHandler backendDataFetcher = new BackendDataHandler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

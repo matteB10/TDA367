@@ -3,7 +3,6 @@ package com.masthuggis.boki.backend;
 import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.model.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,7 +19,7 @@ import java.util.Map;
 /**
  * Class providing the functionality to convert data from backend into Book-objects to be used
  * by the domain-layer of the application.
- * Data is fetched using the BackendDataFetcher class.
+ * Data is fetched using the BackendDataHandler class.
  */
 
 public class Repository implements RepositoryObserver {
@@ -49,7 +48,7 @@ public class Repository implements RepositoryObserver {
      */
 
     private void readFromBackend() {
-        String json = BackendDataFetcher.getInstance().getMockBooks(Boki.getAppContext());
+        String json = BackendDataHandler.getInstance().getMockBooks(Boki.getAppContext());
         try {
             JSONObject booksObject = new JSONObject(json);
             JSONArray booksArray = booksObject.getJSONArray("books"); //Array in json file must be named "books"
@@ -149,7 +148,7 @@ public class Repository implements RepositoryObserver {
     /**
      * @param advertisement gets saved into temporary list as well as in firebase
      */
-    //TODO make sure it actually stores the advertisement in firebase, doesn't currently work
+    //TODO
     public void saveAdvert(Advertisement advertisement) {
         localAdList.add(advertisement); //Saves in a temporary list
         String title = advertisement.getTitle();
@@ -160,6 +159,7 @@ public class Repository implements RepositoryObserver {
         List<String> tags = advertisement.getTags();
         String uniqueOwnerID = advertisement.getUniqueOwnerID();
         String uniqueAdID = advertisement.getUniqueID();
+
         storeAdvertInFirebase(null, "tempUserID", uniqueAdID, title, imgURL, description, price, condition, tags);
 
     }
@@ -222,7 +222,7 @@ public class Repository implements RepositoryObserver {
 
     /**
      * Creates an advert-object in the firebase database with input given by the user
-     * Input is parsed to a HashMap which is used by the BackendDataFetcher to write the data to firebase
+     * Input is parsed to a HashMap which is used by the BackendDataHandler to write the data to firebase
      */
     public void storeAdvertInFirebase(Date datePublished, String uniqueOwnerID, String uniqueAdID, String title, String imgURL,
                                       String description, long price, Advert.Condition condition, List<String> tags) {
@@ -235,7 +235,7 @@ public class Repository implements RepositoryObserver {
         data.put("imgURL", imgURL);
         data.put("tags", tags);
         data.put("uniqueAdID", uniqueAdID);
-        BackendDataFetcher.getInstance().writeAdvertToFirebase(data);
+        BackendDataHandler.getInstance().writeAdvertToFirebase(data);
     }
 
 
@@ -245,7 +245,7 @@ public class Repository implements RepositoryObserver {
      */
     public void fetchAdvertsFromUserID(String userID, advertisementCallback advertisementCallback) {
         List<Advertisement> userIDAdverts = new ArrayList<>();
-        BackendDataFetcher.getInstance().readUserIDAdverts(new advertisementDBCallback() {
+        BackendDataHandler.getInstance().readUserIDAdverts(new advertisementDBCallback() {
             @Override
             public void onCallBack(List<Map<String, Object>> advertDataList) {
                 for (Map<String, Object> dataMap : advertDataList) {
@@ -259,7 +259,7 @@ public class Repository implements RepositoryObserver {
     //TODO Fix bug where fields of all adverts get the data from the advert that is fetched first
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
         List<Advertisement> allAdverts = new ArrayList<>();
-        BackendDataFetcher.getInstance().readAllAdvertData(new advertisementDBCallback() {
+        BackendDataHandler.getInstance().readAllAdvertData(new advertisementDBCallback() {
             @Override
             public void onCallBack(List<Map<String, Object>> advertDataList) {
                 for (Map<String, Object> dataMap : advertDataList) {
@@ -304,7 +304,7 @@ public class Repository implements RepositoryObserver {
     }
 
     public String getFireBaseID(String userID, String advertID) {
-        return BackendDataFetcher.getInstance().getFireBaseID(userID, advertID);
+        return BackendDataHandler.getInstance().getFireBaseID(userID, advertID);
     }
 
     //TODO FOR LATER IMPLEMENTATION
