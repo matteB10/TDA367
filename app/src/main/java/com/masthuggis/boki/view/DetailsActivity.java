@@ -63,6 +63,12 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
     @Override
+    public void setDate(String date) {
+        TextView textView = findViewById(R.id.datePublishedTextView);
+        textView.setText(date);
+    }
+
+    @Override
     public void setImageUrl(String url) {
         // TODO: fetch img, cache it and set it
         ImageView imageView = (ImageView) findViewById(R.id.detailsImage);
