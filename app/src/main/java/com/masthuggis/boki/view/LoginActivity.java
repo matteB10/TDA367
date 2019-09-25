@@ -3,7 +3,6 @@ package com.masthuggis.boki.view;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,13 +26,14 @@ public class LoginActivity extends AppCompatActivity {
     private Button singinButton;
 
     private FirebaseAuth auth;
+    private FirebaseUser user;
     private ProgressDialog PD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.onStart();
-        auth =FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = auth.getCurrentUser();
 
         setContentView(R.layout.activity_login);
@@ -55,45 +55,53 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity( intent);
+                startActivity(intent);
             }
         });
 
 
         singinButton = findViewById(R.id.signinButton);
         singinButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final String email = inputEmail.getText().toString();
-                    final String password = inputPassword.getText().toString();
+            @Override
+            public void onClick(View v) {
+                final String email = inputEmail.getText().toString();
+                final String password = inputPassword.getText().toString();
 
-                    try {
-                        if (password.length() > 0 && email.length() > 0) {
-                            PD.show();
-                            auth.signInWithEmailAndPassword(email, password)
-                                    .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<AuthResult> task) {
-                                            if (!task.isSuccessful()) {
-                                                Toast.makeText(
-                                                        LoginActivity.this,
-                                                        "Authentication Failed",
-                                                        Toast.LENGTH_LONG).show();
-                                                Log.v("error", task.getResult().toString());
-                                            } else {
-                                                Intent intent = new Intent(LoginActivity.this, ProfileFragment.class);
-                                                startActivity(intent);
-                                                finish();
-                                            }
+                try {
+                    if (password.length() > 0 && email.length() > 0) {
+                        PD.show();
+                        auth.signInWithEmailAndPassword(email, password)
+                                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                            startActivity(intent);
+                                            Toast.makeText(
+                                                    LoginActivity.this,
+                                                    "login successful",
+                                                    Toast.LENGTH_LONG).show();
+                                            //TODO update the profileFragment view, and make the sign out button visible
+                                        } else {
+                                            Toast.makeText(
+                                                    LoginActivity.this,
+                                                    task.getException().getMessage(),
+                                                    Toast.LENGTH_LONG).show();
                                         }
-                                    });
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                                    }
+                                });
+                    } else {
+                        Toast.makeText(
+                                LoginActivity.this,
+                                "Try again",
+                                Toast.LENGTH_LONG).show();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+            }
         });
     }
+
 
 }
