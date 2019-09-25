@@ -64,7 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 }else{
                                     Toast.makeText(
                                             RegisterActivity.this,
-                                            task.getException().getMessage(), // show whatever firebase is telling us
+                                            task.getException().getMessage(),
                                             Toast.LENGTH_LONG).show();
                                 }
 

@@ -82,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     "login successful",
                                                     Toast.LENGTH_LONG).show();
                                             //TODO update the profileFragment view, and make the sign out button visible
+
                                         } else {
                                             Toast.makeText(
                                                     LoginActivity.this,
