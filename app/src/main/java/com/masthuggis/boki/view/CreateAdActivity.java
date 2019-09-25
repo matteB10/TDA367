@@ -10,11 +10,15 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.content.FileProvider;
 
 import com.masthuggis.boki.R;
@@ -24,7 +28,9 @@ import com.masthuggis.boki.presenter.CreateAdPresenter;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * An acitivity for creating a new advertisement
@@ -36,6 +42,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
+    private final List<Button> tagButtons = new ArrayList<>();
+    private static final List<String> preDefTags = new ArrayList<>();
     private String currentImagePath;
     private CreateAdPresenter presenter;
 
@@ -54,10 +62,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_advert);
         presenter = new CreateAdPresenter(this);
-        imageViewDisplay = (ImageView) findViewById(R.id.addImageView);
         disablePublishAdButton();
+        renderTagButtons();
         setListeners();
-
 
     }
 
@@ -149,6 +156,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setDescriptionListener();
         setCreateAdvertListener();
         setConditionGroupListener();
+        setPreDefTagsListeners();
 
     }
 
@@ -201,6 +209,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void setImageViewListener() {
+        imageViewDisplay = findViewById(R.id.addImageView);
         imageViewDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -283,6 +292,65 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             }
         });
 
+    }
+    private void setPreDefTagsListeners(){
+        for(Button btn : tagButtons) {
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    presenter.tagsChanged(btn.getText().toString());
+                    if(presenter.isTagPressed(btn.getText().toString()))
+                        btn.setBackgroundResource(R.drawable.subject_tag_shape_pressed);
+                    else
+                        btn.setBackgroundResource(R.drawable.subject_tag_shape_normal);
+
+                }
+            });
+        }
+    }
+
+    /**
+     * Reads pre defined subject strings from resources,
+     * saves all string in a list.
+     */
+    private  void initPreDefTags(){
+        String[] strArr = getResources().getStringArray(R.array.preDefSubjectTags);
+        for (String str : strArr)
+            preDefTags.add(str);
+    }
+
+    /**
+     * Create buttons with pre defined subject tags.
+     */
+    private void createTagButtons(){
+        for(String str: preDefTags) {
+            Button btn = new Button(this);
+            btn.setBackgroundResource(R.drawable.subject_tag_shape_normal);
+            btn.setText(str);
+
+            tagButtons.add(btn);
+        }
+    }
+
+    /**
+     * Populates view with subject tag buttons.
+     */
+    private void populateTagsLayout(){
+        //TODO: fix button in layout
+
+        TableLayout tableLayout = findViewById(R.id.preDefTagsTableLayout);
+        TableRow tableRow = new TableRow(this);
+
+        for(Button btn : tagButtons) {
+            tableRow.addView(btn);
+        }
+        tableLayout.addView(tableRow);
+    }
+
+    private void renderTagButtons(){
+        initPreDefTags();
+        createTagButtons();
+        populateTagsLayout();
     }
 
 }

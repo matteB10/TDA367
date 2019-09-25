@@ -121,5 +121,14 @@ public class CreateAdPresenter{
     public Advertisement getAdvertisement(){
         return advertisement;
     }
+    public boolean isTagPressed(String tag){
+        for(String t :advertisement.getTags()){
+            if(t.equals(tag)){
+                return true;
+            }
+        }
+        return false;
+
+    }
 
 }
