@@ -32,6 +32,7 @@ public class DetailsPresenter {
         view.setName(advertisement.getTitle());
         view.setPrice(advertisement.getPrice());
         view.setDescription(advertisement.getDescription());
+        view.setDate(advertisement.getDatePublished());
         setCondition();
         if (advertisement.getImgURL() != null) {
             view.setImageUrl(advertisement.getImgURL());
@@ -43,7 +44,7 @@ public class DetailsPresenter {
         void setName(String name);
 
         void setPrice(long price);
-
+        void setDate( String date);
         void setImageUrl(String url);
 
         void setDescription(String description);

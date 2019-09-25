@@ -13,15 +13,12 @@ import java.util.List;
 public class ProfilePresenter implements IProductsPresenter, RepositoryObserver {
     private View view;
     private List<Advertisement> userItemsOnSale;
-    private Repository repository;
 
     public ProfilePresenter(View view) {
         this.view = view;
-        this.repository = Repository.getInstance();
         // TODO: for now using temp data, later use real advertisment of the actual user
-        this.userItemsOnSale = repository.getTemporaryListOfAllAds();
-
-        repository.addObserver(this);
+        this.userItemsOnSale = Repository.getInstance().getAllAds();
+        Repository.getInstance().addObserver(this);
     }
 
     public void onSettingsButtonPressed() {
