@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -163,8 +164,25 @@ public class BackendDataHandler implements iBackend {
         return db.collection("users").document(userID).getId();
     }
 
-    private void test() {
 
+    //Downloads the file as a local tempFile rather than as an array of bytes.
+    private void testDownloadFromCloudStorage() {
+        try {
+            File localFile = File.createTempFile("images", "jpg");
+            imagesRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    //Reference downloaded file from here
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    //Handle any errors
+                }
+            });
+        } catch (IOException exc) {
+            exc.printStackTrace();
+        }
     }
 
 }

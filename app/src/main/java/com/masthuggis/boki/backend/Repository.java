@@ -256,7 +256,7 @@ public class Repository implements RepositoryObserver {
         }, userID);
     }
 
-    //TODO Fix bug where fields of all adverts get the data from the advert that is fetched first
+    //TODO Implement functionality that downloads images from firebase and attaches them to their corresponding adverts
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
         List<Advertisement> allAdverts = new ArrayList<>();
         BackendDataHandler.getInstance().readAllAdvertData(new advertisementDBCallback() {
@@ -273,6 +273,10 @@ public class Repository implements RepositoryObserver {
     }
 
 
+    /**
+     * Returns and advertisement-object given a Key-Value Map with data provided by
+     * the BackendDataHandler.
+     */
     private Advertisement retriveAdvert(Map<String, Object> dataMap) {
         String title = (String) dataMap.get("title");
         String description = (String) dataMap.get("description");
@@ -302,6 +306,7 @@ public class Repository implements RepositoryObserver {
         return AdFactory.createAd(null, uniqueOwnerID, uniqueAdID, title, imgURL, description, price, condition);
 
     }
+
 
     public String getFireBaseID(String userID, String advertID) {
         return BackendDataHandler.getInstance().getFireBaseID(userID, advertID);
