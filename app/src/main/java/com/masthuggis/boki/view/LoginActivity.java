@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.masthuggis.boki.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -31,6 +32,10 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        super.onStart();
+        auth =FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
+
         setContentView(R.layout.activity_login);
 
 
