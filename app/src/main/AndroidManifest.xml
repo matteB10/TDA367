@@ -13,7 +13,9 @@
         <activity android:name=".view.SettingsActivity"></activity>
         <activity android:name=".view.DetailsActivity" />
         <activity android:name=".view.HomeFragment" />
-        <activity android:name=".view.CreateAdActivity" />
+        <activity android:name=".view.CreateAdActivity"
+                  android:windowSoftInputMode="stateHidden"
+            />
         <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

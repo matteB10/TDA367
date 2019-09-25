@@ -9,11 +9,13 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -29,8 +31,10 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * An acitivity for creating a new advertisement
@@ -43,7 +47,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private final List<Button> tagButtons = new ArrayList<>();
-    private static final List<String> preDefTags = new ArrayList<>();
+    private final List<String> preDefTags = new ArrayList<>();
     private String currentImagePath;
     private CreateAdPresenter presenter;
 
@@ -299,6 +303,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
                 @Override
                 public void onClick(View view) {
                     presenter.tagsChanged(btn.getText().toString());
+                    btn.requestFocusFromTouch();
                     if(presenter.isTagPressed(btn.getText().toString()))
                         btn.setBackgroundResource(R.drawable.subject_tag_shape_pressed);
                     else
@@ -320,14 +325,13 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     /**
-     * Create buttons with pre defined subject tags.
+     * Create buttons with pre-defined subject tags.
      */
     private void createTagButtons(){
         for(String str: preDefTags) {
             Button btn = new Button(this);
-            btn.setBackgroundResource(R.drawable.subject_tag_shape_normal);
             btn.setText(str);
-
+            setTagStyling(btn);
             tagButtons.add(btn);
         }
     }
@@ -336,13 +340,20 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      * Populates view with subject tag buttons.
      */
     private void populateTagsLayout(){
-        //TODO: fix button in layout
-
+        //TODO: fix styling of button/tableRow height
         TableLayout tableLayout = findViewById(R.id.preDefTagsTableLayout);
+        tableLayout.setStretchAllColumns(true);
         TableRow tableRow = new TableRow(this);
+        tableRow.setLayoutParams(new TableRow.LayoutParams());
+        int i = 1;
 
         for(Button btn : tagButtons) {
             tableRow.addView(btn);
+            if(i % 3 == 0){
+                tableLayout.addView(tableRow);
+                tableRow = new TableRow(this);
+            }
+            i++;
         }
         tableLayout.addView(tableRow);
     }
@@ -352,6 +363,12 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         createTagButtons();
         populateTagsLayout();
     }
+    private void setTagStyling(Button btn){
+        btn.setBackgroundResource(R.drawable.subject_tag_shape_normal);
+        btn.setTextSize(12);
+        btn.setTextColor(getResources().getColor(R.color.colorWhite));
+    }
+
 
 }
 
