@@ -1,6 +1,8 @@
 package com.masthuggis.boki.presenter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.view.ThumbnailView;
+
+import java.io.File;
 
 public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder> {
 
@@ -82,8 +86,9 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         }
 
         @Override
-        public void setImageUrl(String url) {
-            imageView.setImageURI(Uri.parse(url));
+        public void setImageUrl(File url) {
+            Bitmap bitmap = BitmapFactory.decodeFile(url.getPath());
+            imageView.setImageBitmap(bitmap);
         }
 
         @Override

@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -99,7 +101,13 @@ public class Repository {
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
         allAds.clear();
-        BackendDataHandler.getInstance().readAllAdvertData(new advertisementDBCallback() {
+        BackendDataHandler.getInstance().readAllAdvertData(new imageCallBack() {
+            @Override
+            public void onCallBack(URI imageURI) {
+
+
+            }
+        }, new advertisementDBCallback() {
             @Override
             public void onCallBack(List<Map<String, Object>> advertDataList) {
                 for (Map<String, Object> dataMap : advertDataList) {
@@ -139,7 +147,8 @@ public class Repository {
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, imgURL, description, price, condition);
+        File file  = (File) dataMap.get("filepath");
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, imgURL, description, price, condition,file);
     }
 
     /**
