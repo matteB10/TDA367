@@ -16,6 +16,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * MainActivity is the primary view of the application. This is where the application will take you on launch.
+ *
+ */
 public class MainActivity extends AppCompatActivity {
 
  //   private BackendDataHandler backendDataFetcher = new BackendDataHandler();
@@ -29,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment()).commit();
     }
 
+
+    /**
+     * This is a method handling the navigation between fractals which are parts of the view of the mainActivity class.
+     * It does this through the defined ID:s of the different fragments.
+     */
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -41,15 +50,14 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_profile:
                     selectedFragment = new ProfileFragment();
                     break;
-                case R.id.navigation_home:
-                    selectedFragment = new HomeFragment();
-                    break;
                 case R.id.navigation_new_ad:
                     selectedFragment = new NewAdFragment();
                     break;
                 case R.id.navigation_messages:
                     selectedFragment = new MessagesFragment();
                     break;
+                default:
+                    selectedFragment = new HomeFragment();
 
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,selectedFragment).commit();

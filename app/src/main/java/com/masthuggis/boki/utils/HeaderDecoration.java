@@ -10,6 +10,9 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * Header that can be used to add a static header to recycler.
+ */
 public class HeaderDecoration extends RecyclerView.ItemDecoration {
 
     private final View mView;

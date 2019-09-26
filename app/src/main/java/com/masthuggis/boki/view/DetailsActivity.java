@@ -20,6 +20,10 @@ import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.presenter.DetailsPresenter;
 
+/**
+ * The view showing details of a specific advertisement.
+ *
+ */
 public class DetailsActivity extends AppCompatActivity implements DetailsPresenter.View {
     private DetailsPresenter presenter;
 
@@ -56,6 +60,12 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     public void setPrice(long price) {
         TextView textView = findViewById(R.id.detailsPrice);
         textView.setText(Long.toString(price) + " kr");
+    }
+
+    @Override
+    public void setDate(String date) {
+        TextView textView = findViewById(R.id.datePublishedTextView);
+        textView.setText(date);
     }
 
     @Override
