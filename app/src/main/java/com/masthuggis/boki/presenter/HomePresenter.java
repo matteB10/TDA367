@@ -26,6 +26,7 @@ public class HomePresenter implements IProductsPresenter {
             view.hideLoadingScreen();
             view.showThumbnails();
         });
+        Repository.getInstance().getAllAds()
     }
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
         Advertisement a = adverts.get(position);

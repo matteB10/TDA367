@@ -84,28 +84,22 @@ public class Repository {
      */
     public void fetchAdvertsFromUserIDFirebase(String userID, advertisementCallback advertisementCallback) {
         List<Advertisement> userIDAdverts = new ArrayList<>();
-        BackendDataFetcher.getInstance().readUserIDAdverts(new advertisementDBCallback() {
-            @Override
-            public void onCallBack(List<Map<String, Object>> advertDataList) {
-                for (Map<String, Object> dataMap : advertDataList) {
-                    userIDAdverts.add(retrieveAdvertWithUserID(dataMap, userID));
-                }
-                advertisementCallback.onCallback(userIDAdverts);
+        BackendDataFetcher.getInstance().readUserIDAdverts(advertDataList -> {
+            for (Map<String, Object> dataMap : advertDataList) {
+                userIDAdverts.add(retrieveAdvertWithUserID(dataMap, userID));
             }
+            advertisementCallback.onCallback(userIDAdverts);
         }, userID);
     }
 
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
         allAds.clear();
-        BackendDataFetcher.getInstance().readAllAdvertData(new advertisementDBCallback() {
-            @Override
-            public void onCallBack(List<Map<String, Object>> advertDataList) {
-                for (Map<String, Object> dataMap : advertDataList) {
-                    allAds.add(retrieveAdvert(dataMap));
-                }
-                advertisementCallback.onCallback(allAds);
+        BackendDataFetcher.getInstance().readAllAdvertData(advertDataList -> {
+            for (Map<String, Object> dataMap : advertDataList) {
+                allAds.add(retrieveAdvert(dataMap));
             }
+            advertisementCallback.onCallback(allAds);
         });
     }
 
