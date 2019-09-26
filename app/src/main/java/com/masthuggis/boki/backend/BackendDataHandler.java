@@ -1,7 +1,6 @@
 package com.masthuggis.boki.backend;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -26,10 +25,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -155,7 +151,7 @@ public class BackendDataHandler implements iBackend {
 
     //Fetch data for all adverts from all users
     //Not currently possible to attach listeners to subcollections, but possible to query so-called "Collection groups"
-    void readAllAdvertData(imageCallBack imageCallBack, advertisementDBCallback advertisementDBCallback) {
+    void readAllAdvertData(advertisementDBCallback advertisementDBCallback) {
         List<Map<String, Object>> advertDataList = new ArrayList<>();
         db.collectionGroup("adverts").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -163,27 +159,30 @@ public class BackendDataHandler implements iBackend {
                 List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
                 int i=0;
                 for (DocumentSnapshot snapshot : adverts) {
-                    advertDataList.add(snapshot.getData());
-                    advertDataList.get(i).put("imgURL",testDownloadFile((String)snapshot.getData().get("uniqueAdID")).toString());
-
+                    Map<String, Object> toBeAdded = snapshot.getData();
+                    toBeAdded.put("imgURL", downloadFirebaseFile((String)toBeAdded.get("uniqueAdID")).toString());
+                    advertDataList.add(toBeAdded);
                     i++;
                 }
-
                 advertisementDBCallback.onCallBack(advertDataList);
                 OMEGALUL++;
-                System.out.println(OMEGALUL);
+                System.out.println(OMEGALUL); //Isak, explain yourself
             }
         });
 
     }
 
-    private File testDownloadFile(String uniqueID) {
+    /**
+     * All images in firebase are stored in the images-folder with their
+     * uniqueAdID as filenames
+     */
+    private File downloadFirebaseFile(String uniqueID) {
         try {
             File localFile = File.createTempFile("images", "jpg");
             imagesRef.child(uniqueID).getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    //Local temp file has been created
+                    //Local temp file has been created and can be accessed, even outside this function
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

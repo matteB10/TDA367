@@ -54,7 +54,7 @@ public class Repository {
      * @param advertisement gets saved into temporary list as well as in firebase
      */
 
-    //TODO implement functionality for uploading the image of and Advert to Firebase
+    //TODO implement functionality for uploading the image of Advert to Firebase
     public void saveAdvert(Advertisement advertisement) {
         allAds.add(advertisement); //Saves in a temporary list
         HashMap<String, Object> dataMap = new HashMap<>();
@@ -101,13 +101,7 @@ public class Repository {
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
         allAds.clear();
-        BackendDataHandler.getInstance().readAllAdvertData(new imageCallBack() {
-            @Override
-            public void onCallBack(URI imageURI) {
-
-
-            }
-        }, advertDataList -> {
+        BackendDataHandler.getInstance().readAllAdvertData(advertDataList -> {
             for (Map<String, Object> dataMap : advertDataList) {
                 allAds.add(retrieveAdvert(dataMap));
             }
