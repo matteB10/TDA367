@@ -54,7 +54,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_advert);
         presenter = new CreateAdPresenter(this);
-        imageViewDisplay = (ImageView) findViewById(R.id.addImageView);
+        imageViewDisplay = findViewById(R.id.addImageView);
         disablePublishAdButton();
         setListeners();
 
@@ -99,7 +99,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        imageViewDisplay = (ImageView) findViewById(R.id.addImageView);
+        imageViewDisplay = findViewById(R.id.addImageView);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap bitmap = decodeBitmap();
@@ -154,35 +154,26 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     private void setConditionGroupListener() {
         conditionGoodButton = findViewById(R.id.conditionGoodButton);
-        conditionGoodButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO FIX STYLING
-                presenter.conditionChanged(Advert.Condition.GOOD);
-                conditionGoodButton.setPressed(true);
-                conditionOKButton.setPressed(false);
-                conditionNewButton.setPressed(false);
-            }
+        conditionGoodButton.setOnClickListener(view -> {
+            //TODO FIX STYLING
+            presenter.conditionChanged(Advert.Condition.GOOD);
+            conditionGoodButton.setPressed(true);
+            conditionOKButton.setPressed(false);
+            conditionNewButton.setPressed(false);
         });
         conditionNewButton = findViewById(R.id.conditionNewButton);
-        conditionNewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.conditionChanged(Advert.Condition.NEW);
-                conditionNewButton.setPressed(true);
-                conditionGoodButton.setPressed(false);
-                conditionOKButton.setPressed(false);
-            }
+        conditionNewButton.setOnClickListener(view -> {
+            presenter.conditionChanged(Advert.Condition.NEW);
+            conditionNewButton.setPressed(true);
+            conditionGoodButton.setPressed(false);
+            conditionOKButton.setPressed(false);
         });
         conditionOKButton = findViewById(R.id.conditionOkButton);
-        conditionOKButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.conditionChanged(Advert.Condition.OK);
-                conditionOKButton.setPressed(true);
-                conditionGoodButton.setPressed(false);
-                conditionNewButton.setPressed(false);
-            }
+        conditionOKButton.setOnClickListener(view -> {
+            presenter.conditionChanged(Advert.Condition.OK);
+            conditionOKButton.setPressed(true);
+            conditionGoodButton.setPressed(false);
+            conditionNewButton.setPressed(false);
         });
     }
 
@@ -201,12 +192,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void setImageViewListener() {
-        imageViewDisplay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dispatchTakePictureIntent();
-            }
-        });
+        imageViewDisplay.setOnClickListener(view -> dispatchTakePictureIntent());
 
     }
 
@@ -271,16 +257,13 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void setCreateAdvertListener() {
-        publishAdButton = (Button) findViewById(R.id.publishAdButton);
-        publishAdButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CreateAdActivity.
-                        this, DetailsActivity.class);
-                intent.putExtra("advertID", presenter.getId());
-                presenter.publishAdvert();
-                startActivity(intent);
-            }
+        publishAdButton = findViewById(R.id.publishAdButton);
+        publishAdButton.setOnClickListener(view -> {
+            Intent intent = new Intent(CreateAdActivity.
+                    this, DetailsActivity.class);
+            intent.putExtra("advertID", presenter.getId());
+            presenter.publishAdvert();
+            startActivity(intent);
         });
 
     }
