@@ -26,9 +26,13 @@ public class Repository {
     private static JSONObject booksJsonObj;
     private static Repository repository;
     private final List<RepositoryObserver> observers = new ArrayList<>();
-    private final List<Advertisement> allAds = new ArrayList<>();
+    private List<Advertisement> allAds = new ArrayList<>();
 
     private Repository() {
+        fetchAllAdverts(advertisements -> {
+            this.allAds = new ArrayList<>(advertisements);
+            this.notifyMarketObservers();
+        });
     }
 
     //Make repository generate a mock userID
@@ -92,8 +96,19 @@ public class Repository {
         }, userID);
     }
 
+    public String getFireBaseID(String userID, String advertID) {
+        return BackendDataFetcher.getInstance().getFireBaseID(userID, advertID);
+    }
 
-    public void fetchAllAdverts(advertisementCallback advertisementCallback) {
+    public void addObserver(RepositoryObserver observer) {
+        observers.add(observer);
+    }
+
+    public List<Advertisement> getAllAds() {
+        return new ArrayList<>(allAds); //Returnerar en kopia av listan, lite läskigt att ProfilePresenter pekar på den faktiska listan
+    }
+
+    private void fetchAllAdverts(advertisementCallback advertisementCallback) {
         allAds.clear();
         BackendDataFetcher.getInstance().readAllAdvertData(advertDataList -> {
             for (Map<String, Object> dataMap : advertDataList) {
@@ -103,24 +118,14 @@ public class Repository {
         });
     }
 
-    public String getFireBaseID(String userID, String advertID) {
-        return BackendDataFetcher.getInstance().getFireBaseID(userID, advertID);
-    }
-
-    //TODO FOR LATER IMPLEMENTATION
-    public void addObserver(RepositoryObserver observer) {
-        observers.add(observer);
-    }
-
-    public List<Advertisement> getAllAds() {
-        return new ArrayList<>(allAds); //Returnerar en kopia av listan, lite läskigt att ProfilePresenter pekar på den faktiska listan
-    }
-
-    private void userAdvertsForSaleUpdate(Iterator<Advertisement> updatedListIterator) {
+    private void notifyUsersAdvertsForSaleUpdated() {
         // TODO: change from temp list to actual user list
-        observers.forEach(observer -> observer.userAdvertsForSaleUpdate(updatedListIterator));
+        //observers.forEach(observer -> observer.userAdvertsForSaleUpdate(updatedListIterator));
     }
 
+    private void notifyMarketObservers() {
+        observers.forEach(observer -> observer.allAdvertsInMarketUpdate(allAds.iterator()));
+    }
 
     private Advertisement retrieveAdvert(Map<String, Object> dataMap) {
         String title = (String) dataMap.get("title");

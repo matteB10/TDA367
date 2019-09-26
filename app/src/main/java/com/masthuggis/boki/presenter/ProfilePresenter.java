@@ -2,7 +2,6 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryObserver;
-import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.view.ThumbnailView;
 
@@ -51,6 +50,11 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
     public void userAdvertsForSaleUpdate(Iterator<Advertisement> advertsForSale) {
         updateUserItemsOnSale(advertsForSale);
         view.updateItemsOnSale();
+    }
+
+    @Override
+    public void allAdvertsInMarketUpdate(Iterator<Advertisement> advertsInMarket) {
+
     }
 
     private void updateUserItemsOnSale(Iterator<Advertisement> advertsForSale) {
