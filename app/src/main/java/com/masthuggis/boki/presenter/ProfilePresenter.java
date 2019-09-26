@@ -5,19 +5,18 @@ import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.view.ThumbnailView;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 public class ProfilePresenter implements IProductsPresenter, RepositoryObserver {
-    private View view;
-    private List<Advertisement> userItemsOnSale;
+    private final View view;
+    private Repository repository;
 
     public ProfilePresenter(View view) {
         this.view = view;
-        // TODO: for now using temp data, later use real advertisment of the actual user
-        this.userItemsOnSale = Repository.getInstance().getAllAds();
-        Repository.getInstance().addObserver(this);
+        this.repository = Repository.getInstance();
+
+        repository.addObserver(this);
+        this.view.showLoadingScreen();
     }
 
     public void onSettingsButtonPressed() {
@@ -26,19 +25,21 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
 
     @Override
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
-        Advertisement a = userItemsOnSale.get(position);
+        Advertisement a = repository.getAllAds().get(position);
         thumbnailView.setId(a.getTitle());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
         if (a.getImgURL() != null) {
-                thumbnailView.setImageUrl(a.getImgURL());
-            }
+            thumbnailView.setImageUrl(a.getImgURL());
         }
+    }
 
 
     @Override
     public int getItemCount() {
-        return userItemsOnSale.size();
+        // TODO: change to user adverts when that logic has been implemented
+        // for now using same adverts as in market
+        return repository.getAllAds().size();
     }
 
     @Override
@@ -48,26 +49,20 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
 
     @Override
     public void userAdvertsForSaleUpdate(Iterator<Advertisement> advertsForSale) {
-        updateUserItemsOnSale(advertsForSale);
+        view.hideLoadingScreen();
         view.updateItemsOnSale();
     }
 
     @Override
     public void allAdvertsInMarketUpdate(Iterator<Advertisement> advertsInMarket) {
-
-    }
-
-    private void updateUserItemsOnSale(Iterator<Advertisement> advertsForSale) {
-        List<Advertisement> updatedAdverts = new ArrayList<>();
-        while (advertsForSale.hasNext()) {
-            updatedAdverts.add(advertsForSale.next());
-        }
-        userItemsOnSale = updatedAdverts;
+        // TODO: remove this when interface is segregated
     }
 
     public interface View {
         void setIsUserLoggedIn(boolean isUserLoggedIn);
         void updateItemsOnSale();
         void showSettingsScreen();
+        void showLoadingScreen();
+        void hideLoadingScreen();
     }
 }

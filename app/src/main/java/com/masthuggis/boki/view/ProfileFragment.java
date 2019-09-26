@@ -84,4 +84,14 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
         Intent intent = new Intent(getContext(), SettingsActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    public void showLoadingScreen() {
+        // TODO: show loading animation
+    }
+
+    @Override
+    public void hideLoadingScreen() {
+        // TODO: hide loading animation
+    }
 }
