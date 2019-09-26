@@ -15,7 +15,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.masthuggis.boki.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -26,7 +25,6 @@ public class LoginActivity extends AppCompatActivity {
     private Button singinButton;
 
     private FirebaseAuth auth;
-    private FirebaseUser user;
     private ProgressDialog PD;
 
     @Override
@@ -34,13 +32,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         super.onStart();
         auth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = auth.getCurrentUser();
 
         setContentView(R.layout.activity_login);
 
-
         PD = new ProgressDialog(this);
-        PD.setMessage("Loading...");
+        PD.setMessage("Laddar...");
         PD.setCanceledOnTouchOutside(false);
         auth = FirebaseAuth.getInstance();
 
@@ -81,6 +77,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     LoginActivity.this,
                                                     "login successful",
                                                     Toast.LENGTH_LONG).show();
+
                                             //TODO update the profileFragment view, and make the sign out button visible
 
                                         } else {
