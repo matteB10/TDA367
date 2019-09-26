@@ -107,14 +107,11 @@ public class Repository {
 
 
             }
-        }, new advertisementDBCallback() {
-            @Override
-            public void onCallBack(List<Map<String, Object>> advertDataList) {
-                for (Map<String, Object> dataMap : advertDataList) {
-                    allAds.add(retrieveAdvert(dataMap));
-                }
-                advertisementCallback.onCallback(allAds);
+        }, advertDataList -> {
+            for (Map<String, Object> dataMap : advertDataList) {
+                allAds.add(retrieveAdvert(dataMap));
             }
+            advertisementCallback.onCallback(allAds);
         });
     }
 
@@ -147,8 +144,7 @@ public class Repository {
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        File file  = (File) dataMap.get("filepath");
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, imgURL, description, price, condition,file);
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, imgURL, description, price, condition);
     }
 
     /**

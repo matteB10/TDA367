@@ -56,6 +56,7 @@ public class BackendDataHandler implements iBackend {
     private StorageReference mainRef = storage.getReference();
     private StorageReference imagesRef = mainRef.child("images"); //Reference to storage location of images
 
+    private static int OMEGALUL = 0;
     private BackendDataHandler() {
 
     }
@@ -160,12 +161,17 @@ public class BackendDataHandler implements iBackend {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
+                int i=0;
                 for (DocumentSnapshot snapshot : adverts) {
                     advertDataList.add(snapshot.getData());
-                    snapshot.getData().put("filePath",testDownloadFile((String)snapshot.getData().get("uniqueAdID")));
+                    advertDataList.get(i).put("imgURL",testDownloadFile((String)snapshot.getData().get("uniqueAdID")).toString());
+
+                    i++;
                 }
 
                 advertisementDBCallback.onCallBack(advertDataList);
+                OMEGALUL++;
+                System.out.println(OMEGALUL);
             }
         });
 

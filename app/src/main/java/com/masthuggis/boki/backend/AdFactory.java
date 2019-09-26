@@ -24,10 +24,6 @@ public class AdFactory {
 
         return new Advert(datePublished, uniqueOwnerID, id, title, imgURLs, description, price, condition);
     }
-    public static Advertisement createAd(String datePublished, String uniqueOwnerID, String id, String title, String imgURLs, String description, long price, Advert.Condition condition, File file) {
-
-        return new Advert(datePublished, uniqueOwnerID, id, title, imgURLs, description, price, condition,file);
-    }
 
     public static Advertisement createAd() {
         String uniqueAdId = UniqueIdCreator.getUniqueID();

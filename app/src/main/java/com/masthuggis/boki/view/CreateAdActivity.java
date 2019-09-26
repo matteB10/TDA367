@@ -280,6 +280,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
                 intent.putExtra("advertID", presenter.getId());
                 presenter.publishAdvert();
                 startActivity(intent);
+                finish();
             }
         });
 

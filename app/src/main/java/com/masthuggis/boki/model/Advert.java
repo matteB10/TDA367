@@ -158,13 +158,6 @@ public class Advert implements Advertisement {
         }
         return true;
     }
-    public void setImageFile( File imageFile){
-        this.imageFile = imageFile;
-    }
 
-    @Override
-    public File getImageFile() {
-        return this.imageFile;
-    }
 
 }

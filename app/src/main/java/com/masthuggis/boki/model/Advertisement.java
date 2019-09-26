@@ -40,8 +40,4 @@ public interface Advertisement {
     void setCondition(Advert.Condition condition);
 
     void setDatePublished(String datePublished);
-    void setImageFile( File file);
-
-
-    File getImageFile();
 }
