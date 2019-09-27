@@ -18,7 +18,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.masthuggis.boki.R;
 
 public class LoginActivity extends AppCompatActivity {
-
+    /**Class for the sign in activity.
+     * Connects to Firebase to see if there is an active user, to access private ads
+     * in the profile view.
+     */
     private EditText inputEmail;
     private EditText inputPassword;
     private Button signupButton;
@@ -26,6 +29,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private ProgressDialog PD;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         PD = new ProgressDialog(this);
         PD.setMessage("Laddar...");
         PD.setCanceledOnTouchOutside(false);
+
+        //
         auth = FirebaseAuth.getInstance();
 
         inputEmail = (EditText) findViewById(R.id.email);
@@ -54,7 +61,6 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
         singinButton = findViewById(R.id.signinButton);
         singinButton.setOnClickListener(new View.OnClickListener() {
@@ -77,14 +83,12 @@ public class LoginActivity extends AppCompatActivity {
                                                     LoginActivity.this,
                                                     "login successful",
                                                     Toast.LENGTH_LONG).show();
-
-                                            //TODO update the profileFragment view, and make the sign out button visible
-
                                         } else {
                                             Toast.makeText(
                                                     LoginActivity.this,
                                                     task.getException().getMessage(),
                                                     Toast.LENGTH_LONG).show();
+                                            finish();
                                         }
                                     }
                                 });

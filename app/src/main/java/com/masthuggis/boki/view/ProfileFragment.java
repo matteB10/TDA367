@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
@@ -25,9 +27,10 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
 
 
     FirebaseUser user;
-
+    FirebaseAuth auth;
     Button signOutButton;
     Button signinButton;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -35,7 +38,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
         View v = inflater.inflate(R.layout.profile_fragment,container,false);
         setupHeader(v);
         setupList(v);
-        //Button signOutButton = v.findViewById(R.id.signOutButton);
+        Button signOutButton = v.findViewById(R.id.signOutButton);
         Button signinButton = v.findViewById(R.id.signinButton);
 
         signinButton.setOnClickListener(new View.OnClickListener() {
@@ -44,8 +47,15 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
                 }
+        });
 
-
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Toast.makeText(getActivity(),"you are now signed out",
+                        Toast.LENGTH_LONG).show();
+            }
         });
 
         return v;
