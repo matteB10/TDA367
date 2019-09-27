@@ -269,4 +269,3 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
 }
-

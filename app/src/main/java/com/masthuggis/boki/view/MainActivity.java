@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.masthuggis.boki.R;
@@ -14,14 +17,18 @@ import com.masthuggis.boki.R;
  */
 public class MainActivity extends AppCompatActivity {
 
- //   private BackendDataFetcher backendDataFetcher = new BackendDataFetcher();
+    //   private BackendDataFetcher backendDataFetcher = new BackendDataFetcher();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        BottomNavigationView bottomNav =findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+      /*  backendDataFetcher.addNewBook(new Book("testTitle","testAuthor",1,666,1234567890,
+                1337, Book.Condition.GOOD,null,null));*/
+
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment()).commit();
     }
 
@@ -53,8 +60,5 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,selectedFragment).commit();
         return true;
 
-
     };
-
-
 }

@@ -1,15 +1,16 @@
 <resources>
     <string name="app_name">boki</string>
     <string name="title_home">home</string>
-    <string name="title_profile">My Ads</string>
+    <string name="title_profile">Mina Annonser</string>
     <string name="title_messages">messages</string>
     <string name="title_favorites">favorites</string>
     <string name="title_new_ad">new ad</string>
 
-    <string name="back">back</string>
-    <string name="settings">settings</string>
-    <string name="mybooks">my books</string>
-    <string name="mycollections">my collections</string>
+    <string name="back">Tillbaka</string>
+    <string name="settings">Inställningar</string>
+    <string name="myBooks">Mina Böcker</string>
+
+    <string name="myCollections">Mina Samlingar</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -47,5 +48,14 @@
     <string name="conditionNew">NY</string>
     <string name="conditionOk">OK</string>
 
-    >>>>>>> Added all neccessary fields to view for createAdvertActivity
+    <!-- login and signup activity-->
+    <string name="email">E-post</string>
+    <string name="password">Lösenord</string>
+    <string name="reenterPassword">Ange lösenord igen</string>
+    <string name="login">Logga in</string>
+    <string name="signup">Skapa användare</string>
+    <string name="forgotPassword">Glömt lösenord?</string>
+    <string name="logOut">Logga ut</string>
+
+
 </resources>

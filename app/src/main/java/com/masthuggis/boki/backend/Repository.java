@@ -10,10 +10,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-
 import java.util.Map;
 
 /**
@@ -23,7 +22,6 @@ import java.util.Map;
  */
 
 public class Repository {
-    private static JSONObject booksJsonObj;
     private static Repository repository;
     private final List<RepositoryObserver> observers = new ArrayList<>();
     private List<Advertisement> allAds = new ArrayList<>();
@@ -59,7 +57,7 @@ public class Repository {
     public void saveAdvert(Advertisement advertisement) {
         allAds.add(advertisement); //Saves in a temporary list
         HashMap<String, Object> dataMap = new HashMap<>();
-        dataMap.put("title",advertisement.getTitle());
+        dataMap.put("title", advertisement.getTitle());
         dataMap.put("description", advertisement.getDescription());
         dataMap.put("uniqueOwnerID", advertisement.getUniqueOwnerID());
         dataMap.put("condition", advertisement.getConditon());

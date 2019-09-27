@@ -1,8 +1,8 @@
 package com.masthuggis.boki.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.masthuggis.boki.R;
 

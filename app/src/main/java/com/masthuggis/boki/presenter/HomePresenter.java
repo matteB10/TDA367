@@ -1,7 +1,6 @@
 package com.masthuggis.boki.presenter;
 
 import android.util.Log;
-import android.view.View;
 
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryObserver;

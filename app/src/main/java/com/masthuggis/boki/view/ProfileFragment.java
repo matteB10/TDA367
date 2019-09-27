@@ -6,20 +6,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 import com.masthuggis.boki.presenter.ProfilePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
-import com.masthuggis.boki.utils.HeaderDecoration;
-
-import java.util.Iterator;
 
 /**
  * Profile page used for displaying the adverts that the user have published. Also have an settings
@@ -30,13 +29,45 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     private RecyclerView recyclerView;
     private ProductsRecyclerViewAdapter adapter;
 
+
+    FirebaseUser user;
+    FirebaseAuth auth;
+    Button signOutButton;
+    Button signinButton;
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.profile_fragment,container,false);
         setupHeader(v);
         setupList(v);
+        Button signOutButton = v.findViewById(R.id.signOutButton);
+        Button signinButton = v.findViewById(R.id.signinButton);
+
+        signinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+                }
+        });
+
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Toast.makeText(getActivity(),"you are now signed out",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+
         return v;
     }
+
+
+
+
 
     private void setupHeader(View v) {
         Button settingsButton = v.findViewById(R.id.profileSettingsButton);
@@ -95,3 +126,5 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
         // TODO: hide loading animation
     }
 }
+
+
