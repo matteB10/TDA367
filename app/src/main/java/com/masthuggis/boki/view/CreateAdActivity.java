@@ -9,19 +9,15 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.content.FileProvider;
 
 import com.masthuggis.boki.R;
@@ -32,10 +28,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * An acitivity for creating a new advertisement
@@ -70,7 +64,22 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         disablePublishAdButton();
         renderTagButtons();
         setListeners();
+        updateDataFromModel();
 
+    }
+
+    private void updateDataFromModel() {
+        imageViewDisplay.setImageURI(Uri.parse(presenter.getImgURL()));
+        title.setText(presenter.getTitle());
+        description.setText(presenter.getDescription());
+        if(presenter.getIsValidPrice()) {
+            price.setText("" + presenter.getPrice());
+        } else{showInputPrompt();
+        }
+    }
+
+    private void showInputPrompt() {
+        price.setText("");
     }
 
     private void dispatchTakePictureIntent() {
@@ -96,6 +105,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * Creates an empty file and specifies unique file name.
+     *
      * @return
      * @throws IOException
      */
@@ -126,7 +136,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     /**
-     * Helper method to decode bitmap 
+     * Helper method to decode bitmap
+     *
      * @return
      */
     private Bitmap decodeBitmap() {
@@ -199,7 +210,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
 
-    private void disablePublishAdButton(){
+
+    private void disablePublishAdButton() {
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setEnabled(false);
         publishAdButton.setBackgroundColor(getResources().getColor(R.color.colorGreyLight));
@@ -287,14 +299,15 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         });
 
     }
-    private void setPreDefTagsListeners(){
-        for(Button btn : tagButtons) {
+
+    private void setPreDefTagsListeners() {
+        for (Button btn : tagButtons) {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     presenter.tagsChanged(btn.getText().toString());
                     btn.requestFocusFromTouch();
-                    if(presenter.isTagPressed(btn.getText().toString()))
+                    if (presenter.isTagPressed(btn.getText().toString()))
                         btn.setBackgroundResource(R.drawable.subject_tag_shape_pressed);
                     else
                         btn.setBackgroundResource(R.drawable.subject_tag_shape_normal);
@@ -303,7 +316,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             });
         }
     }
-    private void setUserDefTagListener(){
+
+    private void setUserDefTagListener() {
         EditText userDefTag = findViewById(R.id.tagsEditText);
         userDefTag.addTextChangedListener(new TextWatcher() {
             @Override
@@ -329,7 +343,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      * Reads pre defined subject strings from resources,
      * saves all string in a list.
      */
-    private  void initPreDefTags(){
+    private void initPreDefTags() {
         String[] strArr = getResources().getStringArray(R.array.preDefSubjectTags);
         for (String str : strArr)
             preDefTags.add(str);
@@ -338,8 +352,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     /**
      * Create buttons with pre-defined subject tags.
      */
-    private void createTagButtons(){
-        for(String str: preDefTags) {
+    private void createTagButtons() {
+        for (String str : preDefTags) {
             Button btn = new Button(this);
             btn.setText(str);
             setTagStyling(btn);
@@ -350,7 +364,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     /**
      * Populates view with subject tag buttons.
      */
-    private void populateTagsLayout(){
+    private void populateTagsLayout() {
         //TODO: fix styling of button/tableRow height
         TableLayout tableLayout = findViewById(R.id.preDefTagsTableLayout);
         tableLayout.setStretchAllColumns(true);
@@ -358,9 +372,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         tableRow.setLayoutParams(new TableRow.LayoutParams());
         int i = 1;
 
-        for(Button btn : tagButtons) {
+        for (Button btn : tagButtons) {
             tableRow.addView(btn);
-            if(i % 3 == 0){
+            if (i % 3 == 0) {
                 tableLayout.addView(tableRow);
                 tableRow = new TableRow(this);
             }
@@ -369,17 +383,19 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         tableLayout.addView(tableRow);
     }
 
-    private void renderTagButtons(){
+    private void renderTagButtons() {
         initPreDefTags();
         createTagButtons();
         populateTagsLayout();
     }
-    private void setTagStyling(Button btn){
+
+    private void setTagStyling(Button btn) {
         btn.setBackgroundResource(R.drawable.subject_tag_shape_normal);
         btn.setTextSize(12);
         btn.setTextColor(getResources().getColor(R.color.colorWhite));
     }
-    private void displayUserTag(String str){
+
+    private void displayUserTag(String str) {
         Button btn = new Button(this);
         btn.setText(str);
         setTagStyling(btn);
@@ -390,6 +406,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         linearLayout.addView(tr);
 
     }
+
 
 
 }
