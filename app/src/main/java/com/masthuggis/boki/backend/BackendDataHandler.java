@@ -150,7 +150,6 @@ public class BackendDataHandler implements iBackend {
     }
 
     //Fetch data for all adverts from all users
-    //Not currently possible to attach listeners to subcollections, but possible to query so-called "Collection groups"
     void readAllAdvertData(advertisementDBCallback advertisementDBCallback) {
         List<Map<String, Object>> advertDataList = new ArrayList<>();
         db.collectionGroup("adverts").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
