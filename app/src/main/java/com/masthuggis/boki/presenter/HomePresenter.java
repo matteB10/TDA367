@@ -1,11 +1,13 @@
 package com.masthuggis.boki.presenter;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.advertisementCallback;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.utils.ConditionStylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.List;
@@ -32,6 +34,7 @@ public class HomePresenter implements IProductsPresenter {
         thumbnailView.setId(a.getUniqueID());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
+        setCondition(a,thumbnailView);
         if (a.getImgURL() != null) {
             thumbnailView.setImageUrl(a.getImgURL());
 
@@ -48,6 +51,12 @@ public class HomePresenter implements IProductsPresenter {
         Log.d("PRINT", "Row id pressed " + uniqueIDoFAdvert);
         view.showDetailsScreen(uniqueIDoFAdvert);
     }
+    private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
+        ConditionStylingHelper helper = ConditionStylingHelper.getInstance();
+        int color = helper.getConditionColor(a.getCondition(), view.getContext());
+        String text = helper.getConditionText(a.getCondition(), view.getContext());
+        thumbnailView.setCondition(text, color);
+    }
 
     public interface View {
         void showLoadingScreen();
@@ -57,5 +66,7 @@ public class HomePresenter implements IProductsPresenter {
         void hideLoadingScreen();
 
         void showDetailsScreen(String id);
+
+        Context getContext();
     }
 }

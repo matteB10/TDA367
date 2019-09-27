@@ -23,6 +23,7 @@ import androidx.core.content.FileProvider;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
+import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,9 +51,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private EditText title;
     private EditText price;
     private EditText description;
-    private Button conditionNewButton;
-    private Button conditionGoodButton;
-    private Button conditionOKButton;
     private Button publishAdButton;
 
 
@@ -85,7 +83,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File imageFile = null;
+            File imageFile;
             try {
                 imageFile = createImageFile();
             } catch (Exception i) {
@@ -110,18 +108,18 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      * @throws IOException
      */
     private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String photoFileName = "IMG_"+ UniqueIdCreator.getUniqueID();
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        String photoFileName = "IMAGE_" + timeStamp + "_";
-        File image = File.createTempFile(photoFileName, ".jpg", storageDir);
-        currentImagePath = image.getAbsolutePath();
-        return image;
+
+        File imageFile = File.createTempFile(photoFileName, ".jpg", storageDir);
+        currentImagePath = imageFile.getAbsolutePath();
+        return imageFile;
     }
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        imageViewDisplay = (ImageView) findViewById(R.id.addImageView);
+        imageViewDisplay =  findViewById(R.id.addImageView);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap bitmap = decodeBitmap();
@@ -136,23 +134,19 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     /**
-     * Helper method to decode bitmap
-     *
+     * Helper method to decode bitmap 
      * @return
      */
     private Bitmap decodeBitmap() {
-        // Get the dimensions of the View
         int imageWidth = imageViewDisplay.getWidth();
         int imageHeight = imageViewDisplay.getHeight();
 
-        // Get the dimensions of the bitmap
         BitmapFactory.Options imageOptions = new BitmapFactory.Options();
         imageOptions.inJustDecodeBounds = true;
 
         int actualWidth = imageOptions.outWidth;
         int actualHeight = imageOptions.outHeight;
 
-        // Determine how much to scale down the image
         int scaleFactor = Math.min(actualWidth / imageWidth, actualHeight / imageHeight);
 
         // Decode the image file into a Bitmap sized to fill the View
@@ -177,7 +171,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void setConditionGroupListener() {
-        conditionGoodButton = findViewById(R.id.conditionGoodButton);
+        Button conditionGoodButton = findViewById(R.id.conditionGoodButton);
         conditionGoodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,14 +180,14 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
             }
         });
-        conditionNewButton = findViewById(R.id.conditionNewButton);
+        Button conditionNewButton = findViewById(R.id.conditionNewButton);
         conditionNewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 presenter.conditionChanged(Advert.Condition.NEW);
             }
         });
-        conditionOKButton = findViewById(R.id.conditionOkButton);
+        Button conditionOKButton = findViewById(R.id.conditionOkButton);
         conditionOKButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -205,16 +199,15 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     @Override
     public void enablePublishButton() {
         publishAdButton.setEnabled(true);
-        publishAdButton.setBackgroundColor(getResources().getColor(R.color.colorTeal));
+        publishAdButton.setBackground(getResources().getDrawable(R.drawable.primary_button));
 
     }
 
 
-
-    private void disablePublishAdButton() {
+    private void disablePublishAdButton(){
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setEnabled(false);
-        publishAdButton.setBackgroundColor(getResources().getColor(R.color.colorGreyLight));
+        publishAdButton.setBackground(getResources().getDrawable(R.drawable.disabled_primary_button));
     }
 
     private void setImageViewListener() {
@@ -229,7 +222,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void setTitleListener() {
-        title = (EditText) findViewById(R.id.titleEditText);
+        title =  findViewById(R.id.titleEditText);
         title.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -248,7 +241,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void setPriceListener() {
-        price = (EditText) findViewById(R.id.priceEditText);
+        price =  findViewById(R.id.priceEditText);
         price.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -267,7 +260,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void setDescriptionListener() {
-        description = (EditText) findViewById(R.id.descriptionEditText);
+        description =  findViewById(R.id.descriptionEditText);
         description.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -286,7 +279,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void setCreateAdvertListener() {
-        publishAdButton = (Button) findViewById(R.id.publishAdButton);
+        publishAdButton =  findViewById(R.id.publishAdButton);
         publishAdButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -299,9 +292,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         });
 
     }
-
-    private void setPreDefTagsListeners() {
-        for (Button btn : tagButtons) {
+    private void setPreDefTagsListeners(){
+        for(Button btn : tagButtons) {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -316,8 +308,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             });
         }
     }
-
-    private void setUserDefTagListener() {
+    private void setUserDefTagListener(){
         EditText userDefTag = findViewById(R.id.tagsEditText);
         userDefTag.addTextChangedListener(new TextWatcher() {
             @Override
@@ -329,7 +320,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String str = charSequence.toString();
                 presenter.tagsChanged(str);
-                displayUserTag(str);
             }
 
             @Override
@@ -343,7 +333,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      * Reads pre defined subject strings from resources,
      * saves all string in a list.
      */
-    private void initPreDefTags() {
+    private  void initPreDefTagStrings(){
         String[] strArr = getResources().getStringArray(R.array.preDefSubjectTags);
         for (String str : strArr)
             preDefTags.add(str);
@@ -383,8 +373,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         tableLayout.addView(tableRow);
     }
 
-    private void renderTagButtons() {
-        initPreDefTags();
+    private void renderTagButtons(){
+        initPreDefTagStrings();
         createTagButtons();
         populateTagsLayout();
     }
@@ -394,8 +384,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         btn.setTextSize(12);
         btn.setTextColor(getResources().getColor(R.color.colorWhite));
     }
-
-    private void displayUserTag(String str) {
+    private void displayUserTag(String str){
         Button btn = new Button(this);
         btn.setText(str);
         setTagStyling(btn);

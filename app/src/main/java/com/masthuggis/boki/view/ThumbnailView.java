@@ -1,6 +1,5 @@
 package com.masthuggis.boki.view;
 
-import com.masthuggis.boki.model.Advert;
 
 /**
  * An abstraction of what a thumbnail view needs to know in order to render an advert. With
@@ -15,5 +14,5 @@ public interface ThumbnailView {
 
     void setId(String id);
 
-    void setCondition(Advert.Condition conditon);
+    void setCondition(String condition, int color);
 }

@@ -1,7 +1,10 @@
 package com.masthuggis.boki.presenter;
 
+import android.content.Context;
+
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.utils.ConditionStylingHelper;
 
 /**
  * DetailsPresenter is the presenter class for the view called DetailsActivity.
@@ -39,6 +42,12 @@ public class DetailsPresenter {
         }
 
     }
+    private void setCondition(){
+        ConditionStylingHelper helper = ConditionStylingHelper.getInstance();
+        int color = helper.getConditionColor(advertisement.getCondition(),view.getContext());
+        String text = helper.getConditionText(advertisement.getCondition(), view.getContext());
+        view.setCondition(text,color);
+    }
 
     public interface View {
         void setName(String name);
@@ -46,29 +55,11 @@ public class DetailsPresenter {
         void setPrice(long price);
         void setDate( String date);
         void setImageUrl(String url);
-
+        void setCondition(String text, int color);
         void setDescription(String description);
-        void setConditionGood();
-        void setConditionNew();
-        void setConditionOk();
+        Context getContext();
 
     }
 
-    //TODO kommentera detta.
-
-    private void setCondition(){
-        switch (advertisement.getCondition()){
-
-            case NEW:
-                view.setConditionNew();
-                break;
-            case GOOD:
-                view.setConditionGood();
-                break;
-            case OK:
-                view.setConditionOk();
-        }
-
-    }
 
 }

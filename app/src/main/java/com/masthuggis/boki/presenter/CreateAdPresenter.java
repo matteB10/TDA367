@@ -173,7 +173,7 @@ public class CreateAdPresenter {
         return advertisement.getTitle();
     }
 
-    public String getConditon() {
+    public String getCondition(){
         return advertisement.getCondition().toString();
     }
 

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -82,25 +83,15 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
     @Override
-    public void setConditionNew(){
+    public void setCondition(String text, int color) {
         TextView textView = findViewById(R.id.conditionTextView);
-        textView.setText(getResources().getString(R.string.conditionNew));
+        textView.setText(text);
         ConstraintLayout layout = findViewById(R.id.conditionConstraintLayout);
-        layout.setBackground(getResources().getDrawable(R.drawable.button_new_condition));
+        layout.setBackgroundColor(color);
     }
     @Override
-    public void setConditionGood(){
-        TextView textView = findViewById(R.id.conditionTextView);
-        textView.setText(getResources().getString(R.string.conditionGood));
-        ConstraintLayout layout = findViewById(R.id.conditionConstraintLayout);
-        layout.setBackground(getResources().getDrawable(R.drawable.button_good_condition));
-    }
-    @Override
-    public void setConditionOk(){
-        TextView textView = findViewById(R.id.conditionTextView);
-        textView.setText(getResources().getString(R.string.conditionOk));
-        ConstraintLayout layout = findViewById(R.id.conditionConstraintLayout);
-        layout.setBackground(getResources().getDrawable(R.drawable.button_ok_condition));
+    public Context getContext(){
+        return this;
     }
 
 
