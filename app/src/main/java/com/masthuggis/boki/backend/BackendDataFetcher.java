@@ -35,9 +35,6 @@ public class BackendDataFetcher implements iBackend {
 
     /**
      * Singleton that converts the contents of a json-file into a String via a Context-object.
-     *
-     * @param context the Context-object required to load the .json-file via the assets-folder
-     * @return the contents of the loaded .json-file formatted as a String.
      */
     private static BackendDataFetcher instance;
     private static List<Map<String, Object>> userAdvertsData = new ArrayList<>();
@@ -97,7 +94,7 @@ public class BackendDataFetcher implements iBackend {
     //Fetch data for all adverts from all user
     //Not currently possible to attach listeners to subcollections, but possible to query so-called "Collection groups"
     void readAllAdvertData(advertisementDBCallback advertisementDBCallback) {
-        List<Map<String,Object>> advertDataList = new ArrayList<>();
+        List<Map<String, Object>> advertDataList = new ArrayList<>();
         db.collectionGroup("adverts").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -113,7 +110,7 @@ public class BackendDataFetcher implements iBackend {
 
     //Small method for manually testing if firebase returns the correct ID's for users and adverts
     String getFireBaseID(String userID, String advertID) {
-        if(advertID != null)
+        if (advertID != null)
             return db.collection("users").document(userID).collection("adverts").document(advertID).getId();
         return db.collection("users").document(userID).getId();
     }
