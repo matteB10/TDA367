@@ -23,7 +23,6 @@ import java.util.Map;
  */
 
 public class Repository {
-    private static JSONObject booksJsonObj;
     private static Repository repository;
     private final List<RepositoryObserver> observers = new ArrayList<>();
     private final List<Advertisement> allAds = new ArrayList<>();
