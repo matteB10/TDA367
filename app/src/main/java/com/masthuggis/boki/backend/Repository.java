@@ -54,7 +54,7 @@ public class Repository {
     public void saveAdvert(Advertisement advertisement) {
         allAds.add(advertisement); //Saves in a temporary list
         HashMap<String, Object> dataMap = new HashMap<>();
-        dataMap.put("title",advertisement.getTitle());
+        dataMap.put("title", advertisement.getTitle());
         dataMap.put("description", advertisement.getDescription());
         dataMap.put("uniqueOwnerID", advertisement.getUniqueOwnerID());
         dataMap.put("condition", advertisement.getConditon());
