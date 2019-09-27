@@ -146,7 +146,6 @@ public class Repository {
      * Called from fetchAdvertsFromUserID
      */
     private Advertisement retrieveAdvertWithUserID(Map<String, Object> dataMap, String uniqueOwnerID) {
-        //Date datePublished = dataMap.get("datePublished"); //Oklart
         String title = (String) dataMap.get("title");
         String description = (String) dataMap.get("description");
         long price = (long) dataMap.get("price");
