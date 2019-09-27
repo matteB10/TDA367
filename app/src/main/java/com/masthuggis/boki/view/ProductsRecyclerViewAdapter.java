@@ -1,8 +1,6 @@
-package com.masthuggis.boki.presenter;
+package com.masthuggis.boki.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.model.Advert;
-import com.masthuggis.boki.view.ThumbnailView;
+import com.masthuggis.boki.presenter.IProductsPresenter;
 
 public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder> {
 
@@ -84,9 +82,10 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         }
 
         @Override
-        public void setImageUrl(String url) {
+        public void setImageURL(String url) {
             imageView.setImageURI(Uri.parse(url));
         }
+
 
         @Override
         public void setId(String id) {
@@ -94,7 +93,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         }
 
         @Override
-        public void setCondition(Advert.Condition conditon) {
+        public void setCondition(Advert.Condition condition) {
 
         }
 

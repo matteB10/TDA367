@@ -58,7 +58,7 @@ public class Repository {
      */
 
     //TODO implement functionality for uploading the image of Advert to Firebase
-    public void saveAdvert(Advertisement advertisement) {
+    public void saveAdvert(Advertisement advertisement, File imageFile) {
         allAds.add(advertisement); //Saves in a temporary list
         HashMap<String, Object> dataMap = new HashMap<>();
         dataMap.put("title", advertisement.getTitle());
@@ -66,11 +66,10 @@ public class Repository {
         dataMap.put("uniqueOwnerID", advertisement.getUniqueOwnerID());
         dataMap.put("condition", advertisement.getConditon());
         dataMap.put("price", advertisement.getPrice());
-        dataMap.put("imgURL", advertisement.getImgURL());
         dataMap.put("tags", advertisement.getTags());
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
-        BackendDataHandler.getInstance().writeAdvertToFirebase(dataMap);
+        BackendDataHandler.getInstance().writeAdvertToFirebase(dataMap, imageFile);
     }
 
 
@@ -138,13 +137,13 @@ public class Repository {
         String title = (String) dataMap.get("title");
         String description = (String) dataMap.get("description");
         long price = (long) dataMap.get("price");
-        String imgURL = (String) dataMap.get("imgURL");
         List<String> tags = (List<String>) dataMap.get("tags");
         String uniqueOwnerID = (String) dataMap.get("uniqueOwnerID");
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, imgURL, description, price, condition);
+        File imageFile =(File) dataMap.get("imgFile");
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageFile);
     }
 
     /**
@@ -155,13 +154,12 @@ public class Repository {
         String title = (String) dataMap.get("title");
         String description = (String) dataMap.get("description");
         long price = (long) dataMap.get("price");
-        String imgURL = (String) dataMap.get("imgURL");
         List<String> tags = (List<String>) dataMap.get("tags");
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, imgURL, description, price, condition);
-    }
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, null);
+    } //TODO den här kommer behöva en imageFile den här med
 
 }
 
