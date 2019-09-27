@@ -14,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advert;

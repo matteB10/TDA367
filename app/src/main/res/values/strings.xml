@@ -55,6 +55,7 @@
     <string name="login">Logga in</string>
     <string name="signup">Skapa användare</string>
     <string name="forgotPassword">Glömt lösenord?</string>
+    <string name="logOut">Logga ut</string>
 
 
 </resources>
