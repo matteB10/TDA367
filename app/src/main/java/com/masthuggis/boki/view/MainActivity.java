@@ -17,7 +17,7 @@ import com.masthuggis.boki.R;
  */
 public class MainActivity extends AppCompatActivity {
 
-    //   private BackendDataFetcher backendDataFetcher = new BackendDataFetcher();
+ //   private BackendDataHandler backendDataFetcher = new BackendDataHandler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,5 +60,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,selectedFragment).commit();
         return true;
 
-    };
-}
+        };
+
+    }
+

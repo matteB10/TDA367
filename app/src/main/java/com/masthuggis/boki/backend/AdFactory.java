@@ -4,6 +4,7 @@ import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 

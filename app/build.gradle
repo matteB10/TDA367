@@ -42,11 +42,13 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.google.code.gson:gson:2.8.5'
+
+    //Firebase database, cloud storage and authentication
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
     implementation 'com.google.firebase:firebase-firestore:21.1.1'
     implementation 'com.google.firebase:firebase-auth:19.0.0'
     implementation 'com.firebaseui:firebase-ui-auth:6.0.2'
-
+    implementation 'com.google.firebase:firebase-storage:19.1.0'
 
 }
 apply plugin: 'com.google.gms.google-services'

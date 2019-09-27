@@ -21,6 +21,7 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -84,6 +85,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * Creates an empty file and specifies unique file name.
+     *
      * @return
      * @throws IOException
      */
@@ -114,33 +116,36 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     /**
-     * Helper method to decode bitmap 
+     * Helper method to decode bitmap
+     *
      * @return
      */
+
     private Bitmap decodeBitmap() {
-        // Get the dimensions of the View
         int imageWidth = imageViewDisplay.getWidth();
         int imageHeight = imageViewDisplay.getHeight();
 
-        // Get the dimensions of the bitmap
         BitmapFactory.Options imageOptions = new BitmapFactory.Options();
         imageOptions.inJustDecodeBounds = true;
 
         int actualWidth = imageOptions.outWidth;
         int actualHeight = imageOptions.outHeight;
 
-        // Determine how much to scale down the image
         int scaleFactor = Math.min(actualWidth / imageWidth, actualHeight / imageHeight);
 
         // Decode the image file into a Bitmap sized to fill the View
         imageOptions.inJustDecodeBounds = false;
         imageOptions.inSampleSize = scaleFactor;
+
         Bitmap bitmap = BitmapFactory.decodeFile(currentImagePath, imageOptions);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
 
-        return bitmap;
+        byte[] byteArray = stream.toByteArray();
+        Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
+        return compressedBitmap;
     }
-
 
     private void setListeners() {
         setImageViewListener();
@@ -149,7 +154,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setDescriptionListener();
         setCreateAdvertListener();
         setConditionGroupListener();
-
     }
 
     private void setConditionGroupListener() {
@@ -185,7 +189,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
 
-    private void disablePublishAdButton(){
+    private void disablePublishAdButton() {
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setEnabled(false);
         publishAdButton.setBackgroundColor(getResources().getColor(R.color.colorGreyLight));
@@ -265,7 +269,5 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             presenter.publishAdvert();
             startActivity(intent);
         });
-
     }
-
 }

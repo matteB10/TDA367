@@ -1,8 +1,6 @@
 package com.masthuggis.boki.model;
 
-import java.net.URL;
-import java.util.Date;
-import java.util.Iterator;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -42,6 +40,4 @@ public interface Advertisement {
     void setCondition(Advert.Condition condition);
 
     void setDatePublished(String datePublished);
-
-
 }

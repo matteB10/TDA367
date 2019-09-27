@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,10 +20,11 @@ import java.util.Map;
 /**
  * Class providing the functionality to convert data from backend into Book-objects to be used
  * by the domain-layer of the application.
- * Data is fetched using the BackendDataFetcher class.
+ * Data is fetched using the BackendDataHandler class.
  */
 
 public class Repository {
+    private static JSONObject booksJsonObj;
     private static Repository repository;
     private final List<RepositoryObserver> observers = new ArrayList<>();
     private List<Advertisement> allAds = new ArrayList<>();
@@ -54,6 +57,7 @@ public class Repository {
      * @param advertisement gets saved into temporary list as well as in firebase
      */
 
+    //TODO implement functionality for uploading the image of Advert to Firebase
     public void saveAdvert(Advertisement advertisement) {
         allAds.add(advertisement); //Saves in a temporary list
         HashMap<String, Object> dataMap = new HashMap<>();
@@ -66,7 +70,7 @@ public class Repository {
         dataMap.put("tags", advertisement.getTags());
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
-        BackendDataFetcher.getInstance().writeAdvertToFirebase(dataMap);
+        BackendDataHandler.getInstance().writeAdvertToFirebase(dataMap);
     }
 
 
@@ -86,34 +90,39 @@ public class Repository {
      */
     public void fetchAdvertsFromUserIDFirebase(String userID, advertisementCallback advertisementCallback) {
         List<Advertisement> userIDAdverts = new ArrayList<>();
-        BackendDataFetcher.getInstance().readUserIDAdverts(advertDataList -> {
-            for (Map<String, Object> dataMap : advertDataList) {
-                userIDAdverts.add(retrieveAdvertWithUserID(dataMap, userID));
+        BackendDataHandler.getInstance().readUserIDAdverts(new advertisementDBCallback() {
+            @Override
+            public void onCallBack(List<Map<String, Object>> advertDataList) {
+                for (Map<String, Object> dataMap : advertDataList) {
+                    userIDAdverts.add(retrieveAdvertWithUserID(dataMap, userID));
+                }
+                advertisementCallback.onCallback(userIDAdverts);
             }
-            advertisementCallback.onCallback(userIDAdverts);
         }, userID);
     }
 
-    public String getFireBaseID(String userID, String advertID) {
-        return BackendDataFetcher.getInstance().getFireBaseID(userID, advertID);
+
+    public void fetchAllAdverts(advertisementCallback advertisementCallback) {
+        allAds.clear();
+        BackendDataHandler.getInstance().readAllAdvertData(advertDataList -> {
+            for (Map<String, Object> dataMap : advertDataList) {
+                allAds.add(retrieveAdvert(dataMap));
+            }
+            advertisementCallback.onCallback(allAds);
+        });
     }
 
+    public String getFireBaseID(String userID, String advertID) {
+        return BackendDataHandler.getInstance().getFireBaseID(userID, advertID);
+    }
+
+    //TODO FOR LATER IMPLEMENTATION
     public void addObserver(RepositoryObserver observer) {
         observers.add(observer);
     }
 
     public List<Advertisement> getAllAds() {
         return new ArrayList<>(allAds); //Returnerar en kopia av listan, lite läskigt att ProfilePresenter pekar på den faktiska listan
-    }
-
-    private void fetchAllAdverts(advertisementCallback advertisementCallback) {
-        allAds.clear();
-        BackendDataFetcher.getInstance().readAllAdvertData(advertDataList -> {
-            for (Map<String, Object> dataMap : advertDataList) {
-                allAds.add(retrieveAdvert(dataMap));
-            }
-            advertisementCallback.onCallback(allAds);
-        });
     }
 
     private void notifyUsersAdvertsForSaleUpdated() {
@@ -143,7 +152,6 @@ public class Repository {
      * Called from fetchAdvertsFromUserID
      */
     private Advertisement retrieveAdvertWithUserID(Map<String, Object> dataMap, String uniqueOwnerID) {
-        //Date datePublished = dataMap.get("datePublished"); //Oklart
         String title = (String) dataMap.get("title");
         String description = (String) dataMap.get("description");
         long price = (long) dataMap.get("price");

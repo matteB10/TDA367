@@ -1,8 +1,7 @@
 package com.masthuggis.boki.model;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -26,6 +25,7 @@ public class Advert implements Advertisement {
     private long price;
     private Condition condition;
     private List<String> tags = new ArrayList<>();
+    private File imageFile;
 
 
     /**public Advert(Date datePublished, String uniqueOwnerID, String uniqueAdID, String title, List<String> imgURLs, String description, long price, Condition condition) {
@@ -52,6 +52,19 @@ public class Advert implements Advertisement {
         this.price = price;
         this.condition = condition;
     }
+
+    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String imgURL, String description, long price, Condition condition,File file) {
+        this.datePublished = datePublished;
+        this.uniqueOwnerID = uniqueOwnerID;
+        this.uniqueAdID = id;
+        this.title = title;
+        this.imageURL = imgURL;
+        this.description = description;
+        this.price = price;
+        this.condition = condition;
+        this.imageFile = file;
+    }
+
 
     public String getDatePublished() {
         return this.datePublished;
@@ -145,5 +158,6 @@ public class Advert implements Advertisement {
         }
         return true;
     }
+
 
 }
