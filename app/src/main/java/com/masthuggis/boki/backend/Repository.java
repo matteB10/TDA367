@@ -24,12 +24,19 @@ import java.util.Map;
  */
 
 public class Repository {
-    private static JSONObject booksJsonObj;
     private static Repository repository;
     private final List<RepositoryObserver> observers = new ArrayList<>();
     private List<Advertisement> allAds = new ArrayList<>();
 
     private Repository() {
+        updateAdverts();
+    }
+
+
+    /**
+     * Fetches data from Firebase and updates local list of Advertisements. Also notifies observers.
+     */
+    public void updateAdverts() {
         fetchAllAdverts(advertisements -> {
             this.allAds = new ArrayList<>(advertisements);
             this.notifyMarketObservers();
@@ -72,7 +79,6 @@ public class Repository {
         BackendDataHandler.getInstance().writeAdvertToFirebase(dataMap, imageFile);
     }
 
-
     //Same functionality as above method but based off of firebase
     public Advertisement getAdFromAdID(String ID) {
         for (Advertisement ad : allAds) {
@@ -81,7 +87,6 @@ public class Repository {
         }
         return null; //TODO Fix a better solution to handle NPExc....
     }
-
 
     /**
      * Gets all adverts in firebase that belong to a specific userID
@@ -99,7 +104,6 @@ public class Repository {
             }
         }, userID);
     }
-
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
         allAds.clear();
@@ -142,7 +146,7 @@ public class Repository {
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        File imageFile =(File) dataMap.get("imgFile");
+        File imageFile = (File) dataMap.get("imgFile");
         return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageFile);
     }
 

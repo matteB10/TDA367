@@ -140,6 +140,11 @@ public class BackendDataHandler implements iBackend {
                 }
                 advertisementDBCallback.onCallBack(advertDataList);
             }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("Read from firebase failed.");
+            }
         });
 
     }

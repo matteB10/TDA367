@@ -1,5 +1,7 @@
 package com.masthuggis.boki.model;
 
+import com.masthuggis.boki.utils.UniqueIdCreator;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,8 +68,8 @@ public class Advert implements Advertisement {
 
     public Advert() {
         this.datePublished = "";
-        this.uniqueOwnerID = "uniqueOwnerID";
-        this.uniqueAdID = "unikID";
+        this.uniqueOwnerID = "tempOwnerID";
+        this.uniqueAdID = UniqueIdCreator.getUniqueID();
         this.title = "";
         this.description = "";
         this.price = 0;
