@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -171,9 +172,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             public void onClick(View view) {
                 //TODO FIX STYLING
                 presenter.conditionChanged(Advert.Condition.GOOD);
-                conditionGoodButton.setPressed(true);
-                conditionOKButton.setPressed(false);
-                conditionNewButton.setPressed(false);
+
             }
         });
         conditionNewButton = findViewById(R.id.conditionNewButton);
@@ -181,9 +180,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             @Override
             public void onClick(View view) {
                 presenter.conditionChanged(Advert.Condition.NEW);
-                conditionNewButton.setPressed(true);
-                conditionGoodButton.setPressed(false);
-                conditionOKButton.setPressed(false);
             }
         });
         conditionOKButton = findViewById(R.id.conditionOkButton);
@@ -191,9 +187,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             @Override
             public void onClick(View view) {
                 presenter.conditionChanged(Advert.Condition.OK);
-                conditionOKButton.setPressed(true);
-                conditionGoodButton.setPressed(false);
-                conditionNewButton.setPressed(false);
             }
         });
     }
@@ -238,7 +231,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
     }
@@ -258,7 +250,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
     }
@@ -278,7 +269,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
     }
@@ -312,6 +302,27 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
                 }
             });
         }
+    }
+    private void setUserDefTagListener(){
+        EditText userDefTag = findViewById(R.id.tagsEditText);
+        userDefTag.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String str = charSequence.toString();
+                presenter.tagsChanged(str);
+                displayUserTag(str);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     /**
@@ -367,6 +378,17 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         btn.setBackgroundResource(R.drawable.subject_tag_shape_normal);
         btn.setTextSize(12);
         btn.setTextColor(getResources().getColor(R.color.colorWhite));
+    }
+    private void displayUserTag(String str){
+        Button btn = new Button(this);
+        btn.setText(str);
+        setTagStyling(btn);
+        EditText text = findViewById(R.id.tagsEditText);
+        LinearLayout linearLayout = findViewById(R.id.tagsLinearLayout);
+        TableRow tr = new TableRow(this);
+        tr.addView(btn);
+        linearLayout.addView(tr);
+
     }
 
 
