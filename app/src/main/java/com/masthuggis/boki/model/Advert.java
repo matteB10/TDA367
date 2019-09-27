@@ -16,7 +16,7 @@ public class Advert implements Advertisement {
         NEW, GOOD, OK, UNDEFINED
     }
 
-    private Date datePublished;
+    private String datePublished;
     private String uniqueOwnerID;
     private String uniqueAdID;
     private String title;
@@ -42,7 +42,7 @@ public class Advert implements Advertisement {
      */
 
     //Alternative constructor with only one image allowed
-    public Advert(Date datePublished, String uniqueOwnerID, String id, String title, String imgURL, String description, long price, Condition condition) {
+    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String imgURL, String description, long price, Condition condition) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.uniqueAdID = id;
@@ -53,7 +53,7 @@ public class Advert implements Advertisement {
         this.condition = condition;
     }
 
-    public Date getDatePublished() {
+    public String getDatePublished() {
         return this.datePublished;
     }
 
@@ -127,6 +127,9 @@ public class Advert implements Advertisement {
         }
     }
 
+    public void setDatePublished(String datePublished) {
+        this.datePublished = datePublished;
+    }
 
     @Override
     public void setCondition(Condition condition) {

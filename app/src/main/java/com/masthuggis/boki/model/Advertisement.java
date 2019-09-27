@@ -11,7 +11,7 @@ import java.util.List;
 public interface Advertisement {
 
 
-    Date getDatePublished();
+    String getDatePublished();
 
     String getImgURL();
 
@@ -40,6 +40,8 @@ public interface Advertisement {
     void tagsChanged(String tag);
 
     void setCondition(Advert.Condition condition);
+
+    void setDatePublished(String datePublished);
 
 
 }

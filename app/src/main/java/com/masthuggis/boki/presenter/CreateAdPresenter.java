@@ -7,6 +7,10 @@ import com.masthuggis.boki.utils.FormHelper;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * Presenter class handling the createAdActivity. Validates input from
@@ -110,10 +114,19 @@ public class CreateAdPresenter{
      * saves advert in temp list and resets current ad in presenter
      */
     public void publishAdvert() {
+        setAdvertDate();
         Repository.getInstance().saveAdvert(advertisement);
         advertisement = null;
     }
-    public String getId(){
+
+    private void setAdvertDate() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+        String dateString = dateFormat.format(calendar.getTime()); //Saves current time as a string
+        advertisement.setDatePublished(dateString);
+    }
+
+    public String getId() {
         return advertisement.getUniqueID();
     }
 
@@ -130,5 +143,22 @@ public class CreateAdPresenter{
         return false;
 
     }
+    public View getView() {
+        return view;
+    }
+
+    public String getTitle() {
+        return advertisement.getTitle();
+    }
+    public String getConditon(){
+        return advertisement.getCondition().toString();
+    }
+
+    public long getPrice() {
+        return advertisement.getPrice();
+    }
+
+
+
 
 }
