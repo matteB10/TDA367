@@ -1,5 +1,6 @@
 package com.masthuggis.boki.backend;
 
+
 import android.content.Context;
 import android.util.Log;
 
@@ -8,6 +9,8 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -133,5 +136,12 @@ public class BackendDataFetcher implements iBackend {
             return db.collection("users").document(userID).collection("adverts").document(advertID).getId();
         return db.collection("users").document(userID).getId();
     }
+
+
+    //-------------------------------------------------------------------------------
+    public FirebaseAuth auth;
+    public FirebaseUser user;
+
+
 
 }

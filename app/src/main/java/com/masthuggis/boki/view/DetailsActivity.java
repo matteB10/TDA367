@@ -21,13 +21,12 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-
-
         Intent intent = getIntent();
         String advertID = intent.getExtras().getString("advertID");
         if (advertID != null || advertID == "") {
             presenter = new DetailsPresenter(this, advertID);
         }
+
         Button contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
             //TODO HÄR SKA CHATTEN ÖPPNAS TYP

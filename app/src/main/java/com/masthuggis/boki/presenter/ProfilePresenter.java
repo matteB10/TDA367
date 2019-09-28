@@ -2,7 +2,6 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryObserver;
-import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.view.ThumbnailView;
 
@@ -24,9 +23,6 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         repository.addObserver(this);
     }
 
-    public void onSettingsButtonPressed() {
-        view.showSettingsScreen();
-    }
 
     @Override
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
@@ -68,5 +64,16 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         void setIsUserLoggedIn(boolean isUserLoggedIn);
         void updateItemsOnSale();
         void showSettingsScreen();
+        void showSignInScreen();
+    }
+
+
+    //---------------------------------------
+    public void onSettingsButtonPressed() {
+        view.showSettingsScreen();
+    }
+
+    public void onSignInButtonPressed(){
+        view.showSignInScreen();
     }
 }

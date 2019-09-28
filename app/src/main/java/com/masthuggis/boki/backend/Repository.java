@@ -152,7 +152,6 @@ public class Repository implements RepositoryObserver {
     }
 
 
-
     private static List<String> getPreDefinedTags(JSONObject object) {
         try {
             JSONArray tagsArray = object.getJSONArray("preDefinedTags");
@@ -296,6 +295,7 @@ public class Repository implements RepositoryObserver {
         // TODO: change from temp list to actual user list
         observers.forEach(observer -> observer.userAdvertsForSaleUpdate(getTemporaryListOfAllAds().iterator()));
     }
+
 }
 
 

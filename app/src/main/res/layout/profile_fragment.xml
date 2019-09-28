@@ -47,7 +47,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
-                    android:id="@+id/signinButton"
+                    android:id="@+id/signInButton"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:text="@string/login"
@@ -69,7 +69,7 @@
                     android:textSize="8sp"
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/signinButton" />
+                    app:layout_constraintEnd_toStartOf="@+id/signInButton" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView

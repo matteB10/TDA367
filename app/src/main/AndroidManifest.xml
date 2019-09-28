@@ -21,8 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".view.ForgetAndChangePasswordActivity"></activity>
-        <activity android:name=".view.RegisterActivity" />
-        <activity android:name=".view.LoginActivity" />
+        <activity android:name=".view.SignUpActivity" />
+        <activity android:name=".view.SignInActivity" />
         <activity android:name=".view.DetailsActivity" />
         <activity android:name=".view.SettingsActivity"></activity>
         <activity android:name=".view.HomeFragment" />
