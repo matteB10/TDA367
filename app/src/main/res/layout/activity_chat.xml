@@ -15,7 +15,6 @@
         android:layout_height="match_parent"
         android:background="@color/cardview_dark_background"
         android:theme="@style/AppTheme"
-        app:popupTheme="@style/MenuStyle"
         android:id="@+id/chatToolbar"/>
 
     <ImageView
