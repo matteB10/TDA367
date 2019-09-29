@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,14 +45,14 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
 
     @Override
     public void hideLoadingScreen() {
-        TextView loadingTextView = view.findViewById(R.id.homeLoadingTextView);
-        loadingTextView.setVisibility(View.GONE);
+        ProgressBar progressBar = view.findViewById(R.id.loadingProgressBar);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void showLoadingScreen() {
-        TextView loadingTextView = view.findViewById(R.id.homeLoadingTextView);
-        loadingTextView.setVisibility(View.VISIBLE);
+        ProgressBar progressBar = view.findViewById(R.id.loadingProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override

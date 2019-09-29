@@ -42,14 +42,11 @@
                     android:text="Sortera" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/homeLoadingTextView"
+            <ProgressBar
+                android:id="@+id/loadingProgressBar"
+                style="?android:attr/progressBarStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="Laddar..."
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:visibility="visible" />
+                android:layout_height="wrap_content" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/advertsRecyclerView"
