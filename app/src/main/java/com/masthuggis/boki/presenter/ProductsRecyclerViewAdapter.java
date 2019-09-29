@@ -65,12 +65,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         }
 
         private void setupOnPressActionFor(View v) {
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    presenter.onRowPressed(id);
-                }
-            });
+            v.setOnClickListener(view -> presenter.onRowPressed(id));
         }
 
         @Override

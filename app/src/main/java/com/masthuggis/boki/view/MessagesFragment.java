@@ -7,14 +7,41 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.presenter.MessagesPresenter;
+import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
 public class MessagesFragment extends Fragment {
+    private MessagesPresenter presenter;
+    private View view;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.messages_fragment,container,false);
+
+        this.view = inflater.inflate(R.layout.messages_fragment, container, false);
+        this.presenter = new MessagesPresenter();
+        setupList();
+        return view;
 
     }
+
+
+    private void setupList() {
+        RecyclerView recyclerView = view.findViewById(R.id.messages_recyclerview);
+        MessagesRecyclerViewAdapter adapter = new MessagesRecyclerViewAdapter(presenter);
+        recyclerView.setAdapter(adapter);
+        int spanCount = 1;
+        int spacing = 10;
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), spanCount);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, true));
+    }
+
+
+
+
+
 }
