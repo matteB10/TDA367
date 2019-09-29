@@ -5,18 +5,23 @@ import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.view.ThumbnailView;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class ProfilePresenter implements IProductsPresenter, RepositoryObserver {
     private final View view;
-    private Repository repository;
+    private List<Advertisement> adverts;
 
     public ProfilePresenter(View view) {
         this.view = view;
-        this.repository = Repository.getInstance();
 
-        repository.addObserver(this);
         this.view.showLoadingScreen();
+        Repository.getInstance().getAllAds(advertisements -> {
+            this.adverts = new ArrayList<>(advertisements);
+            this.view.hideLoadingScreen();
+            this.view.updateItemsOnSale();
+        });
     }
 
     public void onSettingsButtonPressed() {
@@ -25,7 +30,7 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
 
     @Override
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
-        Advertisement a = repository.getAllAds().get(position);
+        Advertisement a = adverts.get(position);
         thumbnailView.setId(a.getTitle());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
@@ -39,7 +44,7 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
     public int getItemCount() {
         // TODO: change to user adverts when that logic has been implemented
         // for now using same adverts as in market
-        return repository.getAllAds().size();
+        return adverts.size();
     }
 
     @Override

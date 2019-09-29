@@ -121,8 +121,11 @@ public class Repository {
         observers.add(observer);
     }
 
-    public List<Advertisement> getAllAds() {
-        return new ArrayList<>(allAds); //Returnerar en kopia av listan, lite läskigt att ProfilePresenter pekar på den faktiska listan
+    public void getAllAds(advertisementCallback advertisementCallback) {
+        // If there are adverts already stored, return those, else make a request. The stored
+        // adverts, if there are any, will be same as the ones stored on the database.
+        // TODO: make a setup so it does not have to do fetch every time (only if necessary)
+        fetchAllAdverts(advertisementCallback);
     }
 
     private void notifyUsersAdvertsForSaleUpdated() {

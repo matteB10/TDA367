@@ -26,6 +26,7 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
  */
 public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     private ProfilePresenter presenter = new ProfilePresenter(this);
+    private View view;
     private RecyclerView recyclerView;
     private ProductsRecyclerViewAdapter adapter;
 
@@ -39,11 +40,10 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.profile_fragment,container,false);
-        setupHeader(v);
-        setupList(v);
-        Button signOutButton = v.findViewById(R.id.signOutButton);
-        Button signinButton = v.findViewById(R.id.signinButton);
+        this.view = inflater.inflate(R.layout.profile_fragment,container,false);
+        setupHeader(view);
+        Button signOutButton = view.findViewById(R.id.signOutButton);
+        Button signinButton = view.findViewById(R.id.signinButton);
 
         signinButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +62,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
             }
         });
 
-        return v;
+        return view;
     }
 
 
@@ -74,8 +74,8 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
         settingsButton.setOnClickListener(view -> presenter.onSettingsButtonPressed());
     }
 
-    private void setupList(View v) {
-        setupRecycler(v);
+    private void setupList() {
+        setupRecycler(view);
         setupAdapter();
         setupListLayout();
     }
@@ -107,7 +107,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
 
     @Override
     public void updateItemsOnSale() {
-        adapter.notifyDataSetChanged();
+        setupList();
     }
 
     @Override
