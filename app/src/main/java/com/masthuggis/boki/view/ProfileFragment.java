@@ -45,21 +45,15 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
         Button signOutButton = view.findViewById(R.id.signOutButton);
         Button signinButton = view.findViewById(R.id.signinButton);
 
-        signinButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
-                }
-        });
+        signinButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+            });
 
-        signOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Toast.makeText(getActivity(),"you are now signed out",
-                        Toast.LENGTH_LONG).show();
-            }
+        signOutButton.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            Toast.makeText(getActivity(),"you are now signed out",
+                    Toast.LENGTH_LONG).show();
         });
 
         return view;
