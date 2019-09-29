@@ -2,9 +2,11 @@ package com.masthuggis.boki.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -23,7 +25,7 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
  * Home page displaying all the adverts that have been published to the market.
  * Will also include filter and sort buttons in the future.
  */
-public class HomeFragment extends Fragment implements HomePresenter.View {
+public class HomeFragment extends Fragment implements HomePresenter.View, AdapterView.OnItemSelectedListener {
 
     private HomePresenter presenter;
     private View view;
@@ -42,6 +44,7 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
                 R.array.sorting_options, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
     }
 
     private void setupList() {
@@ -78,5 +81,21 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
         setupList();
     }
 
+    /**
+     * Called when the sorting option changes. For example, sorting for lowest price.
+     * @param adapterView
+     * @param view
+     * @param i
+     * @param l
+     */
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        String itemSelected = (String) adapterView.getItemAtPosition(i);
+        Log.d("DEBUG", itemSelected);
+    }
 
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
 }
