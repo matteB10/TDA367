@@ -1,15 +1,11 @@
 package com.masthuggis.boki.presenter;
 
-import android.util.Log;
-
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryObserver;
-import com.masthuggis.boki.backend.advertisementCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * HomePresenter is the presenter class for the view called HomeFragment.
