@@ -5,8 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -31,7 +32,16 @@ public class HomeFragment extends Fragment implements HomePresenter.View {
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.home_fragment, container, false);
         this.presenter = new HomePresenter(this);
+        setupSortSpinner();
         return view;
+    }
+
+    private void setupSortSpinner() {
+        Spinner spinner = view.findViewById(R.id.sortPickerSpinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.sorting_options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
     }
 
     private void setupList() {

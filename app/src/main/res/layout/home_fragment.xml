@@ -31,15 +31,16 @@
                     android:id="@+id/homeFilterButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
+                    android:minWidth="220dp"
                     android:text="Filtrera" />
 
-                <Button
-                    android:id="@+id/homeSortButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Sortera" />
+                <Spinner
+                    android:id="@+id/sortPickerSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
             </LinearLayout>
 
             <ProgressBar
