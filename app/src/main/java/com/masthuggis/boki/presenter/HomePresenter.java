@@ -7,6 +7,7 @@ import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
  *
  */
 public class HomePresenter implements IProductsPresenter {
-    private View view;
+    private final View view;
     private List<Advertisement> adverts;
 
     public HomePresenter(View view) {
@@ -49,6 +50,10 @@ public class HomePresenter implements IProductsPresenter {
 
     public void onRowPressed(String uniqueIDoFAdvert) {
         view.showDetailsScreen(uniqueIDoFAdvert);
+    }
+
+    public void sortOptionSelected(int pos) {
+        Log.d("DEBUG", Integer.toString(pos));
     }
 
     public interface View {

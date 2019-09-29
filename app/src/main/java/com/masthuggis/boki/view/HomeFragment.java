@@ -21,6 +21,10 @@ import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * Home page displaying all the adverts that have been published to the market.
  * Will also include filter and sort buttons in the future.
@@ -90,8 +94,8 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
      */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        String itemSelected = (String) adapterView.getItemAtPosition(i);
-        Log.d("DEBUG", itemSelected);
+        //String itemSelected = (String) adapterView.getItemAtPosition(i);
+        presenter.sortOptionSelected(i);
     }
 
     @Override
