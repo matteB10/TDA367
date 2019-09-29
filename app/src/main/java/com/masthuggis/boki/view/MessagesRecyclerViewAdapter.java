@@ -28,9 +28,8 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        MessagesRecyclerViewAdapter.ViewHolder v = new ViewHolder(LayoutInflater.from(parent
+        return new ViewHolder(LayoutInflater.from(parent
                 .getContext()).inflate(R.layout.messages_listitem, parent, false));
-        return v;
     }
 
     @Override
@@ -41,7 +40,7 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
 
     @Override
     public int getItemCount() {
-        return Repository.getInstance().getAllAds().size();
+        return Repository.getInstance().getAdsFromUniqueOwnerID(Repository.mockUniqueUserID).size();
     }
 
 

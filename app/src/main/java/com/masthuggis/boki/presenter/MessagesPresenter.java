@@ -16,10 +16,11 @@ public class MessagesPresenter {
 
     public void bindViewHolderAtPosition(int position, MessagesRecyclerViewAdapter.ViewHolder holder) {
 
-        if (Repository.getInstance().getAllAds().size() < position)
+        if (Repository.getInstance().getAdsFromUniqueOwnerID(Repository.mockUniqueUserID).size() < position) {
             return;
+        }
 
-        Advertisement a = Repository.getInstance().getAllAds().get(position);
+        Advertisement a = Repository.getInstance().getAdsFromUniqueOwnerID(Repository.mockUniqueUserID).get(position);
 
         holder.setDateTextView("TEMPDATE");
         holder.setUserTextView("TEMP USER");

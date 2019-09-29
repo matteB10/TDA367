@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 import com.masthuggis.boki.presenter.ProfilePresenter;
@@ -31,10 +30,6 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     private ProductsRecyclerViewAdapter adapter;
 
 
-    FirebaseUser user;
-    FirebaseAuth auth;
-    Button signOutButton;
-    Button signinButton;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,

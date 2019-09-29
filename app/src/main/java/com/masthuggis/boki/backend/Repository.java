@@ -1,19 +1,13 @@
 package com.masthuggis.boki.backend;
 
-import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.utils.UniqueIdCreator;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +22,7 @@ public class Repository {
     private static Repository repository;
     private final List<RepositoryObserver> observers = new ArrayList<>();
     private List<Advertisement> allAds = new ArrayList<>();
+    public static final String mockUniqueUserID = UniqueIdCreator.getUniqueID();
 
     private Repository() {
         fetchAllAdverts(advertisements -> {
@@ -38,6 +33,7 @@ public class Repository {
 
     //Make repository generate a mock userID
     public static Repository getInstance() {
+
         if (repository == null) {
             repository = new Repository();
         }
@@ -81,6 +77,16 @@ public class Repository {
                 return ad;
         }
         return null; //TODO Fix a better solution to handle NPExc....
+    }
+
+    //Returns a list of advertisements of the current user.
+    public List<Advertisement> getAdsFromUniqueOwnerID(String ID) {
+        List<Advertisement> userAds = new ArrayList<>();
+        for (Advertisement ad : allAds) {
+            if (ad.getUniqueID().equals(ID))
+                userAds.add(ad);
+        }
+        return userAds;
     }
 
 

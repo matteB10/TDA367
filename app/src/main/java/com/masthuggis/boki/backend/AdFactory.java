@@ -27,7 +27,7 @@ public class AdFactory {
 
     public static Advertisement createAd() {
         String uniqueAdId = UniqueIdCreator.getUniqueID();
-        return new Advert("", "Test", uniqueAdId, "", "", "", 0, Advert.Condition.UNDEFINED);
+        return new Advert("", Repository.mockUniqueUserID, uniqueAdId, "", "", "", 0, Advert.Condition.UNDEFINED);
     }
 
 
