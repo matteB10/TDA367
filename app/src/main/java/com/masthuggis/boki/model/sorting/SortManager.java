@@ -22,6 +22,7 @@ public class SortManager {
         List<SortStrategy> strategies = new ArrayList<>();
         strategies.add(new LatestPublishedSorting());
         strategies.add(new AlphabeticalSorting());
+        strategies.add(new ReversedAlphabeticalSorting());
         strategies.add(new LowestPriceSorting());
         strategies.add(new HightPriceSorting());
         return strategies;

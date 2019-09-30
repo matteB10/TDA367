@@ -7,8 +7,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class AlphabeticalSorting implements SortStrategy {
-    private static final String NAME = "Alfabetisk (A-Ö)";
+class ReversedAlphabeticalSorting implements SortStrategy {
+    private static final String NAME = "Omvänt Alfabetisk (Ö-A)";
 
     @Override
     public List<Advertisement> sort(List<Advertisement> adverts) {
@@ -18,7 +18,7 @@ class AlphabeticalSorting implements SortStrategy {
         }
 
         return new ArrayList<>(adverts).stream()
-                .sorted(Comparator.comparing(Advertisement::getTitle))
+                .sorted(Comparator.comparing(Advertisement::getTitle).reversed())
                 .collect(Collectors.toList());
     }
 
