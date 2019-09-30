@@ -40,6 +40,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         if (advertID != null) {
             presenter = new DetailsPresenter(this, advertID);
         }
+
         Button contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
             //TODO HÄR SKA CHATTEN ÖPPNAS TYP

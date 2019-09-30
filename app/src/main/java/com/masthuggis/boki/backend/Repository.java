@@ -128,16 +128,22 @@ public class Repository {
         fetchAllAdverts(advertisementCallback);
     }
 
+<<<<<<< HEAD
     public List<Advertisement> getLocalJSONAds() {
         allAds.clear();
         getMockDataOfAllAds();
+=======
+    public List<Advertisement> getMockOfAllAds() {
+        allAds.clear();
+        this.getMockDataOfAllAds();
+>>>>>>> 281782732f79068077365b1fa9846f3ea142d524
         return allAds;
     }
 
     /**
      * Retrieves local mock JSON file for debugging purposes.
      */
-    public void getMockDataOfAllAds() {
+    private void getMockDataOfAllAds() {
         String json = BackendDataHandler.getInstance().getMockBooks(Boki.getAppContext());
         try {
             JSONObject booksObject = new JSONObject(json);
@@ -215,6 +221,5 @@ public class Repository {
     } //TODO den här kommer behöva en imageFile den här med
 
 }
-
 
 
