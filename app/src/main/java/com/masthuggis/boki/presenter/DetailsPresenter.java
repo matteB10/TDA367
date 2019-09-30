@@ -34,8 +34,8 @@ public class DetailsPresenter {
         view.setDescription(advertisement.getDescription());
         view.setDate(advertisement.getDatePublished());
         setCondition();
-        if (advertisement.getImgURL() != null) {
-            view.setImageUrl(advertisement.getImgURL());
+        if (advertisement.getImageFile() != null) {
+            view.setImageUrl(advertisement.getImageFile().toURI().toString());
         }
 
     }

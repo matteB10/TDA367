@@ -23,7 +23,9 @@ import com.masthuggis.boki.presenter.CreateAdPresenter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -37,7 +39,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    private String currentImagePath;
+    private File currentImageFile;
     private CreateAdPresenter presenter;
 
     private ImageView imageViewDisplay;
@@ -56,6 +58,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setContentView(R.layout.activity_create_advert);
         presenter = new CreateAdPresenter(this);
         imageViewDisplay = findViewById(R.id.addImageView);
+        //imageViewDisplay.setImageBitmap(BitmapFactory.decodeFile(currentImageFile.getPath()));
         disablePublishAdButton();
         setListeners();
 
@@ -65,21 +68,18 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File imageFile = null;
             try {
-                imageFile = createImageFile();
+                currentImageFile = createImageFile();
             } catch (Exception i) {
                 System.out.println("error creating file");
             }
-            if (imageFile != null) {
+            if (currentImageFile != null) {
                 Uri imageURI = FileProvider.getUriForFile(this, "com.masthuggis.boki.fileprovider",
-                        imageFile);
+                        currentImageFile);
                 System.out.println(imageURI);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-
             }
-
         }
     }
 
@@ -94,7 +94,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         String photoFileName = "IMAGE_" + timeStamp + "_";
         File image = File.createTempFile(photoFileName, ".jpg", storageDir);
-        currentImagePath = image.getAbsolutePath();
         return image;
     }
 
@@ -106,13 +105,16 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap bitmap = decodeBitmap();
             setImageView(bitmap);
-            presenter.imageURIChanged(currentImagePath);
+            presenter.imageFileChanged(currentImageFile);
         }
-
     }
 
     private void setImageView(Bitmap bitmap) {
         imageViewDisplay.setImageBitmap(bitmap);
+    }
+
+    public void imageFileChanged(File image){
+        imageViewDisplay.setImageBitmap(BitmapFactory.decodeFile(image.getPath()));
     }
 
     /**
@@ -137,14 +139,14 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageOptions.inJustDecodeBounds = false;
         imageOptions.inSampleSize = scaleFactor;
 
-        Bitmap bitmap = BitmapFactory.decodeFile(currentImagePath, imageOptions);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+        Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath(), imageOptions);
+        //ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        //bitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
 
-        byte[] byteArray = stream.toByteArray();
-        Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        //byte[] byteArray = stream.toByteArray();
+        //Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
-        return compressedBitmap;
+        return bitmap;
     }
 
     private void setListeners() {

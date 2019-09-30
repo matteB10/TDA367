@@ -39,8 +39,8 @@ public class HomePresenter implements IProductsPresenter {
         thumbnailView.setId(a.getUniqueID());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
-        if (a.getImgURL() != null) {
-            thumbnailView.setImageUrl(a.getImgURL());
+        if (a.getImageFile() != null) {
+            thumbnailView.setImageURL(a.getImageFile().toURI().toString());
         }
     }
 

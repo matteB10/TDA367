@@ -11,7 +11,7 @@ public interface ThumbnailView {
 
     void setPrice(long price);
 
-    void setImageUrl(String url);
+    void setImageURL(String url);
 
     void setId(String id);
 
