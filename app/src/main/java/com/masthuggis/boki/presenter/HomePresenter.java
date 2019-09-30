@@ -2,6 +2,7 @@ package com.masthuggis.boki.presenter;
 
 import android.os.Handler;
 
+
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.sorting.SortManager;
@@ -9,6 +10,7 @@ import com.masthuggis.boki.utils.ConditionStylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -39,6 +41,19 @@ public class HomePresenter implements IProductsPresenter {
                 updateData(advertisements);
             }
         });
+    }
+
+    //Uses presenters local list of adverts for faster search queries
+    //Should perhaps be moved to be part of model/backend
+    private List<Advertisement> searchAdverts(String query) {
+        List<Advertisement> matchingAdverts = new ArrayList<>();
+        Iterator<Advertisement> iterator = this.adverts.iterator();
+        while (iterator.hasNext()) {
+            Advertisement ad = iterator.next();
+            if (ad.getTitle().contains(query))
+                matchingAdverts.add(ad);
+        }
+        return matchingAdverts;
     }
 
     // Used during development when using local data
@@ -94,6 +109,10 @@ public class HomePresenter implements IProductsPresenter {
             arr[i] = list.get(i);
         }
         return arr;
+    }
+
+    public List<Advertisement> getLocalAdList() {
+        return this.adverts;
     }
 
     public String[] getSortOptions() {

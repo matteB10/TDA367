@@ -17,8 +17,9 @@
             android:orientation="vertical" >
 
             <SearchView
+                android:id="@+id/searchField"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" >
+                android:layout_height="50dp">
 
             </SearchView>
 

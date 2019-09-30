@@ -7,7 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -17,18 +20,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Home page displaying all the adverts that have been published to the market.
  * Will also include filter and sort buttons in the future.
  */
-public class HomeFragment extends Fragment implements HomePresenter.View, AdapterView.OnItemSelectedListener {
+public class HomeFragment extends Fragment implements HomePresenter.View, AdapterView.OnItemSelectedListener, Filterable {
 
     private HomePresenter presenter;
     private View view;
     private ProductsRecyclerViewAdapter recyclerViewAdapter;
+    private List<Advertisement> advertisements;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -53,6 +62,12 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
+    }
+
+    private void setupSearchField() {
+        SearchView searchField = view.findViewById(R.id.searchField);
+        searchField.setQuery("", false); //Should clear field without actually querying
+        advertisements = new ArrayList<>(presenter.getLocalAdList()); //Need COPY of local list since we will be deleting items from it
     }
 
     @Override
@@ -84,6 +99,7 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
 
     /**
      * Called when the sorting option changes. For example, sorting for lowest price.
+     *
      * @param adapterView
      * @param view
      * @param i
@@ -98,4 +114,38 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
     public void onNothingSelected(AdapterView<?> adapterView) {
         presenter.sortOptionSelected(0);
     }
+
+    @Override
+    public Filter getFilter() {
+        return testFilter;
+    }
+
+    private Filter testFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Advertisement> filteredList = new ArrayList<>();
+            Iterator<Advertisement> iterator = advertisements.iterator();
+            if(constraint == null || constraint.length() == 0)
+                filteredList.addAll(advertisements);
+            else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                while(iterator.hasNext()) {
+                    Advertisement ad = iterator.next();
+                    if (ad.getTitle().toLowerCase().contains(filterPattern))
+                        filteredList.add(ad);
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList; //Gets results in correct form
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            advertisements.clear();
+            advertisements.addAll((List)filterResults.values); //Necessary cast
+
+        }
+    };
 }
