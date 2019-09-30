@@ -152,42 +152,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private Bitmap compressBitmap() {
-        String imagePath = currentImageFile.getPath();
-        try {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            options.inSampleSize = 6; //Factor of downsizing the image
-
-            FileInputStream inputStream = new FileInputStream(imagePath);
-            BitmapFactory.decodeStream(inputStream);
-            inputStream.close();
-
-            final int REQUIRED_SIZE = 75; //New size we want to scale the image to
-
-            //Finds the correct scaling value, needs to be a factor of 2
-            int scale = 1;
-            while (options.outWidth / scale / 2 >= REQUIRED_SIZE &&
-                    options.outHeight / scale / 2 >= REQUIRED_SIZE) {
-                scale *= 2;
-            }
-
-            BitmapFactory.Options options2 = new BitmapFactory.Options();
-            options2.inSampleSize = scale;
-            inputStream = new FileInputStream(imagePath);
-
-            Bitmap selectedBitmap = BitmapFactory.decodeStream(inputStream,null,options2);
-            inputStream.close();
-
-
-            FileOutputStream outputStream = new FileOutputStream(imagePath); //Probably not going to work
-            selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-
-            return selectedBitmap;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null; //TODO fix this
+        BitmapFactory.Options imageOptions = new BitmapFactory.Options();
+        imageOptions.inJustDecodeBounds = true;
+        Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap,200,200,true);
+        return scaledBitmap;
     }
 
     private void setListeners() {
