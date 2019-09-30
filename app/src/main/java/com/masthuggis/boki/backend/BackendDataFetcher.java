@@ -9,8 +9,6 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -132,16 +130,8 @@ public class BackendDataFetcher implements iBackend {
 
     //Small method for manually testing if firebase returns the correct ID's for users and adverts
     String getFireBaseID(String userID, String advertID) {
-        if(advertID != null)
+        if (advertID != null)
             return db.collection("users").document(userID).collection("adverts").document(advertID).getId();
         return db.collection("users").document(userID).getId();
     }
-
-
-    //-------------------------------------------------------------------------------
-    public FirebaseAuth auth;
-    public FirebaseUser user;
-
-
-
 }
