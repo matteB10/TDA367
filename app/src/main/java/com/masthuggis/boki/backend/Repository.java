@@ -173,7 +173,7 @@ public class Repository {
             yearPublished = object.getInt("yearPublished");
             String conditionString = object.getString("condition");
             condition = Advert.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
-            Advertisement ad = AdFactory.createAd("", "UniqueOwnerID", "UniqueAdID", title, "imgURL", "Description", price, condition);
+            Advertisement ad = AdFactory.createAd("", "UniqueOwnerID", "UniqueAdID", title, "imgURL", price, condition, new File("", ""));
             allAds.add(ad);
             return ad;
         } catch (JSONException e) {
