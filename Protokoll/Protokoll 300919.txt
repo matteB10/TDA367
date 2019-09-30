@@ -1,0 +1,46 @@
+# Meeting Agenda
+
+Group:Masthuggis (grupp 8) 
+Date: 30/9 - 19
+Chair: Isak Lindgren
+Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak Lindgren, Elin Melander
+
+
+## Objectives (5 min) 
+- Avsluta sprinten.
+	- Code refactor och review.
+	- Review av Domän- och Designmodell
+	- Se över user stories inför nästa sprint samt skapa tasks utifrån dem.
+- Verification via mail när man registrerar sig på appen?
+- Prata om hur nästa sprint ska påbörjas.
+
+## Reports (0 min) from previous meeting
+
+
+
+## Discussion items (10 min)
+
+
+Check- in från alla:
+
+ - Elin har problem med authentication och firebase. Svårt att veta vart beroendena ska ligga då firebase authentication kräver både android-beroenden och firebaseberoenden. Men kämpar vidare med det.
+ 
+  - Joel har fixat en bugg i homefragment där bilder bytte plats med varandra. Han fixar en testklass som beror på  ett json-objekt för att kunna mocka backend samt arbetar med sorteringsfunktionalitet i homefragment.
+  
+  - Matilda arbetar med att lägga till taggar till advertisements och försöker lösa problem med styling och hur det görs bäst. Både gällande smidighet samt  hur man uppnår högst cohesion och minst coupling.
+  
+  -Isak förbereder så mycket som möjligt för att kunna bygga en chatt så fort authentication-delen är färdig. I övrigt arbetar han med olika småfixar i övriga programmet.
+  
+  - Arvid försöker ladda upp bilder på firebase i mindre format för att kunna hantera dem enklare då vi har problem med att kunna visa bilderna i dagsläget i vissa lägen. Detta beror mest troligt på att bilderna är för stora och för att hinna laddas.
+  
+  
+  Det finns kvar refaktorering att göra, det görs allt eftersom tid ges för det.
+   
+  
+## Outcomes and assignments (5 min)
+	Arbeta vidare med tilldelade arbetsuppgifter, be om hjälp om det behövs.
+
+
+## Wrap up
+
+	Möte fredag kl 9 där vi går igenom veckans arbete.
