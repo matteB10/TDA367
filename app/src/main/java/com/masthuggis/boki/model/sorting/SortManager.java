@@ -3,7 +3,6 @@ package com.masthuggis.boki.model.sorting;
 import com.masthuggis.boki.model.Advertisement;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -34,7 +33,7 @@ public class SortManager {
         }
         return instance;
     }
-    
+
     public List<String> getSortOptions() {
         List<String> sortOptionNames = new ArrayList<>();
         for (SortStrategy strategy: sortStrategies) {
