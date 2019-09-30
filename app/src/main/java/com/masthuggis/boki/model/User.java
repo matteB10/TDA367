@@ -4,10 +4,13 @@ import java.util.List;
 
 public class User implements iUser {
     private List<iChat> chats;
-    private int id;
+    private String id;
     iFavoriteCollection favoriteCollection;
 
-    public int getId() {
+    public String getId() {
         return this.id;
+    }
+    public void setId(String id){
+        this.id =id;
     }
 }

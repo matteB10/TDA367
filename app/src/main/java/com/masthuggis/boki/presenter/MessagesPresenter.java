@@ -4,28 +4,65 @@ import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.view.MessagesRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessagesPresenter {
 
+    private List<Advertisement> adverts;
+    private View view;
 
-    public void onMessageClicked(){
+    public MessagesPresenter(View view) {
+        this.view = view;
+        Repository.getInstance().getAllAds(advertisements -> {
+            if (advertisements != null) {
+                this.adverts = new ArrayList<>(advertisements);
+                this.view.hideLoadingScreen();
+                this.view.showThumbnails();
+
+            } else {
+                System.out.println(adverts.size());
+            }
+        });
+    }
+
+    public void onRowPressed(String userID) {
+        view.showDetailsScreen(userID);
+
 
     }
 
 
-    public void bindViewHolderAtPosition(int position, MessagesRecyclerViewAdapter.ViewHolder holder) {
-
-        if (Repository.getInstance().getAdsFromUniqueOwnerID(Repository.mockUniqueUserID).size() < position) {
+    public void bindViewHolderAtPosition(int position, MessagesRecyclerViewAdapter.
+            ViewHolder holder) {
+        if (adverts.size() < position) {
             return;
         }
-
-        Advertisement a = Repository.getInstance().getAdsFromUniqueOwnerID(Repository.mockUniqueUserID).get(position);
-
-        holder.setDateTextView("TEMPDATE");
-        holder.setUserTextView("TEMP USER");
+        Advertisement a = adverts.get(position);
+        holder.setDateTextView(a.getDatePublished());
+        holder.setUserTextView(a.getTitle());
+        holder.setId(a.getUniqueOwnerID());
         if (a.getImgURL() != null) {
             holder.setMessageImageView(a.getImgURL());
         }
+    }
+
+    public int getItemCount() {
+        if (adverts != null) {
+            return adverts.size();
+
+        }
+        return 0;
+    }
+
+
+    public interface View {
+        void showLoadingScreen();
+
+        void showThumbnails();
+
+        void hideLoadingScreen();
+
+        void showDetailsScreen(String id);
     }
 }

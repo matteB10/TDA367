@@ -12,7 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.backend.advertisementCallback;
+import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.presenter.MessagesPresenter;
+
+import java.util.List;
 
 public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRecyclerViewAdapter.ViewHolder> {
 
@@ -20,8 +24,6 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
 
     public MessagesRecyclerViewAdapter(MessagesPresenter messagesPresenter) {
         this.presenter = messagesPresenter;
-
-
     }
 
 
@@ -34,13 +36,14 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         presenter.bindViewHolderAtPosition(position, holder);
 
     }
 
     @Override
     public int getItemCount() {
-        return Repository.getInstance().getAdsFromUniqueOwnerID(Repository.mockUniqueUserID).size();
+        return presenter.getItemCount();
     }
 
 
@@ -48,14 +51,20 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
         private TextView userTextView;
         private TextView dateTextView;
         private ImageView messageImageView;
+        private String id;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             userTextView = itemView.findViewById(R.id.message_user);
             dateTextView = itemView.findViewById(R.id.message_time);
             messageImageView = itemView.findViewById(R.id.messageImageView);
+            setupOnPressActionFor(itemView);
 
 
+        }
+
+        private void setupOnPressActionFor(View v) {
+            v.setOnClickListener(view -> presenter.onRowPressed(id));
         }
 
         public void setUserTextView(String userTextView) {
@@ -69,5 +78,11 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
         public void setMessageImageView(String messageImageView) {
             this.messageImageView.setImageURI(Uri.parse(messageImageView));
         }
+
+        public void setId(String id) {
+            this.id = id;
+        }
     }
+
+
 }

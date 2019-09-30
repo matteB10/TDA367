@@ -1,8 +1,6 @@
 package com.masthuggis.boki.presenter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +63,12 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         }
 
         private void setupOnPressActionFor(View v) {
-            v.setOnClickListener(view -> presenter.onRowPressed(id));
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    presenter.onRowPressed(id);
+                }
+            });
         }
 
         @Override

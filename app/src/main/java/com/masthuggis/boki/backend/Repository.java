@@ -40,6 +40,7 @@ public class Repository {
         return repository;
     }
 
+
     /**
      * Creates a new empty Advertisement, used during creation of a new ad
      *

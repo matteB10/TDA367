@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ChatActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ffffff"
 
-    <com.google.android.material.appbar.AppBarLayout
+    android:orientation="vertical"
+    tools:context="com.masthuggis.boki.view.ChatActivity">
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_weight="20"
+        android:layout_height="0dp"
+        android:id="@+id/scrollView">
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/layout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/layout1">
+            </LinearLayout>
+        </RelativeLayout>
 
-    <android.widget.Toolbar
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@color/cardview_dark_background"
-        android:theme="@style/AppTheme"
-        android:id="@+id/chatToolbar"/>
-
-    <ImageView
-        android:id="@+id/book_imageView"
-        android:layout_width="30dp"
-        android:layout_height="30dp" />
-
-    <TextView
-        android:id="@+id/usernameTextView"
-        android:layout_width="wrap_content"
+    </ScrollView>
+    <include
+        layout="@layout/message_area"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginLeft="25dp"
-        android:textColor="#fff"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-
-</RelativeLayout>
+        android:gravity="bottom"
+        android:layout_marginTop="5dp"/>
+</LinearLayout>

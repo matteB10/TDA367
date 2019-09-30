@@ -49,7 +49,6 @@ public class BackendDataHandler implements iBackend {
     private StorageReference mainRef = storage.getReference();
     private StorageReference imagesRef = mainRef.child("images"); //Reference to storage location of images
 
-    private static int OMEGALUL = 0;
     private BackendDataHandler() {
 
     }
@@ -144,8 +143,7 @@ public class BackendDataHandler implements iBackend {
                     i++;
                 }
                 advertisementDBCallback.onCallBack(advertDataList);
-                OMEGALUL++;
-                System.out.println(OMEGALUL); //Isak, explain yourself
+
             }
         });
 

@@ -3,6 +3,7 @@ package com.masthuggis.boki.view;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -48,8 +49,9 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new ProfileFragment();
                 break;
             case R.id.navigation_new_ad:
-                selectedFragment = new NewAdFragment();
-                break;
+                Intent intent = new Intent(MainActivity.this,CreateAdActivity.class);
+                startActivity(intent);
+                return true;
             case R.id.navigation_messages:
                 selectedFragment = new MessagesFragment();
                 break;
@@ -61,6 +63,5 @@ public class MainActivity extends AppCompatActivity {
         return true;
 
         };
-
     }
 
