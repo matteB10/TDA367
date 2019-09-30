@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.presenter.DetailsPresenter;
+import com.masthuggis.boki.utils.iConditionable;
 
 /**
  * The view showing details of a specific advertisement.
@@ -40,6 +42,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         if (advertID != null) {
             presenter = new DetailsPresenter(this, advertID);
         }
+
         Button contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
             //TODO HÄR SKA CHATTEN ÖPPNAS TYP
@@ -85,25 +88,15 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
     @Override
-    public void setConditionNew(){
+    public void setCondition(int text, int drawable) {
         TextView textView = findViewById(R.id.conditionTextView);
-        textView.setText(getResources().getString(R.string.conditionNew));
+        textView.setText(text);
         ConstraintLayout layout = findViewById(R.id.conditionConstraintLayout);
-        layout.setBackground(getResources().getDrawable(R.drawable.button_new_condition));
+        layout.setBackground(getDrawable(drawable));
     }
     @Override
-    public void setConditionGood(){
-        TextView textView = findViewById(R.id.conditionTextView);
-        textView.setText(getResources().getString(R.string.conditionGood));
-        ConstraintLayout layout = findViewById(R.id.conditionConstraintLayout);
-        layout.setBackground(getResources().getDrawable(R.drawable.button_good_condition));
-    }
-    @Override
-    public void setConditionOk(){
-        TextView textView = findViewById(R.id.conditionTextView);
-        textView.setText(getResources().getString(R.string.conditionOk));
-        ConstraintLayout layout = findViewById(R.id.conditionConstraintLayout);
-        layout.setBackground(getResources().getDrawable(R.drawable.button_ok_condition));
+    public Context getContext(){
+        return this;
     }
 
 

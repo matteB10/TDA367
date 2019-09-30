@@ -2,7 +2,6 @@ package com.masthuggis.boki.model.sorting;
 
 import com.masthuggis.boki.model.Advertisement;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -10,6 +9,6 @@ import java.util.List;
  * is returned from getName.
  */
 public interface SortStrategy {
-    Iterator<Advertisement> sort(List<Advertisement> adverts);
+    List<Advertisement> sort(List<Advertisement> adverts);
     String getName();
 }

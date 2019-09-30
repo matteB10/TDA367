@@ -1,9 +1,11 @@
 package com.masthuggis.boki.presenter;
 
-import android.util.Log;
+import android.os.Handler;
 
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.sorting.SortManager;
+import com.masthuggis.boki.utils.ConditionStylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.ArrayList;
@@ -15,50 +17,102 @@ import java.util.List;
  */
 public class HomePresenter implements IProductsPresenter {
     private final View view;
+    private final SortManager sortManager;
     private List<Advertisement> adverts;
 
     public HomePresenter(View view) {
         this.view = view;
+        this.sortManager = SortManager.getInstance();
 
         this.view.showLoadingScreen();
+
+        // Used when using local JSON, comment if using firebase
+        useTestData();
+
+        // If using firebase uncommment line below
+        //getData();
+    }
+
+    private void getData() {
         Repository.getInstance().getAllAds(advertisements -> {
             if (advertisements != null) {
-                this.adverts = new ArrayList<>(advertisements);
-                this.view.hideLoadingScreen();
-                this.view.showThumbnails();
+                updateData(advertisements);
             }
         });
     }
 
+    // Used during development when using local data
+    private void useTestData() {
+        Handler handler = new Handler();
+        handler.postDelayed(() -> updateData(Repository.getInstance().getLocalJSONAds()), 500);
+    }
+
+    private void updateData(List<Advertisement> adverts) {
+        this.adverts = new ArrayList<>(adverts);
+        sortUsingTheStandardSortingOption();
+        this.view.hideLoadingScreen();
+        this.view.updateThumbnails();
+    }
+
+    private void sortUsingTheStandardSortingOption() {
+        sortOptionSelected(0);
+    }
+
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
-        if (this.adverts.size() < position)
+        if (adverts.size() < position || adverts == null)
             return;
 
         Advertisement a = adverts.get(position);
         thumbnailView.setId(a.getUniqueID());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
-        if (a.getImgURL() != null) {
-            thumbnailView.setImageUrl(a.getImgURL());
+        setCondition(a,thumbnailView);
+        if (a.getImageFile() != null) {
+            thumbnailView.setImageURL(a.getImageFile().toURI().toString());
         }
     }
 
     public int getItemCount() {
+        if (adverts == null) {
+            return 0;
+        }
         return adverts.size();
     }
 
     public void onRowPressed(String uniqueIDoFAdvert) {
         view.showDetailsScreen(uniqueIDoFAdvert);
     }
+    private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
+        int drawable = ConditionStylingHelper.getConditionDrawable(a.getCondition());
+        int text = ConditionStylingHelper.getConditionText(a.getCondition());
+        thumbnailView.setCondition(text, drawable);
+    }
+
+    private String[] convertListToArray(List<String> list) {
+        String arr[] = new String[list.size()];
+        for (int i=0; i < list.size(); i++) {
+            arr[i] = list.get(i);
+        }
+        return arr;
+    }
+
+    public String[] getSortOptions() {
+        return convertListToArray(sortManager.getSortOptions());
+    }
 
     public void sortOptionSelected(int pos) {
-        Log.d("DEBUG", Integer.toString(pos));
+        if (adverts == null)
+            return;
+
+        List<Advertisement> sortedList = sortManager.sort(pos, adverts);
+        adverts = new ArrayList<>(sortedList);
+        view.updateThumbnails();
     }
 
     public interface View {
         void showLoadingScreen();
 
-        void showThumbnails();
+        void updateThumbnails();
 
         void hideLoadingScreen();
 

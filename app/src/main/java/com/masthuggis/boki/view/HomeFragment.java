@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.presenter.HomePresenter;
-import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
 /**
@@ -28,19 +28,20 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
 
     private HomePresenter presenter;
     private View view;
+    private ProductsRecyclerViewAdapter recyclerViewAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.home_fragment, container, false);
         this.presenter = new HomePresenter(this);
+        Repository.getInstance().updateAdverts();
         setupSortSpinner();
         return view;
     }
 
     private void setupSortSpinner() {
         Spinner spinner = view.findViewById(R.id.sortPickerSpinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.sorting_options, android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, presenter.getSortOptions());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
@@ -48,8 +49,8 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
 
     private void setupList() {
         RecyclerView recyclerView = view.findViewById(R.id.advertsRecyclerView);
-        ProductsRecyclerViewAdapter adapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
-        recyclerView.setAdapter(adapter);
+        recyclerViewAdapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
+        recyclerView.setAdapter(recyclerViewAdapter);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
@@ -76,8 +77,10 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
 
 
     @Override
-    public void showThumbnails() {
-        setupList();
+    public void updateThumbnails() {
+        if (recyclerViewAdapter == null)
+            setupList();
+        recyclerViewAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -89,12 +92,11 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
      */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        //String itemSelected = (String) adapterView.getItemAtPosition(i);
         presenter.sortOptionSelected(i);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
+        presenter.sortOptionSelected(0);
     }
 }

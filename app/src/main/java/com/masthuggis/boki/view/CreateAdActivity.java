@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -20,12 +23,12 @@ import androidx.core.content.FileProvider;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
+import com.masthuggis.boki.utils.UniqueIdCreator;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An acitivity for creating a new advertisement
@@ -37,16 +40,16 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
+    private final List<Button> tagButtons = new ArrayList<>();
+    private final List<String> preDefTags = new ArrayList<>();
     private String currentImagePath;
+    private File currentImageFile;
     private CreateAdPresenter presenter;
 
     private ImageView imageViewDisplay;
     private EditText title;
     private EditText price;
     private EditText description;
-    private Button conditionNewButton;
-    private Button conditionGoodButton;
-    private Button conditionOKButton;
     private Button publishAdButton;
 
 
@@ -56,30 +59,46 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setContentView(R.layout.activity_create_advert);
         presenter = new CreateAdPresenter(this);
         imageViewDisplay = findViewById(R.id.addImageView);
+        //imageViewDisplay.setImageBitmap(BitmapFactory.decodeFile(currentImageFile.getPath()));
         disablePublishAdButton();
+        renderTagButtons();
         setListeners();
+        updateDataFromModel();
 
+    }
 
+    private void updateDataFromModel() {
+        if (presenter.getImgFile() != null) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(presenter.getImgFile().getAbsolutePath());
+            imageViewDisplay.setImageBitmap(myBitmap);
+        }
+        title.setText(presenter.getTitle());
+        description.setText(presenter.getDescription());
+        if(presenter.getIsValidPrice()) {
+            price.setText("" + presenter.getPrice());
+        } else{showInputPrompt();
+        }
+    }
+
+    private void showInputPrompt() {
+        price.setText("");
     }
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File imageFile = null;
             try {
-                imageFile = createImageFile();
+                currentImageFile = createImageFile();
             } catch (Exception i) {
                 System.out.println("error creating file");
             }
-            if (imageFile != null) {
+            if (currentImageFile != null) {
                 Uri imageURI = FileProvider.getUriForFile(this, "com.masthuggis.boki.fileprovider",
-                        imageFile);
+                        currentImageFile);
                 System.out.println(imageURI);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-
             }
-
         }
     }
 
@@ -90,11 +109,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      * @throws IOException
      */
     private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String photoFileName = "IMG_"+ UniqueIdCreator.getUniqueID();
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        String photoFileName = "IMAGE_" + timeStamp + "_";
         File image = File.createTempFile(photoFileName, ".jpg", storageDir);
-        currentImagePath = image.getAbsolutePath();
         return image;
     }
 
@@ -106,13 +123,16 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap bitmap = decodeBitmap();
             setImageView(bitmap);
-            presenter.imageURIChanged(currentImagePath);
+            presenter.imageFileChanged(currentImageFile);
         }
-
     }
 
     private void setImageView(Bitmap bitmap) {
         imageViewDisplay.setImageBitmap(bitmap);
+    }
+
+    public void imageFileChanged(File image){
+        imageViewDisplay.setImageBitmap(BitmapFactory.decodeFile(image.getPath()));
     }
 
     /**
@@ -137,14 +157,14 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageOptions.inJustDecodeBounds = false;
         imageOptions.inSampleSize = scaleFactor;
 
-        Bitmap bitmap = BitmapFactory.decodeFile(currentImagePath, imageOptions);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+        Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath(), imageOptions);
+        //ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        //bitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
 
-        byte[] byteArray = stream.toByteArray();
-        Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        //byte[] byteArray = stream.toByteArray();
+        //Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
-        return compressedBitmap;
+        return bitmap;
     }
 
     private void setListeners() {
@@ -154,37 +174,40 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setDescriptionListener();
         setCreateAdvertListener();
         setConditionGroupListener();
+        setPreDefTagsListeners();
+
     }
 
     private void setConditionGroupListener() {
-        conditionGoodButton = findViewById(R.id.conditionGoodButton);
-        conditionGoodButton.setOnClickListener(view -> {
-            //TODO FIX STYLING
-            presenter.conditionChanged(Advert.Condition.GOOD);
-            conditionGoodButton.setPressed(true);
-            conditionOKButton.setPressed(false);
-            conditionNewButton.setPressed(false);
+        Button conditionGoodButton = findViewById(R.id.conditionGoodButton);
+        conditionGoodButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO FIX STYLING
+                presenter.conditionChanged(Advert.Condition.GOOD);
+
+            }
         });
-        conditionNewButton = findViewById(R.id.conditionNewButton);
-        conditionNewButton.setOnClickListener(view -> {
-            presenter.conditionChanged(Advert.Condition.NEW);
-            conditionNewButton.setPressed(true);
-            conditionGoodButton.setPressed(false);
-            conditionOKButton.setPressed(false);
+        Button conditionNewButton = findViewById(R.id.conditionNewButton);
+        conditionNewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.conditionChanged(Advert.Condition.NEW);
+            }
         });
-        conditionOKButton = findViewById(R.id.conditionOkButton);
-        conditionOKButton.setOnClickListener(view -> {
-            presenter.conditionChanged(Advert.Condition.OK);
-            conditionOKButton.setPressed(true);
-            conditionGoodButton.setPressed(false);
-            conditionNewButton.setPressed(false);
+        Button conditionOKButton = findViewById(R.id.conditionOkButton);
+        conditionOKButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.conditionChanged(Advert.Condition.OK);
+            }
         });
     }
 
     @Override
     public void enablePublishButton() {
         publishAdButton.setEnabled(true);
-        publishAdButton.setBackgroundColor(getResources().getColor(R.color.colorTeal));
+        publishAdButton.setBackground(getResources().getDrawable(R.drawable.primary_button));
 
     }
 
@@ -192,16 +215,17 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void disablePublishAdButton() {
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setEnabled(false);
-        publishAdButton.setBackgroundColor(getResources().getColor(R.color.colorGreyLight));
+        publishAdButton.setBackground(getResources().getDrawable(R.drawable.disabled_primary_button));
     }
 
     private void setImageViewListener() {
+        imageViewDisplay = findViewById(R.id.addImageView);
         imageViewDisplay.setOnClickListener(view -> dispatchTakePictureIntent());
 
     }
 
     private void setTitleListener() {
-        title = (EditText) findViewById(R.id.titleEditText);
+        title =  findViewById(R.id.titleEditText);
         title.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -215,13 +239,12 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
     }
 
     private void setPriceListener() {
-        price = (EditText) findViewById(R.id.priceEditText);
+        price =  findViewById(R.id.priceEditText);
         price.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -235,13 +258,12 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
     }
 
     private void setDescriptionListener() {
-        description = (EditText) findViewById(R.id.descriptionEditText);
+        description =  findViewById(R.id.descriptionEditText);
         description.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -255,7 +277,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
     }
@@ -270,4 +291,110 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             startActivity(intent);
         });
     }
+    private void setPreDefTagsListeners(){
+        for(Button btn : tagButtons) {
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    presenter.tagsChanged(btn.getText().toString());
+                    btn.requestFocusFromTouch();
+                    if (presenter.isTagPressed(btn.getText().toString()))
+                        btn.setBackgroundResource(R.drawable.subject_tag_shape_pressed);
+                    else
+                        btn.setBackgroundResource(R.drawable.subject_tag_shape_normal);
+
+                }
+            });
+        }
+    }
+    private void setUserDefTagListener(){
+        EditText userDefTag = findViewById(R.id.tagsEditText);
+        userDefTag.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String str = charSequence.toString();
+                presenter.tagsChanged(str);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
+
+    /**
+     * Reads pre defined subject strings from resources,
+     * saves all string in a list.
+     */
+    private  void initPreDefTagStrings(){
+        String[] strArr = getResources().getStringArray(R.array.preDefSubjectTags);
+        for (String str : strArr)
+            preDefTags.add(str);
+    }
+
+    /**
+     * Create buttons with pre-defined subject tags.
+     */
+    private void createTagButtons() {
+        for (String str : preDefTags) {
+            Button btn = new Button(this);
+            btn.setText(str);
+            setTagStyling(btn);
+            tagButtons.add(btn);
+        }
+    }
+
+    /**
+     * Populates view with subject tag buttons.
+     */
+    private void populateTagsLayout() {
+        //TODO: fix styling of button/tableRow height
+        TableLayout tableLayout = findViewById(R.id.preDefTagsTableLayout);
+        tableLayout.setStretchAllColumns(true);
+        TableRow tableRow = new TableRow(this);
+        tableRow.setLayoutParams(new TableRow.LayoutParams());
+        int i = 1;
+
+        for (Button btn : tagButtons) {
+            tableRow.addView(btn);
+            if (i % 3 == 0) {
+                tableLayout.addView(tableRow);
+                tableRow = new TableRow(this);
+            }
+            i++;
+        }
+        tableLayout.addView(tableRow);
+    }
+
+    private void renderTagButtons(){
+        initPreDefTagStrings();
+        createTagButtons();
+        populateTagsLayout();
+    }
+
+    private void setTagStyling(Button btn) {
+        btn.setBackgroundResource(R.drawable.subject_tag_shape_normal);
+        btn.setTextSize(12);
+        btn.setTextColor(getResources().getColor(R.color.colorWhite));
+    }
+    private void displayUserTag(String str){
+        Button btn = new Button(this);
+        btn.setText(str);
+        setTagStyling(btn);
+        EditText text = findViewById(R.id.tagsEditText);
+        LinearLayout linearLayout = findViewById(R.id.tagsLinearLayout);
+        TableRow tr = new TableRow(this);
+        tr.addView(btn);
+        linearLayout.addView(tr);
+
+    }
+
+
+
 }

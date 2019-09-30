@@ -3,6 +3,7 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.utils.ConditionStylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.ArrayList;
@@ -24,9 +25,6 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         });
     }
 
-    public void onSettingsButtonPressed() {
-        view.showSettingsScreen();
-    }
 
     @Override
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
@@ -34,8 +32,9 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         thumbnailView.setId(a.getTitle());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
-        if (a.getImgURL() != null) {
-            thumbnailView.setImageUrl(a.getImgURL());
+        setCondition(a,thumbnailView);
+        if (a.getImageFile() != null) {
+            thumbnailView.setImageURL(a.getImageFile().toURI().toString());
         }
     }
 
@@ -44,6 +43,9 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
     public int getItemCount() {
         // TODO: change to user adverts when that logic has been implemented
         // for now using same adverts as in market
+        if(adverts==null){
+            return 0;
+        }
         return adverts.size();
     }
 
@@ -62,6 +64,11 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
     public void allAdvertsInMarketUpdate(Iterator<Advertisement> advertsInMarket) {
         // TODO: remove this when interface is segregated
     }
+    private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
+        int drawable = ConditionStylingHelper.getConditionDrawable(a.getCondition());
+        int text = ConditionStylingHelper.getConditionText(a.getCondition());
+        thumbnailView.setCondition(text, drawable);
+    }
 
     public interface View {
         void setIsUserLoggedIn(boolean isUserLoggedIn);
@@ -69,5 +76,16 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         void showSettingsScreen();
         void showLoadingScreen();
         void hideLoadingScreen();
+        void showSignInScreen();
+    }
+
+
+    //---------------------------------------
+    public void onSettingsButtonPressed() {
+        view.showSettingsScreen();
+    }
+
+    public void onSignInButtonPressed(){
+        view.showSignInScreen();
     }
 }

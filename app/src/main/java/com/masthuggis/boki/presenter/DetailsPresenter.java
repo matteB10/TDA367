@@ -1,7 +1,11 @@
 package com.masthuggis.boki.presenter;
 
+import android.content.Context;
+
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.utils.ConditionStylingHelper;
+import com.masthuggis.boki.utils.iConditionable;
 
 /**
  * DetailsPresenter is the presenter class for the view called DetailsActivity.
@@ -34,42 +38,27 @@ public class DetailsPresenter {
         view.setDescription(advertisement.getDescription());
         view.setDate(advertisement.getDatePublished());
         setCondition();
-        if (advertisement.getImgURL() != null) {
-            view.setImageUrl(advertisement.getImgURL());
+        if (advertisement.getImageFile() != null) {
+            view.setImageUrl(advertisement.getImageFile().toURI().toString());
         }
 
     }
+    private void setCondition(){
+        int color = ConditionStylingHelper.getConditionDrawable(advertisement.getCondition());
+        int text = ConditionStylingHelper.getConditionText(advertisement.getCondition());
+        view.setCondition(text,color);
+    }
 
-    public interface View {
+    public interface View extends iConditionable {
         void setName(String name);
 
         void setPrice(long price);
         void setDate( String date);
         void setImageUrl(String url);
-
         void setDescription(String description);
-        void setConditionGood();
-        void setConditionNew();
-        void setConditionOk();
-
-        //void setCondition(String condition);
-    }
-
-    //TODO kommentera detta.
-
-    private void setCondition(){
-        switch (advertisement.getConditon()){
-            //TODO: get access to res/colors to return right color depending on condition
-            case NEW:
-                view.setConditionNew();
-                break;
-            case GOOD:
-                view.setConditionGood();
-                break;
-            case OK:
-                view.setConditionOk();
-        }
+        Context getContext();
 
     }
+
 
 }

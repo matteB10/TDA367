@@ -48,6 +48,21 @@
     <string name="conditionNew">NY</string>
     <string name="conditionOk">OK</string>
 
+
+    <string-array name="preDefSubjectTags">
+        <item>Matematik</item>
+        <item>Fysik</item>
+        <item>IT/Data</item>
+        <item>Elektronik</item>
+        <item>Maskinteknik</item>
+        <item>Arkitektur</item>
+        <item>Miljö</item>
+        <item>Ekonomi</item>
+        <item>Design</item>
+        <item>Kemi</item>
+        <item>Bioteknik</item>
+    </string-array>
+
     <!-- login and signup activity-->
     <string name="email">E-post</string>
     <string name="password">Lösenord</string>
@@ -56,6 +71,7 @@
     <string name="signup">Skapa användare</string>
     <string name="forgotPassword">Glömt lösenord?</string>
     <string name="logOut">Logga ut</string>
+    <string name="loading">Laddar...</string>
 
 
 </resources>

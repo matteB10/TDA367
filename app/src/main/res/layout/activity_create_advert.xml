@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".view.CreateAdActivity">
 
     <ScrollView
         android:id="@+id/createAdScrollView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +22,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="1300dp">
+                android:layout_height="wrap_content">
+
 
                 <TextView
                     android:id="@+id/headerTextView"
@@ -160,6 +161,7 @@
 
                     <EditText
                         android:id="@+id/descriptionEditText"
+                        android:imeOptions="actionDone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -174,7 +176,7 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="30dp"
                     android:layout_marginLeft="30dp"
-                    android:layout_marginTop="100dp"
+                    android:layout_marginTop="30dp"
                     android:layout_marginEnd="30dp"
                     android:layout_marginRight="30dp"
                     android:background="@color/colorGreyLight"
@@ -195,11 +197,11 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view" />
 
-                <RadioGroup
-                    android:id="@+id/conditionToggleGroup"
+                <LinearLayout
+                    android:id="@+id/conditionLinearLayout"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="20dp"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -210,7 +212,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_marginStart="30dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="15dp"
                         android:background="@drawable/button_new_condition"
                         android:text="@string/conditionNew"
                         android:textColor="@color/colorWhite"
@@ -222,7 +224,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_marginStart="30dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="15dp"
                         android:background="@drawable/button_good_condition"
                         android:text="@string/conditionGood"
                         android:textColor="@color/colorWhite"
@@ -234,13 +236,13 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_marginStart="30dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="15dp"
                         android:background="@drawable/button_ok_condition"
                         android:text="@string/conditionOk"
                         android:textColor="@color/colorWhite"
                         app:layout_constraintStart_toEndOf="@id/conditionGoodButton"
                         app:layout_constraintTop_toBottomOf="@+id/textView" />
-                </RadioGroup>
+                </LinearLayout>
 
                 <View
                     android:id="@+id/view2"
@@ -254,7 +256,7 @@
                     android:background="@color/colorGreyLight"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/conditionToggleGroup" />
+                    app:layout_constraintTop_toBottomOf="@+id/conditionLinearLayout" />
 
                 <TextView
                     android:id="@+id/textView2"
@@ -268,31 +270,70 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view2" />
 
+                <TableLayout
+                    android:id="@+id/preDefTagsTableLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="30dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </TableLayout>
+
                 <View
                     android:id="@+id/view3"
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_marginStart="30dp"
                     android:layout_marginLeft="30dp"
-                    android:layout_marginTop="100dp"
+                    android:layout_marginTop="30dp"
                     android:layout_marginEnd="30dp"
                     android:layout_marginRight="30dp"
                     android:background="@color/colorGreyLight"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                    app:layout_constraintTop_toBottomOf="@+id/preDefTagsTableLayout" />
 
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/addAdvertTags"
-                    android:textSize="20sp"
+                <LinearLayout
+                    android:id="@+id/tagsLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="30dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view3" />
+                    app:layout_constraintTop_toBottomOf="@+id/view3"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="30dp"
+                        android:layout_marginLeft="30dp"
+                        android:layout_marginTop="20dp"
+                        android:text="@string/addAdvertTags"
+                        android:textSize="20sp" />
+
+
+                </LinearLayout>
 
                 <EditText
                     android:id="@+id/tagsEditText"
@@ -305,7 +346,7 @@
                     android:hint="@string/addAdvertTagHint"
                     android:inputType="textPersonName"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                    app:layout_constraintTop_toBottomOf="@+id/tagsLinearLayout" />
 
                 <View
                     android:id="@+id/view4"
@@ -327,6 +368,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="20dp"
+                    android:layout_marginBottom="30dp"
                     android:background="@drawable/primary_button"
                     android:text="@string/createAdButton"
                     android:textColor="@color/colorWhite"

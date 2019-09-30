@@ -3,7 +3,6 @@ package com.masthuggis.boki.model.sorting;
 import com.masthuggis.boki.model.Advertisement;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -21,9 +20,11 @@ public class SortManager {
 
     private List<SortStrategy> createSortStrategies() {
         List<SortStrategy> strategies = new ArrayList<>();
-        strategies.add(new HightPriceSorting());
-        strategies.add(new LowestPriceSorting());
         strategies.add(new LatestPublishedSorting());
+        strategies.add(new AlphabeticalSorting());
+        strategies.add(new ReversedAlphabeticalSorting());
+        strategies.add(new LowestPriceSorting());
+        strategies.add(new HightPriceSorting());
         return strategies;
     }
 
@@ -34,19 +35,15 @@ public class SortManager {
         return instance;
     }
 
-    public int getNumSortOptions() {
-        return sortStrategies.size();
-    }
-
-    public Iterator<String> getSortOptions() {
+    public List<String> getSortOptions() {
         List<String> sortOptionNames = new ArrayList<>();
         for (SortStrategy strategy: sortStrategies) {
             sortOptionNames.add(strategy.getName());
         }
-        return sortOptionNames.iterator();
+        return sortOptionNames;
     }
 
-    public Iterator<Advertisement> sort(int pos, List<Advertisement> advertsToSort) {
+    public List<Advertisement> sort(int pos, List<Advertisement> advertsToSort) {
         return sortStrategies.get(pos).sort(advertsToSort);
     }
 }

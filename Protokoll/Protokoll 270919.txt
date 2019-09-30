@@ -67,6 +67,21 @@ På trello lades nya user stories till i nästa sprints backlog, tasks uppdatera
 - Alla har refaktorering att göra.
 - Alla har valt nya tasks/user stories.
 
+Matilda:
+"Som säljare vill jag kunna tagga mina objekt för att det ska bli enklare för köpare att hitta min bok"
+
+Isak:
+"Som en användare vill jag kunna chatta med säljaren/köparen i appen för att enkelt kunna köpa/sälja böcker"
+
+Joel:
+"Som en köpare vill jag kunna sortera mellan alla de annonserna som visas för att snabbt hitta det bästa alternativet"
+
+Arvid:
+"Som en student på Chalmers vill jag söka på specifik kurslitteratur för att snabbt hitta rätt kurslitteratur"
+
+Elin:
+Arbetar vidare med tidigare user story gällande användare, tar sedan:
+"Som en säljare vill jag kunna redigera och ta bort min annons om jag angett fel information"
 
 ## Wrap up
 

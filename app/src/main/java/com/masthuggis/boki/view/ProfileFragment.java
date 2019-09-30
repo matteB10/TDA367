@@ -6,16 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 import com.masthuggis.boki.presenter.ProfilePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
@@ -35,36 +32,26 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        this.view = inflater.inflate(R.layout.profile_fragment,container,false);
-        setupHeader(view);
-        Button signOutButton = view.findViewById(R.id.signOutButton);
-        Button signinButton = view.findViewById(R.id.signinButton);
+        View v = inflater.inflate(R.layout.profile_fragment,container,false);
+        setupHeader(v);
+        setupList(v);
 
-        signinButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivity(intent);
-            });
-
-        signOutButton.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
-            Toast.makeText(getActivity(),"you are now signed out",
-                    Toast.LENGTH_LONG).show();
-        });
-
-        return view;
+        return v;
     }
-
-
-
 
 
     private void setupHeader(View v) {
+
         Button settingsButton = v.findViewById(R.id.profileSettingsButton);
         settingsButton.setOnClickListener(view -> presenter.onSettingsButtonPressed());
+
+        Button btnSignIn = v.findViewById(R.id.signInButton);
+        btnSignIn.setOnClickListener(view -> presenter.onSignInButtonPressed());
+
     }
 
-    private void setupList() {
-        setupRecycler(view);
+    private void setupList(View v) {
+        setupRecycler(v);
         setupAdapter();
         setupListLayout();
     }
@@ -96,12 +83,19 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
 
     @Override
     public void updateItemsOnSale() {
-        setupList();
+        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void showSettingsScreen() {
         Intent intent = new Intent(getContext(), SettingsActivity.class);
+        startActivity(intent);
+    }
+
+
+    @Override
+    public void showSignInScreen() {
+        Intent intent = new Intent(getContext(),SignInActivity.class);
         startActivity(intent);
     }
 
@@ -115,5 +109,3 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
         // TODO: hide loading animation
     }
 }
-
-

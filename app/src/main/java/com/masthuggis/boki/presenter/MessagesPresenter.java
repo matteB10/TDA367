@@ -42,8 +42,8 @@ public class MessagesPresenter {
         holder.setDateTextView(a.getDatePublished());
         holder.setUserTextView(a.getTitle());
         holder.setId(a.getUniqueOwnerID());
-        if (a.getImgURL() != null) {
-            holder.setMessageImageView(a.getImgURL());
+        if (a.getImageFile() != null) {
+            holder.setMessageImageView(a.getImageFile().toURI().toString());
         }
     }
 

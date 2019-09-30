@@ -1,4 +1,4 @@
-package com.masthuggis.boki.presenter;
+package com.masthuggis.boki.view;
 
 import android.content.Context;
 import android.net.Uri;
@@ -9,11 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.model.Advert;
-import com.masthuggis.boki.view.ThumbnailView;
+import com.masthuggis.boki.presenter.IProductsPresenter;
 
 public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder> {
 
@@ -49,16 +49,21 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
 
     public class ViewHolder extends RecyclerView.ViewHolder implements ThumbnailView {
 
-        private TextView nameTextView;
+        private TextView titleTextView;
         private TextView priceTextView;
         private ImageView imageView;
+        private ConstraintLayout conditionLayout;
+        private TextView conditionTextView;
         private String id;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            nameTextView = itemView.findViewById(R.id.detailsID);
-            priceTextView = itemView.findViewById(R.id.price);
-            imageView = itemView.findViewById(R.id.imageView);
+            titleTextView = itemView.findViewById(R.id.titleTextView);
+            priceTextView = itemView.findViewById(R.id.priceTextView);
+            imageView = itemView.findViewById(R.id.thumbNailImageView);
+            conditionLayout = itemView.findViewById(R.id.thumbnailConditionLayout);
+            conditionTextView = itemView.findViewById(R.id.conditionTextView);
+
             setupOnPressActionFor(itemView);
         }
 
@@ -73,7 +78,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
 
         @Override
         public void setTitle(String name) {
-            nameTextView.setText(name);
+            titleTextView.setText(name);
         }
 
         @Override
@@ -82,9 +87,10 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         }
 
         @Override
-        public void setImageUrl(String url) {
+        public void setImageURL(String url) {
             imageView.setImageURI(Uri.parse(url));
         }
+
 
         @Override
         public void setId(String id) {
@@ -92,8 +98,9 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         }
 
         @Override
-        public void setCondition(Advert.Condition conditon) {
-
+        public void setCondition(int condition, int drawable) {
+            conditionTextView.setText(condition);
+            conditionLayout.setBackground(mContext.getDrawable(drawable));
         }
 
 

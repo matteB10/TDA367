@@ -7,8 +7,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class LowestPriceSorting implements SortStrategy {
-    private static final String NAME = "Lägsta pris";
+class ReversedAlphabeticalSorting implements SortStrategy {
+    private static final String NAME = "Omvänt Alfabetisk (Ö-A)";
 
     @Override
     public List<Advertisement> sort(List<Advertisement> adverts) {
@@ -18,7 +18,7 @@ class LowestPriceSorting implements SortStrategy {
         }
 
         return new ArrayList<>(adverts).stream()
-                .sorted(Comparator.comparing(Advertisement::getPrice))
+                .sorted(Comparator.comparing(Advertisement::getTitle).reversed())
                 .collect(Collectors.toList());
     }
 

@@ -5,34 +5,38 @@ import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.utils.FormHelper;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * Presenter class handling the createAdActivity. Validates input from
  * user and saves in textfields if activity is temporary terminated.
  */
 
-public class CreateAdPresenter{
+public class CreateAdPresenter {
 
-    private Advertisement advertisement;
+    private static Advertisement advertisement = Repository.getInstance().createAdvert();
 
 
     private View view;
-    private boolean validPrice;
+    private static boolean validPrice;
 
 
     public CreateAdPresenter(View view) {
         this.view = view;
-        this.advertisement = Repository.getInstance().createAdvert();
+    }
+
+    public boolean getIsValidPrice() {
+        return this.validPrice;
     }
 
     public interface View {
         void enablePublishButton();
+
 
         //TODO: create methods for future same page error messages in view
 
@@ -46,7 +50,15 @@ public class CreateAdPresenter{
         }
     }
 
+    /**
+     * If price is parsable to an int, price is updated in advert.
+     *
+     * @param price
+     */
+
     public void priceChanged(String price) {
+
+
         if (FormHelper.getInstance().isValidPrice(price)) {
             advertisement.setPrice(Integer.parseInt(price));
             validPrice = true;
@@ -63,11 +75,6 @@ public class CreateAdPresenter{
         advertisement.setDescription(description);
     }
 
-    public void imageURIChanged(String imageURI) {
-        advertisement.setImgURI(imageURI);
-
-    }
-
     public void tagsChanged(String tag) {
         advertisement.tagsChanged(tag);
     }
@@ -80,8 +87,14 @@ public class CreateAdPresenter{
 
     }
 
+    /**
+     * Controls that minimal required user input is entered.
+     * Valid title is all chars, length is arbitrary
+     *
+     * @return
+     */
     private boolean allFieldsValid() {
-        return (advertisement.getTitle().length() > 2 && validPrice && advertisement.getConditon() !=
+        return (advertisement.getTitle().length() > 2 && validPrice && advertisement.getCondition() !=
                 Advert.Condition.UNDEFINED);
         //TODO: expand validation to image URI
     }
@@ -98,6 +111,10 @@ public class CreateAdPresenter{
         return URLString;
     }
 
+    public void imageFileChanged(File imageFile) {
+        advertisement.setImageFile(imageFile);
+    }
+
 
     /**
      * Called on click on button in createAdActivity
@@ -105,7 +122,7 @@ public class CreateAdPresenter{
      */
     public void publishAdvert() {
         setAdvertDate();
-        Repository.getInstance().saveAdvert(advertisement);
+        Repository.getInstance().saveAdvert(advertisement, advertisement.getImageFile());
         advertisement = null;
     }
 
@@ -120,7 +137,25 @@ public class CreateAdPresenter{
         return advertisement.getUniqueID();
     }
 
-    //Getters for testing purpose
+    public File getImgFile() {
+        return advertisement.getImageFile();
+    }
+
+    //Getter for testing purpose
+    public Advertisement getAdvertisement() {
+        return advertisement;
+    }
+
+    public boolean isTagPressed(String tag) {
+        for (String t : advertisement.getTags()) {
+            if (t.equals(tag)) {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
     public View getView() {
         return view;
     }
@@ -129,24 +164,15 @@ public class CreateAdPresenter{
         return advertisement.getTitle();
     }
 
+    public String getCondition(){
+        return advertisement.getCondition().toString();
+    }
     public String getDescription() {
         return advertisement.getDescription();
     }
 
-    public long getPrice() {
-        return advertisement.getPrice();
-    }
-
-    public String getImageUri() {
-        return advertisement.getImgURL();
-    }
-
-    public List<String> getTags() {
-        return advertisement.getTags();
-    }
-
-    public Advert.Condition getCondition() {
-        return advertisement.getConditon();
+    public int getPrice() {
+        return (int) advertisement.getPrice();
     }
 
 

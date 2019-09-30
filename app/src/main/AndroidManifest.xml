@@ -34,10 +34,14 @@
         <activity android:name=".view.ForgetAndChangePasswordActivity" />
         <activity android:name=".view.RegisterActivity" />
         <activity android:name=".view.LoginActivity" />
+        <activity android:name=".view.SignUpActivity" />
+        <activity android:name=".view.SignInActivity" />
         <activity android:name=".view.DetailsActivity" />
         <activity android:name=".view.SettingsActivity" />
         <activity android:name=".view.HomeFragment" />
-        <activity android:name=".view.CreateAdActivity" />
+        <activity android:name=".view.CreateAdActivity"
+                  android:windowSoftInputMode="stateHidden"
+            />
         <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
