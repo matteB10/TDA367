@@ -53,9 +53,9 @@ public class HomePresenter implements IProductsPresenter {
     }
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
         ConditionStylingHelper helper = ConditionStylingHelper.getInstance();
-        int color = helper.getConditionColor(a.getCondition(), view.getContext());
-        String text = helper.getConditionText(a.getCondition(), view.getContext());
-        thumbnailView.setCondition(text, color);
+        int drawable = helper.getConditionDrawable(a.getCondition());
+        int text = helper.getConditionText(a.getCondition());
+        thumbnailView.setCondition(text, drawable);
     }
 
     public interface View {

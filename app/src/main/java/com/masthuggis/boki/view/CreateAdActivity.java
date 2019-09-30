@@ -83,7 +83,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File imageFile;
+            File imageFile = null;
             try {
                 imageFile = createImageFile();
             } catch (Exception i) {

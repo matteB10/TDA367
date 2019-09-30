@@ -84,4 +84,5 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
         Intent intent = new Intent(getContext(), SettingsActivity.class);
         startActivity(intent);
     }
+
 }

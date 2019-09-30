@@ -4,6 +4,8 @@ import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.utils.ConditionStylingHelper;
+import com.masthuggis.boki.utils.iConditionable;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         thumbnailView.setId(a.getTitle());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
+        setCondition(a,thumbnailView);
         if (a.getImgURL() != null) {
                 thumbnailView.setImageUrl(a.getImgURL());
             }
@@ -59,6 +62,12 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
             updatedAdverts.add(advertsForSale.next());
         }
         userItemsOnSale = updatedAdverts;
+    }
+    private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
+        ConditionStylingHelper helper = ConditionStylingHelper.getInstance();
+        int drawable = helper.getConditionDrawable(a.getCondition());
+        int text = helper.getConditionText(a.getCondition());
+        thumbnailView.setCondition(text, drawable);
     }
 
     public interface View {

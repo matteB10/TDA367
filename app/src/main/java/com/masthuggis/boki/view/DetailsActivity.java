@@ -20,6 +20,7 @@ import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.presenter.DetailsPresenter;
+import com.masthuggis.boki.utils.iConditionable;
 
 /**
  * The view showing details of a specific advertisement.
@@ -83,11 +84,11 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
     @Override
-    public void setCondition(String text, int color) {
+    public void setCondition(int text, int drawable) {
         TextView textView = findViewById(R.id.conditionTextView);
         textView.setText(text);
         ConstraintLayout layout = findViewById(R.id.conditionConstraintLayout);
-        layout.setBackgroundColor(color);
+        layout.setBackground(getDrawable(drawable));
     }
     @Override
     public Context getContext(){

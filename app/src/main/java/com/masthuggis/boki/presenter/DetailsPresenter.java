@@ -5,6 +5,7 @@ import android.content.Context;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.utils.ConditionStylingHelper;
+import com.masthuggis.boki.utils.iConditionable;
 
 /**
  * DetailsPresenter is the presenter class for the view called DetailsActivity.
@@ -44,18 +45,17 @@ public class DetailsPresenter {
     }
     private void setCondition(){
         ConditionStylingHelper helper = ConditionStylingHelper.getInstance();
-        int color = helper.getConditionColor(advertisement.getCondition(),view.getContext());
-        String text = helper.getConditionText(advertisement.getCondition(), view.getContext());
+        int color = helper.getConditionDrawable(advertisement.getCondition());
+        int text = helper.getConditionText(advertisement.getCondition());
         view.setCondition(text,color);
     }
 
-    public interface View {
+    public interface View extends iConditionable {
         void setName(String name);
 
         void setPrice(long price);
         void setDate( String date);
         void setImageUrl(String url);
-        void setCondition(String text, int color);
         void setDescription(String description);
         Context getContext();
 

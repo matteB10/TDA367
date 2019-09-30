@@ -98,10 +98,9 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         }
 
         @Override
-        public void setCondition(String condition, int color) {
+        public void setCondition(int condition, int drawable) {
             conditionTextView.setText(condition);
-            conditionLayout.setBackgroundColor(color);
-
+            conditionLayout.setBackground(mContext.getDrawable(drawable));
         }
 
 
