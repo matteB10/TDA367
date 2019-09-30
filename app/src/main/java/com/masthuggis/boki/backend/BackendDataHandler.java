@@ -40,7 +40,8 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 public class BackendDataHandler implements iBackend {
 
     /**
-     * Singleton that converts the contents of a json-file into a String via a Context-object.
+     * Singleton that handles all data-fetching from firebase
+     * Called from repositories
      */
     private static BackendDataHandler instance;
     private static List<Map<String, Object>> userAdvertsData = new ArrayList<>();
@@ -48,8 +49,6 @@ public class BackendDataHandler implements iBackend {
     private FirebaseStorage storage = FirebaseStorage.getInstance(); //Reference to Cloud Storage that holds images
     private StorageReference mainRef = storage.getReference();
     private StorageReference imagesRef = mainRef.child("images"); //Reference to storage location of images
-
-    private static int OMEGALUL = 0;
 
     private BackendDataHandler() {
 
@@ -181,11 +180,14 @@ public class BackendDataHandler implements iBackend {
             imagesRef.child(uniqueID).getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    //Local temp file has been created and can be accessed, even outside this function
+                    //Local temp file has been created and can be accessed
+                    //through variable localFile
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
+                    System.out.println("Download from firebase failed.");
+                    e.printStackTrace();
                     //De gick jävla snett de där du, är du lite dum inuti hvuudet?? Tappad som barn? Mobbad som pucko?
                 }
             });

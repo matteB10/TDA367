@@ -25,7 +25,11 @@ import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,9 +78,10 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
         title.setText(presenter.getTitle());
         description.setText(presenter.getDescription());
-        if(presenter.getIsValidPrice()) {
+        if (presenter.getIsValidPrice()) {
             price.setText("" + presenter.getPrice());
-        } else{showInputPrompt();
+        } else {
+            showInputPrompt();
         }
     }
 
@@ -109,7 +114,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      * @throws IOException
      */
     private File createImageFile() throws IOException {
-        String photoFileName = "IMG_"+ UniqueIdCreator.getUniqueID();
+        String photoFileName = "IMG_" + UniqueIdCreator.getUniqueID();
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(photoFileName, ".jpg", storageDir);
         return image;
@@ -121,7 +126,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageViewDisplay = findViewById(R.id.addImageView);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bitmap bitmap = decodeBitmap();
+            Bitmap bitmap = compressBitmap();
             setImageView(bitmap);
             presenter.imageFileChanged(currentImageFile);
         }
@@ -131,7 +136,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageViewDisplay.setImageBitmap(bitmap);
     }
 
-    public void imageFileChanged(File image){
+    public void imageFileChanged(File image) {
         imageViewDisplay.setImageBitmap(BitmapFactory.decodeFile(image.getPath()));
     }
 
@@ -150,7 +155,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
         int actualWidth = imageOptions.outWidth;
         int actualHeight = imageOptions.outHeight;
-
         int scaleFactor = Math.min(actualWidth / imageWidth, actualHeight / imageHeight);
 
         // Decode the image file into a Bitmap sized to fill the View
@@ -158,13 +162,15 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageOptions.inSampleSize = scaleFactor;
 
         Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath(), imageOptions);
-        //ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        //bitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
-
-        //byte[] byteArray = stream.toByteArray();
-        //Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-
         return bitmap;
+    }
+
+    private Bitmap compressBitmap() {
+        BitmapFactory.Options imageOptions = new BitmapFactory.Options();
+        imageOptions.inJustDecodeBounds = true;
+        Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true); //TODO change 200x200 to preferable resolution
+        return scaledBitmap;
     }
 
     private void setListeners() {
@@ -225,7 +231,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void setTitleListener() {
-        title =  findViewById(R.id.titleEditText);
+        title = findViewById(R.id.titleEditText);
         title.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -244,7 +250,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void setPriceListener() {
-        price =  findViewById(R.id.priceEditText);
+        price = findViewById(R.id.priceEditText);
         price.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -263,7 +269,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void setDescriptionListener() {
-        description =  findViewById(R.id.descriptionEditText);
+        description = findViewById(R.id.descriptionEditText);
         description.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -291,8 +297,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             startActivity(intent);
         });
     }
-    private void setPreDefTagsListeners(){
-        for(Button btn : tagButtons) {
+
+    private void setPreDefTagsListeners() {
+        for (Button btn : tagButtons) {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -307,7 +314,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             });
         }
     }
-    private void setUserDefTagListener(){
+
+    private void setUserDefTagListener() {
         EditText userDefTag = findViewById(R.id.tagsEditText);
         userDefTag.addTextChangedListener(new TextWatcher() {
             @Override
@@ -332,7 +340,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      * Reads pre defined subject strings from resources,
      * saves all string in a list.
      */
-    private  void initPreDefTagStrings(){
+    private void initPreDefTagStrings() {
         String[] strArr = getResources().getStringArray(R.array.preDefSubjectTags);
         for (String str : strArr)
             preDefTags.add(str);
@@ -372,7 +380,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         tableLayout.addView(tableRow);
     }
 
-    private void renderTagButtons(){
+    private void renderTagButtons() {
         initPreDefTagStrings();
         createTagButtons();
         populateTagsLayout();
@@ -383,7 +391,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         btn.setTextSize(12);
         btn.setTextColor(getResources().getColor(R.color.colorWhite));
     }
-    private void displayUserTag(String str){
+
+    private void displayUserTag(String str) {
         Button btn = new Button(this);
         btn.setText(str);
         setTagStyling(btn);
@@ -394,7 +403,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         linearLayout.addView(tr);
 
     }
-
 
 
 }
