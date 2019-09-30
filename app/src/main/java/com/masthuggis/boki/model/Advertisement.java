@@ -11,7 +11,7 @@ public interface Advertisement {
 
     String getDatePublished();
 
-    String getImgURL();
+    File getImageFile();
 
     String getTitle();
 
@@ -29,8 +29,6 @@ public interface Advertisement {
 
     void setTitle(String title);
 
-    void setImgURI(String URI);
-
     void setPrice(int price);
 
     void setDescription(String description);
@@ -40,4 +38,6 @@ public interface Advertisement {
     void setCondition(Advert.Condition condition);
 
     void setDatePublished(String datePublished);
+
+    void setImageFile(File imageFile);
 }

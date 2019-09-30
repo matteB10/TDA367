@@ -5,6 +5,7 @@ import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.utils.FormHelper;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -17,7 +18,7 @@ import java.util.List;
  * user and saves in textfields if activity is temporary terminated.
  */
 
-public class CreateAdPresenter{
+public class CreateAdPresenter {
 
     private Advertisement advertisement;
 
@@ -63,11 +64,6 @@ public class CreateAdPresenter{
         advertisement.setDescription(description);
     }
 
-    public void imageURIChanged(String imageURI) {
-        advertisement.setImgURI(imageURI);
-
-    }
-
     public void tagsChanged(String tag) {
         advertisement.tagsChanged(tag);
     }
@@ -98,6 +94,10 @@ public class CreateAdPresenter{
         return URLString;
     }
 
+    public void imageFileChanged(File imageFile) {
+        advertisement.setImageFile(imageFile);
+    }
+
 
     /**
      * Called on click on button in createAdActivity
@@ -105,7 +105,7 @@ public class CreateAdPresenter{
      */
     public void publishAdvert() {
         setAdvertDate();
-        Repository.getInstance().saveAdvert(advertisement);
+        Repository.getInstance().saveAdvert(advertisement, advertisement.getImageFile());
         advertisement = null;
     }
 
@@ -137,9 +137,6 @@ public class CreateAdPresenter{
         return advertisement.getPrice();
     }
 
-    public String getImageUri() {
-        return advertisement.getImgURL();
-    }
 
     public List<String> getTags() {
         return advertisement.getTags();

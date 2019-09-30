@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.presenter.HomePresenter;
-import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
 /**
@@ -35,6 +35,7 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.home_fragment, container, false);
         this.presenter = new HomePresenter(this);
+        Repository.getInstance().updateAdverts();
         setupSortSpinner();
         return view;
     }
