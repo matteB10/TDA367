@@ -1,7 +1,5 @@
 package com.masthuggis.boki.backend;
 
-import android.app.Activity;
-
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -12,7 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class UserRepository {
     private static UserRepository userRepository;
-    FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
 
     public static UserRepository getInstance() {
         if (userRepository == null) {
@@ -22,10 +20,10 @@ public class UserRepository {
     }
 
 
-    public void signIn(String email, String password, Activity activity) {
+    public void signIn(String email, String password) {
         try{
             auth.signInWithEmailAndPassword(email,password)
-                    .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
@@ -38,11 +36,11 @@ public class UserRepository {
         }
     }
 
-    public void signUp(String email, String password, Activity activity) {
+    public void signUp(String email, String password) {
 
         try {
             auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {

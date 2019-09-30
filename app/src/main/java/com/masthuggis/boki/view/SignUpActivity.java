@@ -36,7 +36,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         btnSignIn.setOnClickListener(view -> presenter.onSignInButtonPressed());
 
         Button btnSignUp = findViewById(R.id.signUpButton);
-        btnSignUp.setOnClickListener(view->presenter.onSignUpButtonPressed(getEmail(),getPassword(),this));
+        btnSignUp.setOnClickListener(view->presenter.onSignUpButtonPressed(getEmail(),getPassword()));
 
     }
 

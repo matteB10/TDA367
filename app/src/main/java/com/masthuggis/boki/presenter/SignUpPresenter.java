@@ -1,6 +1,5 @@
 package com.masthuggis.boki.presenter;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 
 import com.masthuggis.boki.backend.UserRepository;
@@ -20,8 +19,8 @@ public class SignUpPresenter {
         view.showSignInScreen();
     }
 
-    public void onSignUpButtonPressed(String email,String password,Activity activity) {
-        repo.signUp(email, password, activity);
+    public void onSignUpButtonPressed(String email,String password) {
+        repo.signUp(email, password);
     }
 
     public interface View {
