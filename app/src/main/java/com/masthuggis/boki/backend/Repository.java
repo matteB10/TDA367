@@ -125,7 +125,56 @@ public class Repository {
         // If there are adverts already stored, return those, else make a request. The stored
         // adverts, if there are any, will be same as the ones stored on the database.
         // TODO: make a setup so it does not have to do fetch every time (only if necessary)
+
+        // When using local data uncomment two lines below
+        // getMockDataOfAllAds();
+        // advertisementCallback.onCallback(allAds);
+
+        // When using Firebase data uncomment line below
         fetchAllAdverts(advertisementCallback);
+    }
+
+    /**
+     * Retrieves local mock JSON file for debugging purposes.
+     */
+    public void getMockDataOfAllAds() {
+        String json = BackendDataHandler.getInstance().getMockBooks(Boki.getAppContext());
+        try {
+            JSONObject booksObject = new JSONObject(json);
+            JSONArray booksArray = booksObject.getJSONArray("books"); //Array in json file must be named "books"
+            for (int i = 0; i < booksArray.length(); i++) {
+                //Needs some way to create a book from the data that is fetched from each JSON-object
+                createBookWithoutTags(booksArray.getJSONObject(i));
+            }
+        } catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    private Advertisement createBookWithoutTags(JSONObject object) {
+        String title;
+        String author;
+        int edition;
+        int price;
+        long isbn;
+        int yearPublished;
+        Advert.Condition condition;
+        try { //Should use a factory-method instead
+            title = object.getString("title");
+            author = object.getString("author");
+            edition = object.getInt("edition");
+            price = object.getInt("price");
+            isbn = object.getLong("isbn");
+            yearPublished = object.getInt("yearPublished");
+            String conditionString = object.getString("condition");
+            condition = Advert.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
+            Advertisement ad = AdFactory.createAd("", "UniqueOwnerID", "UniqueAdID", title, "imgURL", "Description", price, condition);
+            allAds.add(ad);
+            return ad;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private void notifyUsersAdvertsForSaleUpdated() {

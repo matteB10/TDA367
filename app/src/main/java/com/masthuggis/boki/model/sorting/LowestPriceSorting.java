@@ -13,6 +13,11 @@ class LowestPriceSorting implements SortStrategy {
 
     @Override
     public Iterator<Advertisement> sort(List<Advertisement> adverts) {
+        if (adverts == null || adverts.isEmpty()) {
+            // TODO: implement throws exception instead
+            return null;
+        }
+
         return new ArrayList<>(adverts).stream()
                 .sorted(Comparator.comparing(Advertisement::getPrice).reversed())
                 .collect(Collectors.toList())

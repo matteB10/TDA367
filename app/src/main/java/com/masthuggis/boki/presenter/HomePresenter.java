@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.sorting.SortManager;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.ArrayList;
@@ -16,10 +17,12 @@ import java.util.List;
  */
 public class HomePresenter implements IProductsPresenter {
     private final View view;
+    private final SortManager sortManager;
     private List<Advertisement> adverts;
 
     public HomePresenter(View view) {
         this.view = view;
+        this.sortManager = SortManager.getInstance();
 
         this.view.showLoadingScreen();
         Repository.getInstance().getAllAds(advertisements -> {
@@ -52,8 +55,35 @@ public class HomePresenter implements IProductsPresenter {
         view.showDetailsScreen(uniqueIDoFAdvert);
     }
 
+    public int getNumSortOptions() {
+        return sortManager.getNumSortOptions();
+    }
+
+    private String[] convertIteratorToArray(Iterator<String> iterator) {
+        int numItemsInIterator = 0;
+        while (iterator.hasNext())
+            numItemsInIterator++;
+
+        String[] convertedArray = new String[numItemsInIterator];
+        int i = 0;
+        while (iterator.hasNext()) {
+            convertedArray[i] = iterator.next();
+            i++;
+        }
+        return convertedArray;
+    }
+
+    public String[] getSortOptions() {
+        return convertIteratorToArray(sortManager.getSortOptions());
+    }
+
     public void sortOptionSelected(int pos) {
-        Log.d("DEBUG", Integer.toString(pos));
+        Iterator<Advertisement> sorted = sortManager.sort(pos, adverts);
+        if (sorted == null) {
+            return;
+        }
+        while (sorted.hasNext())
+            Log.d("DEBUG", Long.toString(sorted.next().getPrice()) + " " + sorted.next().getTitle());
     }
 
     public interface View {

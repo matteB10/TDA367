@@ -44,8 +44,7 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
 
     private void setupSortSpinner() {
         Spinner spinner = view.findViewById(R.id.sortPickerSpinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.sorting_options, android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, presenter.getSortOptions());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);

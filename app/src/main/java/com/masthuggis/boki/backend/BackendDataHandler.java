@@ -152,6 +152,28 @@ public class BackendDataHandler implements iBackend {
     }
 
     /**
+     * Retrieves data from local JSON file for debuggnig purposes
+     * @param context
+     * @return
+     */
+    public String getMockBooks(Context context) {
+        String json;
+        try {
+            InputStream inputStream = context.getAssets().open("mockBooks.json");
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+            inputStream.read(buffer);
+            inputStream.close();
+            json = new String(buffer, StandardCharsets.UTF_8);
+            return json;
+
+        } catch (IOException exception) {
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
      * All images in firebase are stored in the images-folder with their
      * uniqueAdID as filenames
      */
