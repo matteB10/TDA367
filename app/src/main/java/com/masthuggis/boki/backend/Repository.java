@@ -125,14 +125,13 @@ public class Repository {
         // If there are adverts already stored, return those, else make a request. The stored
         // adverts, if there are any, will be same as the ones stored on the database.
         // TODO: make a setup so it does not have to do fetch every time (only if necessary)
+        fetchAllAdverts(advertisementCallback);
+    }
 
-        // When using local data uncomment two lines below
+    public List<Advertisement> getLocalJSONAds() {
         allAds.clear();
         getMockDataOfAllAds();
-        advertisementCallback.onCallback(allAds);
-
-        // When using Firebase data uncomment line below
-        //fetchAllAdverts(advertisementCallback);
+        return allAds;
     }
 
     /**
