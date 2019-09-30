@@ -43,19 +43,6 @@ public class HomePresenter implements IProductsPresenter {
         });
     }
 
-    //Uses presenters local list of adverts for faster search queries
-    //Should perhaps be moved to be part of model/backend
-    private List<Advertisement> searchAdverts(String query) {
-        List<Advertisement> matchingAdverts = new ArrayList<>();
-        Iterator<Advertisement> iterator = this.adverts.iterator();
-        while (iterator.hasNext()) {
-            Advertisement ad = iterator.next();
-            if (ad.getTitle().contains(query))
-                matchingAdverts.add(ad);
-        }
-        return matchingAdverts;
-    }
-
     // Used during development when using local data
     private void useTestData() {
         Handler handler = new Handler();

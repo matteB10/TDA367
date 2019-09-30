@@ -9,19 +9,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.presenter.SearchPresenter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 
-public class SearchFragment extends Fragment implements Filterable {
+public class SearchFragment extends Fragment implements Filterable, SearchPresenter.View {
 
-    private List<Advertisement> advertisements; //TODO make sure this is copy of Local adList
+    private List<Advertisement> advertsCopy; //TODO make sure this is copy of Local adList
     private View view;
     private SearchView searchField;
 
@@ -66,9 +68,9 @@ public class SearchFragment extends Fragment implements Filterable {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             List<Advertisement> filteredList = new ArrayList<>();
-            Iterator<Advertisement> iterator = advertisements.iterator();
+            Iterator<Advertisement> iterator = advertsCopy.iterator();
             if (constraint == null || constraint.length() == 0)
-                filteredList.addAll(advertisements); //No filter applied, all adverts to be shown
+                filteredList.addAll(advertsCopy); //No filter applied, all adverts to be shown
             else {
                 String filterPattern = constraint.toString().toLowerCase().trim(); //Consistent string
                 while (iterator.hasNext()) {
@@ -85,8 +87,20 @@ public class SearchFragment extends Fragment implements Filterable {
 
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            advertisements.clear();
-            advertisements.addAll((List)filterResults.values); //necessary cast
+            advertsCopy.clear();
+            advertsCopy.addAll((List)filterResults.values); //necessary cast
         }
     };
+
+    @Override
+    public void showLoadingScreen() {
+        ProgressBar progressBar = view.findViewById(R.id.loadingProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoadingScreen() {
+        ProgressBar progressBar = view.findViewById(R.id.loadingProgressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+    }
 }
