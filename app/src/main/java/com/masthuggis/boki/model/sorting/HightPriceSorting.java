@@ -13,16 +13,15 @@ class HightPriceSorting implements SortStrategy {
     private static final String NAME = "Högsta pris";
 
     @Override
-    public Iterator<Advertisement> sort(List<Advertisement> adverts) {
+    public List<Advertisement> sort(List<Advertisement> adverts) {
         if (adverts == null || adverts.isEmpty()) {
             // TODO: implement throws exception instead
             return null;
         }
 
         return new ArrayList<>(adverts).stream()
-                .sorted(Comparator.comparing(Advertisement::getPrice))
-                .collect(Collectors.toList())
-                .iterator();
+                .sorted(Comparator.comparing(Advertisement::getPrice).reversed())
+                .collect(Collectors.toList());
     }
 
     @Override

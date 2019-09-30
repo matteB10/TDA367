@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Handler;
 
 /**
  * Class providing the functionality to convert data from backend into Book-objects to be used
@@ -127,11 +128,12 @@ public class Repository {
         // TODO: make a setup so it does not have to do fetch every time (only if necessary)
 
         // When using local data uncomment two lines below
-        // getMockDataOfAllAds();
-        // advertisementCallback.onCallback(allAds);
+        allAds.clear();
+        getMockDataOfAllAds();
+        advertisementCallback.onCallback(allAds);
 
         // When using Firebase data uncomment line below
-        fetchAllAdverts(advertisementCallback);
+        //fetchAllAdverts(advertisementCallback);
     }
 
     /**

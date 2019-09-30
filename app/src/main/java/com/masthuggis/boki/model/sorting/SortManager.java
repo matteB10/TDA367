@@ -38,15 +38,15 @@ public class SortManager {
         return sortStrategies.size();
     }
 
-    public Iterator<String> getSortOptions() {
+    public List<String> getSortOptions() {
         List<String> sortOptionNames = new ArrayList<>();
         for (SortStrategy strategy: sortStrategies) {
             sortOptionNames.add(strategy.getName());
         }
-        return sortOptionNames.iterator();
+        return sortOptionNames;
     }
 
-    public Iterator<Advertisement> sort(int pos, List<Advertisement> advertsToSort) {
+    public List<Advertisement> sort(int pos, List<Advertisement> advertsToSort) {
         return sortStrategies.get(pos).sort(advertsToSort);
     }
 }

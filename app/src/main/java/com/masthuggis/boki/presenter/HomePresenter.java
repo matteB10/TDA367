@@ -1,6 +1,6 @@
 package com.masthuggis.boki.presenter;
 
-import android.util.Log;
+import android.os.Handler;
 
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
@@ -8,7 +8,6 @@ import com.masthuggis.boki.model.sorting.SortManager;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -25,17 +24,32 @@ public class HomePresenter implements IProductsPresenter {
         this.sortManager = SortManager.getInstance();
 
         this.view.showLoadingScreen();
+
+        // Used when using local JSON, comment if using firebase
+        Handler handler = new Handler();
+        handler.postDelayed(() -> getData(), 500);
+
+        // If using firebase uncommment line below
+        //getData();
+    }
+
+    private void getData() {
         Repository.getInstance().getAllAds(advertisements -> {
             if (advertisements != null) {
                 this.adverts = new ArrayList<>(advertisements);
+                sortUsingTheStandardSortingOption();
                 this.view.hideLoadingScreen();
-                this.view.showThumbnails();
+                this.view.updateThumbnails();
             }
         });
     }
 
+    private void sortUsingTheStandardSortingOption() {
+        sortOptionSelected(0);
+    }
+
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
-        if (this.adverts.size() < position)
+        if (adverts.size() < position || adverts == null)
             return;
 
         Advertisement a = adverts.get(position);
@@ -48,6 +62,9 @@ public class HomePresenter implements IProductsPresenter {
     }
 
     public int getItemCount() {
+        if (adverts == null) {
+            return 0;
+        }
         return adverts.size();
     }
 
@@ -55,41 +72,31 @@ public class HomePresenter implements IProductsPresenter {
         view.showDetailsScreen(uniqueIDoFAdvert);
     }
 
-    public int getNumSortOptions() {
-        return sortManager.getNumSortOptions();
-    }
-
-    private String[] convertIteratorToArray(Iterator<String> iterator) {
-        int numItemsInIterator = 0;
-        while (iterator.hasNext())
-            numItemsInIterator++;
-
-        String[] convertedArray = new String[numItemsInIterator];
-        int i = 0;
-        while (iterator.hasNext()) {
-            convertedArray[i] = iterator.next();
-            i++;
+    private String[] convertListToArray(List<String> list) {
+        String arr[] = new String[list.size()];
+        for (int i=0; i < list.size(); i++) {
+            arr[i] = list.get(i);
         }
-        return convertedArray;
+        return arr;
     }
 
     public String[] getSortOptions() {
-        return convertIteratorToArray(sortManager.getSortOptions());
+        return convertListToArray(sortManager.getSortOptions());
     }
 
     public void sortOptionSelected(int pos) {
-        Iterator<Advertisement> sorted = sortManager.sort(pos, adverts);
-        if (sorted == null) {
+        if (adverts == null)
             return;
-        }
-        while (sorted.hasNext())
-            Log.d("DEBUG", Long.toString(sorted.next().getPrice()) + " " + sorted.next().getTitle());
+
+        List<Advertisement> sortedList = sortManager.sort(pos, adverts);
+        adverts = new ArrayList<>(sortedList);
+        view.updateThumbnails();
     }
 
     public interface View {
         void showLoadingScreen();
 
-        void showThumbnails();
+        void updateThumbnails();
 
         void hideLoadingScreen();
 

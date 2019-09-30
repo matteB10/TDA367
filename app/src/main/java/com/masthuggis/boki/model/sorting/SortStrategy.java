@@ -10,6 +10,6 @@ import java.util.List;
  * is returned from getName.
  */
 public interface SortStrategy {
-    Iterator<Advertisement> sort(List<Advertisement> adverts);
+    List<Advertisement> sort(List<Advertisement> adverts);
     String getName();
 }

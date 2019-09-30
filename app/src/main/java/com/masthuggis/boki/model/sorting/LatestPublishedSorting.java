@@ -12,7 +12,7 @@ class LatestPublishedSorting implements SortStrategy {
     private static final String NAME = "Senast publicerad";
 
     @Override
-    public Iterator<Advertisement> sort(List<Advertisement> adverts) {
+    public List<Advertisement> sort(List<Advertisement> adverts) {
         if (adverts == null || adverts.isEmpty()) {
             // TODO: implement throws exception instead
             return null;
@@ -20,8 +20,7 @@ class LatestPublishedSorting implements SortStrategy {
 
         return new ArrayList<>(adverts).stream()
                 .sorted(Comparator.comparing(Advertisement::getDatePublished))
-                .collect(Collectors.toList())
-                .iterator();
+                .collect(Collectors.toList());
     }
 
     @Override

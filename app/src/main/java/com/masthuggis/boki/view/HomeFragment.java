@@ -21,10 +21,6 @@ import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
 /**
  * Home page displaying all the adverts that have been published to the market.
  * Will also include filter and sort buttons in the future.
@@ -33,6 +29,7 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
 
     private HomePresenter presenter;
     private View view;
+    private ProductsRecyclerViewAdapter recyclerViewAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -52,8 +49,8 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
 
     private void setupList() {
         RecyclerView recyclerView = view.findViewById(R.id.advertsRecyclerView);
-        ProductsRecyclerViewAdapter adapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
-        recyclerView.setAdapter(adapter);
+        recyclerViewAdapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
+        recyclerView.setAdapter(recyclerViewAdapter);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
@@ -80,8 +77,10 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
 
 
     @Override
-    public void showThumbnails() {
-        setupList();
+    public void updateThumbnails() {
+        if (recyclerViewAdapter == null)
+            setupList();
+        recyclerViewAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -93,12 +92,11 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
      */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        //String itemSelected = (String) adapterView.getItemAtPosition(i);
         presenter.sortOptionSelected(i);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
+        presenter.sortOptionSelected(0);
     }
 }
