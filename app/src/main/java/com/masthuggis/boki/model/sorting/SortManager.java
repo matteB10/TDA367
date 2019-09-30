@@ -21,9 +21,10 @@ public class SortManager {
 
     private List<SortStrategy> createSortStrategies() {
         List<SortStrategy> strategies = new ArrayList<>();
-        strategies.add(new HightPriceSorting());
-        strategies.add(new LowestPriceSorting());
         strategies.add(new LatestPublishedSorting());
+        strategies.add(new AlphabeticalSorting());
+        strategies.add(new LowestPriceSorting());
+        strategies.add(new HightPriceSorting());
         return strategies;
     }
 
@@ -33,11 +34,7 @@ public class SortManager {
         }
         return instance;
     }
-
-    public int getNumSortOptions() {
-        return sortStrategies.size();
-    }
-
+    
     public List<String> getSortOptions() {
         List<String> sortOptionNames = new ArrayList<>();
         for (SortStrategy strategy: sortStrategies) {
