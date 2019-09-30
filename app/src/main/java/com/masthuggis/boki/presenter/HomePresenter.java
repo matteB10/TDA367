@@ -25,9 +25,8 @@ public class HomePresenter implements IProductsPresenter {
 
         this.view.showLoadingScreen();
 
-        // Used when using local JSON, comment if using firebase
-        Handler handler = new Handler();
-        handler.postDelayed(() -> getData(), 500);
+        // Uncommet if using local JSON
+        getMockData();
 
         // If using firebase uncommment line below
         //getData();
@@ -36,12 +35,21 @@ public class HomePresenter implements IProductsPresenter {
     private void getData() {
         Repository.getInstance().getAllAds(advertisements -> {
             if (advertisements != null) {
-                this.adverts = new ArrayList<>(advertisements);
-                sortUsingTheStandardSortingOption();
-                this.view.hideLoadingScreen();
-                this.view.updateThumbnails();
+                update(advertisements);
             }
         });
+    }
+
+    private void getMockData() {
+        Handler handler = new Handler();
+        handler.postDelayed(() -> update(Repository.getInstance().getMockOfAllAds()), 500);
+    }
+
+    private void update(List<Advertisement> adverts) {
+        this.adverts = new ArrayList<>(adverts);
+        sortUsingTheStandardSortingOption();
+        this.view.hideLoadingScreen();
+        this.view.updateThumbnails();
     }
 
     private void sortUsingTheStandardSortingOption() {

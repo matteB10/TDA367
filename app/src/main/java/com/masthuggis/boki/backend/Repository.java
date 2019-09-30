@@ -125,20 +125,19 @@ public class Repository {
         // If there are adverts already stored, return those, else make a request. The stored
         // adverts, if there are any, will be same as the ones stored on the database.
         // TODO: make a setup so it does not have to do fetch every time (only if necessary)
+        fetchAllAdverts(advertisementCallback);
+    }
 
-        // When using local data uncomment two lines below
+    public List<Advertisement> getMockOfAllAds() {
         allAds.clear();
-        getMockDataOfAllAds();
-        advertisementCallback.onCallback(allAds);
-
-        // When using Firebase data uncomment line below
-        //fetchAllAdverts(advertisementCallback);
+        this.getMockDataOfAllAds();
+        return allAds;
     }
 
     /**
      * Retrieves local mock JSON file for debugging purposes.
      */
-    public void getMockDataOfAllAds() {
+    private void getMockDataOfAllAds() {
         String json = BackendDataHandler.getInstance().getMockBooks(Boki.getAppContext());
         try {
             JSONObject booksObject = new JSONObject(json);
