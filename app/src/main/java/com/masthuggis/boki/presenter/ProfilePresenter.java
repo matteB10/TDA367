@@ -2,10 +2,8 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryObserver;
-import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.utils.ConditionStylingHelper;
-import com.masthuggis.boki.utils.iConditionable;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.ArrayList;
@@ -13,36 +11,42 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ProfilePresenter implements IProductsPresenter, RepositoryObserver {
-    private View view;
-    private List<Advertisement> userItemsOnSale;
+    private final View view;
+    private List<Advertisement> adverts;
 
     public ProfilePresenter(View view) {
         this.view = view;
-        // TODO: for now using temp data, later use real advertisment of the actual user
-        this.userItemsOnSale = Repository.getInstance().getAllAds();
-        Repository.getInstance().addObserver(this);
+
+        this.view.showLoadingScreen();
+        Repository.getInstance().getAllAds(advertisements -> {
+            this.adverts = new ArrayList<>(advertisements);
+            this.view.hideLoadingScreen();
+            this.view.updateItemsOnSale();
+        });
     }
 
-    public void onSettingsButtonPressed() {
-        view.showSettingsScreen();
-    }
 
     @Override
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
-        Advertisement a = userItemsOnSale.get(position);
+        Advertisement a = adverts.get(position);
         thumbnailView.setId(a.getTitle());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
         setCondition(a,thumbnailView);
-        if (a.getImgURL() != null) {
-                thumbnailView.setImageUrl(a.getImgURL());
-            }
+        if (a.getImageFile() != null) {
+            thumbnailView.setImageURL(a.getImageFile().toURI().toString());
         }
+    }
 
 
     @Override
     public int getItemCount() {
-        return userItemsOnSale.size();
+        // TODO: change to user adverts when that logic has been implemented
+        // for now using same adverts as in market
+        if(adverts==null){
+            return 0;
+        }
+        return adverts.size();
     }
 
     @Override
@@ -52,21 +56,17 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
 
     @Override
     public void userAdvertsForSaleUpdate(Iterator<Advertisement> advertsForSale) {
-        updateUserItemsOnSale(advertsForSale);
+        view.hideLoadingScreen();
         view.updateItemsOnSale();
     }
 
-    private void updateUserItemsOnSale(Iterator<Advertisement> advertsForSale) {
-        List<Advertisement> updatedAdverts = new ArrayList<>();
-        while (advertsForSale.hasNext()) {
-            updatedAdverts.add(advertsForSale.next());
-        }
-        userItemsOnSale = updatedAdverts;
+    @Override
+    public void allAdvertsInMarketUpdate(Iterator<Advertisement> advertsInMarket) {
+        // TODO: remove this when interface is segregated
     }
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
-        ConditionStylingHelper helper = ConditionStylingHelper.getInstance();
-        int drawable = helper.getConditionDrawable(a.getCondition());
-        int text = helper.getConditionText(a.getCondition());
+        int drawable = ConditionStylingHelper.getConditionDrawable(a.getCondition());
+        int text = ConditionStylingHelper.getConditionText(a.getCondition());
         thumbnailView.setCondition(text, drawable);
     }
 
@@ -74,5 +74,18 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         void setIsUserLoggedIn(boolean isUserLoggedIn);
         void updateItemsOnSale();
         void showSettingsScreen();
+        void showLoadingScreen();
+        void hideLoadingScreen();
+        void showSignInScreen();
+    }
+
+
+    //---------------------------------------
+    public void onSettingsButtonPressed() {
+        view.showSettingsScreen();
+    }
+
+    public void onSignInButtonPressed(){
+        view.showSignInScreen();
     }
 }

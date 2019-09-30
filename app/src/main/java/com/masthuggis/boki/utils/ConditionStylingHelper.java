@@ -7,17 +7,8 @@ import com.masthuggis.boki.model.Advert;
 
 public class ConditionStylingHelper {
 
-    private static ConditionStylingHelper stylingHelper;
-
 
     private ConditionStylingHelper(){
-    }
-
-    public static ConditionStylingHelper getInstance(){
-        if (stylingHelper == null){
-            stylingHelper = new ConditionStylingHelper();
-        }
-        return stylingHelper;
     }
 
 

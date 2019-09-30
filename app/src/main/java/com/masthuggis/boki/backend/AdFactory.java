@@ -4,8 +4,7 @@ import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
-import java.util.Date;
-import java.util.List;
+import java.io.File;
 
 /**
  * Factory class for creating Advertisements. Provides a few ways to create new Advertisements.
@@ -19,14 +18,15 @@ public class AdFactory {
         return new Advert(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition);
     }*/
 
-    public static Advertisement createAd(String datePublished, String uniqueOwnerID, String id, String title, String imgURLs, String description, long price, Advert.Condition condition) {
 
-        return new Advert(datePublished, uniqueOwnerID, id, title, imgURLs, description, price, condition);
+    public static Advertisement createAd(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Advert.Condition condition, File imageFile) {
+
+        return new Advert(datePublished, uniqueOwnerID, id, title, description, price, condition, imageFile);
     }
 
     public static Advertisement createAd() {
         String uniqueAdId = UniqueIdCreator.getUniqueID();
-        return new Advert("", "Test", uniqueAdId, "", "", "", 0, Advert.Condition.UNDEFINED);
+        return new Advert();
     }
 
 

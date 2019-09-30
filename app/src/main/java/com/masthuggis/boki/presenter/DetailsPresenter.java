@@ -38,15 +38,14 @@ public class DetailsPresenter {
         view.setDescription(advertisement.getDescription());
         view.setDate(advertisement.getDatePublished());
         setCondition();
-        if (advertisement.getImgURL() != null) {
-            view.setImageUrl(advertisement.getImgURL());
+        if (advertisement.getImageFile() != null) {
+            view.setImageUrl(advertisement.getImageFile().toURI().toString());
         }
 
     }
     private void setCondition(){
-        ConditionStylingHelper helper = ConditionStylingHelper.getInstance();
-        int color = helper.getConditionDrawable(advertisement.getCondition());
-        int text = helper.getConditionText(advertisement.getCondition());
+        int color = ConditionStylingHelper.getConditionDrawable(advertisement.getCondition());
+        int text = ConditionStylingHelper.getConditionText(advertisement.getCondition());
         view.setCondition(text,color);
     }
 

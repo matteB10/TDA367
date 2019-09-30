@@ -1,8 +1,6 @@
 package com.masthuggis.boki.model;
 
-import java.net.URL;
-import java.util.Date;
-import java.util.Iterator;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -13,7 +11,7 @@ public interface Advertisement {
 
     String getDatePublished();
 
-    String getImgURL();
+    File getImageFile();
 
     String getTitle();
 
@@ -31,8 +29,6 @@ public interface Advertisement {
 
     void setTitle(String title);
 
-    void setImgURI(String URI);
-
     void setPrice(int price);
 
     void setDescription(String description);
@@ -43,5 +39,5 @@ public interface Advertisement {
 
     void setDatePublished(String datePublished);
 
-
+    void setImageFile(File imageFile);
 }

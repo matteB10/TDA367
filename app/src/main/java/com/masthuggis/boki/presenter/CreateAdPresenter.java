@@ -5,13 +5,12 @@ import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.utils.FormHelper;
 
+import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * Presenter class handling the createAdActivity. Validates input from
@@ -29,13 +28,6 @@ public class CreateAdPresenter {
 
     public CreateAdPresenter(View view) {
         this.view = view;
-    }
-
-    public String getDescription() {
-        if (advertisement.getDescription() == null) {
-            return "";
-        }
-        return advertisement.getDescription();
     }
 
     public boolean getIsValidPrice() {
@@ -83,11 +75,6 @@ public class CreateAdPresenter {
         advertisement.setDescription(description);
     }
 
-    public void imageURIChanged(String imageURI) {
-        advertisement.setImgURI(imageURI);
-
-    }
-
     public void tagsChanged(String tag) {
         advertisement.tagsChanged(tag);
     }
@@ -124,6 +111,10 @@ public class CreateAdPresenter {
         return URLString;
     }
 
+    public void imageFileChanged(File imageFile) {
+        advertisement.setImageFile(imageFile);
+    }
+
 
     /**
      * Called on click on button in createAdActivity
@@ -131,7 +122,7 @@ public class CreateAdPresenter {
      */
     public void publishAdvert() {
         setAdvertDate();
-        Repository.getInstance().saveAdvert(advertisement);
+        Repository.getInstance().saveAdvert(advertisement, advertisement.getImageFile());
         advertisement = null;
     }
 
@@ -146,8 +137,8 @@ public class CreateAdPresenter {
         return advertisement.getUniqueID();
     }
 
-    public String getImgURL() {
-        return advertisement.getImgURL();
+    public File getImgFile() {
+        return advertisement.getImageFile();
     }
 
     //Getter for testing purpose
@@ -175,6 +166,9 @@ public class CreateAdPresenter {
 
     public String getCondition(){
         return advertisement.getCondition().toString();
+    }
+    public String getDescription() {
+        return advertisement.getDescription();
     }
 
     public int getPrice() {

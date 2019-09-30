@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -14,12 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.presenter.ProductsRecyclerViewAdapter;
 import com.masthuggis.boki.presenter.ProfilePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
-import com.masthuggis.boki.utils.HeaderDecoration;
-
-import java.util.Iterator;
 
 /**
  * Profile page used for displaying the adverts that the user have published. Also have an settings
@@ -27,20 +22,29 @@ import java.util.Iterator;
  */
 public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     private ProfilePresenter presenter = new ProfilePresenter(this);
+    private View view;
     private RecyclerView recyclerView;
     private ProductsRecyclerViewAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         View v = inflater.inflate(R.layout.profile_fragment,container,false);
         setupHeader(v);
         setupList(v);
+
         return v;
     }
 
+
     private void setupHeader(View v) {
+
         Button settingsButton = v.findViewById(R.id.profileSettingsButton);
         settingsButton.setOnClickListener(view -> presenter.onSettingsButtonPressed());
+
+        Button btnSignIn = v.findViewById(R.id.signInButton);
+        btnSignIn.setOnClickListener(view -> presenter.onSignInButtonPressed());
+
     }
 
     private void setupList(View v) {
@@ -85,4 +89,20 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
         startActivity(intent);
     }
 
+
+    @Override
+    public void showSignInScreen() {
+        Intent intent = new Intent(getContext(),SignInActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showLoadingScreen() {
+        // TODO: show loading animation
+    }
+
+    @Override
+    public void hideLoadingScreen() {
+        // TODO: hide loading animation
+    }
 }

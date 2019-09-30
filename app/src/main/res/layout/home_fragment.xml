@@ -31,25 +31,23 @@
                     android:id="@+id/homeFilterButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
+                    android:minWidth="220dp"
                     android:text="Filtrera" />
 
-                <Button
-                    android:id="@+id/homeSortButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Sortera" />
+                <Spinner
+                    android:id="@+id/sortPickerSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/homeLoadingTextView"
+            <ProgressBar
+                android:id="@+id/loadingProgressBar"
+                style="?android:attr/progressBarStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="Laddar..."
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:visibility="visible" />
+                android:layout_height="wrap_content" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/advertsRecyclerView"

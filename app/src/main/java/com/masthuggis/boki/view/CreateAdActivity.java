@@ -27,9 +27,7 @@ import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,6 +43,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private final List<Button> tagButtons = new ArrayList<>();
     private final List<String> preDefTags = new ArrayList<>();
     private String currentImagePath;
+    private File currentImageFile;
     private CreateAdPresenter presenter;
 
     private ImageView imageViewDisplay;
@@ -59,6 +58,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_advert);
         presenter = new CreateAdPresenter(this);
+        imageViewDisplay = findViewById(R.id.addImageView);
+        //imageViewDisplay.setImageBitmap(BitmapFactory.decodeFile(currentImageFile.getPath()));
         disablePublishAdButton();
         renderTagButtons();
         setListeners();
@@ -67,7 +68,10 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void updateDataFromModel() {
-        imageViewDisplay.setImageURI(Uri.parse(presenter.getImgURL()));
+        if (presenter.getImgFile() != null) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(presenter.getImgFile().getAbsolutePath());
+            imageViewDisplay.setImageBitmap(myBitmap);
+        }
         title.setText(presenter.getTitle());
         description.setText(presenter.getDescription());
         if(presenter.getIsValidPrice()) {
@@ -83,21 +87,18 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            File imageFile = null;
             try {
-                imageFile = createImageFile();
+                currentImageFile = createImageFile();
             } catch (Exception i) {
                 System.out.println("error creating file");
             }
-            if (imageFile != null) {
+            if (currentImageFile != null) {
                 Uri imageURI = FileProvider.getUriForFile(this, "com.masthuggis.boki.fileprovider",
-                        imageFile);
+                        currentImageFile);
                 System.out.println(imageURI);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-
             }
-
         }
     }
 
@@ -110,33 +111,36 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private File createImageFile() throws IOException {
         String photoFileName = "IMG_"+ UniqueIdCreator.getUniqueID();
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-
-        File imageFile = File.createTempFile(photoFileName, ".jpg", storageDir);
-        currentImagePath = imageFile.getAbsolutePath();
-        return imageFile;
+        File image = File.createTempFile(photoFileName, ".jpg", storageDir);
+        return image;
     }
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        imageViewDisplay =  findViewById(R.id.addImageView);
+        imageViewDisplay = findViewById(R.id.addImageView);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap bitmap = decodeBitmap();
             setImageView(bitmap);
-            presenter.imageURIChanged(currentImagePath);
+            presenter.imageFileChanged(currentImageFile);
         }
-
     }
 
     private void setImageView(Bitmap bitmap) {
         imageViewDisplay.setImageBitmap(bitmap);
     }
 
+    public void imageFileChanged(File image){
+        imageViewDisplay.setImageBitmap(BitmapFactory.decodeFile(image.getPath()));
+    }
+
     /**
-     * Helper method to decode bitmap 
+     * Helper method to decode bitmap
+     *
      * @return
      */
+
     private Bitmap decodeBitmap() {
         int imageWidth = imageViewDisplay.getWidth();
         int imageHeight = imageViewDisplay.getHeight();
@@ -152,12 +156,16 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         // Decode the image file into a Bitmap sized to fill the View
         imageOptions.inJustDecodeBounds = false;
         imageOptions.inSampleSize = scaleFactor;
-        Bitmap bitmap = BitmapFactory.decodeFile(currentImagePath, imageOptions);
+
+        Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath(), imageOptions);
+        //ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        //bitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+
+        //byte[] byteArray = stream.toByteArray();
+        //Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
         return bitmap;
-
     }
-
 
     private void setListeners() {
         setImageViewListener();
@@ -204,7 +212,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
 
-    private void disablePublishAdButton(){
+    private void disablePublishAdButton() {
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setEnabled(false);
         publishAdButton.setBackground(getResources().getDrawable(R.drawable.disabled_primary_button));
@@ -212,12 +220,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     private void setImageViewListener() {
         imageViewDisplay = findViewById(R.id.addImageView);
-        imageViewDisplay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dispatchTakePictureIntent();
-            }
-        });
+        imageViewDisplay.setOnClickListener(view -> dispatchTakePictureIntent());
 
     }
 
@@ -279,18 +282,14 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void setCreateAdvertListener() {
-        publishAdButton =  findViewById(R.id.publishAdButton);
-        publishAdButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(CreateAdActivity.
-                        this, DetailsActivity.class);
-                intent.putExtra("advertID", presenter.getId());
-                presenter.publishAdvert();
-                startActivity(intent);
-            }
+        publishAdButton = findViewById(R.id.publishAdButton);
+        publishAdButton.setOnClickListener(view -> {
+            Intent intent = new Intent(CreateAdActivity.
+                    this, DetailsActivity.class);
+            intent.putExtra("advertID", presenter.getId());
+            presenter.publishAdvert();
+            startActivity(intent);
         });
-
     }
     private void setPreDefTagsListeners(){
         for(Button btn : tagButtons) {
@@ -399,4 +398,3 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
 
 }
-

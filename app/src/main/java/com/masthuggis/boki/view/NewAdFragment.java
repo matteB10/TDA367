@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
@@ -25,32 +24,19 @@ public class NewAdFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.new_ad_fragment, container, false);
 
-        ImageButton newCollectionButton = (ImageButton) v.findViewById(R.id.to_new_collection_imagebutton);
-        ImageButton newBookButton = (ImageButton) v.findViewById(R.id.to_new_book_imagebutton);
-        newCollectionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        ImageButton newCollectionButton = v.findViewById(R.id.to_new_collection_imagebutton);
+        ImageButton newBookButton = v.findViewById(R.id.to_new_book_imagebutton);
+        newBookButton.setOnClickListener(view -> {
+            //TODO
+            // Öppna ny vy för att skapa ny bok. Samt skapa presenter för detta.
+            Intent intent = new Intent(getActivity(), CreateAdActivity.class);
+            startActivity(intent);
 
-            }
         });
-        newBookButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        newCollectionButton.setOnClickListener(view -> {
+            //TODO
+            // Öppna ny vy för att skapa ny samling.
 
-                //TODO
-                // Öppna ny vy för att skapa ny bok. Samt skapa presenter för detta.
-                Intent intent = new Intent(getActivity(), CreateAdActivity.class);
-                startActivity(intent);
-
-            }
-        });
-        newCollectionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO
-                // Öppna ny vy för att skapa ny samling.
-
-            }
         });
         return v;
 

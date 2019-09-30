@@ -12,7 +12,7 @@ public interface ThumbnailView extends iConditionable {
 
     void setPrice(long price);
 
-    void setImageUrl(String url);
+    void setImageURL(String url);
 
     void setId(String id);
 

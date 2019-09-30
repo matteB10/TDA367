@@ -1,8 +1,9 @@
 package com.masthuggis.boki.model;
 
+import com.masthuggis.boki.utils.UniqueIdCreator;
+
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -20,46 +21,80 @@ public class Advert implements Advertisement {
     private String uniqueOwnerID;
     private String uniqueAdID;
     private String title;
-    private List<String> imgURLs;
-    private String imageURL;
     private String description;
     private long price;
     private Condition condition;
     private List<String> tags = new ArrayList<>();
+    private File imageFile; //the imageFile used instead of an imageURL
 
 
-    /**public Advert(Date datePublished, String uniqueOwnerID, String uniqueAdID, String title, List<String> imgURLs, String description, long price, Condition condition) {
-        this.datePublished = datePublished;
-        this.uniqueOwnerID = uniqueOwnerID;
-        this.title = title;
-        this.imgURLs = imgURLs;
-        imgURLs.add("TEST"); //Gives nullPointerException when loading all adverts???
-        this.description = description;
-        this.price = price;
-        this.condition = condition;
-        this.uniqueAdID = uniqueAdID;
-    }
+    /**
+     * public Advert(Date datePublished, String uniqueOwnerID, String uniqueAdID, String title, List<String> imgURLs, String description, long price, Condition condition) {
+     * this.datePublished = datePublished;
+     * this.uniqueOwnerID = uniqueOwnerID;
+     * this.title = title;
+     * this.imgURLs = imgURLs;
+     * imgURLs.add("TEST"); //Gives nullPointerException when loading all adverts???
+     * this.description = description;
+     * this.price = price;
+     * this.condition = condition;
+     * this.uniqueAdID = uniqueAdID;
+     * }
      */
 
     //Alternative constructor with only one image allowed
-    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String imgURL, String description, long price, Condition condition) {
+    public Advert(String datePublished, String uniqueOwnerID, String id, String title, File imageFile, String description, long price, Condition condition) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.uniqueAdID = id;
         this.title = title;
-        this.imageURL = imgURL;
         this.description = description;
         this.price = price;
         this.condition = condition;
+        this.imageFile = imageFile;
     }
+
+
+    public Advert(String datePublished, String uniqueOwnerID, String uniqueAdID, String title, String description, long price, Condition condition, List<String> tags) {
+        this.datePublished = datePublished;
+        this.uniqueOwnerID = uniqueOwnerID;
+        this.uniqueAdID = uniqueAdID;
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.condition = condition;
+        this.tags = tags;
+    }
+
+    public Advert() {
+        this.datePublished = "";
+        this.uniqueOwnerID = "tempOwnerID";
+        this.uniqueAdID = UniqueIdCreator.getUniqueID();
+        this.title = "";
+        this.description = "";
+        this.price = 0;
+        this.condition = Condition.OK;
+    }
+
+    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, File file) {
+        this.datePublished = datePublished;
+        this.uniqueOwnerID = uniqueOwnerID;
+        this.uniqueAdID = id;
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.condition = condition;
+        this.imageFile = file;
+    }
+
 
     public String getDatePublished() {
         return this.datePublished;
     }
 
     @Override
-    public String getImgURL() {
-        return this.imageURL;
+    public File getImageFile() {
+        return this.imageFile;
     }
 
     @Override
@@ -104,11 +139,6 @@ public class Advert implements Advertisement {
     }
 
     @Override
-    public void setImgURI(String URI) {
-        this.imageURL = URI;
-    }
-
-    @Override
     public void setPrice(int price) {
         this.price = price;
     }
@@ -132,6 +162,11 @@ public class Advert implements Advertisement {
     }
 
     @Override
+    public void setImageFile(File imageFile) {
+        this.imageFile = imageFile;
+    }
+
+    @Override
     public void setCondition(Condition condition) {
         this.condition = condition;
     }
@@ -145,5 +180,6 @@ public class Advert implements Advertisement {
         }
         return true;
     }
+
 
 }

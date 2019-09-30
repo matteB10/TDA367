@@ -1,15 +1,14 @@
 package com.masthuggis.boki.presenter;
 
-import android.content.Context;
-import android.util.Log;
-import android.view.View;
+import android.os.Handler;
 
 import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.backend.advertisementCallback;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.sorting.SortManager;
 import com.masthuggis.boki.utils.ConditionStylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,56 +16,106 @@ import java.util.List;
  *
  */
 public class HomePresenter implements IProductsPresenter {
-    private View view;
+    private final View view;
+    private final SortManager sortManager;
     private List<Advertisement> adverts;
 
     public HomePresenter(View view) {
         this.view = view;
-        view.showLoadingScreen();
-        Repository.getInstance().fetchAllAdverts(advertisements -> {
-            adverts = advertisements;
-            view.hideLoadingScreen();
-            view.showThumbnails();
+        this.sortManager = SortManager.getInstance();
+
+        this.view.showLoadingScreen();
+
+        // Used when using local JSON, comment if using firebase
+        useTestData();
+
+        // If using firebase uncommment line below
+        //getData();
+    }
+
+    private void getData() {
+        Repository.getInstance().getAllAds(advertisements -> {
+            if (advertisements != null) {
+                updateData(advertisements);
+            }
         });
     }
+
+    // Used during development when using local data
+    private void useTestData() {
+        Handler handler = new Handler();
+        handler.postDelayed(() -> updateData(Repository.getInstance().getLocalJSONAds()), 500);
+    }
+
+    private void updateData(List<Advertisement> adverts) {
+        this.adverts = new ArrayList<>(adverts);
+        sortUsingTheStandardSortingOption();
+        this.view.hideLoadingScreen();
+        this.view.updateThumbnails();
+    }
+
+    private void sortUsingTheStandardSortingOption() {
+        sortOptionSelected(0);
+    }
+
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
+        if (adverts.size() < position || adverts == null)
+            return;
+
         Advertisement a = adverts.get(position);
         thumbnailView.setId(a.getUniqueID());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
         setCondition(a,thumbnailView);
-        if (a.getImgURL() != null) {
-            thumbnailView.setImageUrl(a.getImgURL());
-
+        if (a.getImageFile() != null) {
+            thumbnailView.setImageURL(a.getImageFile().toURI().toString());
         }
     }
 
     public int getItemCount() {
+        if (adverts == null) {
+            return 0;
+        }
         return adverts.size();
     }
 
     public void onRowPressed(String uniqueIDoFAdvert) {
-        // TODO: navigate to new screen with fetched mvp
-        // Question: Should presenter do navigation or some navigationManager?
-        Log.d("PRINT", "Row id pressed " + uniqueIDoFAdvert);
         view.showDetailsScreen(uniqueIDoFAdvert);
     }
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
-        ConditionStylingHelper helper = ConditionStylingHelper.getInstance();
-        int drawable = helper.getConditionDrawable(a.getCondition());
-        int text = helper.getConditionText(a.getCondition());
+        int drawable = ConditionStylingHelper.getConditionDrawable(a.getCondition());
+        int text = ConditionStylingHelper.getConditionText(a.getCondition());
         thumbnailView.setCondition(text, drawable);
+    }
+
+    private String[] convertListToArray(List<String> list) {
+        String arr[] = new String[list.size()];
+        for (int i=0; i < list.size(); i++) {
+            arr[i] = list.get(i);
+        }
+        return arr;
+    }
+
+    public String[] getSortOptions() {
+        return convertListToArray(sortManager.getSortOptions());
+    }
+
+    public void sortOptionSelected(int pos) {
+        if (adverts == null)
+            return;
+
+        List<Advertisement> sortedList = sortManager.sort(pos, adverts);
+        adverts = new ArrayList<>(sortedList);
+        view.updateThumbnails();
     }
 
     public interface View {
         void showLoadingScreen();
 
-        void showThumbnails();
+        void updateThumbnails();
 
         void hideLoadingScreen();
 
         void showDetailsScreen(String id);
-
-        Context getContext();
     }
 }

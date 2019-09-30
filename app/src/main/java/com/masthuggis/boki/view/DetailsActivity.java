@@ -15,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advert;
@@ -39,6 +42,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         if (advertID != null) {
             presenter = new DetailsPresenter(this, advertID);
         }
+
         Button contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
             //TODO HÄR SKA CHATTEN ÖPPNAS TYP

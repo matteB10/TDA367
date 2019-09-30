@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sorting_options">
+        <item>Högsta pris</item>
+        <item>Lägsta pris</item>
+        <item>Senast publicerad</item>
+    </string-array>
+</resources>

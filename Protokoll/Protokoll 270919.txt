@@ -1,0 +1,88 @@
+# Meeting Agenda
+
+Group:Masthuggis (grupp 8) 
+Date: 27/9 - 19
+Chair: Arvid Sundbom / Isak Lindgren 
+Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak Lindgren, Elin Melander
+
+
+## Objectives (5 min) 
+- Avsluta sprinten.
+	- Code refactor och review.
+	- Review av Domän- och Designmodell
+	- Se över user stories inför nästa sprint samt skapa tasks utifrån dem.
+- Verification via mail när man registrerar sig på appen?
+- Prata om hur nästa sprint ska påbörjas.
+
+## Reports (0 min) from previous meeting
+
+
+
+## Discussion items (50 min)
+- Conditional Fragments, ska de användas för inloggningsvyn? Ger två olika xml-filer beroende på användarens inloggningsstatus.
+Login-vyn måste då utgöras av ett android-fragment. Fördelar med att förlita sig på Conditional Fragments istället för att göra en
+egen implementation? Kan kanske även lösa buggen med att man kan öppna dubbla detaljvyer av en och samma annons genom att dubbelklicka
+på annonsen. Ska absolut tittas mer på, låter som en bra lösning.
+
+- Avsluta sprinten:
+Pusha och mergea all färdig kod, så att vår master-branch är uppdaterad inför nästa sprint.
+
+Arvid förklarar och visar hur datan i firebase är strukturerad och hur den ska samordna med Elins arbete gällande användare och authentication i Firebase.
+
+Problem med stora bilder i Firebase för tillfället som måste ordnas. De är för tillfället samma storlek som de är när de tas i kameran (MB), vill ner på KB.
+
+Code review :
+
+Diskussion kring Repository och Backenddatafetcher kring ifall de ska vara singleton eller ej. De har för tillfället varsitt interface som lockar till att skapa instans
+-variabler av denna typ, vilket är paradoxalt då de redan är singletons.
+
+Ett alternativ vore dependency injection, men det skulle för vår del förmodligen innebära att vyn skulle ha beroende på backend. Eller andra lösningar där en eventuell
+injektor-class returnerar en abstraktion av repository.
+
+För att skapa ett så utbyggbart program som möjligt ska vi försöka ha ett interface mellan repository och backenddatafetcher samt mellan repository och 
+övriga delar av applikationen. Repository ska delas upp i flera delar som hämtar olika data från backenden, tex. users,adverts, messages etc. Samt en factory för
+repositories som returnerar rätt repository som dynamisk typ till de som behöver en instans av respektive repository.
+
+Joel kollar på Dagger.
+
+Se till att använda lokala variabler där det går istället för att använda instansvariabler. Tex buttons eller liknande interfaceobjekt i vyer.
+
+Integrera firebase-userdel med vår userklass för att kunna bygga vidare på detta och integrera det med advertisements. Diskussion kring hur user ska fungera kontra firebase. Hur mycket information vår modell-user-klass ska innehålla samt hur mycket som ska ligga i user-klassen.
+
+Diskussion kring namn på aktiviteter och fragments. En del namn är lite otydliga, tex. homefragment vars primära funktion är att visa upp alla advertisements och sekundära funktion är att det är "homefragment".
+
+- Genomgång av designmodell i form av UML:
+
+Matilda har uppdaterat designmodellen enligt det vi diskuterat gällande repositories.
+
+Domänmodell uppdateras allt eftersom.
+
+- User Stories och nästa sprint:
+
+Två dagar ges till att refaktorera för att sedan börja på ny sprint på måndag (30/9) ,färdig måndag 7/10.
+
+På trello lades nya user stories till i nästa sprints backlog, tasks uppdateras och alla valde vilka tasks/user stories de arbetar med.
+ 
+## Outcomes and assignments (5 min)
+- Alla har refaktorering att göra.
+- Alla har valt nya tasks/user stories.
+
+Matilda:
+"Som säljare vill jag kunna tagga mina objekt för att det ska bli enklare för köpare att hitta min bok"
+
+Isak:
+"Som en användare vill jag kunna chatta med säljaren/köparen i appen för att enkelt kunna köpa/sälja böcker"
+
+Joel:
+"Som en köpare vill jag kunna sortera mellan alla de annonserna som visas för att snabbt hitta det bästa alternativet"
+
+Arvid:
+"Som en student på Chalmers vill jag söka på specifik kurslitteratur för att snabbt hitta rätt kurslitteratur"
+
+Elin:
+Arbetar vidare med tidigare user story gällande användare, tar sedan:
+"Som en säljare vill jag kunna redigera och ta bort min annons om jag angett fel information"
+
+## Wrap up
+
+ - Möte måndag kl 9.
