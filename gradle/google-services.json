@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "84677718416",
-    "firebase_url": "https://boki-f5fbc.firebaseio.com",
-    "project_id": "boki-f5fbc",
-    "storage_bucket": "boki-f5fbc.appspot.com"
+    "project_number": "52664849",
+    "firebase_url": "https://bokitwo.firebaseio.com",
+    "project_id": "bokitwo",
+    "storage_bucket": "bokitwo.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:84677718416:android:b5a6e5d90ba5c8f5794315",
+        "mobilesdk_app_id": "1:52664849:android:db735bf35402f81901afb0",
         "android_client_info": {
           "package_name": "com.masthuggis.boki"
         }
       },
       "oauth_client": [
         {
-          "client_id": "84677718416-c96soe3q9i2l4727utuv99kt4mms2mlv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.masthuggis.boki",
-            "certificate_hash": "9d14d46ba54f1c4200d8b24f5c78f01f4498d30e"
-          }
-        },
-        {
-          "client_id": "84677718416-h2ni9lc0vcnkfrvjuv6mfeek93kcfvcm.apps.googleusercontent.com",
+          "client_id": "52664849-vesoilml3ssh1eu4jhmo8u6vg4nedciv.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC8w04kQLb0LJvwTxK3pD0ZNUDq2rrmBJA"
+          "current_key": "AIzaSyCD-3Wjc_pStdu4TQn60vTMdpzAwFxiyHc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "84677718416-h2ni9lc0vcnkfrvjuv6mfeek93kcfvcm.apps.googleusercontent.com",
+              "client_id": "52664849-vesoilml3ssh1eu4jhmo8u6vg4nedciv.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

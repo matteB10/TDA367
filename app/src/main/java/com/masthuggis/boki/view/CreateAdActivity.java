@@ -24,6 +24,8 @@ import com.masthuggis.boki.presenter.CreateAdPresenter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -103,7 +105,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageViewDisplay = findViewById(R.id.addImageView);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bitmap bitmap = decodeBitmap();
+            Bitmap bitmap = compressBitmap();
             setImageView(bitmap);
             presenter.imageFileChanged(currentImageFile);
         }
@@ -113,7 +115,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageViewDisplay.setImageBitmap(bitmap);
     }
 
-    public void imageFileChanged(File image){
+    public void imageFileChanged(File image) {
         imageViewDisplay.setImageBitmap(BitmapFactory.decodeFile(image.getPath()));
     }
 
@@ -122,7 +124,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      *
      * @return
      */
-
+    //Want to replace this method with one that compresses the images
     private Bitmap decodeBitmap() {
         int imageWidth = imageViewDisplay.getWidth();
         int imageHeight = imageViewDisplay.getHeight();
@@ -147,6 +149,45 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         //Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
         return bitmap;
+    }
+
+    private Bitmap compressBitmap() {
+        String imagePath = currentImageFile.getPath();
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            options.inSampleSize = 6; //Factor of downsizing the image
+
+            FileInputStream inputStream = new FileInputStream(imagePath);
+            BitmapFactory.decodeStream(inputStream);
+            inputStream.close();
+
+            final int REQUIRED_SIZE = 75; //New size we want to scale the image to
+
+            //Finds the correct scaling value, needs to be a factor of 2
+            int scale = 1;
+            while (options.outWidth / scale / 2 >= REQUIRED_SIZE &&
+                    options.outHeight / scale / 2 >= REQUIRED_SIZE) {
+                scale *= 2;
+            }
+
+            BitmapFactory.Options options2 = new BitmapFactory.Options();
+            options2.inSampleSize = scale;
+            inputStream = new FileInputStream(imagePath);
+
+            Bitmap selectedBitmap = BitmapFactory.decodeStream(inputStream,null,options2);
+            inputStream.close();
+
+
+            FileOutputStream outputStream = new FileOutputStream(imagePath); //Probably not going to work
+            selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+
+            return selectedBitmap;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null; //TODO fix this
     }
 
     private void setListeners() {

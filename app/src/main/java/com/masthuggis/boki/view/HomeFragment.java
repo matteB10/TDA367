@@ -38,7 +38,6 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.home_fragment, container, false);
         this.presenter = new HomePresenter(this);
-        Repository.getInstance().updateAdverts();
         setupSortSpinner();
         return view;
     }

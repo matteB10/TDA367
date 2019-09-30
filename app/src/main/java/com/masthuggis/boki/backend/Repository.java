@@ -29,19 +29,8 @@ public class Repository {
     private List<Advertisement> allAds = new ArrayList<>();
 
     private Repository() {
-        updateAdverts();
     }
 
-
-    /**
-     * Fetches data from Firebase and updates local list of Advertisements. Also notifies observers.
-     */
-    public void updateAdverts() {
-        fetchAllAdverts(advertisements -> {
-            this.allAds = new ArrayList<>(advertisements);
-            this.notifyMarketObservers();
-        });
-    }
 
     //Make repository generate a mock userID
     public static Repository getInstance() {
@@ -105,13 +94,13 @@ public class Repository {
         }, userID);
     }
 
-    public void fetchAllAdverts(advertisementCallback advertisementCallback) {
-        allAds.clear();
+    private void fetchAllAdverts(advertisementCallback advertisementCallback) {
         BackendDataHandler.getInstance().readAllAdvertData(advertDataList -> {
-            for (Map<String, Object> dataMap : advertDataList) {
+            allAds.clear();
+            for (Map<String, Object> dataMap : advertDataList) { //Loop runs twice, shouldn't be the case
                 allAds.add(retrieveAdvert(dataMap));
             }
-            advertisementCallback.onCallback(allAds);
+            advertisementCallback.onCallback(allAds); //Application lands here three times, making the list 3x bigger than it should
         });
     }
 
