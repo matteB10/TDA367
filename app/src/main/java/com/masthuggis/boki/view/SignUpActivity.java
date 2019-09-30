@@ -1,6 +1,5 @@
 package com.masthuggis.boki.view;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -15,16 +14,12 @@ import com.masthuggis.boki.presenter.SignUpPresenter;
 public class SignUpActivity extends AppCompatActivity implements SignUpPresenter.View {
     private  SignUpPresenter presenter = new SignUpPresenter(this);
 
-    public ProgressDialog PD = new ProgressDialog(this);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         setUpBtns();
     }
-
-
 
 
     public String getEmail(){
@@ -55,7 +50,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         startActivity(intent);
     }
     public void showProfileScreen() {
-        Intent intent = new Intent(SignUpActivity.this, ProfileFragment.class);
+        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
         startActivity(intent);
     }
 }

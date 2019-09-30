@@ -17,9 +17,7 @@ public class SignUpPresenter {
 
     public void onSignUpButtonPressed(String email,String password) {
         repo.signUp(email, password);
-
     }
-
 
     public interface View {
         void showSignInScreen();

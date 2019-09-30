@@ -41,6 +41,9 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
     public int getItemCount() {
         // TODO: change to user adverts when that logic has been implemented
         // for now using same adverts as in market
+        if(adverts==null){
+            return 0;
+        }
         return adverts.size();
     }
 
