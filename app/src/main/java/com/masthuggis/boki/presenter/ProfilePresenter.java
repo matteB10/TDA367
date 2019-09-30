@@ -24,9 +24,6 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         });
     }
 
-    public void onSettingsButtonPressed() {
-        view.showSettingsScreen();
-    }
 
     @Override
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
@@ -69,5 +66,16 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         void showSettingsScreen();
         void showLoadingScreen();
         void hideLoadingScreen();
+        void showSignInScreen();
+    }
+
+
+    //---------------------------------------
+    public void onSettingsButtonPressed() {
+        view.showSettingsScreen();
+    }
+
+    public void onSignInButtonPressed(){
+        view.showSignInScreen();
     }
 }
