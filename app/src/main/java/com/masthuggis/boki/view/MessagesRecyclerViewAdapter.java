@@ -38,6 +38,9 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
 
     @Override
     public int getItemCount() {
+        if(presenter==null){
+            return 0;
+        }
         return presenter.getItemCount();
     }
 

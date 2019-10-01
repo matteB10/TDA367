@@ -42,14 +42,17 @@ public class UserRepository {
 
     }
 
-    public List<iChat> getUserChats() {
+    public List<iChat> getUserChats( chatCallback chatCallback) {
         List<iChat> chatList = new ArrayList<>();
       //  BackendDataHandler.getInstance().readChatData(chatCallback);
-        BackendDataHandler.getInstance().readChatData(chatMap -> {
-            for (Map map : chatMap) {
-                chatList.add(ChatFactory.createChat(map.get("sender").toString(), map.get("receiver").toString()));
-            }
+        BackendDataHandler.getInstance().readChatData(new chatDBCallback() {
+            @Override
+            public void onCallback(List<Map<String, Object>> chatMap) {
+                for (Map map : chatMap) {
+                    chatList.add(ChatFactory.createChat(map.get("sender").toString(), map.get("receiver").toString()));
+                }
 
+            }
         });
         return chatList;
     }

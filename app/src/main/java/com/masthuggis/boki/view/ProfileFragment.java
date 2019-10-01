@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.presenter.ProfilePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
@@ -32,10 +31,11 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.profile_fragment, container, false);
-        setupHeader(v);
+
+        view = inflater.inflate(R.layout.profile_fragment, container, false);
+        setupHeader(view);
         presenter.isLoggedIn();
-        return v;
+        return view;
     }
 
 

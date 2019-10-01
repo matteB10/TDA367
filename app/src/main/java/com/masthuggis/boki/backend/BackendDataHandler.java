@@ -58,7 +58,7 @@ public class BackendDataHandler implements iBackend {
     private StorageReference imagesRef = mainRef.child("images"); //Reference to storage location of images
     private FirebaseAuth auth = FirebaseAuth.getInstance();
 
-    public void readChatData(chatCallback chatCallback) {
+    public void readChatData(chatDBCallback chatDBCallback) {
     CollectionReference userChatsRef = (CollectionReference) db.collection("users").document(DataModel.getInstance().getUserID()).collection("conversations").addSnapshotListener((queryDocumentSnapshots, e) -> {
         if (e != null) {
             Log.w(TAG, "Listen failed.", e);
@@ -70,7 +70,7 @@ public class BackendDataHandler implements iBackend {
         for (QueryDocumentSnapshot q : queryDocumentSnapshots) {
             chatDataList.add(q.getData());
         }
-        chatCallback.onCallback(chatDataList);
+        chatDBCallback.onCallback(chatDataList);
     });
 }
 

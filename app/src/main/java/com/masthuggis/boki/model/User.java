@@ -1,28 +1,29 @@
 package com.masthuggis.boki.model;
 
 import com.masthuggis.boki.backend.UserRepository;
+import com.masthuggis.boki.backend.chatCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class User implements iUser {
-    private  String email;
-    private  String displayname;
-    private  String userID;
+    private String email;
+    private String displayname;
+    private String userID;
     private List<iChat> chats;
     iFavoriteCollection favoriteCollection;
 
     public User(String email, String displayname, String userID) {
         this.email = email;
-        this.displayname= displayname;
+        this.displayname = displayname;
         this.userID = userID;
-        this.chats = UserRepository.getInstance().getUserChats();
+        UserRepository.getInstance().getUserChats(chatsList -> chats = chatsList);
     }
 
     public User(String userID) {
-        this.userID=userID;
-        this.email= "fakeemail@mail.com";
-        this.displayname="Fake Namesson";
+        this.userID = userID;
+        this.email = "fakeemail@mail.com";
+        this.displayname = "Fake Namesson";
     }
 
     public String getId() {
@@ -41,6 +42,6 @@ public class User implements iUser {
 
     @Override
     public List<iChat> getChats() {
-       return this.chats;
+        return this.chats;
     }
 }

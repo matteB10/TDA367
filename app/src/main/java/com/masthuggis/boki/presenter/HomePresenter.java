@@ -26,7 +26,6 @@ public class HomePresenter implements IProductsPresenter {
         this.sortManager = SortManager.getInstance();
 
         this.view.showLoadingScreen();
-        DataModel.getInstance().init();
 
         // Used when using local JSON, comment if using firebase
         //useTestData();

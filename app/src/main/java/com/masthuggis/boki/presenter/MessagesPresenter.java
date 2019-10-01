@@ -1,8 +1,6 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.UserRepository;
-import com.masthuggis.boki.backend.advertisementCallback;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.view.MessagesRecyclerViewAdapter;
@@ -16,14 +14,14 @@ public class MessagesPresenter {
 
     public MessagesPresenter(View view) {
         this.view = view;
-        if(DataModel.getInstance().isLoggedIn()){
+        if (DataModel.getInstance().isLoggedIn()) {
             view.isLoggedIn();
         }
         if (DataModel.getInstance().getUserChats() == null) {
-        }else{
+        } else {
 
-
-        chats = DataModel.getInstance().getUserChats();}
+            UserRepository.getInstance().getUserChats(chatList -> chats = chatList);
+        }
     }
 
 
@@ -36,7 +34,7 @@ public class MessagesPresenter {
 
     public void bindViewHolderAtPosition(int position, MessagesRecyclerViewAdapter.
             ViewHolder holder) {
-        if (chats.size() < position || chats==null) {
+        if (chats.size() < position || chats == null) {
             return;
         }
         iChat c = chats.get(position);
@@ -53,7 +51,6 @@ public class MessagesPresenter {
     public int getItemCount() {
         if (chats != null) {
             return chats.size();
-
         }
         return 0;
     }
