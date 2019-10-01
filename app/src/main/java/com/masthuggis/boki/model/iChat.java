@@ -6,4 +6,5 @@ import java.util.Date;
 public interface iChat {
     Collection<iMessage> getMessages();
 
+    String getReceiver();
 }

@@ -24,6 +24,9 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.masthuggis.boki.model.Chat;
+import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.model.iChat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,11 +58,27 @@ public class BackendDataHandler implements iBackend {
     private StorageReference imagesRef = mainRef.child("images"); //Reference to storage location of images
     private FirebaseAuth auth = FirebaseAuth.getInstance();
 
+    public void readChatData(chatCallback chatCallback) {
+    CollectionReference userChatsRef = (CollectionReference) db.collection("users").document(DataModel.getInstance().getUserID()).collection("conversations").addSnapshotListener((queryDocumentSnapshots, e) -> {
+        if (e != null) {
+            Log.w(TAG, "Listen failed.", e);
+            return;
+        }
+        List<Map<String, Object>> chatDataList = new ArrayList<>();
+
+        assert queryDocumentSnapshots != null;
+        for (QueryDocumentSnapshot q : queryDocumentSnapshots) {
+            chatDataList.add(q.getData());
+        }
+        chatCallback.onCallback(chatDataList);
+    });
+}
+
     private BackendDataHandler() {
 
     }
 
-   public static BackendDataHandler getInstance() {
+    public static BackendDataHandler getInstance() {
         if (instance == null)
             instance = new BackendDataHandler();
         return instance;
@@ -232,12 +251,9 @@ public class BackendDataHandler implements iBackend {
 
     public void userSignIn(String email, String password) {
         try {
-            auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                            }
+            Task<AuthResult> authResultTask = auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
                         }
                     });
 
@@ -261,21 +277,26 @@ public class BackendDataHandler implements iBackend {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
-    public String getUserID(){
+
+    public String getUserID() {
         String id = auth.getUid();
 
         return id;
     }
 
-    public Map<String,String> getUser(){
-        Map<String,String> userMap = new HashMap<>();
-        userMap.put("email",auth.getCurrentUser().getEmail());
-        userMap.put("displayname",auth.getCurrentUser().getDisplayName());
-        userMap.put("userID",auth.getCurrentUser().getUid());
+    public Map<String, String> getUser() {
+        Map<String, String> userMap = new HashMap<>();
+//        userMap.put("email", auth.getCurrentUser().getEmail());
+  //      userMap.put("displayname", auth.getCurrentUser().getDisplayName());
+        FirebaseUser user = auth.getCurrentUser();
+        String str = user.getUid();
+        userMap.put("userID", str);
         return userMap;
     }
 
 
-
 }
+
+

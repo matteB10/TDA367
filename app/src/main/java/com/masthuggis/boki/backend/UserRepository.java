@@ -1,12 +1,16 @@
 package com.masthuggis.boki.backend;
 
+import com.masthuggis.boki.model.Chat;
+import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.model.iUser;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class UserRepository {
     private static UserRepository userRepository;
-    private iUser user;
 
     public static UserRepository getInstance() {
         if (userRepository == null) {
@@ -27,18 +31,27 @@ public class UserRepository {
     }
 
     private void loggedIn() {
+        iUser user;
         Map<String, String> map = BackendDataHandler.getInstance().getUser();
-        user= UserFactory.createUser(map.get("email"), map.get("displayname"), map.get("userID"));
-    }
-    private void loggedOut(){
-        user=null;
-
+        user = UserFactory.createUser(map.get("userID"));
+        DataModel.getInstance().loggedIn(user);
     }
 
+    private void loggedOut() {
+        DataModel.getInstance().loggedOut();
 
+    }
 
-    public iUser getCurrentUser() {
-        return user;
+    public List<iChat> getUserChats() {
+        List<iChat> chatList = new ArrayList<>();
+      //  BackendDataHandler.getInstance().readChatData(chatCallback);
+        BackendDataHandler.getInstance().readChatData(chatMap -> {
+            for (Map map : chatMap) {
+                chatList.add(ChatFactory.createChat(map.get("sender").toString(), map.get("receiver").toString()));
+            }
+
+        });
+        return chatList;
     }
 }
 

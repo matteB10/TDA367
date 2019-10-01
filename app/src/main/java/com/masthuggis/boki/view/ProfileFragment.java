@@ -34,7 +34,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
 
         View v = inflater.inflate(R.layout.profile_fragment, container, false);
         setupHeader(v);
-        setIsUserLoggedIn(UserRepository.getInstance().getCurrentUser()!=null);
+        presenter.isLoggedIn();
         return v;
     }
 
@@ -81,6 +81,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
 
         } else {
             // TODO: ask user to log in? What actions should be taken?
+            btnSignIn.setVisibility(View.VISIBLE);
         }
     }
 

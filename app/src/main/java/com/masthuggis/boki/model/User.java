@@ -1,5 +1,8 @@
 package com.masthuggis.boki.model;
 
+import com.masthuggis.boki.backend.UserRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class User implements iUser {
@@ -13,9 +16,31 @@ public class User implements iUser {
         this.email = email;
         this.displayname= displayname;
         this.userID = userID;
+        this.chats = UserRepository.getInstance().getUserChats();
+    }
+
+    public User(String userID) {
+        this.userID=userID;
+        this.email= "fakeemail@mail.com";
+        this.displayname="Fake Namesson";
     }
 
     public String getId() {
         return this.userID;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return this.displayname;
+    }
+
+    @Override
+    public String getEmail() {
+        return this.email;
+    }
+
+    @Override
+    public List<iChat> getChats() {
+       return this.chats;
     }
 }

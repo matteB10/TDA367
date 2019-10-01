@@ -22,16 +22,12 @@ public class MessagesFragment extends Fragment implements MessagesPresenter.View
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-        this.presenter = new MessagesPresenter(this);
         this.view = inflater.inflate(R.layout.messages_fragment, container, false);
-        showLoadingScreen();
-        showThumbnails();
-        hideLoadingScreen();
+        this.presenter = new MessagesPresenter(this);
+
         return view;
 
     }
-
 
 
     private void setupList() {
@@ -67,9 +63,17 @@ public class MessagesFragment extends Fragment implements MessagesPresenter.View
 
     @Override
     public void showDetailsScreen(String id) {
-        Intent intent = new Intent(getContext(),ChatActivity.class);
-        intent.putExtra("userID",id);
+        Intent intent = new Intent(getContext(), ChatActivity.class);
+        intent.putExtra("userID", id);
         startActivity(intent);
+
+    }
+
+    @Override
+    public void isLoggedIn() {
+        showLoadingScreen();
+        showThumbnails();
+        hideLoadingScreen();
 
     }
 }

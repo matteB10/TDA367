@@ -18,6 +18,7 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.model.Chat;
+import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.User;
 import com.masthuggis.boki.model.iUser;
 import com.masthuggis.boki.presenter.ChatPresenter;
@@ -33,7 +34,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private ImageView advertImageView;
     private TextView username;
-    private User user;
 
 
     private LinearLayout layout;
@@ -45,7 +45,6 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        iUser user = UserRepository.getInstance().getCurrentUser();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         this.presenter = new ChatPresenter();
@@ -62,7 +61,7 @@ public class ChatActivity extends AppCompatActivity {
                 Map<String, String> map = new HashMap<>();
                 if (!messageText.equals("")) {
                     map.put("message", messageText);
-                    map.put("user", user.getId());
+                    map.put("user", DataModel.getInstance().getUserID());
                     messageArea.setText("");
                     counter++;
                 }

@@ -1,6 +1,5 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.BackendDataHandler;
 import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
@@ -18,14 +17,9 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         this.view = view;
 
         this.view.showLoadingScreen();
-         // this.adverts = DataModel.getInstance().getAdsFromUniqueOwnerID(BackendDataHandler.getInstance().getUserID());
         this.adverts = DataModel.getInstance().getAllAds();
-       // Repository.getInstance().getAllAds((List<Advertisement> advertisements) -> {
-           // this.adverts = Repository.getInstance().getAdsFromUniqueOwnerID(BackendDataHandler.getInstance().getUserID());
-            // this.adverts = new ArrayList<>(advertisements);
-            this.view.hideLoadingScreen();
-           // this.view.updateItemsOnSale();
-      //  });
+        this.view.hideLoadingScreen();
+
     }
 
 
@@ -72,6 +66,15 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         int drawable = ConditionStylingHelper.getConditionDrawable(a.getCondition());
         int text = ConditionStylingHelper.getConditionText(a.getCondition());
         thumbnailView.setCondition(text, drawable);
+    }
+
+    public void isLoggedIn() {
+        if (DataModel.getInstance().isLoggedIn()) {
+            view.setIsUserLoggedIn(true);
+        } else {
+            view.setIsUserLoggedIn(false);
+        }
+
     }
 
     public interface View {

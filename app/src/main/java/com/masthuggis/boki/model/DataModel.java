@@ -48,19 +48,54 @@ public class DataModel {
         }
         return userAds;
     }
-    private void updateAllAds(){
+
+    private void updateAllAds() {
         Repository.fetchAllAdverts(advertisements -> allAds = advertisements);
     }
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
 
         Repository.fetchAllAdverts(advertisementCallback);
+    }
 
+    public List<Advertisement> getAllAds() {
+        Repository.updateAdverts();
+        return new ArrayList<>(allAds);
     }
 
 
-    public List<Advertisement> getAllAds() {
-       // Repository.fetchAllAdverts(new );
-        return new ArrayList<>(allAds);
+    public void loggedIn(iUser user) {
+
+        this.user = user;
+    }
+
+    public void loggedOut() {
+        this.user = null;
+    }
+
+    public String getUserID() {
+        return this.user.getId();
+    }
+
+    public String getUserEmail() {
+        return this.getUserEmail();
+    }
+
+    public String getUserDisplayName() {
+        return this.user.getDisplayName();
+    }
+
+    public boolean isLoggedIn() {
+
+        return this.user != null;
+    }
+
+    public List<iChat> getUserChats() {
+
+        return user.getChats();
+    }
+
+    public void init() {
+        //simply here to be instantiated
     }
 }
