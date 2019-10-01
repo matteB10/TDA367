@@ -32,7 +32,7 @@ public class HomePresenter implements IProductsPresenter {
         //useTestData();
 
         // If using firebase uncommment line below
-        //getData();
+        getData();
     }
 
     private void getData() {
@@ -111,8 +111,8 @@ public class HomePresenter implements IProductsPresenter {
             return;
 
         List<Advertisement> sortedList = sortManager.sort(pos, adverts);
-        if (sortedList != null) //otherwise nullPointer is produced when zero adverts are available
-            adverts = new ArrayList<>(sortedList);
+        //if (sortedList != null) //otherwise nullPointer is produced when zero adverts are available
+        adverts = new ArrayList<>(sortedList);
         view.updateThumbnails();
     }
 
