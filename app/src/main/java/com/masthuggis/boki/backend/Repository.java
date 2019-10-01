@@ -35,8 +35,6 @@ public class Repository {
      * Fetches data from Firebase and updates local list of Advertisements. Also notifies observers.
      */
     public static void updateAdverts() {
-
-        DataModel.getInstance().updateAds();
         //this.notifyMarketObservers();
     }
 
@@ -105,7 +103,7 @@ public class Repository {
         observers.add(observer);
     }
 
-    public void getAllAds(advertisementCallback advertisementCallback) {
+    public static void getAllAds(advertisementCallback advertisementCallback) {
         // If there are adverts already stored, return those, else make a request. The stored
         // adverts, if there are any, will be same as the ones stored on the database.
         // TODO: make a setup so it does not have to do fetch every time (only if necessary)

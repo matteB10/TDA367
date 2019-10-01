@@ -3,6 +3,7 @@ package com.masthuggis.boki.presenter;
 import android.os.Handler;
 
 import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.backend.advertisementCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.sorting.SortManager;
@@ -14,7 +15,6 @@ import java.util.List;
 
 /**
  * HomePresenter is the presenter class for the view called HomeFragment.
- *
  */
 public class HomePresenter implements IProductsPresenter {
     private final View view;
@@ -26,35 +26,40 @@ public class HomePresenter implements IProductsPresenter {
         this.sortManager = SortManager.getInstance();
 
         this.view.showLoadingScreen();
-        getData();
+
         // Used when using local JSON, comment if using firebase
-     //  useTestData();
+        //useTestData();
 
         // If using firebase uncommment line below
-        //getData();
+        getData();
     }
 
     private void getData() {
-        List<Advertisement> advertisements = DataModel.getInstance().getAllAds();
+        DataModel.getInstance().fetchAllAdverts((advertisements -> {
             if (advertisements != null) {
                 updateData(advertisements);
             }
+        }));
+
+      /*  Repository.getAllAds(advertisements -> {
+            if (advertisements != null) {
+                updateData(advertisements);
+            }
+        });*/
     }
 
     // Used during development when using local data
     private void useTestData() {
         Handler handler = new Handler();
-     //   handler.postDelayed(this::getData,500);
-     //   handler.postDelayed(() -> updateData(Repository.getLocalJSONAds()), 500);
+        handler.postDelayed(() -> updateData(Repository.getLocalJSONAds()), 500);
     }
 
     private void updateData(List<Advertisement> adverts) {
         this.adverts = new ArrayList<>(adverts);
         sortUsingTheStandardSortingOption();
-      //  this.view.hideLoadingScreen();
+        this.view.hideLoadingScreen();
         this.view.updateThumbnails();
     }
-
     private void sortUsingTheStandardSortingOption() {
         sortOptionSelected(0);
     }
@@ -67,7 +72,7 @@ public class HomePresenter implements IProductsPresenter {
         thumbnailView.setId(a.getUniqueID());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
-        setCondition(a,thumbnailView);
+        setCondition(a, thumbnailView);
         if (a.getImageFile() != null) {
             thumbnailView.setImageURL(a.getImageFile().toURI().toString());
         }
@@ -83,6 +88,7 @@ public class HomePresenter implements IProductsPresenter {
     public void onRowPressed(String uniqueIDoFAdvert) {
         view.showDetailsScreen(uniqueIDoFAdvert);
     }
+
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
         int drawable = ConditionStylingHelper.getConditionDrawable(a.getCondition());
         int text = ConditionStylingHelper.getConditionText(a.getCondition());
@@ -91,7 +97,7 @@ public class HomePresenter implements IProductsPresenter {
 
     private String[] convertListToArray(List<String> list) {
         String arr[] = new String[list.size()];
-        for (int i=0; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             arr[i] = list.get(i);
         }
         return arr;
@@ -102,7 +108,7 @@ public class HomePresenter implements IProductsPresenter {
     }
 
     public void sortOptionSelected(int pos) {
-        if (adverts == null || adverts.size()==0) {
+        if (adverts == null || adverts.size() == 0) {
             return;
         }
         List<Advertisement> sortedList = sortManager.sort(pos, adverts);

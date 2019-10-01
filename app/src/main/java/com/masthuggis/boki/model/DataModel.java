@@ -1,6 +1,7 @@
 package com.masthuggis.boki.model;
 
 import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.backend.advertisementCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +16,11 @@ public class DataModel {
 
 
     private DataModel() {
-        fetchAllAdverts();
-
     }
 
     public static DataModel getInstance() {
         if (instance == null) {
             instance = new DataModel();
-
         }
         return instance;
     }
@@ -50,21 +48,19 @@ public class DataModel {
         }
         return userAds;
     }
-
-    private void fetchAllAdverts() {
-        allAds.clear();
-        Repository.fetchAllAdverts(advertisements -> {
-            allAds = advertisements;
-
-
-        });
+    private void updateAllAds(){
+        Repository.fetchAllAdverts(advertisements -> allAds = advertisements);
     }
 
-    public void updateAds() {
-       fetchAllAdverts();
+    public void fetchAllAdverts(advertisementCallback advertisementCallback) {
+
+        Repository.fetchAllAdverts(advertisementCallback);
+
     }
+
 
     public List<Advertisement> getAllAds() {
+       // Repository.fetchAllAdverts(new );
         return new ArrayList<>(allAds);
     }
 }
