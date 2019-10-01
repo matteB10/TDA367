@@ -59,7 +59,6 @@ public class BackendDataHandler implements iBackend {
     private FirebaseAuth auth = FirebaseAuth.getInstance();
 
 
-
     private BackendDataHandler() {
 
     }
@@ -77,22 +76,7 @@ public class BackendDataHandler implements iBackend {
         writeToDatabase(data);
     }
 
-    private void writeToDatabase(HashMap<String, Object> data) {
-        String uniqueOwnerID = (String) data.get("uniqueOwnerID");
-        db.collection("users").document(uniqueOwnerID).collection("adverts").document()
-                .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d(TAG, "DocumentSnapshot successfully written!");
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                    }
-                });
-    }
+
 
     private void uploadImageToFirebase(File imageFile, String uniqueAdID) {
         try {
@@ -170,6 +154,34 @@ public class BackendDataHandler implements iBackend {
             }
             chatDBCallback.onCallback(chatDataList);
         });
+    }
+
+    public void createNewChat(HashMap<String, Object> newChatMap) {
+        String sender = (String)newChatMap.get("sender");
+        String receiver = (String) newChatMap.get("receiver");
+        db.collection("users").document(receiver).collection("conversations").document(sender  + receiver).set(newChatMap)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+        db.collection("users").document(sender).collection("conversations").document(sender  + receiver).set(newChatMap)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+    }
+
+    private void writeToDatabase(HashMap<String, Object> data) {
+        String uniqueOwnerID = (String) data.get("uniqueOwnerID");
+        db.collection("users").document(uniqueOwnerID).collection("adverts").document()
+                .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "DocumentSnapshot successfully written!");
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
     }
 
     /**

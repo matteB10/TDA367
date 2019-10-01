@@ -50,6 +50,10 @@ public class DetailsPresenter {
         view.setCondition(text,color);
     }
 
+    public void createNewChat(String uniqueOwnerID) {
+        DataModel.getInstance().createNewChat(uniqueOwnerID);
+    }
+
     public interface View extends iConditionable {
         void setName(String name);
 

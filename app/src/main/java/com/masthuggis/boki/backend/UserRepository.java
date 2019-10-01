@@ -6,6 +6,7 @@ import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.model.iUser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +59,8 @@ public class UserRepository {
     }
 
 
-
-
+    public void createNewChat(HashMap<String,Object> newChatMap) {
+        BackendDataHandler.getInstance().createNewChat(newChatMap);
+    }
 }
 

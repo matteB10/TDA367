@@ -1,10 +1,13 @@
 package com.masthuggis.boki.model;
 
 import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.backend.advertisementCallback;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DataModel {
 
@@ -56,6 +59,7 @@ public class DataModel {
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
 
         Repository.fetchAllAdverts(advertisementCallback);
+        updateAllAds();
     }
 
     public List<Advertisement> getAllAds() {
@@ -97,5 +101,12 @@ public class DataModel {
 
     public void init() {
         //simply here to be instantiated
+    }
+
+    public void createNewChat(String uniqueReceiverID) {
+        HashMap<String,Object> newChatMap = new HashMap<>();
+        newChatMap.put("receiver",uniqueReceiverID);
+        newChatMap.put("sender",this.getUserID());
+        UserRepository.getInstance().createNewChat(newChatMap);
     }
 }
