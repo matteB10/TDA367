@@ -29,10 +29,10 @@ public class HomePresenter implements IProductsPresenter {
         this.view.showLoadingScreen();
 
         // Used when using local JSON, comment if using firebase
-        useTestData();
+        //useTestData();
 
         // If using firebase uncommment line below
-        //getData();
+        getData();
     }
 
     private void getData() {

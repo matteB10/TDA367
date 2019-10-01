@@ -19,7 +19,7 @@ import java.util.Calendar;
 
 public class CreateAdPresenter {
 
-    private static Advertisement advertisement = Repository.getInstance().createAdvert();
+    private static Advertisement advertisement;
 
 
     private View view;
@@ -27,6 +27,7 @@ public class CreateAdPresenter {
 
 
     public CreateAdPresenter(View view) {
+        advertisement = Repository.getInstance().createAdvert();
         this.view = view;
     }
 
@@ -124,6 +125,7 @@ public class CreateAdPresenter {
         setAdvertDate();
         Repository.getInstance().saveAdvert(advertisement, advertisement.getImageFile());
         advertisement = null;
+
     }
 
     private void setAdvertDate() {
@@ -138,7 +140,7 @@ public class CreateAdPresenter {
     }
 
     public File getImgFile() {
-        return advertisement.getImageFile();
+        return advertisement.getImageFile(); //advertisement is null here upon second call
     }
 
     //Getter for testing purpose

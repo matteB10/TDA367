@@ -46,7 +46,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     private final List<Button> tagButtons = new ArrayList<>();
     private final List<String> preDefTags = new ArrayList<>();
-    private String currentImagePath;
     private File currentImageFile;
     private CreateAdPresenter presenter;
 
@@ -295,6 +294,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             intent.putExtra("advertID", presenter.getId());
             presenter.publishAdvert();
             startActivity(intent);
+            finish();
         });
     }
 
