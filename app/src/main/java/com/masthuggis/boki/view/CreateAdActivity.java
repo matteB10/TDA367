@@ -127,6 +127,13 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap bitmap = compressBitmap();
             setImageView(bitmap);
+            try {
+                FileOutputStream out = new FileOutputStream(currentImageFile);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
             presenter.imageFileChanged(currentImageFile);
         }
     }
@@ -168,7 +175,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         BitmapFactory.Options imageOptions = new BitmapFactory.Options();
         imageOptions.inJustDecodeBounds = true;
         Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true); //TODO change 200x200 to preferable resolution
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 800, 800, true); //TODO change 200x200 to preferable resolution
         return scaledBitmap;
     }
 
