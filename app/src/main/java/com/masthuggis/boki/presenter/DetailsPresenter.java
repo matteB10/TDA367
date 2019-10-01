@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.ConditionStylingHelper;
 import com.masthuggis.boki.utils.iConditionable;
 
@@ -22,7 +23,7 @@ public class DetailsPresenter {
 
     public DetailsPresenter(View view, String advertID) {
         this.view = view;
-        this.advertisement = Repository.getInstance().getAdFromAdID(advertID);
+        this.advertisement = DataModel.getInstance().getAdFromAdID(advertID);
 
         setupView();
     }

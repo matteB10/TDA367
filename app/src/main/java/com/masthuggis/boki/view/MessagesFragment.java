@@ -25,7 +25,9 @@ public class MessagesFragment extends Fragment implements MessagesPresenter.View
 
         this.presenter = new MessagesPresenter(this);
         this.view = inflater.inflate(R.layout.messages_fragment, container, false);
-
+        showLoadingScreen();
+        showThumbnails();
+        hideLoadingScreen();
         return view;
 
     }
@@ -45,6 +47,8 @@ public class MessagesFragment extends Fragment implements MessagesPresenter.View
 
     @Override
     public void showLoadingScreen() {
+        ProgressBar progressBar = view.findViewById(R.id.loadingProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
 
     }
 

@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
@@ -34,8 +34,9 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.home_fragment, container, false);
         this.presenter = new HomePresenter(this);
-        Repository.getInstance().updateAdverts();
+        DataModel.getInstance().updateAds();
         setupSortSpinner();
+        hideLoadingScreen();
         return view;
     }
 
@@ -78,13 +79,15 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
 
     @Override
     public void updateThumbnails() {
-        if (recyclerViewAdapter == null)
+        if (recyclerViewAdapter == null) {
             setupList();
+        }
         recyclerViewAdapter.notifyDataSetChanged();
     }
 
     /**
      * Called when the sorting option changes. For example, sorting for lowest price.
+     *
      * @param adapterView
      * @param view
      * @param i

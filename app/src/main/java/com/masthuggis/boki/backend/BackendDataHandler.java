@@ -6,8 +6,13 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -48,12 +53,13 @@ public class BackendDataHandler implements iBackend {
     private FirebaseStorage storage = FirebaseStorage.getInstance(); //Reference to Cloud Storage that holds images
     private StorageReference mainRef = storage.getReference();
     private StorageReference imagesRef = mainRef.child("images"); //Reference to storage location of images
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
 
     private BackendDataHandler() {
 
     }
 
-    static BackendDataHandler getInstance() {
+   public static BackendDataHandler getInstance() {
         if (instance == null)
             instance = new BackendDataHandler();
         return instance;
@@ -150,6 +156,7 @@ public class BackendDataHandler implements iBackend {
 
     /**
      * Retrieves data from local JSON file for debuggnig purposes
+     *
      * @param context
      * @return
      */
@@ -222,5 +229,53 @@ public class BackendDataHandler implements iBackend {
             exc.printStackTrace();
         }
     }
+
+    public void userSignIn(String email, String password) {
+        try {
+            auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                            }
+                        }
+                    });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void userSignUp(String email, String password) {
+        try {
+            auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+
+                            } else {
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public String getUserID(){
+        String id = auth.getUid();
+
+        return id;
+    }
+
+    public Map<String,String> getUser(){
+        Map<String,String> userMap = new HashMap<>();
+        userMap.put("email",auth.getCurrentUser().getEmail());
+        userMap.put("displayname",auth.getCurrentUser().getDisplayName());
+        userMap.put("userID",auth.getCurrentUser().getUid());
+        return userMap;
+    }
+
+
 
 }

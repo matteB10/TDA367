@@ -4,6 +4,7 @@ import android.os.Handler;
 
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.sorting.SortManager;
 import com.masthuggis.boki.utils.ConditionStylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
@@ -25,32 +26,32 @@ public class HomePresenter implements IProductsPresenter {
         this.sortManager = SortManager.getInstance();
 
         this.view.showLoadingScreen();
-
+        getData();
         // Used when using local JSON, comment if using firebase
-        useTestData();
+     //  useTestData();
 
         // If using firebase uncommment line below
         //getData();
     }
 
     private void getData() {
-        Repository.getInstance().getAllAds(advertisements -> {
+        List<Advertisement> advertisements = DataModel.getInstance().getAllAds();
             if (advertisements != null) {
                 updateData(advertisements);
             }
-        });
     }
 
     // Used during development when using local data
     private void useTestData() {
         Handler handler = new Handler();
-        handler.postDelayed(() -> updateData(Repository.getInstance().getLocalJSONAds()), 500);
+     //   handler.postDelayed(this::getData,500);
+     //   handler.postDelayed(() -> updateData(Repository.getLocalJSONAds()), 500);
     }
 
     private void updateData(List<Advertisement> adverts) {
         this.adverts = new ArrayList<>(adverts);
         sortUsingTheStandardSortingOption();
-        this.view.hideLoadingScreen();
+      //  this.view.hideLoadingScreen();
         this.view.updateThumbnails();
     }
 
@@ -101,9 +102,9 @@ public class HomePresenter implements IProductsPresenter {
     }
 
     public void sortOptionSelected(int pos) {
-        if (adverts == null)
+        if (adverts == null || adverts.size()==0) {
             return;
-
+        }
         List<Advertisement> sortedList = sortManager.sort(pos, adverts);
         adverts = new ArrayList<>(sortedList);
         view.updateThumbnails();

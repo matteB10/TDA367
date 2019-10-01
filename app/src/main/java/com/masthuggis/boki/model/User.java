@@ -3,14 +3,19 @@ package com.masthuggis.boki.model;
 import java.util.List;
 
 public class User implements iUser {
+    private  String email;
+    private  String displayname;
+    private  String userID;
     private List<iChat> chats;
-    private String id;
     iFavoriteCollection favoriteCollection;
 
-    public String getId() {
-        return this.id;
+    public User(String email, String displayname, String userID) {
+        this.email = email;
+        this.displayname= displayname;
+        this.userID = userID;
     }
-    public void setId(String id){
-        this.id =id;
+
+    public String getId() {
+        return this.userID;
     }
 }

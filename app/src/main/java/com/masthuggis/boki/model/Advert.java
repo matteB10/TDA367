@@ -1,5 +1,7 @@
 package com.masthuggis.boki.model;
 
+import com.google.api.Backend;
+import com.masthuggis.boki.backend.BackendDataHandler;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
@@ -68,7 +70,7 @@ public class Advert implements Advertisement {
 
     public Advert(String uniqueAdID) {
         this.datePublished = "";
-        this.uniqueOwnerID = "tempOwnerID";
+        this.uniqueOwnerID = BackendDataHandler.getInstance().getUserID();
         this.uniqueAdID = UniqueIdCreator.getUniqueID();
         this.title = "";
         this.description = "";

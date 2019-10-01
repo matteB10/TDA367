@@ -11,12 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.backend.advertisementCallback;
-import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.presenter.MessagesPresenter;
-
-import java.util.List;
 
 public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRecyclerViewAdapter.ViewHolder> {
 
@@ -76,6 +71,9 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
         }
 
         public void setMessageImageView(String messageImageView) {
+            if (messageImageView == null) {
+                return;
+            }
             this.messageImageView.setImageURI(Uri.parse(messageImageView));
         }
 

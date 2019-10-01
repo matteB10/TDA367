@@ -1,5 +1,6 @@
 package com.masthuggis.boki.presenter;
 
+import com.masthuggis.boki.backend.AdFactory;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
@@ -19,7 +20,7 @@ import java.util.Calendar;
 
 public class CreateAdPresenter {
 
-    private static Advertisement advertisement = Repository.getInstance().createAdvert();
+    private static Advertisement advertisement = AdFactory.createAd();
 
 
     private View view;
@@ -122,7 +123,7 @@ public class CreateAdPresenter {
      */
     public void publishAdvert() {
         setAdvertDate();
-        Repository.getInstance().saveAdvert(advertisement, advertisement.getImageFile());
+        Repository.saveAdvert(advertisement, advertisement.getImageFile());
         advertisement = null;
     }
 

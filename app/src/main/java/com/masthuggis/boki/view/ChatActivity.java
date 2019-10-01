@@ -15,8 +15,11 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.model.Chat;
 import com.masthuggis.boki.model.User;
+import com.masthuggis.boki.model.iUser;
 import com.masthuggis.boki.presenter.ChatPresenter;
 
 import org.w3c.dom.Text;
@@ -42,8 +45,7 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        user = new User();
-        user.setId("HEJHEJTREST");
+        iUser user = UserRepository.getInstance().getCurrentUser();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         this.presenter = new ChatPresenter();

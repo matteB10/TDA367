@@ -2,6 +2,7 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.view.MessagesRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -14,17 +15,9 @@ public class MessagesPresenter {
 
     public MessagesPresenter(View view) {
         this.view = view;
-        Repository.getInstance().getAllAds(advertisements -> {
-            if (advertisements != null) {
-                this.adverts = new ArrayList<>(advertisements);
-                this.view.hideLoadingScreen();
-                this.view.showThumbnails();
-
-            } else {
-                System.out.println(adverts.size());
-            }
-        });
+        adverts = DataModel.getInstance().getAllAds();
     }
+
 
     public void onRowPressed(String userID) {
         view.showDetailsScreen(userID);

@@ -52,8 +52,9 @@ public class SignInActivity extends AppCompatActivity implements SignInPresenter
 
     @Override
     public void showProfileScreen() {
-        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+        Intent intent = new Intent(SignInActivity.this, HomeFragment.class);
         //TODO open Profilefragment instead of mainActivity
         startActivity(intent);
+        finish();
     }
 }
