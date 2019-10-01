@@ -92,13 +92,19 @@ public class Repository {
     }
 
     private void fetchAllAdverts(advertisementCallback advertisementCallback) {
-        BackendDataHandler.getInstance().readAllAdvertData(advertDataList -> {
-            allAds.clear();
-            for (Map<String, Object> dataMap : advertDataList) { //Loop runs twice, shouldn't be the case
-                allAds.add(retrieveAdvert(dataMap));
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                BackendDataHandler.getInstance().readAllAdvertData(advertDataList -> {
+                    allAds.clear();
+                    for (Map<String, Object> dataMap : advertDataList) { //Loop runs twice, shouldn't be the case
+                        allAds.add(retrieveAdvert(dataMap));
+                    }
+                    advertisementCallback.onCallback(allAds); //Application lands here three times, making the list 3x bigger than it should
+                });
             }
-            advertisementCallback.onCallback(allAds); //Application lands here three times, making the list 3x bigger than it should
         });
+        thread.start();
     }
 
     public String getFireBaseID(String userID, String advertID) {

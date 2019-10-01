@@ -132,6 +132,7 @@ public class BackendDataHandler implements iBackend {
     }
 
     //Fetch data for all adverts from all users
+    //might want to run this on separate thread created by caller
     void readAllAdvertData(advertisementDBCallback advertisementDBCallback) {
         List<Map<String, Object>> advertDataList = new ArrayList<>();
         db.collectionGroup("adverts").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
