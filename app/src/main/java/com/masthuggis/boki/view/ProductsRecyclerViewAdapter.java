@@ -106,8 +106,5 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
             conditionTextView.setText(condition);
             conditionLayout.setBackground(mContext.getDrawable(drawable));
         }
-
-
     }
-
 }

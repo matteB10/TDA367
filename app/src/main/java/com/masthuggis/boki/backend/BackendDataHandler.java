@@ -58,21 +58,7 @@ public class BackendDataHandler implements iBackend {
     private StorageReference imagesRef = mainRef.child("images"); //Reference to storage location of images
     private FirebaseAuth auth = FirebaseAuth.getInstance();
 
-    public void readChatData(chatDBCallback chatDBCallback) {
-    CollectionReference userChatsRef = (CollectionReference) db.collection("users").document(DataModel.getInstance().getUserID()).collection("conversations").addSnapshotListener((queryDocumentSnapshots, e) -> {
-        if (e != null) {
-            Log.w(TAG, "Listen failed.", e);
-            return;
-        }
-        List<Map<String, Object>> chatDataList = new ArrayList<>();
 
-        assert queryDocumentSnapshots != null;
-        for (QueryDocumentSnapshot q : queryDocumentSnapshots) {
-            chatDataList.add(q.getData());
-        }
-        chatDBCallback.onCallback(chatDataList);
-    });
-}
 
     private BackendDataHandler() {
 
@@ -152,17 +138,14 @@ public class BackendDataHandler implements iBackend {
     //Fetch data for all adverts from all users
     void readAllAdvertData(advertisementDBCallback advertisementDBCallback) {
         List<Map<String, Object>> advertDataList = new ArrayList<>();
-        db.collectionGroup("adverts").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
-                for (DocumentSnapshot snapshot : adverts) {
-                    Map<String, Object> toBeAdded = snapshot.getData();
-                    toBeAdded.put("imgFile", downloadFirebaseFile((String) toBeAdded.get("uniqueAdID")));
-                    advertDataList.add(toBeAdded);
-                }
-                advertisementDBCallback.onCallBack(advertDataList);
+        db.collectionGroup("adverts").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
+            for (DocumentSnapshot snapshot : adverts) {
+                Map<String, Object> toBeAdded = snapshot.getData();
+                toBeAdded.put("imgFile", downloadFirebaseFile((String) toBeAdded.get("uniqueAdID")));
+                advertDataList.add(toBeAdded);
             }
+            advertisementDBCallback.onCallBack(advertDataList);
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -171,6 +154,22 @@ public class BackendDataHandler implements iBackend {
             }
         });
 
+    }
+
+    public void readChatData(String userID, chatDBCallback chatDBCallback) {
+        List<Map<String, Object>> chatDataList = new ArrayList<>();
+        db.collection("users").document(userID).collection("conversations").addSnapshotListener((queryDocumentSnapshots, e) -> {
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e);
+                return;
+            }
+
+            assert queryDocumentSnapshots != null;
+            for (QueryDocumentSnapshot q : queryDocumentSnapshots) {
+                chatDataList.add(q.getData());
+            }
+            chatDBCallback.onCallback(chatDataList);
+        });
     }
 
     /**
@@ -289,7 +288,7 @@ public class BackendDataHandler implements iBackend {
     public Map<String, String> getUser() {
         Map<String, String> userMap = new HashMap<>();
 //        userMap.put("email", auth.getCurrentUser().getEmail());
-  //      userMap.put("displayname", auth.getCurrentUser().getDisplayName());
+        //      userMap.put("displayname", auth.getCurrentUser().getDisplayName());
         FirebaseUser user = auth.getCurrentUser();
         String str = user.getUid();
         userMap.put("userID", str);

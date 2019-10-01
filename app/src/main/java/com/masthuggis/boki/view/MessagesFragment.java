@@ -19,6 +19,7 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 public class MessagesFragment extends Fragment implements MessagesPresenter.View {
     private MessagesPresenter presenter;
     private View view;
+    MessagesRecyclerViewAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -30,15 +31,17 @@ public class MessagesFragment extends Fragment implements MessagesPresenter.View
     }
 
 
-    private void setupList() {
+    private void setupList(MessagesPresenter messagesPresenter) {
         RecyclerView recyclerView = view.findViewById(R.id.messages_recyclerview);
-        MessagesRecyclerViewAdapter adapter = new MessagesRecyclerViewAdapter(presenter);
+        adapter = new MessagesRecyclerViewAdapter(messagesPresenter);
         recyclerView.setAdapter(adapter);
         int spanCount = 1;
         int spacing = 10;
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), spanCount);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, true));
+
+
     }
 
     @Override
@@ -49,8 +52,8 @@ public class MessagesFragment extends Fragment implements MessagesPresenter.View
     }
 
     @Override
-    public void showThumbnails() {
-        setupList();
+    public void showThumbnails(MessagesPresenter messagesPresenter) {
+        setupList(messagesPresenter);
 
     }
 
@@ -70,9 +73,9 @@ public class MessagesFragment extends Fragment implements MessagesPresenter.View
     }
 
     @Override
-    public void isLoggedIn() {
+    public void isLoggedIn(MessagesPresenter messagesPresenter) {
         showLoadingScreen();
-        showThumbnails();
+        showThumbnails(messagesPresenter);
         hideLoadingScreen();
 
     }

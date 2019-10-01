@@ -17,13 +17,20 @@ public class User implements iUser {
         this.email = email;
         this.displayname = displayname;
         this.userID = userID;
-        UserRepository.getInstance().getUserChats(chatsList -> chats = chatsList);
+        UserRepository.getInstance().getUserChats(userID, chatsList -> chats = chatsList);
     }
 
     public User(String userID) {
         this.userID = userID;
         this.email = "fakeemail@mail.com";
         this.displayname = "Fake Namesson";
+        UserRepository.getInstance().getUserChats(userID, new chatCallback() {
+            @Override
+            public void onCallback(List<iChat> chatsList) {
+                chats = new ArrayList<>(chatsList);
+            }
+        });
+
     }
 
     public String getId() {

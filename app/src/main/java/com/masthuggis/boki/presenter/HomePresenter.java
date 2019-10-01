@@ -40,12 +40,6 @@ public class HomePresenter implements IProductsPresenter {
                 updateData(advertisements);
             }
         }));
-
-      /*  Repository.getAllAds(advertisements -> {
-            if (advertisements != null) {
-                updateData(advertisements);
-            }
-        });*/
     }
 
     // Used during development when using local data
