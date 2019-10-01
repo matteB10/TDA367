@@ -64,7 +64,7 @@ public class HomePresenter implements IProductsPresenter {
         if (adverts.size() < position || adverts == null)
             return;
         try {
-            Thread.sleep(500);
+            Thread.sleep(300); //TODO tweak number or make better implementation
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
