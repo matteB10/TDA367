@@ -2,6 +2,7 @@ package com.masthuggis.boki;
 
 import androidx.test.runner.AndroidJUnit4;
 
+import com.masthuggis.boki.backend.MockRepository;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.presenter.HomePresenter;
 
@@ -22,7 +23,7 @@ public class HomeFragmentTest {
         HomePresenter.View view = createHomeView();
         HomePresenter presenter = new HomePresenter(view);
 
-        int numItems = Repository.getInstance().getLocalJSONAds().size();
+        int numItems = MockRepository.getInstance().getLocalJSONAds().size();
 
         assertEquals(presenter.getItemCount(), numItems);
     }

@@ -3,6 +3,7 @@ package com.masthuggis.boki.presenter;
 import android.os.Handler;
 
 
+import com.masthuggis.boki.backend.MockRepository;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.sorting.SortManager;
@@ -28,7 +29,7 @@ public class HomePresenter implements IProductsPresenter {
         this.view.showLoadingScreen();
 
         // Used when using local JSON, comment if using firebase
-        //useTestData();
+        // useTestData();
 
         // If using firebase uncommment line below
         getData();
@@ -45,7 +46,7 @@ public class HomePresenter implements IProductsPresenter {
     // Used during development when using local data
     private void useTestData() {
         Handler handler = new Handler();
-        handler.postDelayed(() -> updateData(Repository.getInstance().getLocalJSONAds()), 500);
+        handler.postDelayed(() -> updateData(MockRepository.getInstance().getLocalJSONAds()), 500);
     }
 
     private void updateData(List<Advertisement> adverts) {

@@ -25,9 +25,7 @@ public class Repository {
     private final List<RepositoryObserver> observers = new ArrayList<>();
     private List<Advertisement> allAds = new ArrayList<>();
 
-    private Repository() {
-    }
-
+    private Repository() {}
 
     //Make repository generate a mock userID
     public static Repository getInstance() {
@@ -80,30 +78,22 @@ public class Repository {
      */
     public void fetchAdvertsFromUserIDFirebase(String userID, advertisementCallback advertisementCallback) {
         List<Advertisement> userIDAdverts = new ArrayList<>();
-        BackendDataHandler.getInstance().readUserIDAdverts(new advertisementDBCallback() {
-            @Override
-            public void onCallBack(List<Map<String, Object>> advertDataList) {
-                for (Map<String, Object> dataMap : advertDataList) {
-                    userIDAdverts.add(retrieveAdvertWithUserID(dataMap, userID));
-                }
-                advertisementCallback.onCallback(userIDAdverts);
+        BackendDataHandler.getInstance().readUserIDAdverts(advertDataList -> {
+            for (Map<String, Object> dataMap : advertDataList) {
+                userIDAdverts.add(retrieveAdvertWithUserID(dataMap, userID));
             }
+            advertisementCallback.onCallback(userIDAdverts);
         }, userID);
     }
 
     private void fetchAllAdverts(advertisementCallback advertisementCallback) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                BackendDataHandler.getInstance().readAllAdvertData(advertDataList -> {
-                    allAds.clear();
-                    for (Map<String, Object> dataMap : advertDataList) { //Loop runs twice, shouldn't be the case
-                        allAds.add(retrieveAdvert(dataMap));
-                    }
-                    advertisementCallback.onCallback(allAds); //Application lands here three times, making the list 3x bigger than it should
-                });
+        Thread thread = new Thread(() -> BackendDataHandler.getInstance().readAllAdvertData(advertDataList -> {
+            allAds.clear();
+            for (Map<String, Object> dataMap : advertDataList) { //Loop runs twice, shouldn't be the case
+                allAds.add(retrieveAdvert(dataMap));
             }
-        });
+            advertisementCallback.onCallback(allAds); //Application lands here three times, making the list 3x bigger than it should
+        }));
         thread.start();
     }
 
@@ -121,64 +111,6 @@ public class Repository {
         // adverts, if there are any, will be same as the ones stored on the database.
         // TODO: make a setup so it does not have to do fetch every time (only if necessary)
         fetchAllAdverts(advertisementCallback);
-    }
-
-    public List<Advertisement> getLocalJSONAds() {
-        allAds.clear();
-        getMockDataOfAllAds();
-        return allAds;
-    }
-
-    /**
-     * Retrieves local mock JSON file for debugging purposes.
-     */
-    public void getMockDataOfAllAds() {
-        String json = BackendDataHandler.getInstance().getMockBooks(Boki.getAppContext());
-        try {
-            JSONObject booksObject = new JSONObject(json);
-            JSONArray booksArray = booksObject.getJSONArray("books"); //Array in json file must be named "books"
-            for (int i = 0; i < booksArray.length(); i++) {
-                //Needs some way to create a book from the data that is fetched from each JSON-object
-                createBookWithoutTags(booksArray.getJSONObject(i));
-            }
-        } catch (JSONException exception) {
-            exception.printStackTrace();
-        }
-    }
-
-    private Advertisement createBookWithoutTags(JSONObject object) {
-        String title;
-        String author;
-        int edition;
-        int price;
-        long isbn;
-        int yearPublished;
-        Advert.Condition condition;
-        try { //Should use a factory-method instead
-            title = object.getString("title");
-            author = object.getString("author");
-            edition = object.getInt("edition");
-            price = object.getInt("price");
-            isbn = object.getLong("isbn");
-            yearPublished = object.getInt("yearPublished");
-            String conditionString = object.getString("condition");
-            condition = Advert.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
-            Advertisement ad = AdFactory.createAd("", "UniqueOwnerID", "UniqueAdID", title, "imgURL", price, condition, new File("", ""));
-            allAds.add(ad);
-            return ad;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private void notifyUsersAdvertsForSaleUpdated() {
-        // TODO: change from temp list to actual user list
-        //observers.forEach(observer -> observer.userAdvertsForSaleUpdate(updatedListIterator));
-    }
-
-    private void notifyMarketObservers() {
-        observers.forEach(observer -> observer.allAdvertsInMarketUpdate(allAds.iterator()));
     }
 
     private Advertisement retrieveAdvert(Map<String, Object> dataMap) {
