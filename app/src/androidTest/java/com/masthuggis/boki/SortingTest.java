@@ -44,12 +44,28 @@ public class SortingTest {
     @Test
     public void testReverseAlphabeticalSortingIsCorrect() {
         sort(SortFactory.getReversedAlphabeticalSorting());
-        
+
         assertEquals(adverts.get(0).getTitle().toLowerCase(), "linjär algebra");
         assertEquals(adverts.get(1).getTitle().toLowerCase(), "diskret");
         assertEquals(adverts.get(2).getTitle().toLowerCase(), "design");
         assertEquals(adverts.get(3).getTitle().toLowerCase(), "clean code");
         assertEquals(adverts.get(4).getTitle().toLowerCase(), "calculus");
         assertEquals(adverts.get(5).getTitle().toLowerCase(), "arikitektur");
+    }
+
+    @Test
+    public void testHighestPriceSortingIsCorrect() {
+        sort(SortFactory.getHighestPriceSorting());
+
+        assertEquals(Long.toString(adverts.get(0).getPrice()), "450");
+        assertEquals(Long.toString(adverts.get(adverts.size()-1).getPrice()), "180");
+    }
+
+    @Test
+    public void testLowestPriceSortingIsCorrect() {
+        sort(SortFactory.getLowestPriceSorting());
+
+        assertEquals(Long.toString(adverts.get(0).getPrice()), "180");
+        assertEquals(Long.toString(adverts.get(adverts.size()-1).getPrice()), "450");
     }
 }
