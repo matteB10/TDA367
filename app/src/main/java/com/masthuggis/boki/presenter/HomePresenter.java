@@ -124,7 +124,7 @@ public class HomePresenter implements IProductsPresenter {
     public void filter(String query) {
         Repository.getInstance().getAllAds(advertisements -> {
             if (advertisements != null)
-                adverts = advertisements;
+                adverts = advertisements; //Refreshes
             ArrayList<Advertisement> filteredList = new ArrayList<>();
             Iterator<Advertisement> iterator = adverts.iterator();
             while (iterator.hasNext()) {
