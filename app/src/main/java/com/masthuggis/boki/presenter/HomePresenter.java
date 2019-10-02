@@ -136,10 +136,8 @@ public class HomePresenter implements IProductsPresenter {
         });
 
     }
-    //Has to update list of adverts so it's representative of actual database when search is performed
 
-
-    public void resetAdvertList() {
+    public void resetView() {
         getData();
     }
 

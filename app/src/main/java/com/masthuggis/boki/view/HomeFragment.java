@@ -1,5 +1,6 @@
 package com.masthuggis.boki.view;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -64,6 +65,8 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
     }
 
+    //Adds a listener for when the user performs a search
+    //makes the keyboard disappear then calls on the presenter to perform the search with given input
     private void setupSearchField() {
         searchField = view.findViewById(R.id.searchFieldEditText);
 
@@ -81,7 +84,6 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
                 return false;
             }
         });
-
     }
 
 
