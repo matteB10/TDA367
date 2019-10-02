@@ -47,6 +47,7 @@ public class BackendDataFetcher implements iBackend {
     private static BackendDataFetcher instance;
     private static List<Map<String, Object>> userAdvertsData = new ArrayList<>();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseAuth auth = FirebaseAuth.getInstance();
 
     private BackendDataFetcher() {
 
@@ -140,9 +141,10 @@ public class BackendDataFetcher implements iBackend {
         return db.collection("users").document(userID).getId();
     }
 
-    //-------------------------------------------------------
-    FirebaseAuth auth = FirebaseAuth.getInstance();
-
+    /**Sign in a user to a Firebase account.
+     * @param email
+     * @param password
+     */
     public void userSignIn(String email, String password) {
         try{
             auth.signInWithEmailAndPassword(email,password)
@@ -159,6 +161,10 @@ public class BackendDataFetcher implements iBackend {
         }
     }
 
+    /**Sign up a user to Firebase
+     * @param email
+     * @param password
+     */
     public void userSignUp(String email, String password) {
         try {
             auth.createUserWithEmailAndPassword(email, password)
@@ -176,6 +182,9 @@ public class BackendDataFetcher implements iBackend {
         }
     }
 
+    /** Checking if a user is signed in through Firebase
+     * @return true a user is signed in.
+     */
     public boolean isUserSignedIn(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         return (user != null);
