@@ -22,7 +22,7 @@ public class HomeFragmentTest {
         HomePresenter.View view = createHomeView();
         HomePresenter presenter = new HomePresenter(view);
 
-        int numItems = Repository.getInstance().getAllAds().size();
+        int numItems = Repository.getInstance().getLocalJSONAds().size();
 
         assertEquals(presenter.getItemCount(), numItems);
     }
@@ -35,7 +35,7 @@ public class HomeFragmentTest {
             }
 
             @Override
-            public void showThumbnails() {
+            public void updateThumbnails() {
 
             }
 
@@ -48,7 +48,6 @@ public class HomeFragmentTest {
             public void showDetailsScreen(String id) {
 
             }
-
         };
     }
 }
