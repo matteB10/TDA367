@@ -1,5 +1,7 @@
 package com.masthuggis.boki.model.sorting;
 
+import android.util.Log;
+
 import com.masthuggis.boki.model.Advertisement;
 
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ class AlphabeticalSorting implements SortStrategy {
         }
 
         return new ArrayList<>(adverts).stream()
-                .sorted(Comparator.comparing(Advertisement::getTitle))
+                .sorted((adOne, adTwo) -> adOne.getTitle().toLowerCase().compareTo(adTwo.getTitle().toLowerCase()))
                 .collect(Collectors.toList());
     }
 

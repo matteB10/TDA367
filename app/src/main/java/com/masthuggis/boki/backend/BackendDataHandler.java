@@ -6,8 +6,12 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -40,7 +44,8 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 public class BackendDataHandler implements iBackend {
 
     /**
-     * Singleton that converts the contents of a json-file into a String via a Context-object.
+     * Singleton that handles all data-fetching from firebase
+     * Called from repositories
      */
     private static BackendDataHandler instance;
     private static List<Map<String, Object>> userAdvertsData = new ArrayList<>();
@@ -48,6 +53,8 @@ public class BackendDataHandler implements iBackend {
     private FirebaseStorage storage = FirebaseStorage.getInstance(); //Reference to Cloud Storage that holds images
     private StorageReference mainRef = storage.getReference();
     private StorageReference imagesRef = mainRef.child("images"); //Reference to storage location of images
+    FirebaseAuth auth = FirebaseAuth.getInstance();
+
 
     private BackendDataHandler() {
 
@@ -69,35 +76,19 @@ public class BackendDataHandler implements iBackend {
     private void writeToDatabase(HashMap<String, Object> data) {
         String uniqueOwnerID = (String) data.get("uniqueOwnerID");
         db.collection("users").document(uniqueOwnerID).collection("adverts").document()
-                .set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d(TAG, "DocumentSnapshot successfully written!");
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                    }
-                });
+                .set(data).addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
     }
 
     private void uploadImageToFirebase(File imageFile, String uniqueAdID) {
         try {
             InputStream inputStream = new FileInputStream(imageFile);
             UploadTask uploadTask = imagesRef.child(uniqueAdID).putStream(inputStream);
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    //Oklart
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    //Handle errors here
-                    e.printStackTrace();
-                }
+            uploadTask.addOnSuccessListener(taskSnapshot -> {
+                //Oklart
+            }).addOnFailureListener(e -> {
+                //Handle errors here
+                e.printStackTrace();
             });
         } catch (FileNotFoundException exception) {
             exception.printStackTrace();
@@ -107,37 +98,32 @@ public class BackendDataHandler implements iBackend {
 
     void readUserIDAdverts(advertisementDBCallback advertisementDBCallback, String userID) {
         CollectionReference users = db.collection("users");
-        users.document(userID).collection("adverts").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.w(TAG, "Listen failed.", e);
-                    return;
-                }
-                List<Map<String, Object>> advertDataList = new ArrayList<>();
-                for (QueryDocumentSnapshot document : value) {
-                    Map<String, Object> advertData = document.getData();
-                    advertDataList.add(advertData);
-                }
-                advertisementDBCallback.onCallBack(advertDataList);
+        users.document(userID).collection("adverts").addSnapshotListener((value, e) -> {
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e);
+                return;
             }
+            List<Map<String, Object>> advertDataList = new ArrayList<>();
+            for (QueryDocumentSnapshot document : value) {
+                Map<String, Object> advertData = document.getData();
+                advertDataList.add(advertData);
+            }
+            advertisementDBCallback.onCallBack(advertDataList);
         });
     }
 
     //Fetch data for all adverts from all users
+    //might want to run this on separate thread created by caller
     void readAllAdvertData(advertisementDBCallback advertisementDBCallback) {
         List<Map<String, Object>> advertDataList = new ArrayList<>();
-        db.collectionGroup("adverts").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
-                for (DocumentSnapshot snapshot : adverts) {
-                    Map<String, Object> toBeAdded = snapshot.getData();
-                    toBeAdded.put("imgFile", downloadFirebaseFile((String) toBeAdded.get("uniqueAdID")));
-                    advertDataList.add(toBeAdded);
-                }
-                advertisementDBCallback.onCallBack(advertDataList);
+        db.collectionGroup("adverts").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
+            for (DocumentSnapshot snapshot : adverts) {
+                Map<String, Object> toBeAdded = snapshot.getData();
+                toBeAdded.put("imgFile", downloadFirebaseFile((String) toBeAdded.get("uniqueAdID")));
+                advertDataList.add(toBeAdded);
             }
+            advertisementDBCallback.onCallBack(advertDataList);
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -149,44 +135,18 @@ public class BackendDataHandler implements iBackend {
     }
 
     /**
-     * Retrieves data from local JSON file for debuggnig purposes
-     * @param context
-     * @return
-     */
-    public String getMockBooks(Context context) {
-        String json;
-        try {
-            InputStream inputStream = context.getAssets().open("mockBooks.json");
-            int size = inputStream.available();
-            byte[] buffer = new byte[size];
-            inputStream.read(buffer);
-            inputStream.close();
-            json = new String(buffer, StandardCharsets.UTF_8);
-            return json;
-
-        } catch (IOException exception) {
-            exception.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
      * All images in firebase are stored in the images-folder with their
      * uniqueAdID as filenames
      */
     private File downloadFirebaseFile(String uniqueID) {
         try {
             File localFile = File.createTempFile("images", "jpg");
-            imagesRef.child(uniqueID).getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    //Local temp file has been created and can be accessed, even outside this function
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    //De gick jävla snett de där du, är du lite dum inuti hvuudet?? Tappad som barn? Mobbad som pucko?
-                }
+            imagesRef.child(uniqueID).getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+                //Local temp file has been created and can be accessed
+                //through variable localFile
+            }).addOnFailureListener(e -> {
+                System.out.println("Download from firebase failed.");
+                e.printStackTrace();
             });
             return localFile;
         } catch (IOException e) {
@@ -207,19 +167,40 @@ public class BackendDataHandler implements iBackend {
     private void testDownloadFromCloudStorage() {
         try {
             File localFile = File.createTempFile("images", "jpg");
-            imagesRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    //Reference downloaded file from here
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    //Handle any errors
-                }
+            imagesRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+                //Reference downloaded file from here
+            }).addOnFailureListener(e -> {
+                //Handle any errors
             });
         } catch (IOException exc) {
             exc.printStackTrace();
+        }
+    }
+
+    public void userSignIn(String email, String password) {
+        try{
+            auth.signInWithEmailAndPassword(email,password)
+                    .addOnCompleteListener(task -> {
+                        if(task.isSuccessful()){
+                        }
+                    });
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void userSignUp(String email, String password) {
+        try {
+            auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+
+                        } else {
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

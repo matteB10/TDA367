@@ -20,11 +20,11 @@ public class SortManager {
 
     private List<SortStrategy> createSortStrategies() {
         List<SortStrategy> strategies = new ArrayList<>();
-        strategies.add(new LatestPublishedSorting());
-        strategies.add(new AlphabeticalSorting());
-        strategies.add(new ReversedAlphabeticalSorting());
-        strategies.add(new LowestPriceSorting());
-        strategies.add(new HightPriceSorting());
+        strategies.add(SortFactory.getLatestPublishedSorting());
+        strategies.add(SortFactory.getAlphabeticalSorting());
+        strategies.add(SortFactory.getReversedAlphabeticalSorting());
+        strategies.add(SortFactory.getLowestPriceSorting());
+        strategies.add(SortFactory.getHighestPriceSorting());
         return strategies;
     }
 

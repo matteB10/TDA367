@@ -12,11 +12,11 @@ public class UserRepository {
 
 
     public void signIn(String email, String password) {
-        BackendDataFetcher.getInstance().userSignIn(email,password);
+        BackendDataHandler.getInstance().userSignIn(email,password);
     }
 
     public void signUp(String email, String password) {
-        BackendDataFetcher.getInstance().userSignUp(email,password);
+        BackendDataHandler.getInstance().userSignUp(email,password);
 
     }
 }

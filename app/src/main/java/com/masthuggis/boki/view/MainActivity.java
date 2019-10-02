@@ -16,12 +16,9 @@ import com.masthuggis.boki.R;
 
 /**
  * MainActivity is the primary view of the application. This is where the application will take you on launch.
- *
  */
 public class MainActivity extends AppCompatActivity {
-
- //   private BackendDataHandler backendDataFetcher = new BackendDataHandler();
-
+    Fragment selectedFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,10 +26,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-      /*  backendDataFetcher.addNewBook(new Book("testTitle","testAuthor",1,666,1234567890,
-                1337, Book.Condition.GOOD,null,null));*/
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HomeFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
     }
 
 
@@ -41,9 +35,8 @@ public class MainActivity extends AppCompatActivity {
      * It does this through the defined ID:s of the different fragments.
      */
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = menuItem -> {
-        Fragment selectedFragment;
 
-        switch(menuItem.getItemId()){
+        switch (menuItem.getItemId()) {
             case R.id.navigation_favorites:
                 selectedFragment = new FavoritesFragment();
                 break;
@@ -59,11 +52,17 @@ public class MainActivity extends AppCompatActivity {
                 break;
             default:
                 selectedFragment = new HomeFragment();
+                break;
 
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,selectedFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
         return true;
 
-        };
+    };
+
+    @Override
+    public void onBackPressed() {
+
     }
+}
 

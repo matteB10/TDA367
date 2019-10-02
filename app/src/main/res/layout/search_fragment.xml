@@ -16,16 +16,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <EditText
+            <SearchView
                 android:id="@+id/searchFieldEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textImeMultiLine"
-                android:hint="@string/searchHint"
-                android:imeOptions="actionSearch"
-                android:maxLines="1"
-                />
+                android:layout_height="50dp">
+
+            </SearchView>
 
             <LinearLayout
                 android:layout_width="match_parent"
