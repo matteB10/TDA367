@@ -29,7 +29,7 @@ public class HomePresenter implements IProductsPresenter {
         this.view.showLoadingScreen();
 
         // Used when using local JSON, comment if using firebase
-        // useTestData();
+        //useTestData();
 
         // If using firebase uncommment line below
         getData();
@@ -116,8 +116,10 @@ public class HomePresenter implements IProductsPresenter {
             return;
 
         List<Advertisement> sortedList = sortManager.sort(pos, adverts);
-        if (sortedList != null) //otherwise nullPointer is produced when zero adverts are available
-            adverts = new ArrayList<>(sortedList);
+        if (sortedList == null)
+            return;
+
+        adverts = new ArrayList<>(sortedList);
         view.updateThumbnails();
     }
 
@@ -139,11 +141,9 @@ public class HomePresenter implements IProductsPresenter {
     }
     //Has to update list of adverts so it's representative of actual database when search is performed
 
-
     public void resetAdvertList() {
         getData();
     }
-
 
     public interface View {
         void showLoadingScreen();

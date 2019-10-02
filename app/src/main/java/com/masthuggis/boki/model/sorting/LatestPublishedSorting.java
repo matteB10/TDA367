@@ -19,13 +19,11 @@ class LatestPublishedSorting implements SortStrategy {
             return null;
         }
 
-        List<Integer> dates = new ArrayList<>();
-        for (Advertisement a: adverts)
-            dates.add(convertDateToInt(a.getDatePublished()));
-
-        return reverse(new ArrayList<>(adverts).stream()
-                .sorted((adOne, adTwo) -> convertDateToInt(adOne.getDatePublished()) - convertDateToInt(adTwo.getDatePublished()))
-                .collect(Collectors.toList()));
+        List<Advertisement> sorted = new ArrayList<>(adverts).stream()
+                                        .sorted((adOne, adTwo) -> convertDateToInt(adOne.getDatePublished()) - convertDateToInt(adTwo.getDatePublished()))
+                                        .collect(Collectors.toList());
+        Collections.reverse(sorted);
+        return sorted;
     }
 
     private <T> List<T> reverse(final List<T> list) {

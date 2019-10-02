@@ -3,6 +3,7 @@ package com.masthuggis.boki.model.sorting;
 import com.masthuggis.boki.model.Advertisement;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,9 +18,11 @@ class ReversedAlphabeticalSorting implements SortStrategy {
             return null;
         }
 
-        return new ArrayList<>(adverts).stream()
-                .sorted(Comparator.comparing(Advertisement::getTitle).reversed())
-                .collect(Collectors.toList());
+        List<Advertisement> sorted = new ArrayList<>(adverts).stream()
+                                        .sorted((adOne, adTwo) -> adOne.getTitle().toLowerCase().compareTo(adTwo.getTitle().toLowerCase()))
+                                        .collect(Collectors.toList());
+        Collections.reverse(sorted);
+        return sorted;
     }
 
     @Override

@@ -19,7 +19,6 @@ import java.util.Map;
  * by the domain-layer of the application.
  * Data is fetched using the BackendDataHandler class.
  */
-
 public class Repository {
     private static Repository repository;
     private final List<RepositoryObserver> observers = new ArrayList<>();
