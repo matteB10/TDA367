@@ -7,7 +7,8 @@
       "isbn": 0,
       "yearPublished": 2019,
       "price": 180,
-      "condition": "GOOD"
+      "condition": "GOOD",
+      "date": "02/10/19 10:12:55"
     }, {
       "title": "Calculus",
       "author": "A.ADAMS",
@@ -15,7 +16,8 @@
       "isbn" : 0,
       "yearPublished" : 2017,
       "price" : 450,
-      "condition" : "OK"
+      "condition" : "OK",
+      "date": "01/01/15 10:12:55"
     }, {
       "title" : "Linjär Algebra",
       "author" : "Stefan Lemurell",
@@ -23,7 +25,8 @@
       "isbn" : 0,
       "yearPublished" : 2016,
       "price" : 250,
-      "condition" : "GOOD"
+      "condition" : "GOOD",
+      "date": "01/01/14 10:12:55"
     }, {
       "title" : "Arikitektur",
       "author" : "Stefan Lemurell",
@@ -31,7 +34,8 @@
       "isbn" : 0,
       "yearPublished" : 2016,
       "price" : 300,
-      "condition" : "GOOD"
+      "condition" : "GOOD",
+      "date": "01/10/19 10:12:55"
     }, {
       "title" : "Design",
       "author" : "Stefan Lemurell",
@@ -39,7 +43,8 @@
       "isbn" : 0,
       "yearPublished" : 2016,
       "price" : 250,
-      "condition" : "OK"
+      "condition" : "OK",
+      "date": "01/11/19 10:12:55"
     }, {
       "title" : "Clean Code",
       "author" : "Robert C. Martin",
@@ -48,6 +53,7 @@
       "yearPublished" : 2008,
       "price" : 200,
       "condition" : "NEW",
+      "date": "02/10/19 08:12:55",
       "preDefinedTags" : [
         "IT/Data"
       ],

@@ -50,23 +50,16 @@ public class MockRepository {
     }
 
     private Advertisement createBookWithoutTags(JSONObject object) {
-        String title;
-        String author;
-        int edition;
+        String title, date;
         int price;
-        long isbn;
-        int yearPublished;
         Advert.Condition condition;
         try { //Should use a factory-method instead
             title = object.getString("title");
-            author = object.getString("author");
-            edition = object.getInt("edition");
             price = object.getInt("price");
-            isbn = object.getLong("isbn");
-            yearPublished = object.getInt("yearPublished");
+            date = object.getString("date");
             String conditionString = object.getString("condition");
             condition = Advert.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
-            Advertisement ad = AdFactory.createAd("", "UniqueOwnerID", "UniqueAdID", title, "imgURL", price, condition, new File("", ""));
+            Advertisement ad = AdFactory.createAd(date, "UniqueOwnerID", "UniqueAdID", title, "imgURL", price, condition, new File("", ""));
             adverts.add(ad);
             return ad;
         } catch (JSONException e) {
