@@ -4,7 +4,6 @@ import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,9 +11,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -72,7 +69,7 @@ public class Repository {
      */
     public void fetchAdvertsFromUserIDFirebase(String userID, advertisementCallback advertisementCallback) {
         List<Advertisement> userIDAdverts = new ArrayList<>();
-        BackendDataHandler.getInstance().readUserIDAdverts(new advertisementDBCallback() {
+        BackendDataHandler.getInstance().readUserIDAdverts(new DBCallback() {
             @Override
             public void onCallBack(List<Map<String, Object>> advertDataList) {
                 for (Map<String, Object> dataMap : advertDataList) {

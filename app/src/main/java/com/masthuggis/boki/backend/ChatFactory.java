@@ -5,7 +5,7 @@ import com.masthuggis.boki.model.iChat;
 
 public class ChatFactory {
 
-    public static iChat createChat(String sender, String receiver){
-        return new Chat( sender, receiver);
+    public static iChat createChat(String sender, String receiver, String uniqueChatID){
+        return new Chat( sender, receiver,uniqueChatID);
     }
 }

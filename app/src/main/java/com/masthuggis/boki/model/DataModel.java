@@ -1,5 +1,7 @@
 package com.masthuggis.boki.model;
 
+import android.os.Bundle;
+
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.backend.advertisementCallback;
@@ -104,9 +106,25 @@ public class DataModel {
     }
 
     public void createNewChat(String uniqueReceiverID) {
-        HashMap<String,Object> newChatMap = new HashMap<>();
-        newChatMap.put("receiver",uniqueReceiverID);
-        newChatMap.put("sender",this.getUserID());
+        HashMap<String, Object> newChatMap = new HashMap<>();
+        newChatMap.put("receiver", uniqueReceiverID);
+        newChatMap.put("sender", this.getUserID());
         UserRepository.getInstance().createNewChat(newChatMap);
     }
+
+    public void sendMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
+        UserRepository.getInstance().writeMessage(uniqueChatID, messageMap);
+    }
+
+    public iChat findChatByID(String ID) {
+        List<iChat> chats = user.getChats();
+        for (iChat chat : chats) {
+            if (chat.getChatID().equals(ID)) {
+                return chat;
+            }
+        }
+        return null;
+
+    }
+
 }

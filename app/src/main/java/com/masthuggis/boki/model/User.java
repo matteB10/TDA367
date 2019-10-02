@@ -27,6 +27,7 @@ public class User implements iUser {
         UserRepository.getInstance().getUserChats(userID, new chatCallback() {
             @Override
             public void onCallback(List<iChat> chatsList) {
+                chats = null;
                 chats = new ArrayList<>(chatsList);
             }
         });

@@ -24,8 +24,8 @@ public class MessagesPresenter {
             // UserRepository.getInstance().getUserChats(DataModel.getInstance().getUserID(), chatList -> chats = chatList);
 
     }
-    public void onRowPressed(String userID) {
-        view.showDetailsScreen(userID);
+    public void onRowPressed(String chatID) {
+        view.showDetailsScreen(chatID);
     }
     public void bindViewHolderAtPosition(int position, MessagesRecyclerViewAdapter.
             ViewHolder holder) {
@@ -33,7 +33,9 @@ public class MessagesPresenter {
             return;
         }
         iChat c = chats.get(position);
+
         holder.setUserTextView(c.getReceiver());
+        holder.setChatID(c.getChatID());
 
     }
 
@@ -52,7 +54,7 @@ public class MessagesPresenter {
 
         void hideLoadingScreen();
 
-        void showDetailsScreen(String id);
+        void showDetailsScreen(String chatID);
 
         void isLoggedIn(MessagesPresenter messagesPresenter);
     }

@@ -19,7 +19,7 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 public class MessagesFragment extends Fragment implements MessagesPresenter.View {
     private MessagesPresenter presenter;
     private View view;
-    MessagesRecyclerViewAdapter adapter;
+    private MessagesRecyclerViewAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -65,9 +65,9 @@ public class MessagesFragment extends Fragment implements MessagesPresenter.View
     }
 
     @Override
-    public void showDetailsScreen(String id) {
+    public void showDetailsScreen(String chatID) {
         Intent intent = new Intent(getContext(), ChatActivity.class);
-        intent.putExtra("userID", id);
+        intent.putExtra("chatID",chatID);
         startActivity(intent);
 
     }

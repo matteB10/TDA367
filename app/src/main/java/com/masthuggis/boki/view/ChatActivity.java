@@ -1,7 +1,5 @@
 package com.masthuggis.boki.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -12,23 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toolbar;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.backend.UserRepository;
-import com.masthuggis.boki.model.Chat;
-import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.model.User;
-import com.masthuggis.boki.model.iUser;
 import com.masthuggis.boki.presenter.ChatPresenter;
 
-import org.w3c.dom.Text;
-
-import java.util.HashMap;
-import java.util.Map;
-
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements ChatPresenter.View {
     private ChatPresenter presenter;
 
 
@@ -41,46 +29,40 @@ public class ChatActivity extends AppCompatActivity {
     private ImageView sendButton;
     private EditText messageArea;
     private ScrollView scrollView;
-    int counter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String chatID = getIntent().getExtras().get("chatID").toString();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        this.presenter = new ChatPresenter();
-        layout = (LinearLayout) findViewById(R.id.layout1);
-        layout_2 = (RelativeLayout) findViewById(R.id.layout2);
-        sendButton = (ImageView) findViewById(R.id.sendButton);
-        messageArea = (EditText) findViewById(R.id.messageArea);
-        scrollView = (ScrollView) findViewById(R.id.scrollView);
+        layout = findViewById(R.id.layout1);
+        layout_2 = findViewById(R.id.layout2);
+        sendButton = findViewById(R.id.sendButton);
+        messageArea = findViewById(R.id.messageArea);
+        scrollView = findViewById(R.id.scrollView);
+
+        this.presenter = new ChatPresenter(this, chatID);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String messageText = messageArea.getText().toString();
-
-                Map<String, String> map = new HashMap<>();
-                if (!messageText.equals("")) {
-                    map.put("message", messageText);
-                    map.put("user", DataModel.getInstance().getUserID());
-                    messageArea.setText("");
-                    counter++;
-                }
-                addMessageBox(map.get("message"), counter % 2);
+                presenter.sendMessage(messageArea.getText().toString());
+                messageArea.setText("");
             }
         });
-        presenter.messageActivityStarted();
 
     }
 
-    public void addMessageBox(String message, int type) {
+
+    @Override
+    public void addMessageBox(String messageText, boolean sentByCurrentUser) {
         TextView textView = new TextView(ChatActivity.this);
         textView.setTextSize(14);
-        textView.setText(message);
+        textView.setText(messageText);
 
         LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp2.weight = 1.0f;
-        if (type == 1) {
-            lp2.gravity =Gravity.LEFT;
+        if (!sentByCurrentUser) {
+            lp2.gravity = Gravity.LEFT;
             textView.setBackgroundResource(R.drawable.incoming_speech_bubble);
         } else {
             lp2.gravity = Gravity.RIGHT;
@@ -89,5 +71,16 @@ public class ChatActivity extends AppCompatActivity {
         textView.setLayoutParams(lp2);
         layout.addView(textView);
         scrollView.fullScroll(View.FOCUS_DOWN);
+    }
+
+    @Override
+    public void update() {
+        layout.removeAllViews();
+    }
+
+    @Override
+    protected void onDestroy() {
+        presenter.onDestroy();
+        super.onDestroy();
     }
 }

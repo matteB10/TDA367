@@ -1,8 +1,9 @@
 package com.masthuggis.boki.backend;
 
-import com.masthuggis.boki.model.Advertisement;
+import com.google.api.Backend;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;
+import com.masthuggis.boki.model.iMessage;
 import com.masthuggis.boki.model.iUser;
 
 import java.util.ArrayList;
@@ -47,20 +48,44 @@ public class UserRepository {
 
         List<iChat> chatList = new ArrayList<>();
 
-        BackendDataHandler.getInstance().readChatData(userID, new chatDBCallback() {
+        BackendDataHandler.getInstance().getUserChats(userID, new chatDBCallback() {
             @Override
             public void onCallback(List<Map<String, Object>> chatMap) {
                 for (Map<String, Object> map : chatMap) {
-                    chatList.add(ChatFactory.createChat(map.get("sender").toString(), map.get("receiver").toString()));
+                    chatList.add(ChatFactory.createChat(map.get("sender").toString(), map.get("receiver").toString(),map.get("uniqueChatID").toString()));
                 }
                 chatCallback.onCallback(chatList);
             }
         });
     }
 
+    public void getMessages(String uniqueChatID,messagesCallback messagesCallback) {
+        List<iMessage> messages = new ArrayList<>();
+
+        BackendDataHandler.getInstance().getMessages(uniqueChatID, new DBCallback() {
+            @Override
+            public void onCallBack(List<Map<String, Object>> advertDataList) {
+                if(advertDataList.size() ==0){
+                    return;
+                }
+                for(Map<String,Object> objectMap : advertDataList){
+                    messages.add(MessageFactory.createMessage(objectMap.get("message")
+                            .toString(),objectMap.get("timeSent").toString(),objectMap.get("sender").toString()));
+                }
+
+            }
+        }); messagesCallback.onCallback(messages);
+    }
+
 
     public void createNewChat(HashMap<String,Object> newChatMap) {
         BackendDataHandler.getInstance().createNewChat(newChatMap);
     }
+    public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap){
+        BackendDataHandler.getInstance().writeMessage(uniqueChatID,messageMap);
+    }
+
+
+
 }
 

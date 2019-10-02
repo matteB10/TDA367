@@ -49,7 +49,7 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
         private TextView userTextView;
         private TextView dateTextView;
         private ImageView messageImageView;
-        private String id;
+        private String chatID;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -62,7 +62,7 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
         }
 
         private void setupOnPressActionFor(View v) {
-            v.setOnClickListener(view -> presenter.onRowPressed(id));
+            v.setOnClickListener(view -> presenter.onRowPressed(chatID));
         }
 
         public void setUserTextView(String userTextView) {
@@ -80,8 +80,8 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
             this.messageImageView.setImageURI(Uri.parse(messageImageView));
         }
 
-        public void setId(String id) {
-            this.id = id;
+        public void setChatID(String chatID) {
+            this.chatID = chatID;
         }
     }
 

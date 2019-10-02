@@ -24,9 +24,7 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.masthuggis.boki.model.Chat;
-import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.model.iChat;
+import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -77,7 +75,6 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-
     private void uploadImageToFirebase(File imageFile, String uniqueAdID) {
         try {
             InputStream inputStream = new FileInputStream(imageFile);
@@ -100,7 +97,7 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    void readUserIDAdverts(advertisementDBCallback advertisementDBCallback, String userID) {
+    void readUserIDAdverts(DBCallback DBCallback, String userID) {
         CollectionReference users = db.collection("users");
         users.document(userID).collection("adverts").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -114,13 +111,13 @@ public class BackendDataHandler implements iBackend {
                     Map<String, Object> advertData = document.getData();
                     advertDataList.add(advertData);
                 }
-                advertisementDBCallback.onCallBack(advertDataList);
+                DBCallback.onCallBack(advertDataList);
             }
         });
     }
 
     //Fetch data for all adverts from all users
-    void readAllAdvertData(advertisementDBCallback advertisementDBCallback) {
+    void readAllAdvertData(DBCallback DBCallback) {
         List<Map<String, Object>> advertDataList = new ArrayList<>();
         db.collectionGroup("adverts").get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
@@ -129,7 +126,7 @@ public class BackendDataHandler implements iBackend {
                 toBeAdded.put("imgFile", downloadFirebaseFile((String) toBeAdded.get("uniqueAdID")));
                 advertDataList.add(toBeAdded);
             }
-            advertisementDBCallback.onCallBack(advertDataList);
+            DBCallback.onCallBack(advertDataList);
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -140,7 +137,7 @@ public class BackendDataHandler implements iBackend {
 
     }
 
-    public void readChatData(String userID, chatDBCallback chatDBCallback) {
+    public void getUserChats(String userID, chatDBCallback chatDBCallback) {
         List<Map<String, Object>> chatDataList = new ArrayList<>();
         db.collection("users").document(userID).collection("conversations").addSnapshotListener((queryDocumentSnapshots, e) -> {
             if (e != null) {
@@ -157,14 +154,24 @@ public class BackendDataHandler implements iBackend {
     }
 
     public void createNewChat(HashMap<String, Object> newChatMap) {
-        String sender = (String)newChatMap.get("sender");
+        String uniqueChatID = UniqueIdCreator.getUniqueID();
+        newChatMap.put("uniqueChatID", uniqueChatID);
+        String sender = (String) newChatMap.get("sender");
         String receiver = (String) newChatMap.get("receiver");
-        db.collection("users").document(receiver).collection("conversations").document(sender  + receiver).set(newChatMap)
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
+        db.collection("users").document(receiver).collection("conversations").document().set(newChatMap)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "DocumentSnapshot successfully written!");
+
+                    db.collection("users").document(sender).collection("conversations")
+                            .document().set(newChatMap);
+                })
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
-        db.collection("users").document(sender).collection("conversations").document(sender  + receiver).set(newChatMap)
+
+
+     /*   db.collection("users").document(sender).collection("conversations").document().set(newChatMap)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written!"))
-                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));*/
+
     }
 
     private void writeToDatabase(HashMap<String, Object> data) {
@@ -307,7 +314,36 @@ public class BackendDataHandler implements iBackend {
         return userMap;
     }
 
+    public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
+        db.collection("messages").document(uniqueChatID).collection("messages").document().set(messageMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
 
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+
+            }
+        });
+    }
+
+
+    public void getMessages(String uniqueChatID, DBCallback messageCallback) {
+        List<Map<String, Object>> messageMap = new ArrayList<>();
+        db.collection("messages").document(uniqueChatID).collection("messages").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                    messageMap.add(querySnapshot.getData());
+                }
+                messageCallback.onCallBack(messageMap);
+                messageMap.clear();
+            }
+        });
+
+    }
 }
 
 
