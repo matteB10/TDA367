@@ -31,6 +31,10 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        View v = inflater.inflate(R.layout.profile_fragment,container,false);
+
+        setupHeader(v);
+        setupList(v);
 
         view = inflater.inflate(R.layout.profile_fragment, container, false);
         setupHeader(view);

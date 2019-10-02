@@ -29,9 +29,7 @@ public class UserRepository {
      * @param password
      */
     public void signIn(String email, String password) {
-        BackendDataHandler.getInstance().userSignIn(email, password);
-        loggedIn();
-        BackendDataHandler.getInstance().userSignIn(email,password);
+        BackendDataFetcher.getInstance().userSignIn(email,password);
     }
 
     /**
@@ -76,6 +74,14 @@ public class UserRepository {
         });
     }
 
+
+    public String userID() {
+        return BackendDataFetcher.getInstance().getUserID();
+    }
+
+    public String userEmail() {
+        return BackendDataFetcher.getInstance().getUserEmail();
+    }
     public void getMessages(String uniqueChatID, Chat chat, messagesCallback messagesCallback) {
         List<iMessage> messages = new ArrayList<>();
 
