@@ -35,9 +35,11 @@ public interface Advertisement {
 
     void tagsChanged(String tag);
 
-    void setCondition(Advert.Condition condition);
+    void setCondition(int condition);
 
     void setDatePublished(String datePublished);
 
     void setImageFile(File imageFile);
+
+    boolean isNewTag(String tag);
 }

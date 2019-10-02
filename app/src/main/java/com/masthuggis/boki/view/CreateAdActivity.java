@@ -14,20 +14,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
+import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,7 +33,7 @@ import java.util.List;
 
 /**
  * An acitivity for creating a new advertisement
- * through user input.
+ * with user input.
  */
 
 public class CreateAdActivity extends AppCompatActivity implements CreateAdPresenter.View {
@@ -46,6 +43,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     private final List<Button> tagButtons = new ArrayList<>();
     private final List<String> preDefTags = new ArrayList<>();
+
     private File currentImageFile;
     private CreateAdPresenter presenter;
 
@@ -62,8 +60,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setContentView(R.layout.activity_create_advert);
         presenter = new CreateAdPresenter(this);
         imageViewDisplay = findViewById(R.id.addImageView);
-        //imageViewDisplay.setImageBitmap(BitmapFactory.decodeFile(currentImageFile.getPath()));
-        disablePublishAdButton();
+        enablePublishButton(false);
         renderTagButtons();
         setListeners();
         updateDataFromModel();
@@ -129,7 +126,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             setImageView(bitmap);
             try {
                 FileOutputStream out = new FileOutputStream(currentImageFile);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -192,42 +189,58 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     private void setConditionGroupListener() {
         Button conditionGoodButton = findViewById(R.id.conditionGoodButton);
+        Button conditionNewButton = findViewById(R.id.conditionNewButton);
+        Button conditionOKButton = findViewById(R.id.conditionOkButton);
+
+
         conditionGoodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO FIX STYLING
-                presenter.conditionChanged(Advert.Condition.GOOD);
+                presenter.conditionChanged(R.string.conditionGood);
 
             }
         });
-        Button conditionNewButton = findViewById(R.id.conditionNewButton);
         conditionNewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.conditionChanged(Advert.Condition.NEW);
+                presenter.conditionChanged(R.string.conditionNew);
             }
         });
-        Button conditionOKButton = findViewById(R.id.conditionOkButton);
         conditionOKButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.conditionChanged(Advert.Condition.OK);
+                presenter.conditionChanged(R.string.conditionOk);
             }
         });
     }
 
     @Override
-    public void enablePublishButton() {
-        publishAdButton.setEnabled(true);
-        publishAdButton.setBackground(getResources().getDrawable(R.drawable.primary_button));
-
+    public void styleConditionButtonPressed(int conditionButtonPressed) {
+        Button conditionButton = new Button(this);
+        switch (conditionButtonPressed) {
+            case R.string.conditionNew:
+                conditionButton = findViewById(R.id.conditionNewButton);
+                break;
+            case R.string.conditionGood:
+                conditionButton = findViewById(R.id.conditionGoodButton);
+                break;
+            case R.string.conditionOk:
+                conditionButton = findViewById(R.id.conditionOkButton);
+                break;
+        }
+        conditionButton.setElevation(StylingHelper.getDPToPixels(this, 4));
     }
 
-
-    private void disablePublishAdButton() {
+    /**
+     * Enables publish ad button when all mandatory fields contains
+     * valid input.
+     */
+    @Override
+    public void enablePublishButton(boolean b) {
         publishAdButton = findViewById(R.id.publishAdButton);
-        publishAdButton.setEnabled(false);
-        publishAdButton.setBackground(getResources().getDrawable(R.drawable.disabled_primary_button));
+        publishAdButton.setEnabled(b);
+        publishAdButton.setBackground(getDrawable(StylingHelper.getPrimaryButtonDrawable(b)));
+
     }
 
     private void setImageViewListener() {
@@ -298,25 +311,23 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         publishAdButton.setOnClickListener(view -> {
             Intent intent = new Intent(CreateAdActivity.
                     this, DetailsActivity.class);
-            intent.putExtra("advertID", presenter.getId());
             presenter.publishAdvert();
+            intent.putExtra("advertID", presenter.getId());
             startActivity(intent);
             finish();
+
         });
     }
+
 
     private void setPreDefTagsListeners() {
         for (Button btn : tagButtons) {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    //Prevent scrollview from auto scrolling to textfields in focus
+                    btn.requestFocus();
                     presenter.tagsChanged(btn.getText().toString());
-                    btn.requestFocusFromTouch();
-                    if (presenter.isTagPressed(btn.getText().toString()))
-                        btn.setBackgroundResource(R.drawable.subject_tag_shape_pressed);
-                    else
-                        btn.setBackgroundResource(R.drawable.subject_tag_shape_normal);
-
                 }
             });
         }
@@ -355,60 +366,90 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * Create buttons with pre-defined subject tags.
+     * <p>
+     * private void createTagButtons() {
+     * for (String str : preDefTags) {
+     * Button btn = new Button(this);
+     * btn.setText(str);
+     * styleTagButtons(btn, false);
+     * tagButtons.add(btn);
+     * }
+     * }
      */
-    private void createTagButtons() {
-        for (String str : preDefTags) {
-            Button btn = new Button(this);
-            btn.setText(str);
-            setTagStyling(btn);
-            tagButtons.add(btn);
-        }
+    private Button getTagButton(String text) {
+        Button b = new Button(this);
+        b.setText(text);
+        styleTagButtons(b, false);
+        return b;
     }
 
     /**
      * Populates view with subject tag buttons.
      */
     private void populateTagsLayout() {
-        //TODO: fix styling of button/tableRow height
-        TableLayout tableLayout = findViewById(R.id.preDefTagsTableLayout);
-        tableLayout.setStretchAllColumns(true);
+        LinearLayout parentLayout = findViewById(R.id.preDefTagsLinearLayout);
         TableRow tableRow = new TableRow(this);
-        tableRow.setLayoutParams(new TableRow.LayoutParams());
-        int i = 1;
+        Button btn;
 
-        for (Button btn : tagButtons) {
-            tableRow.addView(btn);
-            if (i % 3 == 0) {
-                tableLayout.addView(tableRow);
-                tableRow = new TableRow(this);
-            }
-            i++;
+        for (String str : preDefTags) {
+            btn = getTagButton(str);
+            tagButtons.add(btn);
+            tableRow = getTableRow(tableRow, parentLayout);
+            tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
+            tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
         }
-        tableLayout.addView(tableRow);
+        parentLayout.addView(tableRow);
     }
+
+
+    /**
+     * Private method trying to resolve if a tableRow with tags is filled and
+     * if a new one should be created.
+     *
+     * @param tableRow     current tableRow
+     * @param parentLayout
+     * @return param tableRow or new tableRow object
+     */
+    private TableRow getTableRow(TableRow tableRow, LinearLayout parentLayout) {
+        if (tableRow.getChildCount() % 4 == 0) {
+            parentLayout.addView(tableRow);
+            return new TableRow(this);
+        }
+        return tableRow;
+    }
+
 
     private void renderTagButtons() {
         initPreDefTagStrings();
-        createTagButtons();
         populateTagsLayout();
     }
 
-    private void setTagStyling(Button btn) {
-        btn.setBackgroundResource(R.drawable.subject_tag_shape_normal);
+    private void styleTagButtons(Button btn, boolean isSelected) {
+        btn.setBackgroundResource(presenter.getTagDrawable(isSelected));
         btn.setTextSize(12);
-        btn.setTextColor(getResources().getColor(R.color.colorWhite));
+        btn.setTextColor(this.getColor(R.color.colorWhite));
+        btn.setElevation(StylingHelper.getDPToPixels(this, 4));
     }
 
     private void displayUserTag(String str) {
         Button btn = new Button(this);
         btn.setText(str);
-        setTagStyling(btn);
+        styleTagButtons(btn, false);
         EditText text = findViewById(R.id.tagsEditText);
         LinearLayout linearLayout = findViewById(R.id.tagsLinearLayout);
         TableRow tr = new TableRow(this);
         tr.addView(btn);
         linearLayout.addView(tr);
 
+    }
+
+    @Override
+    public void setTagStyling(String tag, boolean isSelected) {
+        for (Button btn : tagButtons) {
+            if (btn.getText().equals(tag)) {
+                styleTagButtons(btn, isSelected);
+            }
+        }
     }
 
 

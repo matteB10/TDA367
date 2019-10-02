@@ -1,16 +1,23 @@
 package com.masthuggis.boki.view;
 
+import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -18,14 +25,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Home page displaying all the adverts that have been published to the market.
@@ -36,13 +37,14 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
     private HomePresenter presenter;
     private View view;
     private ProductsRecyclerViewAdapter recyclerViewAdapter;
-
+    private EditText searchField;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.home_fragment, container, false);
         this.presenter = new HomePresenter(this);
         setupSortSpinner();
+        setupSearchField();
         return view;
     }
 
@@ -61,6 +63,27 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
+    }
+
+    //Adds a listener for when the user performs a search
+    //makes the keyboard disappear then calls on the presenter to perform the search with given input
+    private void setupSearchField() {
+        searchField = view.findViewById(R.id.searchFieldEditText);
+
+        searchField.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) { //Make sure stuff happens when enter is pressed
+                    InputMethodManager inputMethodManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+                    searchField.clearFocus(); //This and two lines above hides keyboard when search is pressed
+                    presenter.filter(searchField.getText().toString()); //Actually perform search
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
 

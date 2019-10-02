@@ -3,10 +3,11 @@ package com.masthuggis.boki.presenter;
 import android.os.Handler;
 
 
+import com.masthuggis.boki.backend.MockRepository;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.sorting.SortManager;
-import com.masthuggis.boki.utils.ConditionStylingHelper;
+import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.ArrayList;
@@ -15,7 +16,6 @@ import java.util.List;
 
 /**
  * HomePresenter is the presenter class for the view called HomeFragment.
- *
  */
 public class HomePresenter implements IProductsPresenter {
     private final View view;
@@ -43,10 +43,11 @@ public class HomePresenter implements IProductsPresenter {
         });
     }
 
+
     // Used during development when using local data
     private void useTestData() {
         Handler handler = new Handler();
-        handler.postDelayed(() -> updateData(Repository.getInstance().getLocalJSONAds()), 500);
+        handler.postDelayed(() -> updateData(MockRepository.getInstance().getLocalJSONAds()), 500);
     }
 
     private void updateData(List<Advertisement> adverts) {
@@ -72,7 +73,7 @@ public class HomePresenter implements IProductsPresenter {
         thumbnailView.setId(a.getUniqueID());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
-        setCondition(a,thumbnailView);
+        setCondition(a, thumbnailView);
         if (a.getImageFile() != null) {
             thumbnailView.setImageURL(a.getImageFile().toURI().toString());
         }
@@ -88,15 +89,16 @@ public class HomePresenter implements IProductsPresenter {
     public void onRowPressed(String uniqueIDoFAdvert) {
         view.showDetailsScreen(uniqueIDoFAdvert);
     }
+
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
-        int drawable = ConditionStylingHelper.getConditionDrawable(a.getCondition());
-        int text = ConditionStylingHelper.getConditionText(a.getCondition());
+        int drawable = StylingHelper.getConditionDrawable(a.getCondition());
+        int text = StylingHelper.getConditionText(a.getCondition());
         thumbnailView.setCondition(text, drawable);
     }
 
     private String[] convertListToArray(List<String> list) {
         String arr[] = new String[list.size()];
-        for (int i=0; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             arr[i] = list.get(i);
         }
         return arr;
@@ -115,10 +117,36 @@ public class HomePresenter implements IProductsPresenter {
             return;
 
         List<Advertisement> sortedList = sortManager.sort(pos, adverts);
-        //if (sortedList != null) //otherwise nullPointer is produced when zero adverts are available
+        if (sortedList == null)
+            return;
+
         adverts = new ArrayList<>(sortedList);
         view.updateThumbnails();
     }
+
+    //Should probably run on its own thread
+    //Filters the advertisements shown to the user by if their title matches the given query
+    public void filter(String query) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Repository.getInstance().getAllAds(advertisements -> {
+                    if (advertisements != null)
+                        adverts = advertisements; //Refreshes the list so it accurately reflects adverts in firebase
+                    ArrayList<Advertisement> filteredList = new ArrayList<>();
+                    Iterator<Advertisement> iterator = adverts.iterator();
+                    while (iterator.hasNext()) {
+                        Advertisement ad = iterator.next();
+                        if (ad.getTitle().toLowerCase().contains(query.toLowerCase().trim()))
+                            filteredList.add(ad);
+                    }
+                    updateData(filteredList);
+                });
+            }
+        });
+        thread.start();
+    }
+
 
     public interface View {
         void showLoadingScreen();

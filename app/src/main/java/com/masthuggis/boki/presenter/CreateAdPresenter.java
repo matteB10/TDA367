@@ -4,10 +4,9 @@ import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.utils.FormHelper;
+import com.masthuggis.boki.utils.StylingHelper;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,7 +35,12 @@ public class CreateAdPresenter {
     }
 
     public interface View {
-        void enablePublishButton();
+
+        void enablePublishButton(boolean isEnabled);
+
+        void styleConditionButtonPressed(int condition);
+
+        void setTagStyling(String tag, boolean isPressed);
 
 
         //TODO: create methods for future same page error messages in view
@@ -45,10 +49,8 @@ public class CreateAdPresenter {
 
     public void titleChanged(String title) {
         advertisement.setTitle(title);
-        if (allFieldsValid()) {
-            view.enablePublishButton();
+        view.enablePublishButton(allFieldsValid());
 
-        }
     }
 
     /**
@@ -59,16 +61,14 @@ public class CreateAdPresenter {
 
     public void priceChanged(String price) {
 
-
         if (FormHelper.getInstance().isValidPrice(price)) {
             advertisement.setPrice(Integer.parseInt(price));
             validPrice = true;
         } else {
             validPrice = false;
         }
-        if (allFieldsValid()) {
-            view.enablePublishButton();
-        }
+        view.enablePublishButton(allFieldsValid());
+
     }
 
     //cannot check for valid input, all input is valid
@@ -76,15 +76,36 @@ public class CreateAdPresenter {
         advertisement.setDescription(description);
     }
 
+    /**
+     * Sends string from tag clicked to advertisement.
+     * Updates styling of tag in view
+     *
+     * @param tag
+     */
     public void tagsChanged(String tag) {
+        view.setTagStyling(tag, isTagSelected(tag));
         advertisement.tagsChanged(tag);
     }
 
-    public void conditionChanged(Advert.Condition condition) {
+    /**
+     * Checks if tag is selected
+     *
+     * @return true if tag is selected
+     */
+    private boolean isTagSelected(String tag) {
+        return advertisement.isNewTag(tag);
+    }
+
+    /**
+     * Updates Advert when condition changed, changes
+     * styling of changed condition button in view.
+     *
+     * @param condition, string res condition
+     */
+    public void conditionChanged(int condition) {
         advertisement.setCondition(condition);
-        if (allFieldsValid()) {
-            view.enablePublishButton();
-        }
+        view.styleConditionButtonPressed(condition);
+        view.enablePublishButton(allFieldsValid());
 
     }
 
@@ -98,18 +119,6 @@ public class CreateAdPresenter {
         return (advertisement.getTitle().length() > 2 && validPrice && advertisement.getCondition() !=
                 Advert.Condition.UNDEFINED);
         //TODO: expand validation to image URI
-    }
-
-    //TODO: Maybe put a standard URL to some image in the catch block
-    private String convertURIStringToURLString(String URI) {
-        String URLString;
-        try {
-            URL url = new URL(URI);
-            URLString = url.toString();
-        } catch (MalformedURLException e) {
-            URLString = "";
-        }
-        return URLString;
     }
 
     public void imageFileChanged(File imageFile) {
@@ -148,14 +157,8 @@ public class CreateAdPresenter {
         return advertisement;
     }
 
-    public boolean isTagPressed(String tag) {
-        for (String t : advertisement.getTags()) {
-            if (t.equals(tag)) {
-                return true;
-            }
-        }
-        return false;
-
+    public int getTagDrawable(boolean isPressed) {
+        return StylingHelper.getTagDrawable(isPressed);
     }
 
     public View getView() {
@@ -166,9 +169,10 @@ public class CreateAdPresenter {
         return advertisement.getTitle();
     }
 
-    public String getCondition(){
+    public String getCondition() {
         return advertisement.getCondition().toString();
     }
+
     public String getDescription() {
         return advertisement.getDescription();
     }

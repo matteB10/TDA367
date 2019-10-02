@@ -1,11 +1,11 @@
 package com.masthuggis.boki.presenter;
 
-import android.content.Context;
-
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.utils.ConditionStylingHelper;
+import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.iConditionable;
+
+import java.util.List;
 
 /**
  * DetailsPresenter is the presenter class for the view called DetailsActivity.
@@ -37,6 +37,7 @@ public class DetailsPresenter {
         view.setPrice(advertisement.getPrice());
         view.setDescription(advertisement.getDescription());
         view.setDate(advertisement.getDatePublished());
+        view.setTags(advertisement.getTags());
         setCondition();
         if (advertisement.getImageFile() != null) {
             view.setImageUrl(advertisement.getImageFile().toURI().toString());
@@ -44,9 +45,9 @@ public class DetailsPresenter {
 
     }
     private void setCondition(){
-        int color = ConditionStylingHelper.getConditionDrawable(advertisement.getCondition());
-        int text = ConditionStylingHelper.getConditionText(advertisement.getCondition());
-        view.setCondition(text,color);
+        int drawable = StylingHelper.getConditionDrawable(advertisement.getCondition());
+        int text = StylingHelper.getConditionText(advertisement.getCondition());
+        view.setCondition(text,drawable);
     }
 
     public interface View extends iConditionable {
@@ -56,8 +57,7 @@ public class DetailsPresenter {
         void setDate( String date);
         void setImageUrl(String url);
         void setDescription(String description);
-        Context getContext();
-
+        void setTags(List<String> tags);
     }
 
 
