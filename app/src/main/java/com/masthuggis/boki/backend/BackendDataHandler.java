@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -233,6 +234,10 @@ public class BackendDataHandler implements iBackend {
         }
     }
 
+    /**Sign in a user to a Firebase account.
+     * @param email
+     * @param password
+     */
     public void userSignIn(String email, String password) {
         try{
             auth.signInWithEmailAndPassword(email,password)
@@ -249,6 +254,10 @@ public class BackendDataHandler implements iBackend {
         }
     }
 
+    /**Sign up a user to Firebase
+     * @param email
+     * @param password
+     */
     public void userSignUp(String email, String password) {
         try {
             auth.createUserWithEmailAndPassword(email, password)
@@ -265,5 +274,11 @@ public class BackendDataHandler implements iBackend {
             e.printStackTrace();
         }
     }
-
+    /** Checking if a user is signed in through Firebase
+     * @return true a user is signed in.
+     */
+    public boolean isUserSignedIn(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return (user != null);
+    }
 }

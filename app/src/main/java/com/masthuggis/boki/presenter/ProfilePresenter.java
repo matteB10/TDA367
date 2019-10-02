@@ -2,6 +2,7 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryObserver;
+import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.utils.ConditionStylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
@@ -13,6 +14,8 @@ import java.util.List;
 public class ProfilePresenter implements IProductsPresenter, RepositoryObserver {
     private final View view;
     private List<Advertisement> adverts;
+
+    private UserRepository userRepo;
 
     public ProfilePresenter(View view) {
         this.view = view;
@@ -87,5 +90,9 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
 
     public void onSignInButtonPressed(){
         view.showSignInScreen();
+    }
+
+    public boolean setUpUser(){
+        return userRepo.isSignedIn();
     }
 }

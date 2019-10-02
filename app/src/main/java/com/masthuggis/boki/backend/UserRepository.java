@@ -10,14 +10,32 @@ public class UserRepository {
         return userRepository;
     }
 
-
+    /**
+     * Method to sign a user in using a email address and a chosen password.
+     *
+     * @param email
+     * @param password
+     */
     public void signIn(String email, String password) {
-        BackendDataHandler.getInstance().userSignIn(email,password);
+        BackendDataHandler.getInstance().userSignIn(email, password);
     }
 
+    /**
+     * Method to sign up a user with a email address and a chosen password,
+     * connected to Firebase.
+     *
+     * @param email
+     * @param password
+     */
     public void signUp(String email, String password) {
-        BackendDataHandler.getInstance().userSignUp(email,password);
-
+        BackendDataHandler.getInstance().userSignUp(email, password);
     }
+    /**Checks if a user is sign in to the app.
+    * @return true if a user is signed in
+    */
+    public boolean isSignedIn () {
+        return BackendDataHandler.getInstance().isUserSignedIn();
+    }
+
 }
 
