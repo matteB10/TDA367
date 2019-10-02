@@ -5,6 +5,7 @@ import com.masthuggis.boki.model.Advertisement;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 class LatestPublishedSorting implements SortStrategy {
@@ -18,7 +19,12 @@ class LatestPublishedSorting implements SortStrategy {
         }
 
         return new ArrayList<>(adverts).stream()
-                .sorted(Comparator.comparing(Advertisement::getDatePublished))
+                .sorted(Comparator.comparing(new Function<Advertisement, String>() {
+                    @Override
+                    public String apply(Advertisement advertisement) {
+                        return advertisement.getDatePublished();
+                    }
+                }))
                 .collect(Collectors.toList());
     }
 

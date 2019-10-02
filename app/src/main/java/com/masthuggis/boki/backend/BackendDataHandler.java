@@ -24,6 +24,7 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.masthuggis.boki.model.Chat;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
@@ -330,16 +331,18 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    public void getMessages(String uniqueChatID, DBCallback messageCallback) {
+    public void getMessages(String uniqueChatID,  Chat chat,DBCallback messageCallback) {
         List<Map<String, Object>> messageMap = new ArrayList<>();
         db.collection("messages").document(uniqueChatID).collection("messages").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                messageMap.clear();
                 for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
                     messageMap.add(querySnapshot.getData());
                 }
                 messageCallback.onCallBack(messageMap);
-                messageMap.clear();
+                chat.updateChatObservers();
+
             }
         });
 

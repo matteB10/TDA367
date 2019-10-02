@@ -1,6 +1,7 @@
 package com.masthuggis.boki.backend;
 
 import com.google.api.Backend;
+import com.masthuggis.boki.model.Chat;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.model.iMessage;
@@ -59,15 +60,16 @@ public class UserRepository {
         });
     }
 
-    public void getMessages(String uniqueChatID,messagesCallback messagesCallback) {
+    public void getMessages(String uniqueChatID, Chat chat, messagesCallback messagesCallback) {
         List<iMessage> messages = new ArrayList<>();
 
-        BackendDataHandler.getInstance().getMessages(uniqueChatID, new DBCallback() {
+        BackendDataHandler.getInstance().getMessages(uniqueChatID,chat, new DBCallback() {
             @Override
             public void onCallBack(List<Map<String, Object>> advertDataList) {
                 if(advertDataList.size() ==0){
                     return;
                 }
+                messages.clear();
                 for(Map<String,Object> objectMap : advertDataList){
                     messages.add(MessageFactory.createMessage(objectMap.get("message")
                             .toString(),objectMap.get("timeSent").toString(),objectMap.get("sender").toString()));

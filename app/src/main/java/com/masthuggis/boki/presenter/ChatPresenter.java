@@ -25,9 +25,12 @@ public class ChatPresenter implements ChatObservers {
     }
 
     private void populateView(List<iMessage> messages) {
-        for (iMessage message : messages) {
-            setMessageBox(message.getMessage(), message.getSenderID().equals(DataModel.getInstance().getUserID()));
+        for(int i=messages.size()-1;i>=0;i--){
+            setMessageBox(messages.get(i).getMessage(),messages.get(i).getSenderID().equals(DataModel.getInstance().getUserID()));
         }
+        /*for (iMessage message : messages) {
+            setMessageBox(message.getMessage(), message.getSenderID().equals(DataModel.getInstance().getUserID()));
+        }*/
     }
 
 
@@ -49,6 +52,7 @@ public class ChatPresenter implements ChatObservers {
             DataModel.getInstance().sendMessage(chat.getChatID(), map);
 
             setMessageBox(messageText, true);
+            onChatUpdated();
 
         }
     }
@@ -60,6 +64,7 @@ public class ChatPresenter implements ChatObservers {
     @Override
     public void onChatUpdated() {
         view.update();
+        messages = chat.getMessages();
         populateView(messages);
 
 
