@@ -1,7 +1,6 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.utils.FormHelper;
 import com.masthuggis.boki.utils.StylingHelper;
@@ -41,6 +40,8 @@ public class CreateAdPresenter {
         void styleConditionButtonPressed(int condition);
 
         void setTagStyling(String tag, boolean isPressed);
+
+        void displayUserTagButton(String tag);
 
 
         //TODO: create methods for future same page error messages in view
@@ -82,8 +83,19 @@ public class CreateAdPresenter {
      *
      * @param tag
      */
-    public void tagsChanged(String tag) {
+    public void preDefTagsChanged(String tag) {
         view.setTagStyling(tag, isTagSelected(tag));
+        advertisement.tagsChanged(tag);
+    }
+
+    /**
+     * Gets string from user defined tag.
+     * Updates styling of tag in view
+     *
+     * @param tag
+     */
+    public void userDefTagsChanged(String tag) {
+        view.displayUserTagButton(tag);
         advertisement.tagsChanged(tag);
     }
 
@@ -116,9 +128,8 @@ public class CreateAdPresenter {
      * @return
      */
     private boolean allFieldsValid() {
-        return (advertisement.getTitle().length() > 2 && validPrice && advertisement.getCondition() !=
-                Advert.Condition.UNDEFINED);
-        //TODO: expand validation to image URI
+        return (advertisement.getTitle().length() > 2 && validPrice && advertisement.isValidCondition());
+        //TODO: expand validation to image
     }
 
     public void imageFileChanged(File imageFile) {

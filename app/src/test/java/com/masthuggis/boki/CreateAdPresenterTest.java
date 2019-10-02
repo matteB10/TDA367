@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Tests basic funtionality of CreateAdPresenter
@@ -17,15 +18,33 @@ import static org.junit.Assert.assertTrue;
 public class CreateAdPresenterTest {
 
     class MockView implements CreateAdPresenter.View {
+        CreateAdPresenter presenter;
+        boolean buttonEnabled = false;
+
+        MockView(){
+            presenter = new CreateAdPresenter(this);
+        }
+
+        private CreateAdPresenter getPresenter(){
+            return presenter;
+        }
+        private boolean getButtonEnabled(){
+            return buttonEnabled;
+        }
 
         @Override
         public void enablePublishButton(boolean isEnabled) {
+            buttonEnabled = isEnabled;
         }
         @Override
         public void styleConditionButtonPressed(int condition) {
         }
         @Override
         public void setTagStyling(String tag, boolean isPressed) {
+        }
+        @Override
+        public void displayUserTagButton(String tag){
+            
         }
     }
 
@@ -38,17 +57,6 @@ public class CreateAdPresenterTest {
         assertTrue(presenter.getAdvertisement().getTitle() == "new title");
     }
 
-    @Test
-    public void testChangedImage() {
-        /*
-        CreateAdPresenter presenter = new CreateAdPresenter(new MockView());
-        assertEquals("",presenter.getAdvertisement().getImgURL());
-
-        presenter.imageURIChanged("http://java.sun.com/j2se/1.3/");
-        assertTrue(presenter.getAdvertisement().getImgURL().equals("http://java.sun.com/j2se/1.3/"));
-
-         */
-    }
 
     @Test
     public void testChangedDescription() {
@@ -73,9 +81,9 @@ public class CreateAdPresenterTest {
 
         String subjectTag = "Matematik";
 
-        presenter.tagsChanged(subjectTag);
+        presenter.preDefTagsChanged(subjectTag);
         assertEquals(subjectTag,presenter.getAdvertisement().getTags().get(0));
-        presenter.tagsChanged(subjectTag);
+        presenter.preDefTagsChanged(subjectTag);
 
         assertEquals(0,presenter.getAdvertisement().getTags().size());
     }
@@ -88,5 +96,19 @@ public class CreateAdPresenterTest {
         presenter.conditionChanged(R.string.conditionNew);
         assertEquals(Advert.Condition.NEW, presenter.getAdvertisement().getCondition());
     }
+    @Test
+    public void testEnablePublishButton(){
+        MockView view = new MockView();
+        CreateAdPresenter presenter = view.getPresenter();
+        presenter.priceChanged("10");
+        presenter.titleChanged("hej");
+        presenter.conditionChanged(R.string.conditionGood);
+        assertTrue(view.getButtonEnabled());
+
+        //if no title is given, button should be disabled
+        presenter.titleChanged("");
+        assertFalse(view.getButtonEnabled());
+    }
+
 
 }

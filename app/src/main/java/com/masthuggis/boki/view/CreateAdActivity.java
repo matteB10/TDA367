@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,8 +43,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    private final List<Button> tagButtons = new ArrayList<>();
-    private final List<String> preDefTags = new ArrayList<>();
+    private List<Button> preDefTagButtons = new ArrayList<>();
+    private List<String> userDefTags = new ArrayList<>();
 
     private File currentImageFile;
     private CreateAdPresenter presenter;
@@ -59,9 +61,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_advert);
         presenter = new CreateAdPresenter(this);
-        imageViewDisplay = findViewById(R.id.addImageView);
         enablePublishButton(false);
-        renderTagButtons();
+        displayPreDefTagButtons();
         setListeners();
         updateDataFromModel();
 
@@ -184,6 +185,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setCreateAdvertListener();
         setConditionGroupListener();
         setPreDefTagsListeners();
+        setUserDefTagListener();
 
     }
 
@@ -321,13 +323,13 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
 
     private void setPreDefTagsListeners() {
-        for (Button btn : tagButtons) {
+        for (Button btn : preDefTagButtons) {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //Prevent scrollview from auto scrolling to textfields in focus
                     btn.requestFocus();
-                    presenter.tagsChanged(btn.getText().toString());
+                    presenter.preDefTagsChanged(btn.getText().toString());
                 }
             });
         }
@@ -335,48 +337,52 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     private void setUserDefTagListener() {
         EditText userDefTag = findViewById(R.id.tagsEditText);
-        userDefTag.addTextChangedListener(new TextWatcher() {
+        userDefTag.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String str = charSequence.toString();
-                presenter.tagsChanged(str);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SPACE)) {
+                    presenter.userDefTagsChanged(userDefTag.getText().toString());
+                    userDefTag.setText("");
+                    return true;
+                }
+                return false;
             }
         });
     }
 
     /**
      * Reads pre defined subject strings from resources,
-     * saves all string in a list.
+     *
+     * @return all strings in a list.
      */
-    private void initPreDefTagStrings() {
+    private List<String> getPreDefTagStrings() {
         String[] strArr = getResources().getStringArray(R.array.preDefSubjectTags);
-        for (String str : strArr)
-            preDefTags.add(str);
+        return Arrays.asList(strArr);
     }
 
     /**
-     * Create buttons with pre-defined subject tags.
-     * <p>
-     * private void createTagButtons() {
-     * for (String str : preDefTags) {
-     * Button btn = new Button(this);
-     * btn.setText(str);
-     * styleTagButtons(btn, false);
-     * tagButtons.add(btn);
-     * }
-     * }
+     * Creates a list with buttons from a list of strings.
+     *
+     * @param strTags, list of button text strings
+     * @return a list of buttons
      */
-    private Button getTagButton(String text) {
+    private List<Button> createTagButtons(List<String> strTags) {
+        List<Button> btnList = new ArrayList<>();
+        for (String str : strTags) {
+            Button btn = createTagButton(str);
+            btnList.add(btn);
+        }
+        return btnList;
+    }
+
+    /**
+     * Create a tag button with correct styling
+     *
+     * @param text
+     * @return a button
+     */
+    private Button createTagButton(String text) {
         Button b = new Button(this);
         b.setText(text);
         styleTagButtons(b, false);
@@ -384,45 +390,42 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     /**
-     * Populates view with subject tag buttons.
+     * @param tags         a list of buttons
+     * @param parentLayout the layout in which buttons will be placed
      */
-    private void populateTagsLayout() {
-        LinearLayout parentLayout = findViewById(R.id.preDefTagsLinearLayout);
+    private void populateTagsLayout(List<Button> tags, LinearLayout parentLayout) {
         TableRow tableRow = new TableRow(this);
-        Button btn;
-
-        for (String str : preDefTags) {
-            btn = getTagButton(str);
-            tagButtons.add(btn);
-            tableRow = getTableRow(tableRow, parentLayout);
+        for (Button btn : tags) {
             tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
             tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
+            if (rowFull(tableRow)) {
+                parentLayout.addView(tableRow);
+                tableRow = new TableRow(this);
+            }
         }
         parentLayout.addView(tableRow);
     }
 
+    /**
+     * Method to check if row is full
+     *
+     * @param tableRow the row to be checked
+     * @return true if row is full
+     */
+    private boolean rowFull(TableRow tableRow) {
+        return (tableRow.getChildCount() % 3 == 0 && tableRow.getChildCount() != 0);
+    }
 
     /**
-     * Private method trying to resolve if a tableRow with tags is filled and
-     * if a new one should be created.
-     *
-     * @param tableRow     current tableRow
-     * @param parentLayout
-     * @return param tableRow or new tableRow object
+     * Called in onCreate, create tag buttons and add them to the view
      */
-    private TableRow getTableRow(TableRow tableRow, LinearLayout parentLayout) {
-        if (tableRow.getChildCount() % 4 == 0) {
-            parentLayout.addView(tableRow);
-            return new TableRow(this);
-        }
-        return tableRow;
+
+    private void displayPreDefTagButtons() {
+        LinearLayout preDefTagsLayout = findViewById(R.id.preDefTagsLinearLayout);
+        List<Button> tagButtons = createTagButtons(getPreDefTagStrings());
+        populateTagsLayout(tagButtons, preDefTagsLayout);
     }
 
-
-    private void renderTagButtons() {
-        initPreDefTagStrings();
-        populateTagsLayout();
-    }
 
     private void styleTagButtons(Button btn, boolean isSelected) {
         btn.setBackgroundResource(presenter.getTagDrawable(isSelected));
@@ -431,26 +434,29 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         btn.setElevation(StylingHelper.getDPToPixels(this, 4));
     }
 
-    private void displayUserTag(String str) {
-        Button btn = new Button(this);
-        btn.setText(str);
-        styleTagButtons(btn, false);
-        EditText text = findViewById(R.id.tagsEditText);
-        LinearLayout linearLayout = findViewById(R.id.tagsLinearLayout);
-        TableRow tr = new TableRow(this);
-        tr.addView(btn);
-        linearLayout.addView(tr);
-
-    }
-
     @Override
     public void setTagStyling(String tag, boolean isSelected) {
-        for (Button btn : tagButtons) {
+        for (Button btn : preDefTagButtons) {
             if (btn.getText().equals(tag)) {
                 styleTagButtons(btn, isSelected);
             }
         }
     }
 
+    /**
+     * Called in presenter when a user defined a new tag
+     *
+     * @param tag
+     */
+
+    @Override
+    public void displayUserTagButton(String tag) {
+        LinearLayout parentLayout = findViewById(R.id.tagsLinearLayout);
+        //must reset parentView for every new tag added to get tags in right formation
+        parentLayout.removeAllViewsInLayout();
+        userDefTags.add(tag);
+        populateTagsLayout(createTagButtons(userDefTags), parentLayout);
+
+    }
 
 }

@@ -42,4 +42,6 @@ public interface Advertisement {
     void setImageFile(File imageFile);
 
     boolean isNewTag(String tag);
+
+    boolean isValidCondition();
 }
