@@ -72,6 +72,8 @@
     <string name="forgotPassword">Glömt lösenord?</string>
     <string name="logOut">Logga ut</string>
     <string name="loading">Laddar...</string>
+    <string name="search">Search</string>
 
+    <string name="searchHint">Sök efter titlar...</string>
 
 </resources>
