@@ -11,11 +11,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -23,14 +20,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Home page displaying all the adverts that have been published to the market.
@@ -98,7 +89,7 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
             @Override
             public void afterTextChanged(Editable editable) {
                 if (editable.toString().equals(""))
-                    presenter.searchFieldEmpty();
+                    presenter.resetAdvertList(); //TODO not this causing bug
             }
         });
     }

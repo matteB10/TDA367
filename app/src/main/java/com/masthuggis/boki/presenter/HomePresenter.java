@@ -15,7 +15,6 @@ import java.util.List;
 
 /**
  * HomePresenter is the presenter class for the view called HomeFragment.
- *
  */
 public class HomePresenter implements IProductsPresenter {
     private final View view;
@@ -72,7 +71,7 @@ public class HomePresenter implements IProductsPresenter {
         thumbnailView.setId(a.getUniqueID());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
-        setCondition(a,thumbnailView);
+        setCondition(a, thumbnailView);
         if (a.getImageFile() != null) {
             thumbnailView.setImageURL(a.getImageFile().toURI().toString());
         }
@@ -88,6 +87,7 @@ public class HomePresenter implements IProductsPresenter {
     public void onRowPressed(String uniqueIDoFAdvert) {
         view.showDetailsScreen(uniqueIDoFAdvert);
     }
+
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
         int drawable = ConditionStylingHelper.getConditionDrawable(a.getCondition());
         int text = ConditionStylingHelper.getConditionText(a.getCondition());
@@ -96,7 +96,7 @@ public class HomePresenter implements IProductsPresenter {
 
     private String[] convertListToArray(List<String> list) {
         String arr[] = new String[list.size()];
-        for (int i=0; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             arr[i] = list.get(i);
         }
         return arr;
@@ -120,18 +120,26 @@ public class HomePresenter implements IProductsPresenter {
         view.updateThumbnails();
     }
 
+    //Should probably run on its own thread
     public void filter(String query) {
-        ArrayList<Advertisement> filteredList = new ArrayList<>();
-        Iterator<Advertisement> iterator = adverts.iterator();
-        while(iterator.hasNext()) {
-            Advertisement ad = iterator.next();
-            if (ad.getTitle().toLowerCase().contains(query.toLowerCase()))
-                filteredList.add(ad);
-        }
-        updateData(filteredList); //TODO change
-    }
+        Repository.getInstance().getAllAds(advertisements -> {
+            if (advertisements != null)
+                adverts = advertisements;
+            ArrayList<Advertisement> filteredList = new ArrayList<>();
+            Iterator<Advertisement> iterator = adverts.iterator();
+            while (iterator.hasNext()) {
+                Advertisement ad = iterator.next();
+                if (ad.getTitle().toLowerCase().contains(query.toLowerCase()))
+                    filteredList.add(ad);
+            }
+            updateData(filteredList); //TODO fix this
+        });
 
-    public void searchFieldEmpty() {
+    }
+    //Has to update list of adverts so it's representative of actual database when search is performed
+
+
+    public void resetAdvertList() {
         getData();
     }
 
