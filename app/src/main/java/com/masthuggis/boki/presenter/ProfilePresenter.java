@@ -3,7 +3,7 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.utils.ConditionStylingHelper;
+import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.ArrayList;
@@ -65,8 +65,8 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         // TODO: remove this when interface is segregated
     }
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
-        int drawable = ConditionStylingHelper.getConditionDrawable(a.getCondition());
-        int text = ConditionStylingHelper.getConditionText(a.getCondition());
+        int drawable = StylingHelper.getConditionDrawable(a.getCondition());
+        int text = StylingHelper.getConditionText(a.getCondition());
         thumbnailView.setCondition(text, drawable);
     }
 

@@ -1,12 +1,7 @@
 package com.masthuggis.boki.backend;
 
-import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -117,6 +112,7 @@ public class Repository {
         fetchAllAdverts(advertisementCallback);
     }
 
+    /*
     public List<Advertisement> getLocalJSONAds() {
         allAds.clear();
         getMockDataOfAllAds();
@@ -125,7 +121,7 @@ public class Repository {
 
     /**
      * Retrieves local mock JSON file for debugging purposes.
-     */
+
     public void getMockDataOfAllAds() {
         String json = BackendDataHandler.getInstance().getMockBooks(Boki.getAppContext());
         try {
@@ -139,6 +135,8 @@ public class Repository {
             exception.printStackTrace();
         }
     }
+     */
+    /*
 
     private Advertisement createBookWithoutTags(JSONObject object) {
         String title;
@@ -164,7 +162,7 @@ public class Repository {
             e.printStackTrace();
             return null;
         }
-    }
+    }*/
 
     private void notifyUsersAdvertsForSaleUpdated() {
         // TODO: change from temp list to actual user list
@@ -185,7 +183,7 @@ public class Repository {
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
         File imageFile = (File) dataMap.get("imgFile");
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageFile);
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageFile, tags);
     }
 
     /**
@@ -200,7 +198,7 @@ public class Repository {
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, null);
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, null,tags);
     } //TODO den här kommer behöva en imageFile den här med
 
 }

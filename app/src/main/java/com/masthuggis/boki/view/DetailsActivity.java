@@ -1,33 +1,25 @@
 package com.masthuggis.boki.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
-
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.TestLooperManager;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.model.Advert;
-import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.presenter.DetailsPresenter;
-import com.masthuggis.boki.utils.iConditionable;
+import com.masthuggis.boki.utils.StylingHelper;
+
+import java.util.List;
 
 /**
  * The view showing details of a specific advertisement.
- *
  */
 public class DetailsActivity extends AppCompatActivity implements DetailsPresenter.View {
     private DetailsPresenter presenter;
@@ -65,7 +57,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     @Override
     public void setPrice(long price) {
         TextView textView = findViewById(R.id.detailsPrice);
-        textView.setText(Long.toString(price) + " kr");
+        textView.setText(price + " kr");
     }
 
     @Override
@@ -90,15 +82,62 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     @Override
     public void setCondition(int text, int drawable) {
         TextView textView = findViewById(R.id.conditionTextView);
-        textView.setText(text);
         ConstraintLayout layout = findViewById(R.id.conditionConstraintLayout);
+
+        textView.setText(text);
         layout.setBackground(getDrawable(drawable));
     }
+
+    /**
+     * Set tags as buttons in details
+     * @param tags
+     */
+
     @Override
-    public Context getContext(){
-        return this;
+    public void setTags(List<String> tags) {
+        LinearLayout parentLayout = findViewById(R.id.detailsTagsTableLayout);
+        TableRow tableRow = new TableRow(this);
+        Button btn;
+
+        for (String str : tags) {
+            btn = createTagButton(str);
+            tableRow = getTableRow(tableRow, parentLayout);
+            tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
+            tableRow.addView(btn,StylingHelper.getTableRowChildLayoutParams(this));
+        }
+        parentLayout.addView(tableRow);
     }
 
+
+    private Button createTagButton(String btnTxt) {
+        Button btn = new Button(this);
+        btn.setText(btnTxt);
+        setTagStyling(btn);
+        return btn;
+    }
+
+    /**
+     * Private method trying to resolve if a tableRow with tags is filled and
+     * if a new one should be created.
+     *
+     * @param tableRow    the current tableRow
+     * @param parentLayout width of parent layout
+     * @return param tableRow or new tableRow object depending on
+     */
+    private TableRow getTableRow(TableRow tableRow, LinearLayout parentLayout) {
+        if(tableRow.getChildCount() % 4 == 0) {
+                parentLayout.addView(tableRow);
+                return new TableRow(this);
+        }
+        return tableRow;
+    }
+
+    private void setTagStyling(Button btn) {
+        btn.setBackgroundResource(R.drawable.subject_tag_shape_normal);
+        btn.setTextSize(12);
+        btn.setTextColor(this.getColor(R.color.colorWhite));
+        btn.setElevation(4);
+    }
 
 
 }

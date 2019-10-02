@@ -6,11 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".view.DetailsActivity">
 
+    <TextView
+        android:id="@+id/datePublishedTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <ImageView
         android:id="@+id/detailsImage"
         android:layout_width="180dp"
         android:layout_height="230dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:contentDescription="TODO"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +44,7 @@
 
     <TextView
         android:id="@+id/detailsPrice"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="12dp"
@@ -45,32 +56,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detailsName" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/tagsConstraintLayout"
+    <LinearLayout
+        android:id="@+id/detailsTagsTableLayout"
         android:layout_width="0dp"
-        android:layout_height="10dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/details_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailsPrice">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tagsRecyclerView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@+id/detailsPrice" />
 
     <TextView
         android:id="@+id/details_description"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
@@ -79,7 +81,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tagsConstraintLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/detailsTagsTableLayout" />
 
     <Button
         android:id="@+id/contactOwnerButton"
@@ -88,10 +90,11 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="30dp"
-        android:textColor="@color/colorWhite"
+        android:layout_marginBottom="10dp"
         android:autoLink="phone"
         android:background="@drawable/primary_button"
         android:text="Kontakta ägaren?"
+        android:textColor="@color/colorWhite"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -124,14 +127,5 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/datePublishedTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="16dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/details_description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
