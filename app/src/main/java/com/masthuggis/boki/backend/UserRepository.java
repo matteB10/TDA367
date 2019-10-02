@@ -17,7 +17,11 @@ public class UserRepository {
 
     public void signUp(String email, String password) {
         BackendDataFetcher.getInstance().userSignUp(email,password);
-
     }
+
+    public boolean isSignedIn() {
+        return BackendDataFetcher.getInstance().isUserSignedIn();
+    }
+
 }
 
