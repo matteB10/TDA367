@@ -34,7 +34,7 @@ public class SearchFragment extends Fragment implements Filterable, SearchPresen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        searchField = view.findViewById(R.id.searchField);
+        searchField = view.findViewById(R.id.searchFieldEditText);
         searchField.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {

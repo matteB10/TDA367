@@ -115,10 +115,26 @@ public class HomePresenter implements IProductsPresenter {
             return;
 
         List<Advertisement> sortedList = sortManager.sort(pos, adverts);
-        //if (sortedList != null) //otherwise nullPointer is produced when zero adverts are available
-        adverts = new ArrayList<>(sortedList);
+        if (sortedList != null) //otherwise nullPointer is produced when zero adverts are available
+            adverts = new ArrayList<>(sortedList);
         view.updateThumbnails();
     }
+
+    public void filter(String query) {
+        ArrayList<Advertisement> filteredList = new ArrayList<>();
+        Iterator<Advertisement> iterator = adverts.iterator();
+        while(iterator.hasNext()) {
+            Advertisement ad = iterator.next();
+            if (ad.getTitle().toLowerCase().contains(query.toLowerCase()))
+                filteredList.add(ad);
+        }
+        updateData(filteredList); //TODO change
+    }
+
+    public void searchFieldEmpty() {
+        getData();
+    }
+
 
     public interface View {
         void showLoadingScreen();
