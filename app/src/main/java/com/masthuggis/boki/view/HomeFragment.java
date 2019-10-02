@@ -1,5 +1,7 @@
 package com.masthuggis.boki.view;
 
+import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,11 +10,14 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -60,6 +65,8 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
     }
 
+    //Adds a listener for when the user performs a search
+    //makes the keyboard disappear then calls on the presenter to perform the search with given input
     private void setupSearchField() {
         searchField = view.findViewById(R.id.searchFieldEditText);
 
@@ -67,29 +74,14 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
                 if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    presenter.filter(searchField.getText().toString());
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) { //Make sure stuff happens when enter is pressed
+                    InputMethodManager inputMethodManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+                    searchField.clearFocus(); //This and two lines above hides keyboard when search is pressed
+                    presenter.filter(searchField.getText().toString()); //Actually perform search
                     return true;
                 }
                 return false;
-            }
-        });
-
-        searchField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (editable.toString().equals(""))
-                    presenter.resetAdvertList(); //TODO not this causing bug
             }
         });
     }

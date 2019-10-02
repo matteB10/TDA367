@@ -126,7 +126,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             setImageView(bitmap);
             try {
                 FileOutputStream out = new FileOutputStream(currentImageFile);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

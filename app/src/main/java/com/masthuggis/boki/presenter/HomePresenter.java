@@ -125,26 +125,28 @@ public class HomePresenter implements IProductsPresenter {
     }
 
     //Should probably run on its own thread
+    //Filters the advertisements shown to the user by if their title matches the given query
     public void filter(String query) {
-        Repository.getInstance().getAllAds(advertisements -> {
-            if (advertisements != null)
-                adverts = advertisements;
-            ArrayList<Advertisement> filteredList = new ArrayList<>();
-            Iterator<Advertisement> iterator = adverts.iterator();
-            while (iterator.hasNext()) {
-                Advertisement ad = iterator.next();
-                if (ad.getTitle().toLowerCase().contains(query.toLowerCase()))
-                    filteredList.add(ad);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Repository.getInstance().getAllAds(advertisements -> {
+                    if (advertisements != null)
+                        adverts = advertisements; //Refreshes the list so it accurately reflects adverts in firebase
+                    ArrayList<Advertisement> filteredList = new ArrayList<>();
+                    Iterator<Advertisement> iterator = adverts.iterator();
+                    while (iterator.hasNext()) {
+                        Advertisement ad = iterator.next();
+                        if (ad.getTitle().toLowerCase().contains(query.toLowerCase().trim()))
+                            filteredList.add(ad);
+                    }
+                    updateData(filteredList);
+                });
             }
-            updateData(filteredList); //TODO fix this
         });
-
+        thread.start();
     }
-    //Has to update list of adverts so it's representative of actual database when search is performed
 
-    public void resetAdvertList() {
-        getData();
-    }
 
     public interface View {
         void showLoadingScreen();
