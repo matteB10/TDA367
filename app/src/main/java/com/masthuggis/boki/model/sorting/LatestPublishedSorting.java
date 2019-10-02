@@ -4,6 +4,7 @@ import com.masthuggis.boki.model.Advertisement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,9 +19,19 @@ class LatestPublishedSorting implements SortStrategy {
             return null;
         }
 
-        return new ArrayList<>(adverts).stream()
+        List<Integer> dates = new ArrayList<>();
+        for (Advertisement a: adverts)
+            dates.add(convertDateToInt(a.getDatePublished()));
+
+        return reverse(new ArrayList<>(adverts).stream()
                 .sorted((adOne, adTwo) -> convertDateToInt(adOne.getDatePublished()) - convertDateToInt(adTwo.getDatePublished()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
+    }
+
+    private <T> List<T> reverse(final List<T> list) {
+        final List<T> result = new ArrayList<>(list);
+        Collections.reverse(result);
+        return result;
     }
 
     private int convertDateToInt(String date) {

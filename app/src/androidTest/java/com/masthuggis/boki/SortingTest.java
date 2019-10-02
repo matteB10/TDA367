@@ -68,4 +68,16 @@ public class SortingTest {
         assertEquals(Long.toString(adverts.get(0).getPrice()), "180");
         assertEquals(Long.toString(adverts.get(adverts.size()-1).getPrice()), "450");
     }
+
+    @Test
+    public void testLatestPublishedSortingIsCorrect() {
+        sort(SortFactory.getLatestPublishedSorting());
+
+        assertEquals(adverts.get(0).getTitle().toLowerCase(), "clean code");
+        assertEquals(adverts.get(1).getTitle().toLowerCase(), "design");
+        assertEquals(adverts.get(2).getTitle().toLowerCase(), "arikitektur");
+        assertEquals(adverts.get(3).getTitle().toLowerCase(), "linjär algebra");
+        assertEquals(adverts.get(4).getTitle().toLowerCase(), "calculus");
+        assertEquals(adverts.get(5).getTitle().toLowerCase(), "diskret");
+    }
 }
