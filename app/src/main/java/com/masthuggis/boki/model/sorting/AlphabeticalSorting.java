@@ -18,7 +18,7 @@ class AlphabeticalSorting implements SortStrategy {
         }
 
         return new ArrayList<>(adverts).stream()
-                .sorted(Comparator.comparing(Advertisement::getTitle))
+                .sorted((adOne, adTwo) -> adOne.getTitle().compareTo(adTwo.getTitle()))
                 .collect(Collectors.toList());
     }
 
