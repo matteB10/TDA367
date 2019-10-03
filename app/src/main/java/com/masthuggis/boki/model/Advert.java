@@ -29,6 +29,7 @@ public class Advert implements Advertisement {
     private Condition condition;
     private List<String> tags;
     private File imageFile; //the imageFile used instead of an imageURL
+    private String imageUrl;
 
 
     public Advert() {
@@ -42,7 +43,8 @@ public class Advert implements Advertisement {
         this.tags = new ArrayList<>();
     }
 
-    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, File file, List<String> tags) {
+    //Probably doesn't need to set a
+    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, File imageFile, String imageUrl, List<String> tags) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.uniqueAdID = id;
@@ -50,7 +52,8 @@ public class Advert implements Advertisement {
         this.description = description;
         this.price = price;
         this.condition = condition;
-        this.imageFile = file;
+        this.imageFile = imageFile;
+        this.imageUrl = imageUrl;
         this.tags = tags;
     }
 
@@ -62,6 +65,11 @@ public class Advert implements Advertisement {
     @Override
     public File getImageFile() {
         return this.imageFile;
+    }
+
+    @Override
+    public String getImageUrl() {
+        return this.imageUrl;
     }
 
     @Override
@@ -135,22 +143,20 @@ public class Advert implements Advertisement {
 
 
     /**
-     *
-     *
      * @param condition, string given from view, representing a condition
      */
     @Override
     public void setCondition(int condition) {
-            switch (condition){
-                case R.string.conditionNew:
-                    this.condition = Condition.NEW;
-                    break;
-                case R.string.conditionGood:
-                    this.condition = Condition.GOOD;
-                    break;
-                case R.string.conditionOk:
-                    this.condition = Condition.OK;
-                    break;
+        switch (condition) {
+            case R.string.conditionNew:
+                this.condition = Condition.NEW;
+                break;
+            case R.string.conditionGood:
+                this.condition = Condition.GOOD;
+                break;
+            case R.string.conditionOk:
+                this.condition = Condition.OK;
+                break;
         }
     }
 
@@ -163,8 +169,9 @@ public class Advert implements Advertisement {
         }
         return true;
     }
+
     @Override
-    public boolean isValidCondition(){
+    public boolean isValidCondition() {
         return condition != Condition.UNDEFINED;
     }
 

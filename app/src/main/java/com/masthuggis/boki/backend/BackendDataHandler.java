@@ -1,5 +1,6 @@
 package com.masthuggis.boki.backend;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -124,14 +125,15 @@ public class BackendDataHandler implements iBackend {
                 List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
                 for (DocumentSnapshot snapshot : adverts) {
                     Map<String, Object> toBeAdded = snapshot.getData();
-                    downloadFirebaseFile((String) toBeAdded.get("uniqueAdID"), file -> { //Doesn't make use of glide's caching right now
-                        toBeAdded.put("imgFile", file);
-                        advertDataList.add(toBeAdded);
-                        DBCallback.onCallBack(advertDataList);
+                    getFirebaseURL((String) toBeAdded.get("uniqueAdID"), new UrlCallback() {
+                        @Override
+                        public void onCallback(String url) {
+                            toBeAdded.put("imgUrl", url);
+                            advertDataList.add(toBeAdded);
+                            DBCallback.onCallBack(advertDataList);
+                        }
                     });
-                    //advertDataList.add(toBeAdded);
                 }
-                //DBCallback.onCallBack(advertDataList);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -161,6 +163,16 @@ public class BackendDataHandler implements iBackend {
             e.printStackTrace();
             fileCallback.onCallback(null);
         }
+    }
+
+    public void getFirebaseURL(String uniqueID, UrlCallback urlCallback) {
+        imagesRef.child(uniqueID).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                //Got the download URL
+                urlCallback.onCallback(uri.toString());
+            }
+        }).addOnFailureListener(e -> e.printStackTrace());
     }
 
 

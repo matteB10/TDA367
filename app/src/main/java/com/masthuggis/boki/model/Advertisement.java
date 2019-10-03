@@ -13,6 +13,8 @@ public interface Advertisement {
 
     File getImageFile();
 
+    String getImageUrl();
+
     String getTitle();
 
     long getPrice();
