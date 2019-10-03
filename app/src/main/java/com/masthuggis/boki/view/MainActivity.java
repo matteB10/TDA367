@@ -26,8 +26,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
+
         homeFragment = new HomeFragment();
         activeFragment = homeFragment;
+        /*
+        favoritesFragment = new FavoritesFragment();
+        profileFragment = new ProfileFragment();
+        messagesFragment = new MessagesFragment();
+        */
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
     }
 
