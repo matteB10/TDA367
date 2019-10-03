@@ -27,8 +27,7 @@ public class NewAdFragment extends Fragment {
         ImageButton newCollectionButton = v.findViewById(R.id.to_new_collection_imagebutton);
         ImageButton newBookButton = v.findViewById(R.id.to_new_book_imagebutton);
         newBookButton.setOnClickListener(view -> {
-            //TODO
-            // Öppna ny vy för att skapa ny bok. Samt skapa presenter för detta.
+
             Intent intent = new Intent(getActivity(), CreateAdActivity.class);
             startActivity(intent);
 

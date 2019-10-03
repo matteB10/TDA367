@@ -182,7 +182,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setTitleListener();
         setPriceListener();
         setDescriptionListener();
-        setCreateAdvertListener();
+        setPublishAdListener();
         setConditionGroupListener();
         setPreDefTagsListeners();
         setUserDefTagListener();
@@ -308,13 +308,13 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         });
     }
 
-    private void setCreateAdvertListener() {
+    private void setPublishAdListener() {
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setOnClickListener(view -> {
             Intent intent = new Intent(CreateAdActivity.
                     this, DetailsActivity.class);
-            presenter.publishAdvert();
             intent.putExtra("advertID", presenter.getId());
+            presenter.publishAdvert();
             startActivity(intent);
             finish();
 
@@ -343,6 +343,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
                 if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SPACE)) {
                     presenter.userDefTagsChanged(userDefTag.getText().toString());
+                    //clear text field for new user input
                     userDefTag.setText("");
                     return true;
                 }
@@ -423,6 +424,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void displayPreDefTagButtons() {
         LinearLayout preDefTagsLayout = findViewById(R.id.preDefTagsLinearLayout);
         List<Button> tagButtons = createTagButtons(getPreDefTagStrings());
+        preDefTagButtons = tagButtons;
         populateTagsLayout(tagButtons, preDefTagsLayout);
     }
 
