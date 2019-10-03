@@ -45,6 +45,7 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
         this.presenter = new HomePresenter(this);
         setupSortSpinner();
         setupSearchField();
+        hideLoadingScreen();
         return view;
     }
 
@@ -109,8 +110,9 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
 
     @Override
     public void updateThumbnails() {
-        if (recyclerViewAdapter == null)
+        if (recyclerViewAdapter == null) {
             setupList();
+        }
         recyclerViewAdapter.notifyDataSetChanged();
     }
 

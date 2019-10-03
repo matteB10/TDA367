@@ -1,56 +1,47 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.view.MessagesRecyclerViewAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MessagesPresenter {
 
-    private List<Advertisement> adverts;
+    private List<iChat> chats;
     private View view;
 
     public MessagesPresenter(View view) {
         this.view = view;
-        Repository.getInstance().getAllAds(advertisements -> {
-            if (advertisements != null) {
-                this.adverts = new ArrayList<>(advertisements);
-                this.view.hideLoadingScreen();
-                this.view.showThumbnails();
+        this.view.showLoadingScreen();
+        if (DataModel.getInstance().isLoggedIn()) {
+            chats= DataModel.getInstance().getUserChats();
+            view.isLoggedIn( this);
+        }
 
-            } else {
-                System.out.println(adverts.size());
-            }
-        });
-    }
 
-    public void onRowPressed(String userID) {
-        view.showDetailsScreen(userID);
 
+            // UserRepository.getInstance().getUserChats(DataModel.getInstance().getUserID(), chatList -> chats = chatList);
 
     }
-
-
+    public void onRowPressed(String chatID) {
+        view.showDetailsScreen(chatID);
+    }
     public void bindViewHolderAtPosition(int position, MessagesRecyclerViewAdapter.
             ViewHolder holder) {
-        if (adverts.size() < position) {
+        if (chats.size() < position || chats == null) {
             return;
         }
-        Advertisement a = adverts.get(position);
-        holder.setDateTextView(a.getDatePublished());
-        holder.setUserTextView(a.getTitle());
-        holder.setId(a.getUniqueOwnerID());
-        if (a.getImageFile() != null) {
-            holder.setMessageImageView(a.getImageFile().toURI().toString());
-        }
+        iChat c = chats.get(position);
+
+        holder.setUserTextView(c.getReceiver());
+        holder.setChatID(c.getChatID());
+
     }
 
     public int getItemCount() {
-        if (adverts != null) {
-            return adverts.size();
-
+        if (chats != null) {
+            return chats.size();
         }
         return 0;
     }
@@ -59,10 +50,12 @@ public class MessagesPresenter {
     public interface View {
         void showLoadingScreen();
 
-        void showThumbnails();
+        void showThumbnails(MessagesPresenter messagesPresenter);
 
         void hideLoadingScreen();
 
-        void showDetailsScreen(String id);
+        void showDetailsScreen(String chatID);
+
+        void isLoggedIn(MessagesPresenter messagesPresenter);
     }
 }

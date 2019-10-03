@@ -1,6 +1,5 @@
 package com.masthuggis.boki.backend;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -12,6 +11,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -19,17 +19,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.masthuggis.boki.model.Chat;
+import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,14 +53,14 @@ public class BackendDataHandler implements iBackend {
     private FirebaseStorage storage = FirebaseStorage.getInstance(); //Reference to Cloud Storage that holds images
     private StorageReference mainRef = storage.getReference();
     private StorageReference imagesRef = mainRef.child("images"); //Reference to storage location of images
-    FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
 
 
     private BackendDataHandler() {
 
     }
 
-    static BackendDataHandler getInstance() {
+    public static BackendDataHandler getInstance() {
         if (instance == null)
             instance = new BackendDataHandler();
         return instance;
@@ -96,34 +96,40 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    void readUserIDAdverts(advertisementDBCallback advertisementDBCallback, String userID) {
+    void readUserIDAdverts(DBCallback DBCallback, String userID) {
         CollectionReference users = db.collection("users");
-        users.document(userID).collection("adverts").addSnapshotListener((value, e) -> {
-            if (e != null) {
-                Log.w(TAG, "Listen failed.", e);
-                return;
+        users.document(userID).collection("adverts").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
+                List<Map<String, Object>> advertDataList = new ArrayList<>();
+                for (QueryDocumentSnapshot document : value) {
+                    Map<String, Object> advertData = document.getData();
+                    advertDataList.add(advertData);
+                }
+                DBCallback.onCallBack(advertDataList);
             }
-            List<Map<String, Object>> advertDataList = new ArrayList<>();
-            for (QueryDocumentSnapshot document : value) {
-                Map<String, Object> advertData = document.getData();
-                advertDataList.add(advertData);
-            }
-            advertisementDBCallback.onCallBack(advertDataList);
         });
     }
 
     //Fetch data for all adverts from all users
     //might want to run this on separate thread created by caller
-    void readAllAdvertData(advertisementDBCallback advertisementDBCallback) {
+    void readAllAdvertData(DBCallback DBCallback) {
         List<Map<String, Object>> advertDataList = new ArrayList<>();
-        db.collectionGroup("adverts").get().addOnSuccessListener(queryDocumentSnapshots -> {
-            List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
-            for (DocumentSnapshot snapshot : adverts) {
-                Map<String, Object> toBeAdded = snapshot.getData();
-                toBeAdded.put("imgFile", downloadFirebaseFile((String) toBeAdded.get("uniqueAdID")));
-                advertDataList.add(toBeAdded);
+        db.collectionGroup("adverts").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
+                for (DocumentSnapshot snapshot : adverts) {
+                    Map<String, Object> toBeAdded = snapshot.getData();
+                    toBeAdded.put("imgFile", downloadFirebaseFile((String) toBeAdded.get("uniqueAdID")));
+                    advertDataList.add(toBeAdded);
+                }
+                DBCallback.onCallBack(advertDataList);
             }
-            advertisementDBCallback.onCallBack(advertDataList);
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -132,6 +138,37 @@ public class BackendDataHandler implements iBackend {
             }
         });
 
+    }
+
+    public void getUserChats(String userID, chatDBCallback chatDBCallback) {
+        List<Map<String, Object>> chatDataList = new ArrayList<>();
+        db.collection("users").document(userID).collection("conversations").addSnapshotListener((queryDocumentSnapshots, e) -> {
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e);
+                return;
+            }
+
+            assert queryDocumentSnapshots != null;
+            for (QueryDocumentSnapshot q : queryDocumentSnapshots) {
+                chatDataList.add(q.getData());
+            }
+            chatDBCallback.onCallback(chatDataList);
+        });
+    }
+
+    public void createNewChat(HashMap<String, Object> newChatMap) {
+        String uniqueChatID = UniqueIdCreator.getUniqueID();
+        newChatMap.put("uniqueChatID", uniqueChatID);
+        String sender = (String) newChatMap.get("sender");
+        String receiver = (String) newChatMap.get("receiver");
+        db.collection("users").document(receiver).collection("conversations").document().set(newChatMap)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "DocumentSnapshot successfully written!");
+
+                    db.collection("users").document(sender).collection("conversations")
+                            .document().set(newChatMap);
+                })
+                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
     }
 
     /**
@@ -177,15 +214,16 @@ public class BackendDataHandler implements iBackend {
         }
     }
 
+
     public void userSignIn(String email, String password) {
-        try{
-            auth.signInWithEmailAndPassword(email,password)
+        try {
+            Task<AuthResult> authResultTask = auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                         }
                     });
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -193,15 +231,69 @@ public class BackendDataHandler implements iBackend {
     public void userSignUp(String email, String password) {
         try {
             auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
 
-                        } else {
+                            } else {
+                            }
                         }
                     });
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
+    public String getUserID() {
+        String id = auth.getUid();
+
+        return id;
+    }
+
+    public Map<String, String> getUser() {
+        Map<String, String> userMap = new HashMap<>();
+//        userMap.put("email", auth.getCurrentUser().getEmail());
+        //      userMap.put("displayname", auth.getCurrentUser().getDisplayName());
+        FirebaseUser user = auth.getCurrentUser();
+        String str = user.getUid();
+        userMap.put("userID", str);
+        return userMap;
+    }
+
+    public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
+        db.collection("messages").document(uniqueChatID).collection("messages").document().set(messageMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+
+            }
+        });
+    }
+
+
+    public void getMessages(String uniqueChatID, Chat chat, DBCallback messageCallback) {
+        List<Map<String, Object>> messageMap = new ArrayList<>();
+        db.collection("messages").document(uniqueChatID).collection("messages").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                messageMap.clear();
+                for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                    messageMap.add(querySnapshot.getData());
+                }
+                messageCallback.onCallBack(messageMap);
+                chat.updateChatObservers();
+
+            }
+        });
+
+    }
 }
+
+

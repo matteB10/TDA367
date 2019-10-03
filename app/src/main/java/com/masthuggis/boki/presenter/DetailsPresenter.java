@@ -1,7 +1,7 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.iConditionable;
 
@@ -22,7 +22,7 @@ public class DetailsPresenter {
 
     public DetailsPresenter(View view, String advertID) {
         this.view = view;
-        this.advertisement = Repository.getInstance().getAdFromAdID(advertID);
+        this.advertisement = DataModel.getInstance().getAdFromAdID(advertID);
 
         setupView();
     }
@@ -48,6 +48,10 @@ public class DetailsPresenter {
         int drawable = StylingHelper.getConditionDrawable(advertisement.getCondition());
         int text = StylingHelper.getConditionText(advertisement.getCondition());
         view.setCondition(text,drawable);
+    }
+
+    public void createNewChat(String uniqueOwnerID) {
+        DataModel.getInstance().createNewChat(uniqueOwnerID);
     }
 
     public interface View extends iConditionable {

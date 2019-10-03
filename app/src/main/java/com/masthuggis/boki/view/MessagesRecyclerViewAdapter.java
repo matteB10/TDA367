@@ -11,12 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.backend.advertisementCallback;
-import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.presenter.MessagesPresenter;
-
-import java.util.List;
 
 public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRecyclerViewAdapter.ViewHolder> {
 
@@ -43,6 +38,9 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
 
     @Override
     public int getItemCount() {
+        if(presenter==null){
+            return 0;
+        }
         return presenter.getItemCount();
     }
 
@@ -51,7 +49,7 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
         private TextView userTextView;
         private TextView dateTextView;
         private ImageView messageImageView;
-        private String id;
+        private String chatID;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,7 +62,7 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
         }
 
         private void setupOnPressActionFor(View v) {
-            v.setOnClickListener(view -> presenter.onRowPressed(id));
+            v.setOnClickListener(view -> presenter.onRowPressed(chatID));
         }
 
         public void setUserTextView(String userTextView) {
@@ -76,11 +74,14 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
         }
 
         public void setMessageImageView(String messageImageView) {
+            if (messageImageView == null) {
+                return;
+            }
             this.messageImageView.setImageURI(Uri.parse(messageImageView));
         }
 
-        public void setId(String id) {
-            this.id = id;
+        public void setChatID(String chatID) {
+            this.chatID = chatID;
         }
     }
 

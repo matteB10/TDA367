@@ -2,10 +2,9 @@ package com.masthuggis.boki.presenter;
 
 import android.os.Handler;
 
-
 import com.masthuggis.boki.backend.MockRepository;
-import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.sorting.SortManager;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
@@ -36,11 +35,11 @@ public class HomePresenter implements IProductsPresenter {
     }
 
     private void getData() {
-        Repository.getInstance().getAllAds(advertisements -> {
+        DataModel.getInstance().fetchAllAdverts((advertisements -> {
             if (advertisements != null) {
                 updateData(advertisements);
             }
-        });
+        }));
     }
 
 
@@ -56,7 +55,6 @@ public class HomePresenter implements IProductsPresenter {
         this.view.hideLoadingScreen();
         this.view.updateThumbnails();
     }
-
     private void sortUsingTheStandardSortingOption() {
         sortOptionSelected(0);
     }
@@ -113,9 +111,9 @@ public class HomePresenter implements IProductsPresenter {
     }
 
     public void sortOptionSelected(int pos) {
-        if (adverts == null)
+        if (adverts == null || adverts.size() == 0) {
             return;
-
+        }
         List<Advertisement> sortedList = sortManager.sort(pos, adverts);
         if (sortedList == null)
             return;
@@ -130,9 +128,10 @@ public class HomePresenter implements IProductsPresenter {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Repository.getInstance().getAllAds(advertisements -> {
+                DataModel.getInstance().fetchAllAdverts(advertisements -> {
                     if (advertisements != null)
                         adverts = advertisements; //Refreshes the list so it accurately reflects adverts in firebase
+
                     ArrayList<Advertisement> filteredList = new ArrayList<>();
                     Iterator<Advertisement> iterator = adverts.iterator();
                     while (iterator.hasNext()) {

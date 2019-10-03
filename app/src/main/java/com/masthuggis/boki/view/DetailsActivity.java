@@ -13,6 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.model.Advert;
+import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.presenter.DetailsPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 
@@ -34,16 +38,18 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         if (advertID != null) {
             presenter = new DetailsPresenter(this, advertID);
         }
+        String uniqueOwnerID= DataModel.getInstance().getAdFromAdID(advertID).getUniqueOwnerID();
 
         Button contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
             //TODO HÄR SKA CHATTEN ÖPPNAS TYP
-            if (contactOwnerButton.getText() == "+46738083104") {
+            if (contactOwnerButton.getText().equals("Skicka meddelande till" + uniqueOwnerID)) {
+                presenter.createNewChat(uniqueOwnerID);
                 //   Intent intent = new Intent(Intent.ACTION_DIAL);
                 // intent.setData(Uri.parse(contactOwnerButton.getText().toString()));
                 // startActivity(intent);
             } else {
-                contactOwnerButton.setText("+46738083104");
+                contactOwnerButton.setText("Skicka meddelande till" + uniqueOwnerID);
             }
         });
     }

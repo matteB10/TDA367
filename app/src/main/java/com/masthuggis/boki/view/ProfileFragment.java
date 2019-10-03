@@ -25,18 +25,17 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     private View view;
     private RecyclerView recyclerView;
     private ProductsRecyclerViewAdapter adapter;
-
-
+    private Button btnSignIn;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.profile_fragment,container,false);
-        setupHeader(v);
-        setupList(v);
 
-        return v;
+        view = inflater.inflate(R.layout.profile_fragment, container, false);
+        setupHeader(view);
+        presenter.isLoggedIn();
+        return view;
     }
 
 
@@ -45,7 +44,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
         Button settingsButton = v.findViewById(R.id.profileSettingsButton);
         settingsButton.setOnClickListener(view -> presenter.onSettingsButtonPressed());
 
-        Button btnSignIn = v.findViewById(R.id.signInButton);
+        btnSignIn = v.findViewById(R.id.signInButton);
         btnSignIn.setOnClickListener(view -> presenter.onSignInButtonPressed());
 
     }
@@ -76,8 +75,13 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     public void setIsUserLoggedIn(boolean isUserLoggedIn) {
         if (isUserLoggedIn) {
             // TODO: Display the users books on sale
+            btnSignIn.setVisibility(View.INVISIBLE);
+            setupList(view);
+
+
         } else {
             // TODO: ask user to log in? What actions should be taken?
+            btnSignIn.setVisibility(View.VISIBLE);
         }
     }
 
@@ -95,7 +99,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
 
     @Override
     public void showSignInScreen() {
-        Intent intent = new Intent(getContext(),SignInActivity.class);
+        Intent intent = new Intent(getContext(), SignInActivity.class);
         startActivity(intent);
     }
 
@@ -107,5 +111,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     @Override
     public void hideLoadingScreen() {
         // TODO: hide loading animation
+
+
     }
 }

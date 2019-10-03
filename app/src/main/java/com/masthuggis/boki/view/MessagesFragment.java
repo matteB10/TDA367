@@ -19,38 +19,41 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 public class MessagesFragment extends Fragment implements MessagesPresenter.View {
     private MessagesPresenter presenter;
     private View view;
+    private MessagesRecyclerViewAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-        this.presenter = new MessagesPresenter(this);
         this.view = inflater.inflate(R.layout.messages_fragment, container, false);
+        this.presenter = new MessagesPresenter(this);
 
         return view;
 
     }
 
 
-
-    private void setupList() {
+    private void setupList(MessagesPresenter messagesPresenter) {
         RecyclerView recyclerView = view.findViewById(R.id.messages_recyclerview);
-        MessagesRecyclerViewAdapter adapter = new MessagesRecyclerViewAdapter(presenter);
+        adapter = new MessagesRecyclerViewAdapter(messagesPresenter);
         recyclerView.setAdapter(adapter);
         int spanCount = 1;
         int spacing = 10;
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), spanCount);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, true));
+
+
     }
 
     @Override
     public void showLoadingScreen() {
+        ProgressBar progressBar = view.findViewById(R.id.loadingProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
 
     }
 
     @Override
-    public void showThumbnails() {
-        setupList();
+    public void showThumbnails(MessagesPresenter messagesPresenter) {
+        setupList(messagesPresenter);
 
     }
 
@@ -62,10 +65,18 @@ public class MessagesFragment extends Fragment implements MessagesPresenter.View
     }
 
     @Override
-    public void showDetailsScreen(String id) {
-        Intent intent = new Intent(getContext(),ChatActivity.class);
-        intent.putExtra("userID",id);
+    public void showDetailsScreen(String chatID) {
+        Intent intent = new Intent(getContext(), ChatActivity.class);
+        intent.putExtra("chatID",chatID);
         startActivity(intent);
+
+    }
+
+    @Override
+    public void isLoggedIn(MessagesPresenter messagesPresenter) {
+        showLoadingScreen();
+        showThumbnails(messagesPresenter);
+        hideLoadingScreen();
 
     }
 }
