@@ -37,6 +37,7 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
 
         // If using firebase uncommment line below
         getData();
+        DataModel.getInstance().addRepositoryObserver(this);
     }
 
     private void getData() {

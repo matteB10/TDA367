@@ -1,5 +1,7 @@
 package com.masthuggis.boki.backend;
 
+import android.util.Log;
+
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
@@ -55,8 +57,9 @@ public class Repository {
         dataMap.put("tags", advertisement.getTags());
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
-        BackendDataHandler.getInstance().writeAdvertToFirebase(dataMap, imageFile);
-        Repository.notifyMarketObservers();
+        BackendDataHandler.getInstance().writeAdvertToFirebase(dataMap, imageFile, () -> {
+            Repository.notifyMarketObservers();
+        });
     }
 
     /**
@@ -81,7 +84,6 @@ public class Repository {
                 allAds.add(retrieveAdvert(dataMap));
             }
             advertisementCallback.onCallback(allAds);
-            Repository.notifyMarketObservers();
         }));
         thread.start();
     }
