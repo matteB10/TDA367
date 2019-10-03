@@ -16,8 +16,8 @@ import java.util.Map;
  * Data is fetched using the BackendDataHandler class.
  */
 public class Repository {
-    private final List<RepositoryObserver> observers = new ArrayList<>();
-    private List<Advertisement> allAds = new ArrayList<>();
+    private static final List<RepositoryObserver> observers = new ArrayList<>();
+    private static List<Advertisement> allAds = new ArrayList<>();
 
     private Repository() {
     }
@@ -56,6 +56,7 @@ public class Repository {
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
         BackendDataHandler.getInstance().writeAdvertToFirebase(dataMap, imageFile);
+        Repository.notifyMarketObservers();
     }
 
     /**
@@ -80,6 +81,7 @@ public class Repository {
                 allAds.add(retrieveAdvert(dataMap));
             }
             advertisementCallback.onCallback(allAds);
+            Repository.notifyMarketObservers();
         }));
         thread.start();
     }
@@ -88,9 +90,13 @@ public class Repository {
         return BackendDataHandler.getInstance().getFireBaseID(userID, advertID);
     }
 
-    //TODO FOR LATER IMPLEMENTATION
-    public void addObserver(RepositoryObserver observer) {
+    public static void addRepositoryObserver(RepositoryObserver observer) {
         observers.add(observer);
+    }
+
+    private static void notifyMarketObservers() {
+        if (!Repository.observers.isEmpty())
+            observers.forEach(observer -> observer.advertsInMarketUpdate(allAds));
     }
 
     public static void getAllAds(advertisementCallback advertisementCallback) {
@@ -98,17 +104,6 @@ public class Repository {
         // adverts, if there are any, will be same as the ones stored on the database.
         // TODO: make a setup so it does not have to do fetch every time (only if necessary)
         fetchAllAdverts(advertisementCallback);
-    }
-
-    private void notifyUsersAdvertsForSaleUpdated() {
-        // TODO: change from temp list to actual user list
-        //observers.forEach(observer -> observer.userAdvertsForSaleUpdate(updatedListIterator));
-    }
-
-    private void notifyMarketObservers() {
-
-        //TODO FIX SO THAT THIS IS IN DATAMODEL INSTEAD
-        // observers.forEach(observer -> observer.allAdvertsInMarketUpdate(allAds.iterator()));
     }
 
     private static Advertisement retrieveAdvert(Map<String, Object> dataMap) {

@@ -1,6 +1,7 @@
 package com.masthuggis.boki.model;
 
 import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.backend.advertisementCallback;
 
@@ -56,9 +57,12 @@ public class DataModel {
     }
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
-
         Repository.fetchAllAdverts(advertisementCallback);
         updateAllAds();
+    }
+
+    public void addRepositoryObserver(RepositoryObserver observer) {
+        Repository.addRepositoryObserver(observer);
     }
 
     public List<Advertisement> getAllAds() {

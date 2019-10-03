@@ -1,10 +1,12 @@
 package com.masthuggis.boki.presenter;
 
 import android.os.Handler;
+import android.util.Log;
 
 
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.backend.MockRepository;
+import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.sorting.SortManager;
@@ -19,7 +21,7 @@ import java.util.List;
 /**
  * HomePresenter is the presenter class for the view called HomeFragment.
  */
-public class HomePresenter implements IProductsPresenter {
+public class HomePresenter implements IProductsPresenter, RepositoryObserver {
     private final View view;
     private final SortManager sortManager;
     private List<Advertisement> adverts;
@@ -45,7 +47,6 @@ public class HomePresenter implements IProductsPresenter {
         }));
     }
 
-
     // Used during development when using local data
     private void useTestData() {
         Handler handler = new Handler();
@@ -58,6 +59,7 @@ public class HomePresenter implements IProductsPresenter {
         this.view.hideLoadingScreen();
         this.view.updateThumbnails();
     }
+
     private void sortUsingTheStandardSortingOption() {
         sortOptionSelected(0);
     }
@@ -142,6 +144,11 @@ public class HomePresenter implements IProductsPresenter {
         });
         thread.start();
 
+    }
+
+    @Override
+    public void advertsInMarketUpdate(List<Advertisement> advertsInMarket) {
+        Log.d("DEBUG", "advertsInMarketUpdate " + advertsInMarket.size());
     }
 
 
