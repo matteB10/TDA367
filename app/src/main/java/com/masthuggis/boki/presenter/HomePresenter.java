@@ -150,6 +150,8 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
     @Override
     public void advertsInMarketUpdate(List<Advertisement> advertsInMarket) {
         Log.d("DEBUG", "advertsInMarketUpdate " + advertsInMarket.size());
+        if (advertsInMarket != null && !advertsInMarket.isEmpty())
+            updateData(advertsInMarket);
     }
 
 

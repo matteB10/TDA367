@@ -57,9 +57,7 @@ public class Repository {
         dataMap.put("tags", advertisement.getTags());
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
-        BackendDataHandler.getInstance().writeAdvertToFirebase(dataMap, imageFile, () -> {
-            Repository.notifyMarketObservers();
-        });
+        BackendDataHandler.getInstance().writeAdvertToFirebase(dataMap, imageFile, () -> Repository.notifyMarketObservers());
     }
 
     /**
@@ -77,7 +75,6 @@ public class Repository {
     }
 
     public static void fetchAllAdverts(advertisementCallback advertisementCallback) {
-        List<Advertisement> allAds = new ArrayList<>();
         Thread thread = new Thread(() -> BackendDataHandler.getInstance().readAllAdvertData(advertDataList -> {
             allAds.clear();
             for (Map<String, Object> dataMap : advertDataList) {
