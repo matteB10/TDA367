@@ -74,14 +74,13 @@ public class Repository {
 
     public static void fetchAllAdverts(advertisementCallback advertisementCallback) {
         List<Advertisement> allAds = new ArrayList<>();
-        Thread thread = new Thread(() -> BackendDataHandler.getInstance().readAllAdvertData(advertDataList -> {
+        BackendDataHandler.getInstance().readAllAdvertData(advertDataList -> {
             allAds.clear();
             for (Map<String, Object> dataMap : advertDataList) {
                 allAds.add(retrieveAdvert(dataMap));
             }
             advertisementCallback.onCallback(allAds);
-        }));
-        thread.start();
+        });
     }
 
     public String getFireBaseID(String userID, String advertID) {

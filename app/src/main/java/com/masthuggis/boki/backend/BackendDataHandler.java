@@ -85,7 +85,6 @@ public class BackendDataHandler implements iBackend {
             InputStream inputStream = new FileInputStream(imageFile);
             UploadTask uploadTask = imagesRef.child(uniqueAdID).putStream(inputStream);
             uploadTask.addOnSuccessListener(taskSnapshot -> {
-                //Oklart
             }).addOnFailureListener(e -> {
                 //Handle errors here
                 e.printStackTrace();
@@ -125,10 +124,14 @@ public class BackendDataHandler implements iBackend {
                 List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
                 for (DocumentSnapshot snapshot : adverts) {
                     Map<String, Object> toBeAdded = snapshot.getData();
-                    toBeAdded.put("imgFile", downloadFirebaseFile((String) toBeAdded.get("uniqueAdID")));
-                    advertDataList.add(toBeAdded);
+                    downloadFirebaseFile((String) toBeAdded.get("uniqueAdID"), file -> {
+                        toBeAdded.put("imgFile", file);
+                        advertDataList.add(toBeAdded);
+                        DBCallback.onCallBack(advertDataList);
+                    });
+                    //advertDataList.add(toBeAdded);
                 }
-                DBCallback.onCallBack(advertDataList);
+                //DBCallback.onCallBack(advertDataList);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -137,8 +140,29 @@ public class BackendDataHandler implements iBackend {
 
             }
         });
-
     }
+
+    /**
+     * All images in firebase are stored in the images-folder with their
+     * uniqueAdID as filenames
+     */
+    private void downloadFirebaseFile(String uniqueID, FileCallback fileCallback) {
+        try {
+            File localFile = File.createTempFile("images", "jpg");
+            imagesRef.child(uniqueID).getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+                //Local temp file has been created and can be accessed
+                //through variable localFile
+                fileCallback.onCallback(localFile); //return chain of callbacks when image is downloaded
+            }).addOnFailureListener(e -> {
+                System.out.println("Download from firebase failed.");
+                e.printStackTrace();
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            fileCallback.onCallback(null);
+        }
+    }
+
 
     public void getUserChats(String userID, chatDBCallback chatDBCallback) {
         List<Map<String, Object>> chatDataList = new ArrayList<>();
@@ -171,26 +195,6 @@ public class BackendDataHandler implements iBackend {
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
     }
 
-    /**
-     * All images in firebase are stored in the images-folder with their
-     * uniqueAdID as filenames
-     */
-    private File downloadFirebaseFile(String uniqueID) {
-        try {
-            File localFile = File.createTempFile("images", "jpg");
-            imagesRef.child(uniqueID).getFile(localFile).addOnSuccessListener(taskSnapshot -> {
-                //Local temp file has been created and can be accessed
-                //through variable localFile
-            }).addOnFailureListener(e -> {
-                System.out.println("Download from firebase failed.");
-                e.printStackTrace();
-            });
-            return localFile;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null; //Best solution //TODO fix this return case to something more informative perhaps
-    }
 
     //Small method for manually testing if firebase returns the correct ID's for users and adverts
     String getFireBaseID(String userID, String advertID) {
