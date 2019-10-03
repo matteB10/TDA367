@@ -1,8 +1,12 @@
 package com.masthuggis.boki.presenter;
 
 import android.os.Handler;
+import android.util.Log;
 
+
+import com.bumptech.glide.Glide;
 import com.masthuggis.boki.backend.MockRepository;
+import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.sorting.SortManager;
@@ -17,7 +21,7 @@ import java.util.List;
 /**
  * HomePresenter is the presenter class for the view called HomeFragment.
  */
-public class HomePresenter implements IProductsPresenter {
+public class HomePresenter implements IProductsPresenter, RepositoryObserver {
     private final View view;
     private final SortManager sortManager;
     private List<Advertisement> adverts;
@@ -33,6 +37,7 @@ public class HomePresenter implements IProductsPresenter {
 
         // If using firebase uncommment line below
         getData();
+        DataModel.getInstance().addRepositoryObserver(this);
     }
 
     private void getData() {
@@ -42,7 +47,6 @@ public class HomePresenter implements IProductsPresenter {
             }
         }));
     }
-
 
     // Used during development when using local data
     private void useTestData() {
@@ -56,6 +60,7 @@ public class HomePresenter implements IProductsPresenter {
         this.view.hideLoadingScreen();
         this.view.updateThumbnails();
     }
+
     private void sortUsingTheStandardSortingOption() {
         sortOptionSelected(0);
     }
@@ -63,11 +68,6 @@ public class HomePresenter implements IProductsPresenter {
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
         if (adverts.size() < position || adverts == null)
             return;
-        try {
-            Thread.sleep(300); //TODO tweak number or make better implementation
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         Advertisement a = adverts.get(position);
         thumbnailView.setId(a.getUniqueID());
         thumbnailView.setTitle(a.getTitle());
@@ -103,10 +103,6 @@ public class HomePresenter implements IProductsPresenter {
         return arr;
     }
 
-    public List<Advertisement> getLocalAdList() {
-        return this.adverts;
-    }
-
     public String[] getSortOptions() {
         return convertListToArray(sortManager.getSortOptions());
     }
@@ -115,6 +111,7 @@ public class HomePresenter implements IProductsPresenter {
         if (adverts == null || adverts.size() == 0) {
             return;
         }
+
         List<Advertisement> sortedList = sortManager.sort(pos, adverts);
         if (sortedList == null)
             return;
@@ -148,6 +145,13 @@ public class HomePresenter implements IProductsPresenter {
         });
         thread.start();
 
+    }
+
+    @Override
+    public void advertsInMarketUpdate(List<Advertisement> advertsInMarket) {
+        Log.d("DEBUG", "advertsInMarketUpdate " + advertsInMarket.size());
+        if (advertsInMarket != null && !advertsInMarket.isEmpty())
+            updateData(advertsInMarket);
     }
 
 

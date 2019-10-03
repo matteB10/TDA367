@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +21,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
@@ -66,11 +70,10 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
     }
 
-    //Adds a listener for when the user performs a search
+    //Adds a listener for when the user performs a search, reacts to when enter key is pressed
     //makes the keyboard disappear then calls on the presenter to perform the search with given input
     private void setupSearchField() {
         searchField = view.findViewById(R.id.searchFieldEditText);
-
         searchField.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {

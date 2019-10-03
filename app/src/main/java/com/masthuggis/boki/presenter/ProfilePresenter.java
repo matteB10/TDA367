@@ -10,7 +10,7 @@ import com.masthuggis.boki.view.ThumbnailView;
 import java.util.Iterator;
 import java.util.List;
 
-public class ProfilePresenter implements IProductsPresenter, RepositoryObserver {
+public class ProfilePresenter implements IProductsPresenter {
     private final View view;
     private List<Advertisement> adverts;
 
@@ -24,7 +24,6 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         this.view.hideLoadingScreen();
 
     }
-
 
     @Override
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
@@ -52,17 +51,6 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
     @Override
     public void onRowPressed(String uniqueIDoFAdvert) {
         // TODO
-    }
-
-    @Override
-    public void userAdvertsForSaleUpdate(Iterator<Advertisement> advertsForSale) {
-        view.hideLoadingScreen();
-        view.updateItemsOnSale();
-    }
-
-    @Override
-    public void allAdvertsInMarketUpdate(Iterator<Advertisement> advertsInMarket) {
-        // TODO: remove this when interface is segregated
     }
 
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {

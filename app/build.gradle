@@ -41,6 +41,10 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.1.0'
     implementation 'androidx.navigation:navigation-ui:2.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.android.support:support-annotations:28.0.0'
+    annotationProcessor 'com.android.support:support-annotations:28.0.0'
+
+    //GSON - json parser
     implementation 'com.google.code.gson:gson:2.8.5'
 
     //Firebase database, cloud storage and authentication

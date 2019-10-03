@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.IProductsPresenter;
 
@@ -95,19 +96,12 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
             priceTextView.setText(Long.toString(price) + " kr");
         }
 
+
         @Override
         public void setImageURL(String url) {
-            imageView.setImageURI(Uri.parse(url));
+            Glide.with(mContext).load(url).into(imageView); //Does run when app is first started
+            //Needs to be somehow delayed until files are returned from firebase?
         }
-
-        private void compressFile(String url) {
-            Bitmap original = BitmapFactory.decodeFile(url);
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            original.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            Bitmap decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
-        }
-
-
 
 
         @Override

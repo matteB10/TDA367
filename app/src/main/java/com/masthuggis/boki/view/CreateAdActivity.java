@@ -173,7 +173,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         BitmapFactory.Options imageOptions = new BitmapFactory.Options();
         imageOptions.inJustDecodeBounds = true;
         Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 600, 800, true); //TODO change 200x200 to preferable resolution
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 600, 800, true); //TODO change to preferable resolution
         return scaledBitmap;
     }
 

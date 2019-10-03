@@ -1,0 +1,94 @@
+# Meeting Agenda
+
+Group:Masthuggis
+Date: 03/10 - 19
+Chair: Matilda Blomquist
+Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak Lindgren, Elin Melander
+
+
+## Objectives (5 min) 
+
+- statusrapport
+- "buggar", vilka finns? vem fixar?
+- firebase
+
+
+## Reports (15 min) from previous meeting
+
+- Isak har skapat en dataModel som är en fasad för modellen, för att repository inte ska vara vår modell. 
+I dataModel (som är singleton och globalt åtkomstbar) finns en boolean så att man vart som helst i appen kan
+kontrollera om användaren är inloggad eller inte.
+
+
+## Discussion items (35 min)
+
+- statusrapport:
+	- joel håller fortsatt på med sorterings user storyn, i stort sett klar men ej optimerad. 
+	
+	- Isak fortsätter med sin user story (chattfunktionen). Är fungerande men inte helt finslipad.
+
+	- Arvid har jobbat på sin user story med sökfunktion. Finns en fungerande version men är inte optimerad. Hämtar
+	från firebase vid varje sökning, oklart om detta är optimalt eller ej. Kollar även på bildhanteringen 
+	i flödet i thumbnailsen.
+	
+	- Elin jobbar med sin user story att kunna redigera en befintlig annons, och se till att man bara kan redigera
+	sin egen annons.
+	- Matilda har jobbat på sin user story att kunna lägga till fördefinierade ämnestaggar och användartaggar.
+	
+- allmänna buggar och fixar
+
+	- när man backar från att ha gått in i CreateAdActivity ser man startflödet med alla annonser men
+	"new ad" är highlightat som den fliken man står i. Kan detta lösas med conditional navigation?
+
+	- när man lagt upp en ny annons och får se detaljvyn, måste man backa ur den, "new ad" menyfliken är highlightad
+	men startflödet med annonserna visas. Dock ej den annons man precis lagt upp, den syns först om man klickar på 
+	"home"-fliken. Kanske borde vi även lägga till en knapp i detaljvyn för gå vidare för att slippa backa ur vyn.
+
+	- menubar lägger sig ovanpå tangentbordet när man använder sökfältet, denna borde låsas fast på något sätt.
+
+	- lite buggar kring inloggad/utloggad
+
+	- dubbelklickar man på t ex en thumbnail öppnas två detaljvyer, måste fixas.
+
+- firebase
+	- funkar det? haft lite problem med bandbreddsgränsen. Komprimerandet av bilderna borde lösa detta, kanske
+	tillsammans med cachning av bilderna. Sökfunktionen kanske också inte ska hämta direkt från firebase för att 
+	minska risken för att vår begränsande bandbredd på firebase ska ta slut.
+
+	- 50.000 reads om dagen från cloud storage, kan bli ett problem om appen blir realiserad. 
+
+
+- Övriga frågor
+
+	- Vart hamnar man när man loggar in? på sina egna annonser?
+
+
+## Outcomes and assignments (5 min)
+
+- Joel fortsätter jobba med att bevara fragment states osv för att behålla sortering när man byter vy, 
+men kommer att vara användbar i hela appen.
+
+- Isak fortsätter att jobba med chatten men behöver fixa lite ytterligare funktionalitet runtomkring för att det ska 
+fungera korrekt.
+
+
+- Arvid fortsätter med sökfunktionalitet, kanske prioritera sökning. Kanske lägga till att kunna visa en text, avbryta sökningen
+på något sätt osv. Fortsätter med bildhanteringen, kanske cachea bilderna för att optimera appen. 
+
+- Elin fortsätter med att kunna redigera annonser. 
+
+- Matilda ska fortsätta med att kolla på hur taggarnas position i layouten kan optimeras, och hur dessa kan tas bort under
+skapandet av annonsen.
+
+
+Allmänt att göra:
+- Utöka till att kunna söka på taggar. 
+- fixa ovan nämna buggar
+
+## Wrap up
+
+ - Handledning fredag.
+ - Nästa möte: Fredag 10.00, lite code review och kolla lite status på sprinten.
+
+ 
+
