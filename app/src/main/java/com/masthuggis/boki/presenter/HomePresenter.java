@@ -3,6 +3,7 @@ package com.masthuggis.boki.presenter;
 import android.os.Handler;
 
 
+import com.bumptech.glide.Glide;
 import com.masthuggis.boki.backend.MockRepository;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
@@ -65,11 +66,11 @@ public class HomePresenter implements IProductsPresenter {
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
         if (adverts.size() < position || adverts == null)
             return;
-        try {
+        /*try {
             Thread.sleep(300); //TODO tweak number or make better implementation
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
         Advertisement a = adverts.get(position);
         thumbnailView.setId(a.getUniqueID());
         thumbnailView.setTitle(a.getTitle());

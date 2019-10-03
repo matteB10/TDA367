@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
@@ -65,7 +66,7 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
     }
 
-    //Adds a listener for when the user performs a search
+    //Adds a listener for when the user performs a search, reacts to when enter key is pressed
     //makes the keyboard disappear then calls on the presenter to perform the search with given input
     private void setupSearchField() {
         searchField = view.findViewById(R.id.searchFieldEditText);
