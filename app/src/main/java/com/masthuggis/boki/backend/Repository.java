@@ -73,14 +73,18 @@ public class Repository {
     }
 
     public static void fetchAllAdverts(advertisementCallback advertisementCallback) {
-        List<Advertisement> allAds = new ArrayList<>();
-        BackendDataHandler.getInstance().readAllAdvertData(advertDataList -> {
-            allAds.clear();
-            for (Map<String, Object> dataMap : advertDataList) {
-                allAds.add(retrieveAdvert(dataMap));
-            }
-            advertisementCallback.onCallback(allAds);
+        Thread thread = new Thread(() -> { //Runs fetch on a seperate thread to not overload ui thread
+            List<Advertisement> allAds = new ArrayList<>();
+            BackendDataHandler.getInstance().readAllAdvertData(advertDataList -> {
+                allAds.clear();
+                for (Map<String, Object> dataMap : advertDataList) {
+                    allAds.add(retrieveAdvert(dataMap));
+                }
+                advertisementCallback.onCallback(allAds);
+            });
         });
+        thread.start();
+
     }
 
     public String getFireBaseID(String userID, String advertID) {
@@ -135,7 +139,7 @@ public class Repository {
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, null,tags);
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, null, tags);
     } //TODO den här kommer behöva en imageFile den här med
 
 }

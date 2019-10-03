@@ -83,7 +83,7 @@ public class BackendDataHandler implements iBackend {
     private void uploadImageToFirebase(File imageFile, String uniqueAdID) {
         try {
             InputStream inputStream = new FileInputStream(imageFile);
-            UploadTask uploadTask = imagesRef.child(uniqueAdID).putStream(inputStream);
+            UploadTask uploadTask = imagesRef.child(uniqueAdID).putStream(inputStream); //Starts upload to firebase
             uploadTask.addOnSuccessListener(taskSnapshot -> {
             }).addOnFailureListener(e -> {
                 //Handle errors here
@@ -124,7 +124,7 @@ public class BackendDataHandler implements iBackend {
                 List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
                 for (DocumentSnapshot snapshot : adverts) {
                     Map<String, Object> toBeAdded = snapshot.getData();
-                    downloadFirebaseFile((String) toBeAdded.get("uniqueAdID"), file -> {
+                    downloadFirebaseFile((String) toBeAdded.get("uniqueAdID"), file -> { //Doesn't make use of glide's caching right now
                         toBeAdded.put("imgFile", file);
                         advertDataList.add(toBeAdded);
                         DBCallback.onCallBack(advertDataList);
