@@ -1,5 +1,6 @@
 package com.masthuggis.boki.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import com.masthuggis.boki.R;
  */
 public class MainActivity extends AppCompatActivity {
     Fragment selectedFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,34 +37,39 @@ public class MainActivity extends AppCompatActivity {
      * It does this through the defined ID:s of the different fragments.
      */
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = menuItem -> {
+        if (menuItem.getItemId() == R.id.navigation_new_ad) {
+            Intent intent = new Intent(this, CreateAdActivity.class);
+            startActivity(intent);
+        } else {
+            switch (menuItem.getItemId()) {
+                case R.id.navigation_favorites:
+                    selectedFragment = new FavoritesFragment();
+                    break;
+                case R.id.navigation_profile:
+                    selectedFragment = new ProfileFragment();
+                    break;
+                case R.id.navigation_new_ad:
+                    Intent intent = new Intent(MainActivity.this, CreateAdActivity.class);
+                    startActivity(intent);
+                    return true;
+                case R.id.navigation_messages:
+                    selectedFragment = new MessagesFragment();
+                    break;
+                default:
+                    selectedFragment = new HomeFragment();
+                    break;
 
-        switch (menuItem.getItemId()) {
-            case R.id.navigation_favorites:
-                selectedFragment = new FavoritesFragment();
-                break;
-            case R.id.navigation_profile:
-                selectedFragment = new ProfileFragment();
-                break;
-            case R.id.navigation_new_ad:
-                Intent intent = new Intent(MainActivity.this,CreateAdActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.navigation_messages:
-                selectedFragment = new MessagesFragment();
-                break;
-            default:
-                selectedFragment = new HomeFragment();
-                break;
+            }
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+        }
+            return true;
 
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-        return true;
+        ;
 
-    };
+        @Override
+        public void onBackPressed () {
 
-    @Override
-    public void onBackPressed() {
-
+        }
     }
-}
 

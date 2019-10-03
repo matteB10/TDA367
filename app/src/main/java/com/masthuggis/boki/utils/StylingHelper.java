@@ -88,7 +88,7 @@ public class StylingHelper {
     public static TableLayout.LayoutParams getTableRowLayoutParams(Context context) {
         int rowHeight = (int)getDPToPixels(context, 20);
         TableLayout.LayoutParams layoutParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, rowHeight, 1);
-        layoutParams.setMargins(0, 8, 0, 0);
+        layoutParams.setMargins(0, 0, 0, 8);
         layoutParams.setMarginEnd(6);
         return layoutParams;
     }

@@ -36,7 +36,7 @@ public class Advert implements Advertisement {
         this.title = "";
         this.description = "";
         this.price = 0;
-        this.condition = Condition.OK;
+        this.condition = Condition.UNDEFINED;
         this.tags = new ArrayList<>();
     }
 
@@ -152,7 +152,7 @@ public class Advert implements Advertisement {
         }
     }
 
-
+    @Override
     public boolean isNewTag(String tag) {
         for (String s : tags) {
             if (s.equals(tag)) {
@@ -160,6 +160,10 @@ public class Advert implements Advertisement {
             }
         }
         return true;
+    }
+    @Override
+    public boolean isValidCondition(){
+        return condition != Condition.UNDEFINED;
     }
 
 
