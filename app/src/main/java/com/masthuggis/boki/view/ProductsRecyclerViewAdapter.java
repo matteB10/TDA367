@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.IProductsPresenter;
 
@@ -95,9 +96,13 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
             priceTextView.setText(Long.toString(price) + " kr");
         }
 
+        public void setImgURL(String url) {
+            imageView.setImageURI(Uri.parse(url));
+        }
+
         @Override
         public void setImageURL(String url) {
-            imageView.setImageURI(Uri.parse(url));
+            Glide.with(mContext).load(url).into(imageView);
         }
 
         private void compressFile(String url) {
