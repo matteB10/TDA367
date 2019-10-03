@@ -29,6 +29,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
     public ProductsRecyclerViewAdapter(Context context, IProductsPresenter presenter) {
         this.mContext = context;
         this.presenter = presenter;
+        getItemCount();
     }
 
     public void addDecorator(RecyclerView.ItemDecoration decorator) {
@@ -45,6 +46,9 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
 
     @Override
     public int getItemCount() {
+        if(presenter==null){
+            return 0;
+        }
         return presenter.getItemCount();
     }
 
@@ -121,8 +125,5 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
             conditionTextView.setText(condition);
             conditionLayout.setBackground(mContext.getDrawable(drawable));
         }
-
-
     }
-
 }

@@ -2,8 +2,15 @@ package com.masthuggis.boki.model;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 public interface iChat {
-    Collection<iMessage> getMessages();
+    List<iMessage> getMessages();
 
-}
+    String getReceiver();
+    String getChatID();
+     void removeChatObserver(ChatObservers chatObserver);
+     void addChatObserver( ChatObservers chatObserver);
+
+
+    }

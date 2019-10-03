@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 class LatestPublishedSorting implements SortStrategy {
@@ -26,13 +27,7 @@ class LatestPublishedSorting implements SortStrategy {
         return sorted;
     }
 
-    private <T> List<T> reverse(final List<T> list) {
-        final List<T> result = new ArrayList<>(list);
-        Collections.reverse(result);
-        return result;
-    }
-
-    private int convertDateToInt(String date) {
+        private int convertDateToInt(String date) {
         String year, month, day, time;
         date = date
                 .replace("/", "")

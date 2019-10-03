@@ -5,6 +5,13 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.masthuggis.boki.R;
@@ -13,15 +20,35 @@ import com.masthuggis.boki.R;
  * MainActivity is the primary view of the application. This is where the application will take you on launch.
  */
 public class MainActivity extends AppCompatActivity {
-    Fragment selectedFragment;
+    private Fragment homeFragment = new HomeFragment();
+    private Fragment favoritesFragment = new FavoritesFragment();
+    private Fragment profileFragment = new ProfileFragment();
+    private Fragment messagesFragment = new MessagesFragment();
+    private Fragment activeFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setupBottomTabNavigator();
+        addFragmentsToViewHierachy();
+    }
+
+    private void setupBottomTabNavigator() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+    }
+
+    private void addFragmentsToViewHierachy() {
+        FragmentManager fm = getSupportFragmentManager();
+        activeFragment = homeFragment;
+
+        // Adds all fragments to MainActivity container but hides all but homeFragment.
+        fm.beginTransaction().add(R.id.fragment_container, favoritesFragment).hide(favoritesFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, profileFragment).hide(profileFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, messagesFragment).hide(messagesFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, homeFragment).commit();
     }
 
 
@@ -30,36 +57,37 @@ public class MainActivity extends AppCompatActivity {
      * It does this through the defined ID:s of the different fragments.
      */
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = menuItem -> {
-
-        if(menuItem.getItemId() == R.id.navigation_new_ad){
+        if (menuItem.getItemId() == R.id.navigation_new_ad) {
             Intent intent = new Intent(this, CreateAdActivity.class);
             startActivity(intent);
-        }else {
-
+        } else {
             switch (menuItem.getItemId()) {
+                case R.id.navigation_home:
+                    showFragment(homeFragment);
+                    break;
                 case R.id.navigation_favorites:
-                    selectedFragment = new FavoritesFragment();
+                    showFragment(favoritesFragment);
                     break;
                 case R.id.navigation_profile:
-                    selectedFragment = new ProfileFragment();
+                    showFragment(profileFragment);
                     break;
+                case R.id.navigation_new_ad:
+                    Intent intent = new Intent(MainActivity.this, CreateAdActivity.class);
+                    startActivity(intent);
+                    return true;
                 case R.id.navigation_messages:
-                    selectedFragment = new MessagesFragment();
+                    showFragment(messagesFragment);
                     break;
                 default:
-                    selectedFragment = new HomeFragment();
-                    break;
-
+                    return false;
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
         }
         return true;
-
     };
 
-    @Override
-    public void onBackPressed() {
-
+    private void showFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().hide(activeFragment).show(fragment).commit();
+        activeFragment = fragment;
     }
 }
 

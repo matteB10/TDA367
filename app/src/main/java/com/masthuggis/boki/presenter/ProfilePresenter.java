@@ -1,12 +1,11 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,11 +17,9 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         this.view = view;
 
         this.view.showLoadingScreen();
-        Repository.getInstance().getAllAds(advertisements -> {
-            this.adverts = new ArrayList<>(advertisements);
-            this.view.hideLoadingScreen();
-            this.view.updateItemsOnSale();
-        });
+        this.adverts = DataModel.getInstance().getAllAds();
+        this.view.hideLoadingScreen();
+
     }
 
 
@@ -71,6 +68,15 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         thumbnailView.setCondition(text, drawable);
     }
 
+    public void isLoggedIn() {
+        if (DataModel.getInstance().isLoggedIn()) {
+            view.setIsUserLoggedIn(true);
+        } else {
+            view.setIsUserLoggedIn(false);
+        }
+
+    }
+
     public interface View {
         void setIsUserLoggedIn(boolean isUserLoggedIn);
 
@@ -83,6 +89,7 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         void hideLoadingScreen();
 
         void showSignInScreen();
+
     }
 
 
