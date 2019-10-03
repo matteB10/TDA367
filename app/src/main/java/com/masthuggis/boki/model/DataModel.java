@@ -3,6 +3,7 @@ package com.masthuggis.boki.model;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.backend.advertisementCallback;
+import com.masthuggis.boki.backend.signInCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +26,14 @@ public class DataModel {
             instance = new DataModel();
         }
         return instance;
+    }
+
+    public  void signUp(String email, String password, signInCallback signInCallback) {
+        UserRepository.getInstance().signUp(email,password,signInCallback);
+    }
+
+    public  void SignIn(String email, String password, signInCallback signInCallback) {
+        UserRepository.getInstance().signIn(email,password,signInCallback);
     }
 
     public void addAdvertisement(Advertisement ad) {
@@ -102,10 +111,11 @@ public class DataModel {
         //simply here to be instantiated
     }
 
-    public void createNewChat(String uniqueReceiverID) {
+    public void createNewChat(String uniqueReceiverID,String owner) {
         HashMap<String, Object> newChatMap = new HashMap<>();
         newChatMap.put("receiver", uniqueReceiverID);
         newChatMap.put("sender", this.getUserID());
+        newChatMap.put("receiverUsername",owner);
         UserRepository.getInstance().createNewChat(newChatMap);
     }
 
@@ -124,4 +134,7 @@ public class DataModel {
 
     }
 
+    public void setUsername(String username) {
+        UserRepository.getInstance().setUsername(username);
+    }
 }

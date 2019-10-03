@@ -1,4 +1,5 @@
 package com.masthuggis.boki.presenter;
+
 import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.model.User;
 
@@ -7,7 +8,7 @@ public class SignInPresenter {
     private View view;
     private User user;
 
-    public SignInPresenter(View view){
+    public SignInPresenter(View view) {
         this.view = view;
         this.repo = UserRepository.getInstance();
 
@@ -15,8 +16,9 @@ public class SignInPresenter {
 
 
     public void onSignInButtonPressed(String email, String password) {
-        repo.signIn(email, password);
-        view.showProfileScreen();
+        repo.signIn(email, password, () -> {
+            view.showProfileScreen();
+        });
     }
 
     public void onSignUpButtonPressed() {
@@ -26,6 +28,7 @@ public class SignInPresenter {
 
     public interface View {
         void showSignUpScreen();
+
         void showProfileScreen();
     }
 }

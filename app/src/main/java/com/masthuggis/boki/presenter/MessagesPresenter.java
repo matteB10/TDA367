@@ -34,7 +34,7 @@ public class MessagesPresenter {
         }
         iChat c = chats.get(position);
 
-        holder.setUserTextView(c.getReceiver());
+        holder.setUserTextView(c.getReceiverUsername());
         holder.setChatID(c.getChatID());
 
     }

@@ -4,10 +4,7 @@ import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.backend.messagesCallback;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class Chat implements iChat {
     private List<iMessage> messages;
@@ -15,12 +12,14 @@ public class Chat implements iChat {
     private String sender;
     private String receiver;
     private String chatID;
+    private String receiverUsername;
 
 
-    public Chat(String sender, String receiver, String uniqueChatID) {
+    public Chat(String sender, String receiver, String uniqueChatID,String receiverUsername) {
         this.sender = sender;
         this.receiver = receiver;
         this.chatID = uniqueChatID;
+        this.receiverUsername = receiverUsername;
         UserRepository.getInstance().getMessages(uniqueChatID,this, new messagesCallback() {
 
             @Override
@@ -69,4 +68,7 @@ public class Chat implements iChat {
         }
     }
 
+    public String getReceiverUsername() {
+        return receiverUsername;
+    }
 }

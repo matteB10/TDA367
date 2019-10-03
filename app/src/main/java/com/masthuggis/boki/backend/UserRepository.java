@@ -1,6 +1,5 @@
 package com.masthuggis.boki.backend;
 
-import com.google.api.Backend;
 import com.masthuggis.boki.model.Chat;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;
@@ -23,21 +22,20 @@ public class UserRepository {
     }
 
 
-    public void signIn(String email, String password) {
-        BackendDataHandler.getInstance().userSignIn(email, password);
+    public void signIn(String email, String password, signInCallback signInCallback) {
+        BackendDataHandler.getInstance().userSignIn(email, password,signInCallback);
         loggedIn();
-        BackendDataHandler.getInstance().userSignIn(email,password);
     }
 
-    public void signUp(String email, String password) {
-        BackendDataHandler.getInstance().userSignUp(email, password);
+    public void signUp(String email, String password, signInCallback signInCallback) {
+        BackendDataHandler.getInstance().userSignUp(email, password,signInCallback);
         loggedOut();
     }
 
     private void loggedIn() {
         iUser user;
         Map<String, String> map = BackendDataHandler.getInstance().getUser();
-        user = UserFactory.createUser(map.get("userID"));
+        user = UserFactory.createUser(map.get("email"),map.get("username"),map.get("userID"));
         DataModel.getInstance().loggedIn(user);
     }
 
@@ -53,8 +51,11 @@ public class UserRepository {
         BackendDataHandler.getInstance().getUserChats(userID, new chatDBCallback() {
             @Override
             public void onCallback(List<Map<String, Object>> chatMap) {
+                if(chatMap.size()==0){
+                    return;
+                }
                 for (Map<String, Object> map : chatMap) {
-                    chatList.add(ChatFactory.createChat(map.get("sender").toString(), map.get("receiver").toString(),map.get("uniqueChatID").toString()));
+                    chatList.add(ChatFactory.createChat(map.get("sender").toString(), map.get("receiver").toString(),map.get("uniqueChatID").toString(),map.get("receiverUsername").toString()));
                 }
                 chatCallback.onCallback(chatList);
             }
@@ -86,6 +87,10 @@ public class UserRepository {
     }
     public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap){
         BackendDataHandler.getInstance().writeMessage(uniqueChatID,messageMap);
+    }
+
+    public void setUsername(String username) {
+        BackendDataHandler.getInstance().setUsername(username);
     }
 }
 

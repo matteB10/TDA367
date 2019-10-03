@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -148,9 +149,14 @@ public class BackendDataHandler implements iBackend {
                 return;
             }
 
-            assert queryDocumentSnapshots != null;
+            if(queryDocumentSnapshots.size()<=0 || queryDocumentSnapshots== null){
+                return;
+            }
             for (QueryDocumentSnapshot q : queryDocumentSnapshots) {
                 chatDataList.add(q.getData());
+            }
+            if(chatDataList.size() == 0){
+                return;
             }
             chatDBCallback.onCallback(chatDataList);
         });
@@ -215,11 +221,12 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    public void userSignIn(String email, String password) {
+    public void userSignIn(String email, String password,signInCallback signInCallback) {
         try {
             Task<AuthResult> authResultTask = auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
+                            signInCallback.onCallback();
                         }
                     });
 
@@ -228,13 +235,14 @@ public class BackendDataHandler implements iBackend {
         }
     }
 
-    public void userSignUp(String email, String password) {
+    public void userSignUp(String email, String password, signInCallback signInCallback) {
         try {
             auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
+                                signInCallback.onCallback();
 
                             } else {
                             }
@@ -254,15 +262,17 @@ public class BackendDataHandler implements iBackend {
 
     public Map<String, String> getUser() {
         Map<String, String> userMap = new HashMap<>();
-//        userMap.put("email", auth.getCurrentUser().getEmail());
-        //      userMap.put("displayname", auth.getCurrentUser().getDisplayName());
         FirebaseUser user = auth.getCurrentUser();
         String str = user.getUid();
+        String username = user.getDisplayName();
+        String email = user.getEmail();
         userMap.put("userID", str);
+        userMap.put("username", username);
+        userMap.put("email",email);
         return userMap;
     }
 
-    public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
+    void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
         db.collection("messages").document(uniqueChatID).collection("messages").document().set(messageMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -278,7 +288,7 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    public void getMessages(String uniqueChatID, Chat chat, DBCallback messageCallback) {
+    void getMessages(String uniqueChatID, Chat chat, DBCallback messageCallback) {
         List<Map<String, Object>> messageMap = new ArrayList<>();
         db.collection("messages").document(uniqueChatID).collection("messages").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -293,6 +303,23 @@ public class BackendDataHandler implements iBackend {
             }
         });
 
+    }
+
+    void setUsername(String username) {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+
+
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
+            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "User profile updated.");
+                    }
+                }
+            });
+        }
     }
 }
 

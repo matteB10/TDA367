@@ -50,8 +50,9 @@ public class DetailsPresenter {
         view.setCondition(text,drawable);
     }
 
-    public void createNewChat(String uniqueOwnerID) {
-        DataModel.getInstance().createNewChat(uniqueOwnerID);
+    public void createNewChat(String uniqueOwnerID,String owner) {
+        DataModel.getInstance().createNewChat(uniqueOwnerID,owner);
+        view.openChat(uniqueOwnerID);
     }
 
     public interface View extends iConditionable {
@@ -62,6 +63,7 @@ public class DetailsPresenter {
         void setImageUrl(String url);
         void setDescription(String description);
         void setTags(List<String> tags);
+        void openChat(String uniqueOwnerID);
     }
 
 
