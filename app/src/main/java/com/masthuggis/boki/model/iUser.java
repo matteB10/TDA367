@@ -1,5 +1,11 @@
 package com.masthuggis.boki.model;
 
+import java.util.List;
+
 public interface iUser {
-    int getId();
+    String getId();
+    String getDisplayName();
+    String getEmail();
+
+    List<iChat> getChats();
 }

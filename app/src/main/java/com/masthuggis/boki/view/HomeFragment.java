@@ -47,32 +47,8 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
         this.presenter = new HomePresenter(this);
         setupSortSpinner();
         setupSearchField();
-        Log.d("DEBUG", "onCreateView");
+        hideLoadingScreen();
         return view;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d("DEBUG", "onCreate");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d("DEBUG", "onPause");
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d("DEBUG", "onDestroyView");
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        Log.d("DEBUG", "onDetach");
     }
 
     private void setupSortSpinner() {
@@ -102,10 +78,16 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
                 if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) { //Make sure stuff happens when enter is pressed
-                    InputMethodManager inputMethodManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
                     searchField.clearFocus(); //This and two lines above hides keyboard when search is pressed
-                    presenter.filter(searchField.getText().toString()); //Actually perform search
+                    showLoadingScreen();
+                    presenter.filter(searchField.getText().toString(), new FilterCallback() {
+                        @Override
+                        public void onCallback() {
+                            hideLoadingScreen(); //Necessary callback since filtering happens on other thread
+                        }
+                    }); //Actually perform search
                     return true;
                 }
                 return false;
@@ -136,8 +118,9 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
 
     @Override
     public void updateThumbnails() {
-        if (recyclerViewAdapter == null)
+        if (recyclerViewAdapter == null) {
             setupList();
+        }
         recyclerViewAdapter.notifyDataSetChanged();
     }
 

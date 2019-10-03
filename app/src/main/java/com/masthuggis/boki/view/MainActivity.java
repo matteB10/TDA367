@@ -7,6 +7,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.masthuggis.boki.R;
 
@@ -65,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_profile:
                     showFragment(profileFragment);
                     break;
+                case R.id.navigation_new_ad:
+                    Intent intent = new Intent(MainActivity.this, CreateAdActivity.class);
+                    startActivity(intent);
+                    return true;
                 case R.id.navigation_messages:
                     showFragment(messagesFragment);
                     break;
@@ -78,11 +88,6 @@ public class MainActivity extends AppCompatActivity {
     private void showFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().hide(activeFragment).show(fragment).commit();
         activeFragment = fragment;
-    }
-
-    @Override
-    public void onBackPressed() {
-
     }
 }
 

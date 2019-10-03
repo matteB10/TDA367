@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 @FunctionalInterface
-public interface advertisementDBCallback {
-    void onCallBack(List<Map<String, Object>> advertDataList);
+public interface chatDBCallback {
+    void onCallback(List<Map<String,Object>> chatDataList);
+
 }

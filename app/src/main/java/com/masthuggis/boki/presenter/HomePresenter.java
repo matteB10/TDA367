@@ -2,12 +2,12 @@ package com.masthuggis.boki.presenter;
 
 import android.os.Handler;
 
-
 import com.masthuggis.boki.backend.MockRepository;
-import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.sorting.SortManager;
 import com.masthuggis.boki.utils.StylingHelper;
+import com.masthuggis.boki.view.FilterCallback;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.ArrayList;
@@ -36,11 +36,11 @@ public class HomePresenter implements IProductsPresenter {
     }
 
     private void getData() {
-        Repository.getInstance().getAllAds(advertisements -> {
+        DataModel.getInstance().fetchAllAdverts((advertisements -> {
             if (advertisements != null) {
                 updateData(advertisements);
             }
-        });
+        }));
     }
 
 
@@ -56,7 +56,6 @@ public class HomePresenter implements IProductsPresenter {
         this.view.hideLoadingScreen();
         this.view.updateThumbnails();
     }
-
     private void sortUsingTheStandardSortingOption() {
         sortOptionSelected(0);
     }
@@ -113,9 +112,9 @@ public class HomePresenter implements IProductsPresenter {
     }
 
     public void sortOptionSelected(int pos) {
-        if (adverts == null)
+        if (adverts == null || adverts.size() == 0) {
             return;
-
+        }
         List<Advertisement> sortedList = sortManager.sort(pos, adverts);
         if (sortedList == null)
             return;
@@ -126,25 +125,29 @@ public class HomePresenter implements IProductsPresenter {
 
     //Should probably run on its own thread
     //Filters the advertisements shown to the user by if their title matches the given query
-    public void filter(String query) {
+    public void filter(String query, FilterCallback callback) { //TODO use callback
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Repository.getInstance().getAllAds(advertisements -> {
+                DataModel.getInstance().fetchAllAdverts(advertisements -> {
                     if (advertisements != null)
                         adverts = advertisements; //Refreshes the list so it accurately reflects adverts in firebase
+
                     ArrayList<Advertisement> filteredList = new ArrayList<>();
                     Iterator<Advertisement> iterator = adverts.iterator();
                     while (iterator.hasNext()) {
                         Advertisement ad = iterator.next();
-                        if (ad.getTitle().toLowerCase().contains(query.toLowerCase().trim()))
+                        if (ad.getTitle().toLowerCase().contains(query.toLowerCase().trim())) //Only search capability on tile of advert
                             filteredList.add(ad);
                     }
-                    updateData(filteredList);
+                    updateData(filteredList); //TODO fix this so loading Screen shows up
+                    callback.onCallback();
                 });
             }
         });
         thread.start();
+
     }
 
 
