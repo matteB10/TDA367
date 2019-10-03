@@ -66,11 +66,6 @@ public class HomePresenter implements IProductsPresenter {
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
         if (adverts.size() < position || adverts == null)
             return;
-        /*try {
-            Thread.sleep(300); //TODO tweak number or make better implementation
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
         Advertisement a = adverts.get(position);
         thumbnailView.setId(a.getUniqueID());
         thumbnailView.setTitle(a.getTitle());

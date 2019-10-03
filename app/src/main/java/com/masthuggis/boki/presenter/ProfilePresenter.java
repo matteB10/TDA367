@@ -32,7 +32,7 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         thumbnailView.setId(a.getTitle());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
-        setCondition(a,thumbnailView);
+        setCondition(a, thumbnailView);
         if (a.getImageFile() != null) {
             thumbnailView.setImageURL(a.getImageFile().toURI().toString());
         }
@@ -43,7 +43,7 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
     public int getItemCount() {
         // TODO: change to user adverts when that logic has been implemented
         // for now using same adverts as in market
-        if(adverts==null){
+        if (adverts == null) {
             return 0;
         }
         return adverts.size();
@@ -64,6 +64,7 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
     public void allAdvertsInMarketUpdate(Iterator<Advertisement> advertsInMarket) {
         // TODO: remove this when interface is segregated
     }
+
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
         int drawable = StylingHelper.getConditionDrawable(a.getCondition());
         int text = StylingHelper.getConditionText(a.getCondition());
@@ -72,10 +73,15 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
 
     public interface View {
         void setIsUserLoggedIn(boolean isUserLoggedIn);
+
         void updateItemsOnSale();
+
         void showSettingsScreen();
+
         void showLoadingScreen();
+
         void hideLoadingScreen();
+
         void showSignInScreen();
     }
 
@@ -85,7 +91,7 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         view.showSettingsScreen();
     }
 
-    public void onSignInButtonPressed(){
+    public void onSignInButtonPressed() {
         view.showSignInScreen();
     }
 }

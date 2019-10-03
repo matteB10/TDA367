@@ -83,10 +83,10 @@ public class Repository {
     private void fetchAllAdverts(advertisementCallback advertisementCallback) {
         Thread thread = new Thread(() -> BackendDataHandler.getInstance().readAllAdvertData(advertDataList -> {
             allAds.clear();
-            for (Map<String, Object> dataMap : advertDataList) { //Loop runs twice, shouldn't be the case
+            for (Map<String, Object> dataMap : advertDataList) {
                 allAds.add(retrieveAdvert(dataMap));
             }
-            advertisementCallback.onCallback(allAds); //Application lands here three times, making the list 3x bigger than it should
+            advertisementCallback.onCallback(allAds);
         }));
         thread.start();
     }
