@@ -104,7 +104,7 @@ public class BackendDataHandler implements iBackend {
             UploadTask uploadTask = imagesRef.child(uniqueAdID).putStream(inputStream); //Starts upload to firebase
             uploadTask.addOnSuccessListener(taskSnapshot -> {
                 isWritingImageToDatabase = false;
-                
+
                 if (callback != null && completedWriteToDatabase()) {
                     callback.onComplete();
                 }
@@ -121,20 +121,17 @@ public class BackendDataHandler implements iBackend {
 
     void readUserIDAdverts(DBCallback DBCallback, String userID) {
         CollectionReference users = db.collection("users");
-        users.document(userID).collection("adverts").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.w(TAG, "Listen failed.", e);
-                    return;
-                }
-                List<Map<String, Object>> advertDataList = new ArrayList<>();
-                for (QueryDocumentSnapshot document : value) {
-                    Map<String, Object> advertData = document.getData();
-                    advertDataList.add(advertData);
-                }
-                DBCallback.onCallBack(advertDataList);
+        users.document(userID).collection("adverts").addSnapshotListener((value, e) -> {
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e);
+                return;
             }
+            List<Map<String, Object>> advertDataList = new ArrayList<>();
+            for (QueryDocumentSnapshot document : value) {
+                Map<String, Object> advertData = document.getData();
+                advertDataList.add(advertData);
+            }
+            DBCallback.onCallBack(advertDataList);
         });
     }
 
@@ -142,28 +139,19 @@ public class BackendDataHandler implements iBackend {
     //might want to run this on separate thread created by caller
     void readAllAdvertData(DBCallback DBCallback) {
         List<Map<String, Object>> advertDataList = new ArrayList<>();
-        db.collectionGroup("adverts").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
-                for (DocumentSnapshot snapshot : adverts) {
-                    Map<String, Object> toBeAdded = snapshot.getData();
-                    downloadFirebaseFile((String) toBeAdded.get("uniqueAdID"), file -> { //Doesn't make use of glide's caching right now
-                        toBeAdded.put("imgFile", file);
-                        advertDataList.add(toBeAdded);
-                        DBCallback.onCallBack(advertDataList);
-                    });
-                    //advertDataList.add(toBeAdded);
-                }
-                //DBCallback.onCallBack(advertDataList);
+        db.collectionGroup("adverts").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
+            for (DocumentSnapshot snapshot : adverts) {
+                Map<String, Object> toBeAdded = snapshot.getData();
+                downloadFirebaseFile((String) toBeAdded.get("uniqueAdID"), file -> { //Doesn't make use of glide's caching right now
+                    toBeAdded.put("imgFile", file);
+                    advertDataList.add(toBeAdded);
+                    DBCallback.onCallBack(advertDataList);
+                });
+                //advertDataList.add(toBeAdded);
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                System.out.println("Read from firebase failed.");
-
-            }
-        });
+            //DBCallback.onCallBack(advertDataList);
+        }).addOnFailureListener(e -> System.out.println("Read from firebase failed."));
     }
 
     /**
@@ -244,13 +232,10 @@ public class BackendDataHandler implements iBackend {
     public void userSignUp(String email, String password) {
         try {
             auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
 
-                            } else {
-                            }
+                        } else {
                         }
                     });
         } catch (Exception e) {
@@ -276,34 +261,22 @@ public class BackendDataHandler implements iBackend {
     }
 
     public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
-        db.collection("messages").document(uniqueChatID).collection("messages").document().set(messageMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
+        db.collection("messages").document(uniqueChatID).collection("messages").document().set(messageMap).addOnSuccessListener(aVoid -> {
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                e.printStackTrace();
-
-            }
-        });
+        }).addOnFailureListener(e -> e.printStackTrace());
     }
 
 
     public void getMessages(String uniqueChatID, Chat chat, DBCallback messageCallback) {
         List<Map<String, Object>> messageMap = new ArrayList<>();
-        db.collection("messages").document(uniqueChatID).collection("messages").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                messageMap.clear();
-                for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
-                    messageMap.add(querySnapshot.getData());
-                }
-                messageCallback.onCallBack(messageMap);
-                chat.updateChatObservers();
-
+        db.collection("messages").document(uniqueChatID).collection("messages").addSnapshotListener((queryDocumentSnapshots, e) -> {
+            messageMap.clear();
+            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                messageMap.add(querySnapshot.getData());
             }
+            messageCallback.onCallBack(messageMap);
+            chat.updateChatObservers();
+
         });
 
     }
