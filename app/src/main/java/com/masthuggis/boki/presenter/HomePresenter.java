@@ -103,10 +103,6 @@ public class HomePresenter implements IProductsPresenter {
         return arr;
     }
 
-    public List<Advertisement> getLocalAdList() {
-        return this.adverts;
-    }
-
     public String[] getSortOptions() {
         return convertListToArray(sortManager.getSortOptions());
     }
@@ -115,6 +111,7 @@ public class HomePresenter implements IProductsPresenter {
         if (adverts == null || adverts.size() == 0) {
             return;
         }
+
         List<Advertisement> sortedList = sortManager.sort(pos, adverts);
         if (sortedList == null)
             return;

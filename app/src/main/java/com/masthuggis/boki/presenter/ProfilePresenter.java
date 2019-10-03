@@ -22,7 +22,6 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
 
     }
 
-
     @Override
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
         Advertisement a = adverts.get(position);
