@@ -75,10 +75,16 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
                 if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) { //Make sure stuff happens when enter is pressed
-                    InputMethodManager inputMethodManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
                     searchField.clearFocus(); //This and two lines above hides keyboard when search is pressed
-                    presenter.filter(searchField.getText().toString()); //Actually perform search
+                    showLoadingScreen();
+                    presenter.filter(searchField.getText().toString(), new FilterCallback() {
+                        @Override
+                        public void onCallback() {
+                            hideLoadingScreen(); //Necessary callback since filtering happens on other thread
+                        }
+                    }); //Actually perform search
                     return true;
                 }
                 return false;
