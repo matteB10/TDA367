@@ -80,7 +80,9 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
 
     @Override
     public void updateItemsOnSale() {
-        adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
