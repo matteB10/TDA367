@@ -204,21 +204,6 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    //Downloads the file as a local tempFile rather than as an array of bytes.
-    private void testDownloadFromCloudStorage() {
-        try {
-            File localFile = File.createTempFile("images", "jpg");
-            imagesRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
-                //Reference downloaded file from here
-            }).addOnFailureListener(e -> {
-                //Handle any errors
-            });
-        } catch (IOException exc) {
-            exc.printStackTrace();
-        }
-    }
-
-
     public void userSignIn(String email, String password) {
         try {
             Task<AuthResult> authResultTask = auth.signInWithEmailAndPassword(email, password)
