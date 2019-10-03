@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,7 +47,32 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
         this.presenter = new HomePresenter(this);
         setupSortSpinner();
         setupSearchField();
+        Log.d("DEBUG", "onCreateView");
         return view;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d("DEBUG", "onCreate");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("DEBUG", "onPause");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d("DEBUG", "onDestroyView");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d("DEBUG", "onDetach");
     }
 
     private void setupSortSpinner() {
