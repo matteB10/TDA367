@@ -12,4 +12,5 @@ public interface iChat {
      String getReceiverUsername();
 
 
-    }
+    String timeLastMessageSent();
+}

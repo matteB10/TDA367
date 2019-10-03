@@ -23,19 +23,34 @@ public class UserRepository {
 
 
     public void signIn(String email, String password, signInCallback signInCallback) {
-        BackendDataHandler.getInstance().userSignIn(email, password,signInCallback);
+        BackendDataHandler.getInstance().userSignIn(email, password, signInCallback);
         loggedIn();
     }
 
     public void signUp(String email, String password, signInCallback signInCallback) {
-        BackendDataHandler.getInstance().userSignUp(email, password,signInCallback);
-        loggedOut();
+        BackendDataHandler.getInstance().userSignUp(email, password, () -> {
+          //  loggedIn();
+            signInCallback.onCallback();
+        });
+
+
     }
 
+    public void signInAfterRegistration(String email, String password, String username){
+        BackendDataHandler.getInstance().userSignIn(email, password, new signInCallback() {
+            @Override
+            public void onCallback() {
+                setUsername(username);
+                loggedIn();
+
+            }
+        });
+
+    }
     private void loggedIn() {
         iUser user;
         Map<String, String> map = BackendDataHandler.getInstance().getUser();
-        user = UserFactory.createUser(map.get("email"),map.get("username"),map.get("userID"));
+        user = UserFactory.createUser(map.get("email"), map.get("username"), map.get("userID"));
         DataModel.getInstance().loggedIn(user);
     }
 
@@ -51,11 +66,12 @@ public class UserRepository {
         BackendDataHandler.getInstance().getUserChats(userID, new chatDBCallback() {
             @Override
             public void onCallback(List<Map<String, Object>> chatMap) {
-                if(chatMap.size()==0){
-                    return;
-                }
+
                 for (Map<String, Object> map : chatMap) {
-                    chatList.add(ChatFactory.createChat(map.get("sender").toString(), map.get("receiver").toString(),map.get("uniqueChatID").toString(),map.get("receiverUsername").toString()));
+                    if (map.size() == 0) {
+                        return;
+                    }
+                    chatList.add(ChatFactory.createChat(map.get("sender").toString(), map.get("receiver").toString(), map.get("uniqueChatID").toString(), map.get("receiverUsername").toString()));
                 }
                 chatCallback.onCallback(chatList);
             }
@@ -65,28 +81,30 @@ public class UserRepository {
     public void getMessages(String uniqueChatID, Chat chat, messagesCallback messagesCallback) {
         List<iMessage> messages = new ArrayList<>();
 
-        BackendDataHandler.getInstance().getMessages(uniqueChatID,chat, new DBCallback() {
+        BackendDataHandler.getInstance().getMessages(uniqueChatID, chat, new DBCallback() {
             @Override
             public void onCallBack(List<Map<String, Object>> advertDataList) {
-                if(advertDataList.size() ==0){
+                if (advertDataList.size() == 0) {
                     return;
                 }
                 messages.clear();
-                for(Map<String,Object> objectMap : advertDataList){
+                for (Map<String, Object> objectMap : advertDataList) {
                     messages.add(MessageFactory.createMessage(objectMap.get("message")
-                            .toString(),objectMap.get("timeSent").toString(),objectMap.get("sender").toString()));
+                            .toString(), objectMap.get("timeSent").toString(), objectMap.get("sender").toString()));
                 }
 
             }
-        }); messagesCallback.onCallback(messages);
+        });
+        messagesCallback.onCallback(messages);
     }
 
 
-    public void createNewChat(HashMap<String,Object> newChatMap) {
+    public void createNewChat(HashMap<String, Object> newChatMap) {
         BackendDataHandler.getInstance().createNewChat(newChatMap);
     }
-    public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap){
-        BackendDataHandler.getInstance().writeMessage(uniqueChatID,messageMap);
+
+    public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
+        BackendDataHandler.getInstance().writeMessage(uniqueChatID, messageMap);
     }
 
     public void setUsername(String username) {

@@ -55,6 +55,7 @@ public class Repository {
         dataMap.put("tags", advertisement.getTags());
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
+        dataMap.put("advertOwnerID",advertisement.getOwner());
         BackendDataHandler.getInstance().writeAdvertToFirebase(dataMap, imageFile);
     }
 
@@ -121,7 +122,8 @@ public class Repository {
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
         File imageFile = (File) dataMap.get("imgFile");
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageFile, tags);
+        String owner = (String) dataMap.get("advertOwnerID");
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageFile, tags,owner);
     }
 
     /**
@@ -136,7 +138,8 @@ public class Repository {
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, null,tags);
+        String owner = (String) dataMap.get("advertOwnerID");
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, null,tags,owner);
     } //TODO den här kommer behöva en imageFile den här med
 
 }

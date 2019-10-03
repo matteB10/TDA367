@@ -43,7 +43,7 @@ public class Advert implements Advertisement {
         this.owner = DataModel.getInstance().getUserDisplayName();
     }
 
-    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, File file, List<String> tags) {
+    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, File file, List<String> tags,String owner) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.uniqueAdID = id;
@@ -53,6 +53,7 @@ public class Advert implements Advertisement {
         this.condition = condition;
         this.imageFile = file;
         this.tags = tags;
+        this.owner = owner;
     }
 
 

@@ -142,8 +142,8 @@ public class BackendDataHandler implements iBackend {
     }
 
     public void getUserChats(String userID, chatDBCallback chatDBCallback) {
-        List<Map<String, Object>> chatDataList = new ArrayList<>();
         db.collection("users").document(userID).collection("conversations").addSnapshotListener((queryDocumentSnapshots, e) -> {
+            List<Map<String, Object>> chatDataList = new ArrayList<>();
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e);
                 return;
@@ -155,7 +155,7 @@ public class BackendDataHandler implements iBackend {
             for (QueryDocumentSnapshot q : queryDocumentSnapshots) {
                 chatDataList.add(q.getData());
             }
-            if(chatDataList.size() == 0){
+            if(chatDataList.size() == 0 || chatDataList== null){
                 return;
             }
             chatDBCallback.onCallback(chatDataList);

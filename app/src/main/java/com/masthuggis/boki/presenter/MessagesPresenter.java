@@ -36,6 +36,7 @@ public class MessagesPresenter {
 
         holder.setUserTextView(c.getReceiverUsername());
         holder.setChatID(c.getChatID());
+        holder.setDateTextView(c.timeLastMessageSent());
 
     }
 

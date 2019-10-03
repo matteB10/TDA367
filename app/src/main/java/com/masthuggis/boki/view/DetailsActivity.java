@@ -36,15 +36,13 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
             presenter = new DetailsPresenter(this, advertID);
         }
         String uniqueOwnerID= DataModel.getInstance().getAdFromAdID(advertID).getUniqueOwnerID();
-
+        String receiverUsername=  DataModel.getInstance().getAdFromAdID(advertID).getOwner();
         Button contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
             //TODO HÄR SKA CHATTEN ÖPPNAS TYP
             if (contactOwnerButton.getText().equals("Starta chatt")) {
-                presenter.createNewChat(uniqueOwnerID,"ägarenSomViKonverserarMed");
-                //   Intent intent = new Intent(Intent.ACTION_DIAL);
-                // intent.setData(Uri.parse(contactOwnerButton.getText().toString()));
-                // startActivity(intent);
+                presenter.createNewChat(uniqueOwnerID,receiverUsername);
+
             } else {
                 contactOwnerButton.setText("Starta chatt");
             }

@@ -137,4 +137,7 @@ public class DataModel {
     public void setUsername(String username) {
         UserRepository.getInstance().setUsername(username);
     }
+    public void signInAfterRegistration(String email, String password, String username){
+        UserRepository.getInstance().signInAfterRegistration(email,password,username);
+    }
 }
