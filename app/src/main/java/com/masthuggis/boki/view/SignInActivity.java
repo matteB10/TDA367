@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.SignInPresenter;
 
-public class SignInActivity extends AppCompatActivity implements SignInPresenter.View{
+public class SignInActivity extends AppCompatActivity implements SignInPresenter.View {
     private SignInPresenter presenter = new SignInPresenter(this);
 
 
@@ -24,12 +24,13 @@ public class SignInActivity extends AppCompatActivity implements SignInPresenter
         setUpBtns();
 
     }
-    public String getEmail(){
+
+    public String getEmail() {
         EditText email = findViewById(R.id.email);
         return email.getText().toString();
     }
 
-    public String getPassword(){
+    public String getPassword() {
         EditText password = findViewById(R.id.password);
         return password.getText().toString();
     }
@@ -39,7 +40,7 @@ public class SignInActivity extends AppCompatActivity implements SignInPresenter
         btnSignIn.setOnClickListener(view -> presenter.onSignInButtonPressed(getEmail(), getPassword()));
 
         Button btnSignUp = findViewById(R.id.signUpButton);
-        btnSignUp.setOnClickListener(view-> presenter.onSignUpButtonPressed());
+        btnSignUp.setOnClickListener(view -> presenter.onSignUpButtonPressed());
     }
 
 
