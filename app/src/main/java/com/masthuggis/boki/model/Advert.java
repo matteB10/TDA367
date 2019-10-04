@@ -1,8 +1,7 @@
 package com.masthuggis.boki.model;
 
-import com.google.api.Backend;
-import com.masthuggis.boki.backend.BackendDataHandler;
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.backend.BackendDataHandler;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
@@ -29,6 +28,7 @@ public class Advert implements Advertisement {
     private Condition condition;
     private List<String> tags;
     private File imageFile; //the imageFile used instead of an imageURL
+    private String owner;
 
 
     public Advert() {
@@ -40,9 +40,10 @@ public class Advert implements Advertisement {
         this.price = 0;
         this.condition = Condition.UNDEFINED;
         this.tags = new ArrayList<>();
+        this.owner = DataModel.getInstance().getUserDisplayName();
     }
 
-    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, File file, List<String> tags) {
+    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, File file, List<String> tags,String owner) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.uniqueAdID = id;
@@ -52,6 +53,7 @@ public class Advert implements Advertisement {
         this.condition = condition;
         this.imageFile = file;
         this.tags = tags;
+        this.owner = owner;
     }
 
 
@@ -135,22 +137,20 @@ public class Advert implements Advertisement {
 
 
     /**
-     *
-     *
      * @param condition, string given from view, representing a condition
      */
     @Override
     public void setCondition(int condition) {
-            switch (condition){
-                case R.string.conditionNew:
-                    this.condition = Condition.NEW;
-                    break;
-                case R.string.conditionGood:
-                    this.condition = Condition.GOOD;
-                    break;
-                case R.string.conditionOk:
-                    this.condition = Condition.OK;
-                    break;
+        switch (condition) {
+            case R.string.conditionNew:
+                this.condition = Condition.NEW;
+                break;
+            case R.string.conditionGood:
+                this.condition = Condition.GOOD;
+                break;
+            case R.string.conditionOk:
+                this.condition = Condition.OK;
+                break;
         }
     }
 
@@ -163,9 +163,15 @@ public class Advert implements Advertisement {
         }
         return true;
     }
+
     @Override
-    public boolean isValidCondition(){
+    public boolean isValidCondition() {
         return condition != Condition.UNDEFINED;
+    }
+
+    @Override
+    public String getOwner() {
+        return this.owner;
     }
 
 

@@ -1,12 +1,10 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class ProfilePresenter implements IProductsPresenter {
@@ -17,9 +15,10 @@ public class ProfilePresenter implements IProductsPresenter {
 
     public ProfilePresenter(View view) {
         this.view = view;
-
         this.view.showLoadingScreen();
-        this.adverts = DataModel.getInstance().getAllAds();
+        if(DataModel.getInstance().isLoggedIn()){
+            this.adverts = DataModel.getInstance().getAdsFromUniqueOwnerID(DataModel.getInstance().getUserID());
+        }
         this.view.hideLoadingScreen();
 
     }

@@ -4,10 +4,7 @@ import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.backend.messagesCallback;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class Chat implements iChat {
     private List<iMessage> messages;
@@ -15,13 +12,15 @@ public class Chat implements iChat {
     private String sender;
     private String receiver;
     private String chatID;
+    private String receiverUsername;
 
 
-    public Chat(String sender, String receiver, String uniqueChatID) {
+    public Chat(String sender, String receiver, String uniqueChatID, String receiverUsername) {
         this.sender = sender;
         this.receiver = receiver;
         this.chatID = uniqueChatID;
-        UserRepository.getInstance().getMessages(uniqueChatID,this, new messagesCallback() {
+        this.receiverUsername = receiverUsername;
+        UserRepository.getInstance().getMessages(uniqueChatID, this, new messagesCallback() {
 
             @Override
             public void onCallback(List<iMessage> messagesList) {
@@ -54,19 +53,36 @@ public class Chat implements iChat {
         this.messages = messages;
     }
 
-    public void addChatObserver( ChatObservers chatObserver){
+    public void addChatObserver(ChatObservers chatObserver) {
         this.chatObserversList.add(chatObserver);
     }
-    public void removeChatObserver(ChatObservers chatObserver){
+
+    public void removeChatObserver(ChatObservers chatObserver) {
         this.chatObserversList.remove(chatObserver);
     }
-    public void updateChatObservers(){
-        if(chatObserversList.size()==0){
+
+    public void updateChatObservers() {
+        if (chatObserversList.size() == 0) {
             return;
         }
-        for(ChatObservers chatObservers :chatObserversList){
+        for (ChatObservers chatObservers : chatObserversList) {
             chatObservers.onChatUpdated();
         }
     }
 
+    public String getReceiverUsername() {
+        return receiverUsername;
+    }
+
+    @Override
+    public String timeLastMessageSent() {
+        String timeLastMessageSent = "0";
+        for (int i = 0; i < messages.size(); i++) {
+            if (Integer.parseInt(messages.get(i).getTimeSent()) >= Integer.parseInt(timeLastMessageSent)) {
+                timeLastMessageSent = messages.get(i).getTimeSent();
+
+            }
+        }
+        return timeLastMessageSent;
+    }
 }

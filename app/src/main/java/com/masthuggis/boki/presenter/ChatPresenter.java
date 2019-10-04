@@ -4,6 +4,7 @@ import com.masthuggis.boki.model.ChatObservers;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.model.iMessage;
+import com.masthuggis.boki.utils.CurrentTimeHelper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +49,7 @@ public class ChatPresenter implements ChatObservers {
             //Date, message, sender
             map.put("message", messageText);
             map.put("sender", DataModel.getInstance().getUserID());
-            map.put("timeSent", "TID SKA VA HÄR");
+            map.put("timeSent", CurrentTimeHelper.getCurrentTimeNumerical());
             DataModel.getInstance().sendMessage(chat.getChatID(), map);
 
             setMessageBox(messageText, true);

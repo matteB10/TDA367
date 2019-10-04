@@ -13,9 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.model.Advert;
-import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.presenter.DetailsPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
@@ -39,17 +36,15 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
             presenter = new DetailsPresenter(this, advertID);
         }
         String uniqueOwnerID= DataModel.getInstance().getAdFromAdID(advertID).getUniqueOwnerID();
-
+        String receiverUsername=  DataModel.getInstance().getAdFromAdID(advertID).getOwner();
         Button contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
             //TODO HÄR SKA CHATTEN ÖPPNAS TYP
-            if (contactOwnerButton.getText().equals("Skicka meddelande till" + uniqueOwnerID)) {
-                presenter.createNewChat(uniqueOwnerID);
-                //   Intent intent = new Intent(Intent.ACTION_DIAL);
-                // intent.setData(Uri.parse(contactOwnerButton.getText().toString()));
-                // startActivity(intent);
+            if (contactOwnerButton.getText().equals("Starta chatt")) {
+                presenter.createNewChat(uniqueOwnerID,receiverUsername);
+
             } else {
-                contactOwnerButton.setText("Skicka meddelande till" + uniqueOwnerID);
+                contactOwnerButton.setText("Starta chatt");
             }
         });
     }
@@ -112,6 +107,12 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
             tableRow.addView(btn,StylingHelper.getTableRowChildLayoutParams(this));
         }
         parentLayout.addView(tableRow);
+    }
+
+    @Override
+    public void openChat(String uniqueOwnerID) {
+        //TODO ÖPPNA CHATT
+
     }
 
 

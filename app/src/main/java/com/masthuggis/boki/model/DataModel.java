@@ -1,7 +1,9 @@
 package com.masthuggis.boki.model;
 
+import com.masthuggis.boki.backend.FailureCallback;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryObserver;
+import com.masthuggis.boki.backend.SuccessCallback;
 import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.backend.advertisementCallback;
 
@@ -26,6 +28,16 @@ public class DataModel {
             instance = new DataModel();
         }
         return instance;
+    }
+    public void addRepositoryObserver(RepositoryObserver observer) {
+        Repository.addRepositoryObserver(observer);
+    }
+    public  void signUp(String email, String password, SuccessCallback successCallback) {
+        UserRepository.getInstance().signUp(email,password,successCallback);
+    }
+
+    public  void SignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
+        UserRepository.getInstance().signIn(email,password,successCallback,failureCallback);
     }
 
     public void addAdvertisement(Advertisement ad) {
@@ -57,12 +69,9 @@ public class DataModel {
     }
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
+
         Repository.fetchAllAdverts(advertisementCallback);
         updateAllAds();
-    }
-
-    public void addRepositoryObserver(RepositoryObserver observer) {
-        Repository.addRepositoryObserver(observer);
     }
 
     public List<Advertisement> getAllAds() {
@@ -72,7 +81,6 @@ public class DataModel {
 
 
     public void loggedIn(iUser user) {
-
         this.user = user;
     }
 
@@ -102,14 +110,13 @@ public class DataModel {
         return user.getChats();
     }
 
-    public void init() {
-        //simply here to be instantiated
-    }
 
-    public void createNewChat(String uniqueReceiverID) {
+    public void createNewChat(String uniqueReceiverID,String owner) {
+
         HashMap<String, Object> newChatMap = new HashMap<>();
         newChatMap.put("receiver", uniqueReceiverID);
         newChatMap.put("sender", this.getUserID());
+        newChatMap.put("receiverUsername",owner);
         UserRepository.getInstance().createNewChat(newChatMap);
     }
 
@@ -128,4 +135,14 @@ public class DataModel {
 
     }
 
+    public void setUsername(String username) {
+        UserRepository.getInstance().setUsername(username);
+    }
+    public void signInAfterRegistration(String email, String password, String username){
+        UserRepository.getInstance().signInAfterRegistration(email,password,username);
+    }
+
+    public void signOut() {
+        UserRepository.getInstance().signOut();
+    }
 }

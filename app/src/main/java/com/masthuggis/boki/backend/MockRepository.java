@@ -59,7 +59,7 @@ public class MockRepository {
             date = object.getString("date");
             String conditionString = object.getString("condition");
             condition = Advert.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
-            Advertisement ad = AdFactory.createAd(date, "UniqueOwnerID", "UniqueAdID", title, "imgURL", price, condition, new File("", ""),new ArrayList<String>());
+            Advertisement ad = AdFactory.createAd(date, "UniqueOwnerID", "UniqueAdID", title, "imgURL", price, condition, new File("", ""),new ArrayList<String>(),null);
             adverts.add(ad);
             return ad;
         } catch (JSONException e) {

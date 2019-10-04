@@ -2,18 +2,29 @@ package com.masthuggis.boki.backend;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.masthuggis.boki.model.Chat;
+import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
@@ -168,16 +179,21 @@ public class BackendDataHandler implements iBackend {
 
 
     public void getUserChats(String userID, chatDBCallback chatDBCallback) {
-        List<Map<String, Object>> chatDataList = new ArrayList<>();
         db.collection("users").document(userID).collection("conversations").addSnapshotListener((queryDocumentSnapshots, e) -> {
+            List<Map<String, Object>> chatDataList = new ArrayList<>();
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e);
                 return;
             }
 
-            assert queryDocumentSnapshots != null;
+            if(queryDocumentSnapshots.size()<=0 || queryDocumentSnapshots== null){
+                return;
+            }
             for (QueryDocumentSnapshot q : queryDocumentSnapshots) {
                 chatDataList.add(q.getData());
+            }
+            if(chatDataList.size() == 0 || chatDataList== null){
+                return;
             }
             chatDBCallback.onCallback(chatDataList);
         });
@@ -221,19 +237,37 @@ public class BackendDataHandler implements iBackend {
         }
     }
 
-    public void userSignUp(String email, String password) {
+    //Downloads the file as a local tempFile rather than as an array of bytes.
+    private void testDownloadFromCloudStorage() {
+        try {
+            File localFile = File.createTempFile("images", "jpg");
+            imagesRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
+                //Reference downloaded file from here
+            }).addOnFailureListener(e -> {
+                //Handle any errors
+            });
+        } catch (IOException exc) {
+            exc.printStackTrace();
+        }
+    }
+
+    public void userSignUp(String email, String password, SuccessCallback successCallback) {
         try {
             auth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                successCallback.onSuccess();
 
-                        } else {
+                            } else {
+                            }
                         }
                     });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public String getUserID() {
@@ -244,33 +278,69 @@ public class BackendDataHandler implements iBackend {
 
     public Map<String, String> getUser() {
         Map<String, String> userMap = new HashMap<>();
-//        userMap.put("email", auth.getCurrentUser().getEmail());
-        //      userMap.put("displayname", auth.getCurrentUser().getDisplayName());
         FirebaseUser user = auth.getCurrentUser();
         String str = user.getUid();
+        String username = user.getDisplayName();
+        String email = user.getEmail();
         userMap.put("userID", str);
+        userMap.put("username", username);
+        userMap.put("email",email);
         return userMap;
     }
 
-    public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
-        db.collection("messages").document(uniqueChatID).collection("messages").document().set(messageMap).addOnSuccessListener(aVoid -> {
+    void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
+        db.collection("messages").document(uniqueChatID).collection("messages").document().set(messageMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
 
-        }).addOnFailureListener(e -> e.printStackTrace());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+
+            }
+        });
     }
 
 
-    public void getMessages(String uniqueChatID, Chat chat, DBCallback messageCallback) {
+    void getMessages(String uniqueChatID, Chat chat, DBCallback messageCallback) {
         List<Map<String, Object>> messageMap = new ArrayList<>();
-        db.collection("messages").document(uniqueChatID).collection("messages").addSnapshotListener((queryDocumentSnapshots, e) -> {
-            messageMap.clear();
-            for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
-                messageMap.add(querySnapshot.getData());
-            }
-            messageCallback.onCallBack(messageMap);
-            chat.updateChatObservers();
+        db.collection("messages").document(uniqueChatID).collection("messages").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                messageMap.clear();
+                for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
+                    messageMap.add(querySnapshot.getData());
+                }
+                messageCallback.onCallBack(messageMap);
+                chat.updateChatObservers();
 
+            }
         });
 
+    }
+
+    void setUsername(String username) {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+
+
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
+            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "User profile updated.");
+                    }
+                }
+            });
+        }
+    }
+
+    void signOut(){
+        auth.signOut();
+        DataModel.getInstance().loggedOut();
     }
 }
 

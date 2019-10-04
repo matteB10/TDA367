@@ -1,13 +1,18 @@
 package com.masthuggis.boki.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.backend.FailureCallback;
+import com.masthuggis.boki.backend.SuccessCallback;
+import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.presenter.SignInPresenter;
 
 public class SignInActivity extends AppCompatActivity implements SignInPresenter.View {
@@ -37,7 +42,28 @@ public class SignInActivity extends AppCompatActivity implements SignInPresenter
 
     private void setUpBtns() {
         Button btnSignIn = findViewById(R.id.signInButton);
-        btnSignIn.setOnClickListener(view -> presenter.onSignInButtonPressed(getEmail(), getPassword()));
+        btnSignIn.setOnClickListener(view -> presenter.onSignInButtonPressed(getEmail(), getPassword(), new SuccessCallback() {
+            @Override
+            public void onSuccess() {
+                Context context = getApplicationContext();
+                CharSequence text = "Du är nu inloggad som " + DataModel.getInstance().getUserDisplayName();
+                int duration = Toast.LENGTH_LONG;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+
+            }
+        }, new FailureCallback() {
+            @Override
+            public void onFailure() {
+                Context context = getApplicationContext();
+                CharSequence text = "Inloggning misslyckades.";
+                int duration = Toast.LENGTH_LONG;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
+        }));
 
         Button btnSignUp = findViewById(R.id.signUpButton);
         btnSignUp.setOnClickListener(view -> presenter.onSignUpButtonPressed());

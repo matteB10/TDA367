@@ -44,4 +44,5 @@ public interface Advertisement {
     boolean isNewTag(String tag);
 
     boolean isValidCondition();
+    String getOwner();
 }
