@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advert;
@@ -76,7 +77,8 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     public void setImageUrl(String url) {
         // TODO: fetch img, cache it and set it
         ImageView imageView = (ImageView) findViewById(R.id.detailsImage);
-        imageView.setImageURI(Uri.parse(url));
+        Glide.with(this).load(url).into(imageView);
+        //imageView.setImageURI(Uri.parse(url));
     }
 
     @Override

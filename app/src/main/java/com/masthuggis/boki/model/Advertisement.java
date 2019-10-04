@@ -11,7 +11,7 @@ public interface Advertisement {
 
     String getDatePublished();
 
-    File getImageFile();
+    String getImageUrl();
 
     String getTitle();
 
@@ -38,8 +38,6 @@ public interface Advertisement {
     void setCondition(int condition);
 
     void setDatePublished(String datePublished);
-
-    void setImageFile(File imageFile);
 
     boolean isNewTag(String tag);
 

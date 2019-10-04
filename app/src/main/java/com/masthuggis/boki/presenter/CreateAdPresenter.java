@@ -7,6 +7,7 @@ import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.FormHelper;
 import com.masthuggis.boki.utils.StylingHelper;
+import com.masthuggis.boki.view.CreateAdActivity;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -46,6 +47,7 @@ public class CreateAdPresenter {
 
         void displayUserTagButton(String tag);
 
+        File getCurrentImageFile();
 
         //TODO: create methods for future same page error messages in view
 
@@ -135,20 +137,16 @@ public class CreateAdPresenter {
         //TODO: expand validation to image
     }
 
-    public void imageFileChanged(File imageFile) {
-        advertisement.setImageFile(imageFile);
-    }
-
 
     /**
      * Called on click on button in createAdActivity
      * saves advert in temp list and resets current ad in presenter
      */
+    //Need to change imageFile in advert to inputStream from View
     public void publishAdvert() {
         setAdvertDate();
-        Repository.saveAdvert(advertisement, advertisement.getImageFile());
+        Repository.saveAdvert(view.getCurrentImageFile(), advertisement);
         advertisement = null;
-
     }
 
     private void setAdvertDate() {
@@ -160,10 +158,6 @@ public class CreateAdPresenter {
 
     public String getId() {
         return advertisement.getUniqueID();
-    }
-
-    public File getImgFile() {
-        return advertisement.getImageFile(); //advertisement is null here upon second call
     }
 
     //Getter for testing purpose
@@ -195,5 +189,7 @@ public class CreateAdPresenter {
         return (int) advertisement.getPrice();
     }
 
-
+    public String getImageUrl() {
+        return advertisement.getImageUrl();
+    }
 }

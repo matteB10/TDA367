@@ -100,7 +100,6 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
             //Needs to be somehow delayed until files are returned from firebase?
         }
 
-
         @Override
         public void setId(String id) {
             this.id = id;

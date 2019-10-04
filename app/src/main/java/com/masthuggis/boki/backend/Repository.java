@@ -7,6 +7,7 @@ import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +47,7 @@ public class Repository {
      */
 
     //TODO implement functionality for uploading the image of Advert to Firebase
-    public static void saveAdvert(Advertisement advertisement, File imageFile) {
+    public static void saveAdvert(File imageFile, Advertisement advertisement) {
         DataModel.getInstance().addAdvertisement(advertisement);
         HashMap<String, Object> dataMap = new HashMap<>();
         dataMap.put("title", advertisement.getTitle());
@@ -57,7 +58,7 @@ public class Repository {
         dataMap.put("tags", advertisement.getTags());
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
-        BackendDataHandler.getInstance().writeAdvertToFirebase(dataMap, imageFile, () -> Repository.notifyMarketObservers());
+        BackendDataHandler.getInstance().writeAdvertToFirebase(imageFile, dataMap, () -> Repository.notifyMarketObservers());
     }
 
     /**
@@ -116,7 +117,8 @@ public class Repository {
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
         File imageFile = (File) dataMap.get("imgFile");
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageFile, tags);
+        String imageUrl = (String) dataMap.get("imgUrl");
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageFile, imageUrl, tags);
     }
 
     /**
@@ -131,7 +133,7 @@ public class Repository {
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, null, tags);
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, null, null, tags);
     } //TODO den här kommer behöva en imageFile den här med
 
 }

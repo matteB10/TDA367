@@ -28,7 +28,7 @@ public class Advert implements Advertisement {
     private long price;
     private Condition condition;
     private List<String> tags;
-    private File imageFile; //the imageFile used instead of an imageURL
+    private String imageUrl;
 
 
     public Advert() {
@@ -42,7 +42,8 @@ public class Advert implements Advertisement {
         this.tags = new ArrayList<>();
     }
 
-    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, File file, List<String> tags) {
+    //Probably doesn't need to set a
+    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, String imageUrl, List<String> tags) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.uniqueAdID = id;
@@ -50,7 +51,7 @@ public class Advert implements Advertisement {
         this.description = description;
         this.price = price;
         this.condition = condition;
-        this.imageFile = file;
+        this.imageUrl = imageUrl;
         this.tags = tags;
     }
 
@@ -59,16 +60,16 @@ public class Advert implements Advertisement {
         return this.datePublished;
     }
 
+
     @Override
-    public File getImageFile() {
-        return this.imageFile;
+    public String getImageUrl() {
+        return this.imageUrl;
     }
 
     @Override
     public String getTitle() {
         return this.title;
     }
-
 
     @Override
     public long getPrice() {
@@ -128,29 +129,22 @@ public class Advert implements Advertisement {
         this.datePublished = datePublished;
     }
 
-    @Override
-    public void setImageFile(File imageFile) {
-        this.imageFile = imageFile;
-    }
-
 
     /**
-     *
-     *
      * @param condition, string given from view, representing a condition
      */
     @Override
     public void setCondition(int condition) {
-            switch (condition){
-                case R.string.conditionNew:
-                    this.condition = Condition.NEW;
-                    break;
-                case R.string.conditionGood:
-                    this.condition = Condition.GOOD;
-                    break;
-                case R.string.conditionOk:
-                    this.condition = Condition.OK;
-                    break;
+        switch (condition) {
+            case R.string.conditionNew:
+                this.condition = Condition.NEW;
+                break;
+            case R.string.conditionGood:
+                this.condition = Condition.GOOD;
+                break;
+            case R.string.conditionOk:
+                this.condition = Condition.OK;
+                break;
         }
     }
 
@@ -163,8 +157,9 @@ public class Advert implements Advertisement {
         }
         return true;
     }
+
     @Override
-    public boolean isValidCondition(){
+    public boolean isValidCondition() {
         return condition != Condition.UNDEFINED;
     }
 

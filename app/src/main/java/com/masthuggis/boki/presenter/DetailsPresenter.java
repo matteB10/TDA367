@@ -39,8 +39,8 @@ public class DetailsPresenter {
         view.setDate(advertisement.getDatePublished());
         view.setTags(advertisement.getTags());
         setCondition();
-        if (advertisement.getImageFile() != null) {
-            view.setImageUrl(advertisement.getImageFile().toURI().toString());
+        if (advertisement.getImageUrl() != null) {
+            view.setImageUrl(advertisement.getImageUrl());
         }
 
     }
@@ -56,7 +56,6 @@ public class DetailsPresenter {
 
     public interface View extends iConditionable {
         void setName(String name);
-
         void setPrice(long price);
         void setDate( String date);
         void setImageUrl(String url);

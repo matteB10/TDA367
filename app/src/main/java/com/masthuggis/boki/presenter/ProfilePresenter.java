@@ -31,11 +31,10 @@ public class ProfilePresenter implements IProductsPresenter {
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
         setCondition(a, thumbnailView);
-        if (a.getImageFile() != null) {
-            thumbnailView.setImageURL(a.getImageFile().toURI().toString());
+        if (a.getImageUrl() != null) {
+            thumbnailView.setImageURL(a.getImageUrl());
         }
     }
-
 
     @Override
     public int getItemCount() {
