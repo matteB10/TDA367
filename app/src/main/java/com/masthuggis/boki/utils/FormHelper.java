@@ -42,7 +42,7 @@ public class FormHelper{
      */
      public boolean isValidEmail(String input){
         return validEmail.matcher(input).matches();
-    }
+     }
     /**
      * @param input the string to be validated
      * @return true if input string matching mobile phone format (10 digits)
