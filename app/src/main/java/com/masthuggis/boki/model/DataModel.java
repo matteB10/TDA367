@@ -1,5 +1,6 @@
 package com.masthuggis.boki.model;
 
+import com.masthuggis.boki.backend.BackendDataHandler;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.backend.UserRepository;
@@ -85,7 +86,7 @@ public class DataModel {
     }
 
     public String getUserEmail() {
-        return this.getUserEmail();
+        return this.user.getEmail();
     }
 
     public String getUserDisplayName() {
@@ -93,7 +94,6 @@ public class DataModel {
     }
 
     public boolean isLoggedIn() {
-
         return this.user != null;
     }
 
@@ -125,7 +125,10 @@ public class DataModel {
             }
         }
         return null;
+    }
 
+    public void removeExistingAdvert(String uniqueID){
+        BackendDataHandler.getInstance().deleteAd(uniqueID);
     }
 
 }

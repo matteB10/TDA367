@@ -23,7 +23,6 @@ public class DetailsPresenter {
     public DetailsPresenter(View view, String advertID) {
         this.view = view;
         this.advertisement = DataModel.getInstance().getAdFromAdID(advertID);
-
         setupView();
     }
 
@@ -42,7 +41,6 @@ public class DetailsPresenter {
         if (advertisement.getImageFile() != null) {
             view.setImageUrl(advertisement.getImageFile().toURI().toString());
         }
-
     }
     private void setCondition(){
         int drawable = StylingHelper.getConditionDrawable(advertisement.getCondition());
@@ -54,14 +52,24 @@ public class DetailsPresenter {
         DataModel.getInstance().createNewChat(uniqueOwnerID);
     }
 
+    public boolean isUserOwner(){
+        return true;
+      //TODO  return DataModel.getInstance().getUserID() == advertisement.getUniqueOwnerID();
+    }
+
+    public void onChangedAdBtnPressed(){
+        String uniqueID = advertisement.getUniqueID();
+        view.showEditView(uniqueID);
+    }
+
     public interface View extends iConditionable {
         void setName(String name);
-
         void setPrice(long price);
         void setDate( String date);
         void setImageUrl(String url);
         void setDescription(String description);
         void setTags(List<String> tags);
+        void showEditView(String uniqueID);
     }
 
 

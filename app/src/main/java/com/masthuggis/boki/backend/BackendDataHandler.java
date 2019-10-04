@@ -2,23 +2,16 @@ package com.masthuggis.boki.backend;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -221,6 +214,7 @@ public class BackendDataHandler implements iBackend {
             Task<AuthResult> authResultTask = auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
+                            //TODO
                         }
                     });
 
@@ -234,8 +228,7 @@ public class BackendDataHandler implements iBackend {
             auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-
-                        } else {
+                            //TODO
                         }
                     });
         } catch (Exception e) {
@@ -278,7 +271,11 @@ public class BackendDataHandler implements iBackend {
             chat.updateChatObservers();
 
         });
+    }
 
+    public void deleteAd(String uniqueID){
+        mainRef.child(uniqueID).delete();
+        mainRef.child(uniqueID).equals(null);
     }
 }
 

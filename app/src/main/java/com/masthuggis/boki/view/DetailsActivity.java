@@ -3,6 +3,7 @@ package com.masthuggis.boki.view;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,11 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.model.Advert;
-import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.presenter.DetailsPresenter;
+import com.masthuggis.boki.presenter.EditAdPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 
 import java.util.List;
@@ -38,7 +37,10 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         if (advertID != null) {
             presenter = new DetailsPresenter(this, advertID);
         }
+
         String uniqueOwnerID= DataModel.getInstance().getAdFromAdID(advertID).getUniqueOwnerID();
+
+        setBtnForOwner();
 
         Button contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
@@ -52,7 +54,12 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
                 contactOwnerButton.setText("Skicka meddelande till" + uniqueOwnerID);
             }
         });
+
+        Button changeAd = findViewById(R.id.changeAdBtn);
+        changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
+
     }
+
 
     @Override
     public void setName(String name) {
@@ -98,7 +105,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
      * Set tags as buttons in details
      * @param tags
      */
-
     @Override
     public void setTags(List<String> tags) {
         LinearLayout parentLayout = findViewById(R.id.detailsTagsTableLayout);
@@ -145,5 +151,27 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         btn.setElevation(4);
     }
 
+
+    private void setBtnForOwner(){
+        if (presenter.isUserOwner()){
+            findViewById(R.id.changeAdBtn).setVisibility(View.VISIBLE);
+            findViewById(R.id.contactOwnerButton).setVisibility(View.GONE);
+        }else{
+            findViewById(R.id.changeAdBtn).setVisibility(View.GONE);
+            findViewById(R.id.contactOwnerButton).setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void showEditScreen(String id){
+        Intent intent = new Intent(DetailsActivity.this, EditAdPresenter.class);
+        intent.putExtra("advertID", id);
+        startActivity(intent);
+    }
+    @Override
+    public void showEditView(String uniqueID){
+        Intent intent = new Intent(DetailsActivity.this, EditAdActivity.class);
+        intent.putExtra("advertID", uniqueID);
+        startActivity(intent);
+    }
 
 }

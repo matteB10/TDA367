@@ -420,7 +420,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     /**
      * Called in onCreate, create tag buttons and add them to the view
      */
-
     private void displayPreDefTagButtons() {
         LinearLayout preDefTagsLayout = findViewById(R.id.preDefTagsLinearLayout);
         List<Button> tagButtons = createTagButtons(getPreDefTagStrings());
@@ -450,7 +449,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      *
      * @param tag
      */
-
     @Override
     public void displayUserTagButton(String tag) {
         LinearLayout parentLayout = findViewById(R.id.tagsLinearLayout);
@@ -458,7 +456,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         parentLayout.removeAllViewsInLayout();
         userDefTags.add(tag);
         populateTagsLayout(createTagButtons(userDefTags), parentLayout);
-
     }
+
+
 
 }

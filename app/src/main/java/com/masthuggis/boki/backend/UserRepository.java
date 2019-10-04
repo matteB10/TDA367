@@ -1,6 +1,5 @@
 package com.masthuggis.boki.backend;
 
-import com.google.api.Backend;
 import com.masthuggis.boki.model.Chat;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;
@@ -24,18 +23,16 @@ public class UserRepository {
 
     /**
      * Method to sign a user in using a email address and a chosen password.
-     *
      * @param email
      * @param password
      */
     public void signIn(String email, String password) {
-        BackendDataFetcher.getInstance().userSignIn(email,password);
+        BackendDataHandler.getInstance().userSignIn(email,password);
     }
 
     /**
      * Method to sign up a user with a email address and a chosen password,
      * connected to Firebase.
-     *
      * @param email
      * @param password
      */
@@ -43,16 +40,17 @@ public class UserRepository {
         BackendDataHandler.getInstance().userSignUp(email, password);
         loggedOut();
     }
+
     /**Checks if a user is sign in to the app.
      * @return true if a user is signed in
      */
-
     private void loggedIn() {
         iUser user;
         Map<String, String> map = BackendDataHandler.getInstance().getUser();
         user = UserFactory.createUser(map.get("userID"));
         DataModel.getInstance().loggedIn(user);
     }
+
 
     private void loggedOut() {
         DataModel.getInstance().loggedOut();
@@ -76,12 +74,16 @@ public class UserRepository {
 
 
     public String userID() {
-        return BackendDataFetcher.getInstance().getUserID();
+        return BackendDataHandler.getInstance().getUserID();
     }
 
+/*
     public String userEmail() {
-        return BackendDataFetcher.getInstance().getUserEmail();
+        return BackendDataHandler.getInstance().getUserEmail();
     }
+
+ */
+
     public void getMessages(String uniqueChatID, Chat chat, messagesCallback messagesCallback) {
         List<iMessage> messages = new ArrayList<>();
 

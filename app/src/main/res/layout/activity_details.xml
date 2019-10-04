@@ -111,10 +111,29 @@
                 android:autoLink="phone"
                 android:background="@drawable/primary_button"
                 android:text="Kontakta ägaren?"
+                android:visibility="visible"
                 android:textColor="@color/colorWhite"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/changeAdBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/primary_button"
+                android:text="redigera annons"
+                android:textColor="@color/colorWhite"
+                android:textSize="24sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                app:layout_constraintHorizontal_bias="0.496"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
