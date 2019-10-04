@@ -26,7 +26,7 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
     private final SortManager sortManager;
     private List<Advertisement> adverts;
     private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
-    private static final long MIN_CLICK_TIME_INTERVAL = 300;
+    private static final long MIN_THUMBNAIL_CLICK_TIME_INTERVAL = 300;
 
     public HomePresenter(View view) {
         this.view = view;
@@ -93,15 +93,14 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
 
     @Override
     public boolean canProceedWithTapAction() {
-        long now = System.currentTimeMillis();
-        boolean canProceed;
-        if (now - lastTimeThumbnailWasClicked < MIN_CLICK_TIME_INTERVAL) {
-            canProceed = false;
-        } else {
-            canProceed = true;
-        }
-        lastTimeThumbnailWasClicked = now;
+        boolean canProceed = tapActionWasNotTooFast();
+        lastTimeThumbnailWasClicked = System.currentTimeMillis();
         return canProceed;
+    }
+
+    private boolean tapActionWasNotTooFast() {
+        long elapsedTimeSinceLastClick = System.currentTimeMillis() - lastTimeThumbnailWasClicked;
+        return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
     }
 
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {

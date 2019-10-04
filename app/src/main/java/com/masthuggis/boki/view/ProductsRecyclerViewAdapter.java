@@ -74,15 +74,13 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
             conditionLayout = itemView.findViewById(R.id.thumbnailConditionLayout);
             conditionTextView = itemView.findViewById(R.id.conditionTextView);
 
-            setupOnPressActionFor(itemView);
+            itemView.setOnClickListener(this::onItemClicked);
         }
 
-        private void setupOnPressActionFor(View v) {
-            v.setOnClickListener(view -> {
-                if (presenter.canProceedWithTapAction()) {
-                    presenter.onRowPressed(id);
-                }
-            });
+        private void onItemClicked(View v) {
+            if (presenter.canProceedWithTapAction()) {
+                presenter.onRowPressed(id);
+            }
         }
 
         @Override
