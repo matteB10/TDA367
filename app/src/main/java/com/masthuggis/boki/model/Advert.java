@@ -28,7 +28,6 @@ public class Advert implements Advertisement {
     private long price;
     private Condition condition;
     private List<String> tags;
-    private File imageFile; //the imageFile used instead of an imageURL
     private String imageUrl;
 
 
@@ -44,7 +43,7 @@ public class Advert implements Advertisement {
     }
 
     //Probably doesn't need to set a
-    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, File imageFile, String imageUrl, List<String> tags) {
+    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, String imageUrl, List<String> tags) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.uniqueAdID = id;
@@ -52,7 +51,6 @@ public class Advert implements Advertisement {
         this.description = description;
         this.price = price;
         this.condition = condition;
-        this.imageFile = imageFile;
         this.imageUrl = imageUrl;
         this.tags = tags;
     }
@@ -62,10 +60,6 @@ public class Advert implements Advertisement {
         return this.datePublished;
     }
 
-    @Override
-    public File getImageFile() {
-        return this.imageFile;
-    }
 
     @Override
     public String getImageUrl() {
@@ -76,7 +70,6 @@ public class Advert implements Advertisement {
     public String getTitle() {
         return this.title;
     }
-
 
     @Override
     public long getPrice() {
@@ -134,11 +127,6 @@ public class Advert implements Advertisement {
 
     public void setDatePublished(String datePublished) {
         this.datePublished = datePublished;
-    }
-
-    @Override
-    public void setImageFile(File imageFile) {
-        this.imageFile = imageFile;
     }
 
 

@@ -25,10 +25,13 @@ import com.masthuggis.boki.presenter.CreateAdPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,9 +49,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private List<Button> preDefTagButtons = new ArrayList<>();
     private List<String> userDefTags = new ArrayList<>();
 
-    private File currentImageFile;
     private CreateAdPresenter presenter;
-
+    private ByteArrayInputStream uploadStream;
+    private File currentImageFile;
     private ImageView imageViewDisplay;
     private EditText title;
     private EditText price;
@@ -125,15 +128,15 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap bitmap = compressBitmap();
             setImageView(bitmap);
-            try {
-                FileOutputStream out = new FileOutputStream(currentImageFile);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            presenter.imageFileChanged(currentImageFile);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
+            byte[] imageData = out.toByteArray();
+            ByteArrayInputStream uploadStream = new ByteArrayInputStream(imageData);
         }
+    }
+
+    public File getCurrentImageFile() {
+        return this.currentImageFile;
     }
 
     private void setImageView(Bitmap bitmap) {
@@ -150,29 +153,10 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      * @return
      */
 
-    private Bitmap decodeBitmap() {
-        int imageWidth = imageViewDisplay.getWidth();
-        int imageHeight = imageViewDisplay.getHeight();
-
-        BitmapFactory.Options imageOptions = new BitmapFactory.Options();
-        imageOptions.inJustDecodeBounds = true;
-
-        int actualWidth = imageOptions.outWidth;
-        int actualHeight = imageOptions.outHeight;
-        int scaleFactor = Math.min(actualWidth / imageWidth, actualHeight / imageHeight);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        imageOptions.inJustDecodeBounds = false;
-        imageOptions.inSampleSize = scaleFactor;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath(), imageOptions);
-        return bitmap;
-    }
-
     private Bitmap compressBitmap() {
         BitmapFactory.Options imageOptions = new BitmapFactory.Options();
         imageOptions.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
+        Bitmap bitmap = BitmapFactory.decodeStream(uploadStream);
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 600, 800, true); //TODO change to preferable resolution
         return scaledBitmap;
     }

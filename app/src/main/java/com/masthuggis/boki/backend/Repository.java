@@ -5,6 +5,7 @@ import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +45,7 @@ public class Repository {
      */
 
     //TODO implement functionality for uploading the image of Advert to Firebase
-    public static void saveAdvert(Advertisement advertisement, File imageFile) {
+    public static void saveAdvert(InputStream uploadStream, Advertisement advertisement) {
         DataModel.getInstance().addAdvertisement(advertisement);
         HashMap<String, Object> dataMap = new HashMap<>();
         dataMap.put("title", advertisement.getTitle());
@@ -55,7 +56,7 @@ public class Repository {
         dataMap.put("tags", advertisement.getTags());
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
-        BackendDataHandler.getInstance().writeAdvertToFirebase(dataMap, imageFile);
+        BackendDataHandler.getInstance().writeAdvertToFirebase(uploadStream, dataMap);
     }
 
     /**

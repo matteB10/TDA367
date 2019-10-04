@@ -22,7 +22,7 @@ public class AdFactory {
     public static Advertisement createAd(String datePublished, String uniqueOwnerID, String id, String title, String description, long price,
                                          Advert.Condition condition, File imageFile, String imageUrl, List<String> tags) {
 
-        return new Advert(datePublished, uniqueOwnerID, id, title, description, price, condition, imageFile, imageUrl, tags);
+        return new Advert(datePublished, uniqueOwnerID, id, title, description, price, condition, imageUrl, tags);
     }
 
     public static Advertisement createAd() {

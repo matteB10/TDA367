@@ -56,7 +56,6 @@ public class DetailsPresenter {
 
     public interface View extends iConditionable {
         void setName(String name);
-
         void setPrice(long price);
         void setDate( String date);
         void setImageUrl(String url);
