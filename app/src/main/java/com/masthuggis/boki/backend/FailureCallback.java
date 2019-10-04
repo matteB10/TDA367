@@ -1,6 +1,8 @@
 package com.masthuggis.boki.backend;
 
+import androidx.annotation.Nullable;
+
 @FunctionalInterface
 public interface FailureCallback {
-    void onFailure();
+    void onFailure(@Nullable String errorMessage);
 }

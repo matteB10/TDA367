@@ -59,10 +59,8 @@ public class SignInActivity extends AppCompatActivity implements SignInPresenter
     }
 
     @Override
-    public void showSignInFailedMessage() {
-        Toast toast = Toast.makeText(getApplicationContext(),
-                "Inloggning misslyckades. Skrev du in rätt lösenord?",
-                Toast.LENGTH_SHORT);
+    public void showSignInFailedMessage(String errorMessage) {
+        Toast toast = Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG);
         toast.show();
     }
 

@@ -212,7 +212,7 @@ public class BackendDataHandler implements iBackend {
             if (task.isSuccessful()) {
                 successCallback.onSuccess();
             } else {
-                failureCallback.onFailure();
+                failureCallback.onFailure(task.getException().getMessage());
             }
         });
     }

@@ -13,15 +13,15 @@ public class SignInPresenter {
     }
 
     public void onSignInButtonPressed(String email, String password) {
-        repo.signIn(email, password, this::onSignInSuccess, this::onSignInFailed);
+        repo.signIn(email, password, this::onSignInSuccess, errorMessage -> onSignInFailed(errorMessage));
     }
 
     private void onSignInSuccess() {
         view.showProfileScreen();
     }
 
-    private void onSignInFailed() {
-        view.showSignInFailedMessage();
+    private void onSignInFailed(String errorMessage) {
+        view.showSignInFailedMessage(errorMessage);
     }
 
     public void onSignUpButtonPressed() {
@@ -31,6 +31,6 @@ public class SignInPresenter {
     public interface View {
         void showSignUpScreen();
         void showProfileScreen();
-        void showSignInFailedMessage();
+        void showSignInFailedMessage(String errorMessage);
     }
 }

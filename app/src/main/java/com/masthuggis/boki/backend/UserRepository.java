@@ -27,7 +27,7 @@ public class UserRepository {
         BackendDataHandler.getInstance().userSignIn(email, password, () -> {
             loggedIn();
             successCallback.onSuccess();
-        }, () -> failureCallback.onFailure());
+        }, errorMessage -> failureCallback.onFailure(errorMessage));
     }
 
     public void signUp(String email, String password) {
