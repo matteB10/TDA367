@@ -5,7 +5,6 @@ import com.masthuggis.boki.model.User;
 public class SignInPresenter {
     private UserRepository repo;
     private View view;
-    private User user;
 
     public SignInPresenter(View view){
         this.view = view;
@@ -13,19 +12,25 @@ public class SignInPresenter {
 
     }
 
-
     public void onSignInButtonPressed(String email, String password) {
-        repo.signIn(email, password);
+        repo.signIn(email, password, this::onSignInSuccess, this::onSignInFailed);
+    }
+
+    private void onSignInSuccess() {
         view.showProfileScreen();
+    }
+
+    private void onSignInFailed() {
+        view.showSignInFailedMessage();
     }
 
     public void onSignUpButtonPressed() {
         view.showSignUpScreen();
     }
 
-
     public interface View {
         void showSignUpScreen();
         void showProfileScreen();
+        void showSignInFailedMessage();
     }
 }

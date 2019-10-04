@@ -23,16 +23,11 @@ public class UserRepository {
     }
 
 
-    public void signIn(String email, String password) {
-        BackendDataHandler.getInstance().userSignIn(email, password, this::onSignInSuccessfull, this::onSignInFailure);
-    }
-
-    private void onSignInSuccessfull() {
-        loggedIn();
-    }
-
-    private void onSignInFailure() {
-        // TODO: notify user it failed
+    public void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
+        BackendDataHandler.getInstance().userSignIn(email, password, () -> {
+            loggedIn();
+            successCallback.onSuccess();
+        }, () -> failureCallback.onFailure());
     }
 
     public void signUp(String email, String password) {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -44,7 +45,6 @@ public class SignInActivity extends AppCompatActivity implements SignInPresenter
     }
 
 
-    //switch between screens
     @Override
     public void showSignUpScreen() {
         Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
@@ -57,4 +57,13 @@ public class SignInActivity extends AppCompatActivity implements SignInPresenter
         //TODO open Profilefragment instead of mainActivity
         finish();
     }
+
+    @Override
+    public void showSignInFailedMessage() {
+        Toast toast = Toast.makeText(getApplicationContext(),
+                "Inloggning misslyckades. Skrev du in rätt lösenord?",
+                Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
 }
