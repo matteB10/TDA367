@@ -208,17 +208,13 @@ public class BackendDataHandler implements iBackend {
 
 
     public void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
-        try {
-            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    successCallback.onSuccess();
-                } else {
-                    failureCallback.onFailure();
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                successCallback.onSuccess();
+            } else {
+                failureCallback.onFailure();
+            }
+        });
     }
 
     public void userSignUp(String email, String password) {

@@ -56,33 +56,27 @@ public class UserRepository {
 
         List<iChat> chatList = new ArrayList<>();
 
-        BackendDataHandler.getInstance().getUserChats(userID, new chatDBCallback() {
-            @Override
-            public void onCallback(List<Map<String, Object>> chatMap) {
-                for (Map<String, Object> map : chatMap) {
-                    chatList.add(ChatFactory.createChat(map.get("sender").toString(), map.get("receiver").toString(),map.get("uniqueChatID").toString()));
-                }
-                chatCallback.onCallback(chatList);
+        BackendDataHandler.getInstance().getUserChats(userID, chatMap -> {
+            for (Map<String, Object> map : chatMap) {
+                chatList.add(ChatFactory.createChat(map.get("sender").toString(), map.get("receiver").toString(),map.get("uniqueChatID").toString()));
             }
+            chatCallback.onCallback(chatList);
         });
     }
 
     public void getMessages(String uniqueChatID, Chat chat, messagesCallback messagesCallback) {
         List<iMessage> messages = new ArrayList<>();
 
-        BackendDataHandler.getInstance().getMessages(uniqueChatID,chat, new DBCallback() {
-            @Override
-            public void onCallBack(List<Map<String, Object>> advertDataList) {
-                if(advertDataList.size() ==0){
-                    return;
-                }
-                messages.clear();
-                for(Map<String,Object> objectMap : advertDataList){
-                    messages.add(MessageFactory.createMessage(objectMap.get("message")
-                            .toString(),objectMap.get("timeSent").toString(),objectMap.get("sender").toString()));
-                }
-
+        BackendDataHandler.getInstance().getMessages(uniqueChatID,chat, advertDataList -> {
+            if(advertDataList.size() ==0){
+                return;
             }
+            messages.clear();
+            for(Map<String,Object> objectMap : advertDataList){
+                messages.add(MessageFactory.createMessage(objectMap.get("message")
+                        .toString(),objectMap.get("timeSent").toString(),objectMap.get("sender").toString()));
+            }
+
         }); messagesCallback.onCallback(messages);
     }
 
