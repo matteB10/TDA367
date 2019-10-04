@@ -45,7 +45,7 @@ public class Repository {
      */
 
     //TODO implement functionality for uploading the image of Advert to Firebase
-    public static void saveAdvert(InputStream uploadStream, Advertisement advertisement) {
+    public static void saveAdvert(File imageFile, Advertisement advertisement) {
         DataModel.getInstance().addAdvertisement(advertisement);
         HashMap<String, Object> dataMap = new HashMap<>();
         dataMap.put("title", advertisement.getTitle());
@@ -56,7 +56,7 @@ public class Repository {
         dataMap.put("tags", advertisement.getTags());
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
-        BackendDataHandler.getInstance().writeAdvertToFirebase(uploadStream, dataMap);
+        BackendDataHandler.getInstance().writeAdvertToFirebase(imageFile, dataMap);
     }
 
     /**

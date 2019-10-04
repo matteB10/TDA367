@@ -47,6 +47,7 @@ public class CreateAdPresenter {
 
         void displayUserTagButton(String tag);
 
+        File getCurrentImageFile();
 
         //TODO: create methods for future same page error messages in view
 
@@ -144,7 +145,7 @@ public class CreateAdPresenter {
     //Need to change imageFile in advert to inputStream from View
     public void publishAdvert() {
         setAdvertDate();
-        Repository.saveAdvert(advertisement, );
+        Repository.saveAdvert(view.getCurrentImageFile(), advertisement);
         advertisement = null;
 
     }

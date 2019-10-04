@@ -72,10 +72,10 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void updateDataFromModel() {
-        if (presenter.getImgFile() != null) {
+        /*if (presenter.getImgFile() != null) {
             Bitmap myBitmap = BitmapFactory.decodeFile(presenter.getImgFile().getAbsolutePath());
             imageViewDisplay.setImageBitmap(myBitmap);
-        }
+        }*/ //Probably won't be possible since we won't be storing images in our adverts
         title.setText(presenter.getTitle());
         description.setText(presenter.getDescription());
         if (presenter.getIsValidPrice()) {
