@@ -14,10 +14,9 @@ class LatestPublishedSorting implements SortStrategy {
     private static final String NAME = "Senast publicerad";
 
     @Override
-    public List<Advertisement> sort(List<Advertisement> adverts) {
+    public List<Advertisement> sort(List<Advertisement> adverts) throws IllegalArgumentException {
         if (adverts == null || adverts.isEmpty()) {
-            // TODO: implement throws exception instead
-            return null;
+            throw new IllegalArgumentException();
         }
 
         List<Advertisement> sorted = new ArrayList<>(adverts).stream()

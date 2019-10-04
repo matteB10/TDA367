@@ -4,13 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.SignInPresenter;
 
-public class SignInActivity extends AppCompatActivity implements SignInPresenter.View{
+public class SignInActivity extends AppCompatActivity implements SignInPresenter.View {
     private SignInPresenter presenter = new SignInPresenter(this);
 
 
@@ -24,12 +25,13 @@ public class SignInActivity extends AppCompatActivity implements SignInPresenter
         setUpBtns();
 
     }
-    public String getEmail(){
+
+    public String getEmail() {
         EditText email = findViewById(R.id.email);
         return email.getText().toString();
     }
 
-    public String getPassword(){
+    public String getPassword() {
         EditText password = findViewById(R.id.password);
         return password.getText().toString();
     }
@@ -39,11 +41,11 @@ public class SignInActivity extends AppCompatActivity implements SignInPresenter
         btnSignIn.setOnClickListener(view -> presenter.onSignInButtonPressed(getEmail(), getPassword()));
 
         Button btnSignUp = findViewById(R.id.signUpButton);
-        btnSignUp.setOnClickListener(view-> presenter.onSignUpButtonPressed());
+        btnSignUp.setOnClickListener(view -> presenter.onSignUpButtonPressed());
     }
 
 
-    //switch between screens
+
     @Override
     public void showSignUpScreen() {
         Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
@@ -56,4 +58,11 @@ public class SignInActivity extends AppCompatActivity implements SignInPresenter
         //TODO open Profilefragment instead of mainActivity
         finish();
     }
+
+    @Override
+    public void showSignInFailedMessage(String errorMessage) {
+        Toast toast = Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
 }

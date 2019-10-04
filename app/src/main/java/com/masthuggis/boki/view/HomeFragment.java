@@ -101,12 +101,17 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
     public void hideLoadingScreen() {
         ProgressBar progressBar = view.findViewById(R.id.loadingProgressBar);
         progressBar.setVisibility(View.GONE);
+        RecyclerView recyclerView = view.findViewById(R.id.advertsRecyclerView);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showLoadingScreen() {
         ProgressBar progressBar = view.findViewById(R.id.loadingProgressBar);
         progressBar.setVisibility(View.VISIBLE);
+        RecyclerView recyclerView = view.findViewById(R.id.advertsRecyclerView);
+        recyclerView.setVisibility(View.GONE);
+
     }
 
     @Override

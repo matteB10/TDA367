@@ -9,9 +9,9 @@ import java.util.List;
 
 /**
  * DetailsPresenter is the presenter class for the view called DetailsActivity.
- *
+ * <p>
  * Validates input from the user to
- *
+ * <p>
  * It is the layer between the view and model and should therefore
  */
 
@@ -39,29 +39,38 @@ public class DetailsPresenter {
         view.setDate(advertisement.getDatePublished());
         view.setTags(advertisement.getTags());
         setCondition();
-        if (advertisement.getImageFile() != null) {
-            view.setImageUrl(advertisement.getImageFile().toURI().toString());
+        if (advertisement.getImageUrl() != null) { //the url here isn't what we want
+            view.setImageUrl(advertisement.getImageUrl());
         }
-
     }
-    private void setCondition(){
+
+    private void setCondition() {
         int drawable = StylingHelper.getConditionDrawable(advertisement.getCondition());
         int text = StylingHelper.getConditionText(advertisement.getCondition());
-        view.setCondition(text,drawable);
+        view.setCondition(text, drawable);
     }
 
-    public void createNewChat(String uniqueOwnerID) {
-        DataModel.getInstance().createNewChat(uniqueOwnerID);
+    public void createNewChat(String uniqueOwnerID, String owner) {
+        if (uniqueOwnerID.equals(DataModel.getInstance().getUserID())) {
+            return;
+        }
+        DataModel.getInstance().createNewChat(uniqueOwnerID, owner);
+        view.openChat(uniqueOwnerID);
     }
 
     public interface View extends iConditionable {
         void setName(String name);
-
         void setPrice(long price);
-        void setDate( String date);
+
+        void setDate(String date);
+
         void setImageUrl(String url);
+
         void setDescription(String description);
+
         void setTags(List<String> tags);
+
+        void openChat(String uniqueOwnerID);
     }
 
 

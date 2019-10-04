@@ -12,10 +12,9 @@ class ReversedAlphabeticalSorting implements SortStrategy {
     private static final String NAME = "Omvänt Alfabetisk (Ö-A)";
 
     @Override
-    public List<Advertisement> sort(List<Advertisement> adverts) {
+    public List<Advertisement> sort(List<Advertisement> adverts) throws IllegalArgumentException {
         if (adverts == null || adverts.isEmpty()) {
-            // TODO: implement throws exception instead
-            return null;
+            throw new IllegalArgumentException();
         }
 
         List<Advertisement> sorted = new ArrayList<>(adverts).stream()

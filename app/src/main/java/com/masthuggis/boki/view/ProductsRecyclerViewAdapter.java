@@ -74,16 +74,13 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
             conditionLayout = itemView.findViewById(R.id.thumbnailConditionLayout);
             conditionTextView = itemView.findViewById(R.id.conditionTextView);
 
-            setupOnPressActionFor(itemView);
+            itemView.setOnClickListener(this::onItemClicked);
         }
 
-        private void setupOnPressActionFor(View v) {
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    presenter.onRowPressed(id);
-                }
-            });
+        private void onItemClicked(View v) {
+            if (presenter.canProceedWithTapAction()) {
+                presenter.onRowPressed(id);
+            }
         }
 
         @Override
@@ -93,7 +90,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
 
         @Override
         public void setPrice(long price) {
-            priceTextView.setText(Long.toString(price) + " kr");
+            priceTextView.setText(price + " kr");
         }
 
 
@@ -102,7 +99,6 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
             Glide.with(mContext).load(url).into(imageView); //Does run when app is first started
             //Needs to be somehow delayed until files are returned from firebase?
         }
-
 
         @Override
         public void setId(String id) {
