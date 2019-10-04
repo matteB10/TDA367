@@ -20,6 +20,7 @@ import android.widget.TableRow;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
@@ -72,10 +73,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void updateDataFromModel() {
-        /*if (presenter.getImgFile() != null) {
-            Bitmap myBitmap = BitmapFactory.decodeFile(presenter.getImgFile().getAbsolutePath());
-            imageViewDisplay.setImageBitmap(myBitmap);
-        }*/ //Probably won't be possible since we won't be storing images in our adverts
+        if (presenter.getImageUrl() != null) {
+            //Bitmap myBitmap = BitmapFactory.decodeFile(presenter.getImgFile().getAbsolutePath());
+            //imageViewDisplay.setImageBitmap(myBitmap);
+            Glide.with(this).load(presenter.getImageUrl()).into(imageViewDisplay);
+        } //Probably won't be possible since we won't be storing images in our adverts
         title.setText(presenter.getTitle());
         description.setText(presenter.getDescription());
         if (presenter.getIsValidPrice()) {

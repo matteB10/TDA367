@@ -34,7 +34,6 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
         }
     }
 
-
     @Override
     public int getItemCount() {
         // TODO: change to user adverts when that logic has been implemented
