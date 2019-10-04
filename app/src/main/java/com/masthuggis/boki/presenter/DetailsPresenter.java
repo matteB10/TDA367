@@ -40,7 +40,7 @@ public class DetailsPresenter {
         view.setTags(advertisement.getTags());
         setCondition();
         if (advertisement.getImageUrl() != null) { //the url here isn't what we want
-            view.setImageUrl(advertisement.getImageUrl());
+            view.setImageUrl(advertisement.getImageUrl()); //imgUrl is null here
         }
     }
 

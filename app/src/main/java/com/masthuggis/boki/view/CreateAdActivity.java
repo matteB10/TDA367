@@ -133,6 +133,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             try {
                 OutputStream out = new FileOutputStream(currentImageFile.getPath());
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
+                imageFileChanged(currentImageFile);
                // byte[] imageData = out.toByteArray();
                // ByteArrayInputStream uploadStream = new ByteArrayInputStream(imageData);
             } catch (FileNotFoundException e) {
@@ -150,7 +151,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     public void imageFileChanged(File image) {
-        imageViewDisplay.setImageBitmap(BitmapFactory.decodeFile(image.getPath()));
+        Glide.with(this).load(image).into(imageViewDisplay);
+        //imageViewDisplay.setImageBitmap(BitmapFactory.decodeFile(image.getPath()));
     }
 
     /**
@@ -302,7 +304,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setOnClickListener(view -> {
             Intent intent = new Intent(CreateAdActivity.
-                    this, DetailsActivity.class);
+                    this, MainActivity.class);
             intent.putExtra("advertID", presenter.getId());
             presenter.publishAdvert();
             startActivity(intent);

@@ -142,7 +142,6 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
             if (advertisements != null) {
                 adverts = advertisements; //Refreshes the list so it accurately reflects adverts in firebase
             }
-
             ArrayList<Advertisement> filteredList = new ArrayList<>();
             Iterator<Advertisement> iterator = adverts.iterator();
             while (iterator.hasNext()) {
