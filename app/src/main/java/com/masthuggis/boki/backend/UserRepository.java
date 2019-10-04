@@ -1,5 +1,7 @@
 package com.masthuggis.boki.backend;
 
+import androidx.annotation.Nullable;
+
 import com.masthuggis.boki.model.Chat;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;
@@ -22,30 +24,12 @@ public class UserRepository {
     }
 
 
-    public void signIn(String email, String password,SuccessCallback successCallback,FailureCallback failureCallback) {
-        BackendDataHandler.getInstance().userSignIn(email, password, new SuccessCallback() {
-            @Override
-            public void onSuccess() {
-                UserRepository.this.onSignInSuccessfull();
-                successCallback.onSuccess();
-            }
-        }, new FailureCallback() {
-            @Override
-            public void onFailure() {
-                UserRepository.this.onSignInFailure();
-                failureCallback.onFailure();
-            }
-        });
+    public void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
+        BackendDataHandler.getInstance().userSignIn(email, password, () -> {
+            loggedIn();
+            successCallback.onSuccess();
+        }, errorMessage -> failureCallback.onFailure(errorMessage));
     }
-
-    private void onSignInSuccessfull() {
-        loggedIn();
-    }
-
-    private void onSignInFailure() {
-        // TODO: notify user it failed
-    }
-
 
 
     public void signUp(String email, String password, SuccessCallback successCallback) {
@@ -56,15 +40,19 @@ public class UserRepository {
 
     public void signInAfterRegistration(String email, String password, String username) {
         BackendDataHandler.getInstance().userSignIn(email, password, new SuccessCallback() {
+
+
             @Override
             public void onSuccess() {
                 setUsername(username);
                 loggedIn();
             }
-        }, () -> {
+        }, new FailureCallback() {
+            @Override
+            public void onFailure(@Nullable String errorMessage) {
 
+            }
         });
-
     }
 
     private void loggedIn() {
@@ -86,14 +74,11 @@ public class UserRepository {
         BackendDataHandler.getInstance().getUserChats(userID, new chatDBCallback() {
             @Override
             public void onCallback(List<Map<String, Object>> chatMap) {
-
                 for (Map<String, Object> map : chatMap) {
-                    if (map.size() == 0) {
-                        return;
-                    }
                     chatList.add(ChatFactory.createChat(map.get("sender").toString(), map.get("receiver").toString(), map.get("uniqueChatID").toString(), map.get("receiverUsername").toString()));
                 }
                 chatCallback.onCallback(chatList);
+
             }
         });
     }
