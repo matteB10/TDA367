@@ -45,6 +45,7 @@ public class SignInActivity extends AppCompatActivity implements SignInPresenter
     }
 
 
+
     @Override
     public void showSignUpScreen() {
         Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);

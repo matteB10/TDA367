@@ -1,18 +1,14 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.AdFactory;
-import com.masthuggis.boki.backend.AdFactory;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.utils.CurrentTimeHelper;
 import com.masthuggis.boki.utils.FormHelper;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.view.CreateAdActivity;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 /**
  * Presenter class handling the createAdActivity. Validates input from
@@ -150,10 +146,8 @@ public class CreateAdPresenter {
     }
 
     private void setAdvertDate() {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-        Calendar calendar = Calendar.getInstance();
-        String dateString = dateFormat.format(calendar.getTime()); //Saves current time as a string
-        advertisement.setDatePublished(dateString);
+        advertisement.setDatePublished(CurrentTimeHelper.getCurrentTime());      //Saves current time as a string
+
     }
 
     public String getId() {

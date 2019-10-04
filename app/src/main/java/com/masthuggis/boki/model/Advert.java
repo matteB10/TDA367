@@ -1,8 +1,7 @@
 package com.masthuggis.boki.model;
 
-import com.google.api.Backend;
-import com.masthuggis.boki.backend.BackendDataHandler;
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.backend.BackendDataHandler;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
@@ -29,6 +28,7 @@ public class Advert implements Advertisement {
     private Condition condition;
     private List<String> tags;
     private String imageUrl;
+    private String owner;
 
 
     public Advert() {
@@ -40,10 +40,10 @@ public class Advert implements Advertisement {
         this.price = 0;
         this.condition = Condition.UNDEFINED;
         this.tags = new ArrayList<>();
+        this.owner = DataModel.getInstance().getUserDisplayName();
     }
 
-    //Probably doesn't need to set a
-    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, String imageUrl, List<String> tags) {
+    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, String imageUrl, List<String> tags, String owner) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.uniqueAdID = id;
@@ -53,6 +53,7 @@ public class Advert implements Advertisement {
         this.condition = condition;
         this.imageUrl = imageUrl;
         this.tags = tags;
+        this.owner = owner;
     }
 
 
@@ -161,6 +162,11 @@ public class Advert implements Advertisement {
     @Override
     public boolean isValidCondition() {
         return condition != Condition.UNDEFINED;
+    }
+
+    @Override
+    public String getOwner() {
+        return this.owner;
     }
 
 

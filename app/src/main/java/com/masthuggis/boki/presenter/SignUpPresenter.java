@@ -1,6 +1,7 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.UserRepository;
+import com.masthuggis.boki.model.DataModel;
 
 public class SignUpPresenter {
 
@@ -15,11 +16,20 @@ public class SignUpPresenter {
         view.showSignInScreen();
     }
 
-    public void onSignUpButtonPressed(String email,String password) {
-        repo.signUp(email, password);
+    public void onSignUpButtonPressed(String email, String password, String username) {
+        DataModel.getInstance().signUp(email,password, () -> {
+            DataModel.getInstance().
+                    signInAfterRegistration(email, password,username);
+        });
+
+        view.signedIn();
+
+
     }
 
     public interface View {
         void showSignInScreen();
+
+        void signedIn();
     }
 }
