@@ -39,10 +39,9 @@ public class DetailsPresenter {
         view.setDate(advertisement.getDatePublished());
         view.setTags(advertisement.getTags());
         setCondition();
-        if (advertisement.getImageUrl() != null) {
+        if (advertisement.getImageUrl() != null) { //the url here isn't what we want
             view.setImageUrl(advertisement.getImageUrl());
         }
-
     }
 
     private void setCondition() {
