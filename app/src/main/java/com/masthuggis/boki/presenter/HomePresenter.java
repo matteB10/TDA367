@@ -58,7 +58,7 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
 
     private void updateData(List<Advertisement> adverts) {
         this.adverts = new ArrayList<>(adverts);
-        sortUsingTheStandardSortingOption();
+        sortUsingTheStandardSortingOption(); // TODO: sort using the selected value instead
         this.view.hideLoadingScreen();
         this.view.updateThumbnails();
     }
@@ -136,36 +136,35 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
 
     //Should probably run on its own thread
     //Filters the advertisements shown to the user by if their title matches the given query
-    public void filter(String query, FilterCallback callback) { //TODO use callback
+    public void filter(String query, FilterCallback callback) {
 
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                DataModel.getInstance().fetchAllAdverts(advertisements -> {
-                    if (advertisements != null)
-                        adverts = advertisements; //Refreshes the list so it accurately reflects adverts in firebase
-
-                    ArrayList<Advertisement> filteredList = new ArrayList<>();
-                    Iterator<Advertisement> iterator = adverts.iterator();
-                    while (iterator.hasNext()) {
-                        Advertisement ad = iterator.next();
-                        if (ad.getTitle().toLowerCase().contains(query.toLowerCase().trim())) //Only search capability on tile of advert
-                            filteredList.add(ad);
-                    }
-                    updateData(filteredList); //TODO fix this so loading Screen shows up
-                    callback.onCallback();
-                });
+        Thread thread = new Thread(() -> DataModel.getInstance().fetchAllAdverts(advertisements -> {
+            view.showLoadingScreen();
+            if (advertisements != null) {
+                adverts = advertisements; //Refreshes the list so it accurately reflects adverts in firebase
             }
-        });
+
+            ArrayList<Advertisement> filteredList = new ArrayList<>();
+            Iterator<Advertisement> iterator = adverts.iterator();
+            while (iterator.hasNext()) {
+                Advertisement ad = iterator.next();
+                if (ad.getTitle().toLowerCase().contains(query.toLowerCase().trim())) {
+                    //Only search capability on tile of advert
+                    filteredList.add(ad);
+                }
+            }
+            updateData(filteredList);
+            callback.onCallback();
+        }));
         thread.start();
 
     }
 
     @Override
     public void advertsInMarketUpdate(List<Advertisement> advertsInMarket) {
-        Log.d("DEBUG", "advertsInMarketUpdate " + advertsInMarket.size());
-        if (advertsInMarket != null && !advertsInMarket.isEmpty())
+        if (advertsInMarket != null && !advertsInMarket.isEmpty()) {
             updateData(advertsInMarket);
+        }
     }
 
 
