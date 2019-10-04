@@ -16,9 +16,7 @@ public class SignInPresenter {
 
 
     public void onSignInButtonPressed(String email, String password) {
-        repo.signIn(email, password, () -> {
-            view.showProfileScreen();
-        });
+        repo.signIn(email, password, () -> view.showProfileScreen());
     }
 
     public void onSignUpButtonPressed() {

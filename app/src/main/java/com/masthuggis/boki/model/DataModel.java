@@ -77,7 +77,6 @@ public class DataModel {
 
 
     public void loggedIn(iUser user) {
-
         this.user = user;
     }
 
@@ -112,6 +111,7 @@ public class DataModel {
     }
 
     public void createNewChat(String uniqueReceiverID,String owner) {
+
         HashMap<String, Object> newChatMap = new HashMap<>();
         newChatMap.put("receiver", uniqueReceiverID);
         newChatMap.put("sender", this.getUserID());
@@ -139,5 +139,9 @@ public class DataModel {
     }
     public void signInAfterRegistration(String email, String password, String username){
         UserRepository.getInstance().signInAfterRegistration(email,password,username);
+    }
+
+    public void signOut() {
+        UserRepository.getInstance().signOut();
     }
 }

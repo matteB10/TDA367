@@ -15,9 +15,10 @@ public class ProfilePresenter implements IProductsPresenter, RepositoryObserver 
 
     public ProfilePresenter(View view) {
         this.view = view;
-
         this.view.showLoadingScreen();
-        this.adverts = DataModel.getInstance().getAllAds();
+        if(DataModel.getInstance().isLoggedIn()){
+            this.adverts = DataModel.getInstance().getAdsFromUniqueOwnerID(DataModel.getInstance().getUserID());
+        }
         this.view.hideLoadingScreen();
 
     }

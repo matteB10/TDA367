@@ -23,15 +23,18 @@ public class UserRepository {
 
 
     public void signIn(String email, String password, signInCallback signInCallback) {
-        BackendDataHandler.getInstance().userSignIn(email, password, signInCallback);
-        loggedIn();
+        BackendDataHandler.getInstance().userSignIn(email, password, new signInCallback() {
+            @Override
+            public void onCallback() {
+                loggedIn();
+                signInCallback.onCallback();
+
+            }
+        });
     }
 
     public void signUp(String email, String password, signInCallback signInCallback) {
-        BackendDataHandler.getInstance().userSignUp(email, password, () -> {
-          //  loggedIn();
-            signInCallback.onCallback();
-        });
+        BackendDataHandler.getInstance().userSignUp(email, password, signInCallback::onCallback);
 
 
     }
@@ -109,6 +112,10 @@ public class UserRepository {
 
     public void setUsername(String username) {
         BackendDataHandler.getInstance().setUsername(username);
+    }
+
+    public void signOut() {
+        BackendDataHandler.getInstance().signOut();
     }
 }
 

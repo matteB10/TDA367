@@ -24,6 +24,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.masthuggis.boki.model.Chat;
+import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
@@ -223,11 +224,15 @@ public class BackendDataHandler implements iBackend {
 
     public void userSignIn(String email, String password,signInCallback signInCallback) {
         try {
-            Task<AuthResult> authResultTask = auth.signInWithEmailAndPassword(email, password)
+                Task<AuthResult> authResultTask = auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             signInCallback.onCallback();
+                            System.out.println("Login successful");
                         }
+                    }).addOnFailureListener(e -> {
+                        System.out.println("Login failed");
+
                     });
 
         } catch (Exception e) {
@@ -320,6 +325,11 @@ public class BackendDataHandler implements iBackend {
                 }
             });
         }
+    }
+
+    void signOut(){
+        auth.signOut();
+        DataModel.getInstance().loggedOut();
     }
 }
 

@@ -76,5 +76,6 @@
     <string name="search">Search</string>
 
     <string name="searchHint">Sök efter titlar...</string>
+    <string name="sign_out">Logga ut</string>
 
 </resources>

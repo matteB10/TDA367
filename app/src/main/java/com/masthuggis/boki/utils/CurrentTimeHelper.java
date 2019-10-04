@@ -12,4 +12,11 @@ public class CurrentTimeHelper {
         Calendar calendar = Calendar.getInstance();
         return dateFormat.format(calendar.getTime());
     }
+    public static String getCurrentTimeNumerical(){
+        DateFormat dateFormat = new SimpleDateFormat("ddMMyyHHmmss");
+        Calendar calendar = Calendar.getInstance();
+        return dateFormat.format(calendar.getTime());
+    }
+
+
 }

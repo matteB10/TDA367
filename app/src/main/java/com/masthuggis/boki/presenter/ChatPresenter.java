@@ -49,7 +49,7 @@ public class ChatPresenter implements ChatObservers {
             //Date, message, sender
             map.put("message", messageText);
             map.put("sender", DataModel.getInstance().getUserID());
-            map.put("timeSent", CurrentTimeHelper.getCurrentTime());
+            map.put("timeSent", CurrentTimeHelper.getCurrentTimeNumerical());
             DataModel.getInstance().sendMessage(chat.getChatID(), map);
 
             setMessageBox(messageText, true);
