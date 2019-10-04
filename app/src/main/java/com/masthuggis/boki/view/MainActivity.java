@@ -1,13 +1,16 @@
 package com.masthuggis.boki.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.model.DataModel;
 
 /**
  * MainActivity is the primary view of the application. This is where the application will take you on launch.
@@ -30,7 +33,17 @@ public class MainActivity extends AppCompatActivity {
      * It does this through the defined ID:s of the different fragments.
      */
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = menuItem -> {
+
         if (menuItem.getItemId() == R.id.navigation_new_ad) {
+            if (!DataModel.getInstance().isLoggedIn()) {
+                Context context = getApplicationContext();
+                CharSequence text = "Du måste logga in för att kunna lägga upp en ny annons!";
+                int duration = Toast.LENGTH_LONG;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+                return false;
+            }
             Intent intent = new Intent(this, CreateAdActivity.class);
             startActivity(intent);
         } else {
@@ -55,14 +68,13 @@ public class MainActivity extends AppCompatActivity {
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
         }
-            return true;
+        return true;
 
-        }
-        ;
+    };
 
-        @Override
-        public void onBackPressed () {
+    @Override
+    public void onBackPressed() {
 
-        }
     }
+}
 
