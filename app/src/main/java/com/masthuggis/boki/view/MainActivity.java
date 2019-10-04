@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.model.DataModel;
 
@@ -60,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
                 Context context = getApplicationContext();
                 CharSequence text = "Du måste logga in för att kunna lägga upp en ny annons!";
                 int duration = Toast.LENGTH_LONG;
-
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
                 return false;
@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
             switch (menuItem.getItemId()) {
                 case R.id.navigation_home:
                     showFragment(homeFragment);
+                    Snackbar snackbar = Snackbar.make(homeFragment.getView(),"test",Snackbar.LENGTH_LONG);
+                    snackbar.show();
                     break;
                 case R.id.navigation_favorites:
                     showFragment(favoritesFragment);
