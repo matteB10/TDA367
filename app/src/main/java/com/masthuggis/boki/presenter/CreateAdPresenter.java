@@ -43,7 +43,12 @@ public class CreateAdPresenter {
 
         void displayUserTagButton(String tag);
 
+        void removeUserTagButton(String tag);
+
         File getCurrentImageFile();
+
+
+
 
         //TODO: create methods for future same page error messages in view
 
@@ -90,12 +95,16 @@ public class CreateAdPresenter {
 
     /**
      * Gets string from user defined tag.
-     * Updates styling of tag in view
-     *
+     * Shows user tag as a button if its added, if tag is already
+     * added to advertisement it is removed
      * @param tag
      */
     public void userDefTagsChanged(String tag) {
-        view.displayUserTagButton(tag);
+        if(isTagSelected(tag)) {
+            view.displayUserTagButton(tag);
+        }else{
+            view.removeUserTagButton(tag);
+        }
         advertisement.tagsChanged(tag);
     }
 
@@ -140,7 +149,7 @@ public class CreateAdPresenter {
     //Need to change imageFile in advert to inputStream from View
     public void publishAdvert() {
         setAdvertDate();
-        Repository.saveAdvert(view.getCurrentImageFile(), advertisement);
+        Repository.saveAdvert(advertisement, view.getCurrentImageFile());
         advertisement = null;
     }
 
@@ -182,7 +191,4 @@ public class CreateAdPresenter {
         return (int) advertisement.getPrice();
     }
 
-    public String getImageUrl() {
-        return advertisement.getImageUrl();
-    }
 }

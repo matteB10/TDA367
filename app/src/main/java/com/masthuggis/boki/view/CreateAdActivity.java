@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -49,7 +50,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private List<Button> preDefTagButtons = new ArrayList<>();
-    private List<String> userDefTags = new ArrayList<>();
+    private List<Button> userDefTagButtons = new ArrayList<>();
 
     private CreateAdPresenter presenter;
     private File currentImageFile;
@@ -161,7 +162,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         BitmapFactory.Options imageOptions = new BitmapFactory.Options();
         imageOptions.inJustDecodeBounds = true;
         Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 600, 800, true); //TODO change to preferable resolution
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 600, 800, true); //TODO change 200x200 to preferable resolution
         return scaledBitmap;
     }
 
@@ -173,7 +174,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setPublishAdListener();
         setConditionGroupListener();
         setPreDefTagsListeners();
-        setUserDefTagListener();
+        setUserTagTextFieldListener();
 
     }
 
@@ -323,7 +324,18 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
     }
 
-    private void setUserDefTagListener() {
+    private void setUserDefTagsListener(Button btn) {
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.userDefTagsChanged(btn.getText().toString());
+
+            }
+        });
+    }
+
+
+    private void setUserTagTextFieldListener() {
         EditText userDefTag = findViewById(R.id.tagsEditText);
         userDefTag.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -382,17 +394,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      * @param tags         a list of buttons
      * @param parentLayout the layout in which buttons will be placed
      */
-    private void populateTagsLayout(List<Button> tags, LinearLayout parentLayout) {
-        TableRow tableRow = new TableRow(this);
+    private void populateTagsLayout(List<Button> tags, ViewGroup parentLayout) {
         for (Button btn : tags) {
-            tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
+            ViewGroup tableRow = getCurrenTagRow(parentLayout.getId());
             tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
-            if (rowFull(tableRow)) {
-                parentLayout.addView(tableRow);
-                tableRow = new TableRow(this);
-            }
         }
-        parentLayout.addView(tableRow);
     }
 
     /**
@@ -439,13 +445,56 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      */
     @Override
     public void displayUserTagButton(String tag) {
-        LinearLayout parentLayout = findViewById(R.id.tagsLinearLayout);
-        //must reset parentView for every new tag added to get tags in right formation
-        parentLayout.removeAllViewsInLayout();
-        userDefTags.add(tag);
-        populateTagsLayout(createTagButtons(userDefTags), parentLayout);
+        Button btn = createTagButton(tag);
+        userDefTagButtons.add(btn);
+        ViewGroup currentUserTagTableRow = getCurrenTagRow(R.id.tagsLinearLayout);
+        setUserDefTagsListener(btn);
+        currentUserTagTableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
     }
 
+    @Override
+    public void removeUserTagButton(String tag) {
+        userDefTagButtons.remove(getButtonFromText(tag));
+        updateUserDefTags();
+    }
 
+    private ViewGroup getCurrenTagRow(int parentViewID) {
+        ViewGroup parentLayout = findViewById(parentViewID);
+        int noOfRows = parentLayout.getChildCount();
+        for (int i = 0; i < noOfRows; i++) {
+            if (!(rowFull((TableRow) parentLayout.getChildAt(i)))) {
+                return (TableRow) parentLayout.getChildAt(i);
+            }
+        }
+        ViewGroup tr = new TableRow(this);
+        parentLayout.addView(tr, StylingHelper.getTableRowLayoutParams(this));
+        return tr;
+    }
+
+    private void updateUserDefTags() {
+        ViewGroup parentLayout = findViewById(R.id.tagsLinearLayout);
+        clearLayout(parentLayout);
+        populateTagsLayout(userDefTagButtons, parentLayout);
+    }
+
+    private Button getButtonFromText(String text) {
+        for (Button btn : userDefTagButtons) {
+            if (btn.getText().toString().equals(text)) {
+                return btn;
+            }
+        }
+        return null;
+    }
+    /**
+     * Clear rows in layout from children
+     */
+    private void clearLayout(ViewGroup layout){
+        ViewGroup tr;
+        int noOfRows = layout.getChildCount();
+        for (int i = 0; i < noOfRows; i++) {
+            tr = (TableRow) layout.getChildAt(i);
+            tr.removeAllViews();
+        }
+    }
 
 }
