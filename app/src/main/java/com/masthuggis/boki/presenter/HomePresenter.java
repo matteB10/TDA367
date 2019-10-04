@@ -25,6 +25,8 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
     private final View view;
     private final SortManager sortManager;
     private List<Advertisement> adverts;
+    private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
+    private static final long MIN_CLICK_TIME_INTERVAL = 300;
 
     public HomePresenter(View view) {
         this.view = view;
@@ -87,6 +89,19 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
 
     public void onRowPressed(String uniqueIDoFAdvert) {
         view.showDetailsScreen(uniqueIDoFAdvert);
+    }
+
+    @Override
+    public boolean canProceedWithTapAction() {
+        long now = System.currentTimeMillis();
+        boolean canProceed;
+        if (now - lastTimeThumbnailWasClicked < MIN_CLICK_TIME_INTERVAL) {
+            canProceed = false;
+        } else {
+            canProceed = true;
+        }
+        lastTimeThumbnailWasClicked = now;
+        return canProceed;
     }
 
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {

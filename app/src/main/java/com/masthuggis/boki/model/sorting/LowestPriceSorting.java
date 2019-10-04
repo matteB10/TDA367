@@ -11,10 +11,9 @@ class LowestPriceSorting implements SortStrategy {
     private static final String NAME = "Lägsta pris";
 
     @Override
-    public List<Advertisement> sort(List<Advertisement> adverts) {
+    public List<Advertisement> sort(List<Advertisement> adverts) throws IllegalArgumentException {
         if (adverts == null || adverts.isEmpty()) {
-            // TODO: implement throws exception instead
-            return null;
+            throw new IllegalArgumentException();
         }
 
         return new ArrayList<>(adverts).stream()

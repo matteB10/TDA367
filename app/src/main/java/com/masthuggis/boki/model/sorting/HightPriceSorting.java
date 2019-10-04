@@ -12,10 +12,9 @@ class HightPriceSorting implements SortStrategy {
     private static final String NAME = "Högsta pris";
 
     @Override
-    public List<Advertisement> sort(List<Advertisement> adverts) {
+    public List<Advertisement> sort(List<Advertisement> adverts) throws IllegalArgumentException {
         if (adverts == null || adverts.isEmpty()) {
-            // TODO: implement throws exception instead
-            return null;
+            throw new NullPointerException();
         }
 
         return new ArrayList<>(adverts).stream()

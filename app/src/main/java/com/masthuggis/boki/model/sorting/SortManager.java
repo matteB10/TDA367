@@ -2,6 +2,7 @@ package com.masthuggis.boki.model.sorting;
 
 import com.masthuggis.boki.model.Advertisement;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class SortManager {
         return sortOptionNames;
     }
 
-    public List<Advertisement> sort(int pos, List<Advertisement> advertsToSort) {
+    public List<Advertisement> sort(int pos, List<Advertisement> advertsToSort) throws NullPointerException {
         return sortStrategies.get(pos).sort(advertsToSort);
     }
 }

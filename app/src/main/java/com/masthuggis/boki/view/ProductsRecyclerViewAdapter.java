@@ -78,9 +78,8 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         }
 
         private void setupOnPressActionFor(View v) {
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            v.setOnClickListener(view -> {
+                if (presenter.canProceedWithTapAction()) {
                     presenter.onRowPressed(id);
                 }
             });
@@ -93,7 +92,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
 
         @Override
         public void setPrice(long price) {
-            priceTextView.setText(Long.toString(price) + " kr");
+            priceTextView.setText(price + " kr");
         }
 
 

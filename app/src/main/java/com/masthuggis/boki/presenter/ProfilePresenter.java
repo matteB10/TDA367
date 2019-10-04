@@ -12,6 +12,8 @@ import java.util.List;
 public class ProfilePresenter implements IProductsPresenter {
     private final View view;
     private List<Advertisement> adverts;
+    private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
+    private static final long MIN_CLICK_TIME_INTERVAL = 300;
 
     public ProfilePresenter(View view) {
         this.view = view;
@@ -48,6 +50,19 @@ public class ProfilePresenter implements IProductsPresenter {
     @Override
     public void onRowPressed(String uniqueIDoFAdvert) {
         // TODO
+    }
+
+    @Override
+    public boolean canProceedWithTapAction() {
+        long now = System.currentTimeMillis();
+        boolean canProceed;
+        if (now - lastTimeThumbnailWasClicked < MIN_CLICK_TIME_INTERVAL) {
+            canProceed = false;
+        } else {
+            canProceed = true;
+        }
+        lastTimeThumbnailWasClicked = now;
+        return canProceed;
     }
 
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
