@@ -137,7 +137,6 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
     //Should probably run on its own thread
     //Filters the advertisements shown to the user by if their title matches the given query
     public void filter(String query, FilterCallback callback) {
-
         Thread thread = new Thread(() -> DataModel.getInstance().fetchAllAdverts(advertisements -> {
             view.showLoadingScreen();
             if (advertisements != null) {
@@ -157,7 +156,6 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
             callback.onCallback();
         }));
         thread.start();
-
     }
 
     @Override
