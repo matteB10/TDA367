@@ -1,5 +1,6 @@
 package com.masthuggis.boki.presenter;
 
+import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
