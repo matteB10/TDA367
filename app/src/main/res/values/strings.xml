@@ -64,6 +64,7 @@
     </string-array>
 
     <!-- login and signup activity-->
+    <string name="username"> Användarnamn </string>
     <string name="email">E-post</string>
     <string name="password">Lösenord</string>
     <string name="reenterPassword">Ange lösenord igen</string>
@@ -75,5 +76,6 @@
     <string name="search">Search</string>
 
     <string name="searchHint">Sök efter titlar...</string>
+    <string name="sign_out">Logga ut</string>
 
 </resources>

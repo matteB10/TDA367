@@ -1,11 +1,9 @@
 package com.masthuggis.boki.model;
 
-import com.google.api.Backend;
-import com.masthuggis.boki.backend.BackendDataHandler;
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.backend.BackendDataHandler;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +26,8 @@ public class Advert implements Advertisement {
     private long price;
     private Condition condition;
     private List<String> tags;
-    private File imageFile; //the imageFile used instead of an imageURL
+    private String imageUrl;
+    private String owner;
 
 
     public Advert() {
@@ -40,9 +39,10 @@ public class Advert implements Advertisement {
         this.price = 0;
         this.condition = Condition.UNDEFINED;
         this.tags = new ArrayList<>();
+        this.owner = DataModel.getInstance().getUserDisplayName();
     }
 
-    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, File file, List<String> tags) {
+    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, String imageUrl, List<String> tags, String owner) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.uniqueAdID = id;
@@ -50,8 +50,9 @@ public class Advert implements Advertisement {
         this.description = description;
         this.price = price;
         this.condition = condition;
-        this.imageFile = file;
+        this.imageUrl = imageUrl;
         this.tags = tags;
+        this.owner = owner;
     }
 
 
@@ -59,16 +60,16 @@ public class Advert implements Advertisement {
         return this.datePublished;
     }
 
+
     @Override
-    public File getImageFile() {
-        return this.imageFile;
+    public String getImageUrl() {
+        return this.imageUrl;
     }
 
     @Override
     public String getTitle() {
         return this.title;
     }
-
 
     @Override
     public long getPrice() {
@@ -128,29 +129,22 @@ public class Advert implements Advertisement {
         this.datePublished = datePublished;
     }
 
-    @Override
-    public void setImageFile(File imageFile) {
-        this.imageFile = imageFile;
-    }
-
 
     /**
-     *
-     *
      * @param condition, string given from view, representing a condition
      */
     @Override
     public void setCondition(int condition) {
-            switch (condition){
-                case R.string.conditionNew:
-                    this.condition = Condition.NEW;
-                    break;
-                case R.string.conditionGood:
-                    this.condition = Condition.GOOD;
-                    break;
-                case R.string.conditionOk:
-                    this.condition = Condition.OK;
-                    break;
+        switch (condition) {
+            case R.string.conditionNew:
+                this.condition = Condition.NEW;
+                break;
+            case R.string.conditionGood:
+                this.condition = Condition.GOOD;
+                break;
+            case R.string.conditionOk:
+                this.condition = Condition.OK;
+                break;
         }
     }
 
@@ -163,9 +157,15 @@ public class Advert implements Advertisement {
         }
         return true;
     }
+
     @Override
-    public boolean isValidCondition(){
+    public boolean isValidCondition() {
         return condition != Condition.UNDEFINED;
+    }
+
+    @Override
+    public String getOwner() {
+        return this.owner;
     }
 
 

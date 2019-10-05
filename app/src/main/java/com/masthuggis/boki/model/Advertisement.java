@@ -1,6 +1,5 @@
 package com.masthuggis.boki.model;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -11,7 +10,7 @@ public interface Advertisement {
 
     String getDatePublished();
 
-    File getImageFile();
+    String getImageUrl();
 
     String getTitle();
 
@@ -39,9 +38,8 @@ public interface Advertisement {
 
     void setDatePublished(String datePublished);
 
-    void setImageFile(File imageFile);
-
     boolean isNewTag(String tag);
 
     boolean isValidCondition();
+    String getOwner();
 }

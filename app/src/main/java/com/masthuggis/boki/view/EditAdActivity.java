@@ -2,11 +2,7 @@ package com.masthuggis.boki.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,12 +13,6 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
 
     private EditAdPresenter presenter;
 
-    private ImageView bookImageView;
-    private EditText titleEditText;
-    private EditText priceEditText;
-    private EditText descriptionEditText;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,62 +20,22 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
 
         Intent intent = getIntent();
         String advertID = intent.getExtras().getString("advertID");
+
         presenter = new EditAdPresenter(this, advertID);
-
-        setListeners();
-        setBtns();
-    }
-
-
-    private void setBtns(){
-        Button removeBtn = findViewById(R.id.removeAdBtn);
-        removeBtn.setOnClickListener(view -> presenter.removeAdPressed());
-
-        Button saveBtn = findViewById(R.id.saveBtn);
+        setUpBtns();
 
     }
 
-//----------------------------------------------------------------------------
+   private void setUpBtns(){
+       Button removeBtn = findViewById(R.id.removeAdBtn);
+       removeBtn.setOnClickListener(view -> presenter.removeAdBtnPressed());
 
-    private void setListeners(){
-        setTitleListener();
-    }
+       Button editTitle = findViewById(R.id.editTitleBtn);
+       editTitle.setOnClickListener(view -> presenter.editTitleBtnPressed());
+   }
 
-
-
-    private void setTitleListener() {
-        EditText title = findViewById(R.id.titleEditText);
-        title.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                presenter.titleChanged(title.getText().toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-    }
-
-
-
-    //----------------------------------------------------------------------------
-    @Override
-    public void setName(String name) {
-
-    }
-
-    @Override
-    public void setImageUrl(String url) {
-
-    }
-
-    @Override
-    public void setDescription(String description) {
-
+    public void backToHomeview(){
+        Intent intent = new Intent(EditAdActivity.this, HomeFragment.class);
+        startActivity(intent);
     }
 }

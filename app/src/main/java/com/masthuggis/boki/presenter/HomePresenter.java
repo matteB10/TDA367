@@ -1,10 +1,7 @@
 package com.masthuggis.boki.presenter;
 
 import android.os.Handler;
-import android.util.Log;
 
-
-import com.bumptech.glide.Glide;
 import com.masthuggis.boki.backend.MockRepository;
 import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.model.Advertisement;
@@ -25,6 +22,8 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
     private final View view;
     private final SortManager sortManager;
     private List<Advertisement> adverts;
+    private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
+    private static final long MIN_THUMBNAIL_CLICK_TIME_INTERVAL = 300;
 
     public HomePresenter(View view) {
         this.view = view;
@@ -56,7 +55,7 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
 
     private void updateData(List<Advertisement> adverts) {
         this.adverts = new ArrayList<>(adverts);
-        sortUsingTheStandardSortingOption();
+        sortUsingTheStandardSortingOption(); // TODO: sort using the selected value instead
         this.view.hideLoadingScreen();
         this.view.updateThumbnails();
     }
@@ -73,8 +72,8 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
         setCondition(a, thumbnailView);
-        if (a.getImageFile() != null) {
-            thumbnailView.setImageURL(a.getImageFile().toURI().toString());
+        if (a.getImageUrl() != null) {
+            thumbnailView.setImageURL(a.getImageUrl());
         }
     }
 
@@ -87,6 +86,18 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
 
     public void onRowPressed(String uniqueIDoFAdvert) {
         view.showDetailsScreen(uniqueIDoFAdvert);
+    }
+
+    @Override
+    public boolean canProceedWithTapAction() {
+        boolean canProceed = tapActionWasNotTooFast();
+        lastTimeThumbnailWasClicked = System.currentTimeMillis();
+        return canProceed;
+    }
+
+    private boolean tapActionWasNotTooFast() {
+        long elapsedTimeSinceLastClick = System.currentTimeMillis() - lastTimeThumbnailWasClicked;
+        return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
     }
 
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
@@ -122,36 +133,33 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
 
     //Should probably run on its own thread
     //Filters the advertisements shown to the user by if their title matches the given query
-    public void filter(String query, FilterCallback callback) { //TODO use callback
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                DataModel.getInstance().fetchAllAdverts(advertisements -> {
-                    if (advertisements != null)
-                        adverts = advertisements; //Refreshes the list so it accurately reflects adverts in firebase
-
-                    ArrayList<Advertisement> filteredList = new ArrayList<>();
-                    Iterator<Advertisement> iterator = adverts.iterator();
-                    while (iterator.hasNext()) {
-                        Advertisement ad = iterator.next();
-                        if (ad.getTitle().toLowerCase().contains(query.toLowerCase().trim())) //Only search capability on tile of advert
-                            filteredList.add(ad);
-                    }
-                    updateData(filteredList); //TODO fix this so loading Screen shows up
-                    callback.onCallback();
-                });
+    public void filter(String query, FilterCallback callback) {
+        Thread thread = new Thread(() -> DataModel.getInstance().fetchAllAdverts(advertisements -> {
+            view.showLoadingScreen();
+            if (advertisements != null) {
+                adverts = advertisements; //Refreshes the list so it accurately reflects adverts in firebase
             }
-        });
-        thread.start();
 
+            ArrayList<Advertisement> filteredList = new ArrayList<>();
+            Iterator<Advertisement> iterator = adverts.iterator();
+            while (iterator.hasNext()) {
+                Advertisement ad = iterator.next();
+                if (ad.getTitle().toLowerCase().contains(query.toLowerCase().trim())) {
+                    //Only search capability on tile of advert
+                    filteredList.add(ad);
+                }
+            }
+            updateData(filteredList);
+            callback.onCallback();
+        }));
+        thread.start();
     }
 
     @Override
     public void advertsInMarketUpdate(List<Advertisement> advertsInMarket) {
-        Log.d("DEBUG", "advertsInMarketUpdate " + advertsInMarket.size());
-        if (advertsInMarket != null && !advertsInMarket.isEmpty())
+        if (advertsInMarket != null && !advertsInMarket.isEmpty()) {
             updateData(advertsInMarket);
+        }
     }
 
 

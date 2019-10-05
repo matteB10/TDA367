@@ -11,14 +11,17 @@ import java.util.List;
 public class ProfilePresenter implements IProductsPresenter {
     private final View view;
     private List<Advertisement> adverts;
+    private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
+    private static final long MIN_CLICK_TIME_INTERVAL = 300;
 
     private UserRepository userRepo;
 
     public ProfilePresenter(View view) {
         this.view = view;
-
         this.view.showLoadingScreen();
-        this.adverts = DataModel.getInstance().getAllAds();
+        if(DataModel.getInstance().isLoggedIn()){
+            this.adverts = DataModel.getInstance().getAdsFromUniqueOwnerID(DataModel.getInstance().getUserID());
+        }
         this.view.hideLoadingScreen();
 
     }
@@ -30,11 +33,10 @@ public class ProfilePresenter implements IProductsPresenter {
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
         setCondition(a, thumbnailView);
-        if (a.getImageFile() != null) {
-            thumbnailView.setImageURL(a.getImageFile().toURI().toString());
+        if (a.getImageUrl() != null) {
+            thumbnailView.setImageURL(a.getImageUrl());
         }
     }
-
 
     @Override
     public int getItemCount() {
@@ -49,6 +51,19 @@ public class ProfilePresenter implements IProductsPresenter {
     @Override
     public void onRowPressed(String uniqueIDoFAdvert) {
         // TODO
+    }
+
+    @Override
+    public boolean canProceedWithTapAction() {
+        long now = System.currentTimeMillis();
+        boolean canProceed;
+        if (now - lastTimeThumbnailWasClicked < MIN_CLICK_TIME_INTERVAL) {
+            canProceed = false;
+        } else {
+            canProceed = true;
+        }
+        lastTimeThumbnailWasClicked = now;
+        return canProceed;
     }
 
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
@@ -90,10 +105,4 @@ public class ProfilePresenter implements IProductsPresenter {
     public void onSignInButtonPressed() {
         view.showSignInScreen();
     }
-/*
-    public boolean setUpUser(){
-        return userRepo.isSignedIn();
-    }
-
- */
 }

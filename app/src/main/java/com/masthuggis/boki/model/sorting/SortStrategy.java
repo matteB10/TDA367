@@ -9,6 +9,6 @@ import java.util.List;
  * is returned from getName.
  */
 public interface SortStrategy {
-    List<Advertisement> sort(List<Advertisement> adverts);
+    List<Advertisement> sort(List<Advertisement> adverts) throws IllegalArgumentException;
     String getName();
 }

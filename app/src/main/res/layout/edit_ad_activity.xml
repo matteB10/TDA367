@@ -15,6 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,6 +70,17 @@
                     app:layout_constraintTop_toBottomOf="@+id/bookImageView" />
 
 
+                <Button
+                    android:id="@+id/removeAdBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/primary_button"
+                    android:text="Ta bort annons"
+                    android:textColor="@color/colorWhite"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <LinearLayout
 
                     android:id="@+id/titleLayout"
@@ -91,6 +103,12 @@
                         android:layout_weight="1"
                         android:text="@string/addAdvertTitle" />
 
+                    <Button
+                        android:id="@+id/editTitleBtn"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:text="ändra Titel" />
+
                     <EditText
                         android:id="@+id/titleEditText"
                         android:layout_width="wrap_content"
@@ -98,6 +116,7 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/titleHint"
+                        android:visibility="gone"
                         android:inputType="textPersonName" />
                 </LinearLayout>
 
@@ -123,12 +142,19 @@
                         android:layout_weight="1"
                         android:text="@string/addAdvertPrice" />
 
+                    <Button
+                        android:id="@+id/editPriceBtn"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:text="ändra Pris" />
+
                     <EditText
                         android:id="@+id/priceEditText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
+                        android:visibility="gone"
                         android:hint="@string/priceHint"
                         android:inputType="textPersonName" />
 
@@ -157,6 +183,12 @@
                         android:layout_weight="1"
                         android:text="@string/addAdvertOtherInfo" />
 
+                    <Button
+                        android:id="@+id/editDescriptionBtn"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:text="ändra Beskrivning" />
+
                     <EditText
                         android:id="@+id/descriptionEditText"
                         android:imeOptions="actionDone"
@@ -164,6 +196,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
+                        android:visibility="gone"
                         android:inputType="textPersonName" />
 
                 </LinearLayout>
@@ -364,19 +397,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view4" />
 
-                <Button
-                    android:id="@+id/removeAdBtn"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/primary_button"
-                    android:text="Ta bort annons"
-                    android:textColor="@color/colorWhite"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.114"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view4" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

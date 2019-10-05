@@ -1,41 +1,35 @@
 package com.masthuggis.boki.presenter;
 
+import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 
 public class EditAdPresenter {
 
-    private View view;
+    private String title;
+    private Advert.Condition condition;
+    private String description;
+    private Long price;
+
     private Advertisement advertisement;
 
     public EditAdPresenter(View view, String advertID){
-        this.view = view;
         this.advertisement = DataModel.getInstance().getAdFromAdID(advertID);
-        setupView();
     }
 
-    public void removeAdPressed(){
+    public void removeAdBtnPressed(){
         String adID = advertisement.getUniqueID();
         DataModel.getInstance().removeExistingAdvert(adID);
     }
 
+    public void editTitleBtnPressed() {
+        String adID = advertisement.getUniqueID();
+        DataModel.getInstance().updateTitle();
 
-    private void setupView() {
-        view.setName(advertisement.getTitle());
-        view.setDescription(advertisement.getDescription());
-        if (advertisement.getImageFile() != null) {
-            view.setImageUrl(advertisement.getImageFile().toURI().toString());
-        }
     }
+
 
     public interface View {
-        void setName(String name);
-        void setImageUrl(String url);
-        void setDescription(String description);
+       void backToHomeview();
     }
-//-------------------------------------------------------
-public void titleChanged(String title) {
-    advertisement.setTitle(title);
-}
-
 }

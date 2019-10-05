@@ -20,15 +20,20 @@ import android.widget.TableRow;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,9 +51,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private List<Button> preDefTagButtons = new ArrayList<>();
     private List<String> userDefTags = new ArrayList<>();
 
-    private File currentImageFile;
     private CreateAdPresenter presenter;
-
+    private File currentImageFile;
     private ImageView imageViewDisplay;
     private EditText title;
     private EditText price;
@@ -69,10 +73,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void updateDataFromModel() {
-        if (presenter.getImgFile() != null) {
-            Bitmap myBitmap = BitmapFactory.decodeFile(presenter.getImgFile().getAbsolutePath());
-            imageViewDisplay.setImageBitmap(myBitmap);
-        }
+        if (presenter.getImageUrl() != null) {
+            //Bitmap myBitmap = BitmapFactory.decodeFile(presenter.getImgFile().getAbsolutePath());
+            //imageViewDisplay.setImageBitmap(myBitmap);
+            Glide.with(this).load(presenter.getImageUrl()).into(imageViewDisplay);
+        } //Probably won't be possible since we won't be storing images in our adverts
         title.setText(presenter.getTitle());
         description.setText(presenter.getDescription());
         if (presenter.getIsValidPrice()) {
@@ -126,14 +131,18 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             Bitmap bitmap = compressBitmap();
             setImageView(bitmap);
             try {
-                FileOutputStream out = new FileOutputStream(currentImageFile);
+                OutputStream out = new FileOutputStream(currentImageFile.getPath());
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
-
+               // byte[] imageData = out.toByteArray();
+               // ByteArrayInputStream uploadStream = new ByteArrayInputStream(imageData);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            presenter.imageFileChanged(currentImageFile);
         }
+    }
+
+    public File getCurrentImageFile() {
+        return this.currentImageFile;
     }
 
     private void setImageView(Bitmap bitmap) {
@@ -149,25 +158,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      *
      * @return
      */
-
-    private Bitmap decodeBitmap() {
-        int imageWidth = imageViewDisplay.getWidth();
-        int imageHeight = imageViewDisplay.getHeight();
-
-        BitmapFactory.Options imageOptions = new BitmapFactory.Options();
-        imageOptions.inJustDecodeBounds = true;
-
-        int actualWidth = imageOptions.outWidth;
-        int actualHeight = imageOptions.outHeight;
-        int scaleFactor = Math.min(actualWidth / imageWidth, actualHeight / imageHeight);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        imageOptions.inJustDecodeBounds = false;
-        imageOptions.inSampleSize = scaleFactor;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath(), imageOptions);
-        return bitmap;
-    }
 
     private Bitmap compressBitmap() {
         BitmapFactory.Options imageOptions = new BitmapFactory.Options();
