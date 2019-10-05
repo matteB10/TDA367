@@ -138,8 +138,8 @@ public class DataModel {
         BackendDataHandler.getInstance().deleteAd(uniqueID);
     }
 
-    public void updateTitle(){
-        BackendDataHandler.getInstance().editTitle();
+    public void updateTitle(String uniqueID){
+        BackendDataHandler.getInstance().editTitle(uniqueID, "title");
     }
 
     public void setUsername(String username) {

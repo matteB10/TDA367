@@ -74,10 +74,12 @@
                     android:id="@+id/removeAdBtn"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/primary_button"
                     android:text="Ta bort annons"
                     android:textColor="@color/colorWhite"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.498"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

@@ -24,12 +24,13 @@ public class EditAdPresenter {
 
     public void editTitleBtnPressed() {
         String adID = advertisement.getUniqueID();
-        DataModel.getInstance().updateTitle();
-
+        DataModel.getInstance().updateTitle(adID);
     }
+
 
 
     public interface View {
        void backToHomeview();
+       void getFieldForTitle();
     }
 }

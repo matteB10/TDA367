@@ -340,30 +340,30 @@ public class BackendDataHandler implements iBackend {
         DataModel.getInstance().loggedOut();
     }
 
-    //----------------------------------------------------------------------------------------------
     public void deleteAd (String adID) {
-        //TODO Getting the wrong adID
-        CollectionReference adverts = db.collection("users")
-                .document(getUserID()).collection("adverts");
-        Query query = adverts.whereEqualTo("uniqueAdID", adID);
-        query.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+       CollectionReference advertPath = db.collection("users").document(getUserID()).collection("adverts");
+       advertPath.whereEqualTo("uniqueAdID", adID).get()
+               .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId());
-                        //TODO returning  the RIGHT doc id, but how to set it to null?
+                        //Log.d(TAG, document.getId());
+                      advertPath.document(document.getId())
+                                .delete();
                     }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
                 }
             }
         });
     }
 
 
-    public void editTitle() {
+    public void editTitle(String adID, String newTitle) {
+        //db.collection(id).document(uid).update("title", newTitle)
+
+        CollectionReference adverts = db.collection("users")
+                .document(getUserID()).collection("adverts");
+        Query query = adverts.whereEqualTo("uniqueAdID", adID);
 
     }
 }
