@@ -90,11 +90,11 @@ public class DataModel {
     }
 
     public String getUserID() {
-        return this.user.getId();
+        return user.getId();
     }
 
     public String getUserEmail() {
-        return this.user.getEmail();
+        return user.getEmail();
     }
 
     public String getUserDisplayName() {

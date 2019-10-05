@@ -58,8 +58,12 @@ public class DetailsPresenter {
     }
 
     public boolean isUserOwner(){
-        return true;
-      //TODO  return DataModel.getInstance().getUserID() == advertisement.getUniqueOwnerID();
+        //TODO get the ID of the advert owner to see the edit button
+        try{
+            return DataModel.getInstance().getUserID() == advertisement.getUniqueOwnerID();
+        }catch (Exception e){
+            return false;
+        }
     }
 
     public void onChangedAdBtnPressed(){

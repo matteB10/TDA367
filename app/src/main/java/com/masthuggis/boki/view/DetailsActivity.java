@@ -53,7 +53,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
             }
         });
 
-        Button changeAd = findViewById(R.id.changeAdBtn);
+        Button changeAd = findViewById(R.id.changeAdButton);
         changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
 
     }
@@ -159,10 +159,11 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
     private void setBtnForOwner(){
         if (presenter.isUserOwner()){
-            findViewById(R.id.changeAdBtn).setVisibility(View.VISIBLE);
+            findViewById(R.id.changeAdButton).setVisibility(View.VISIBLE);
             findViewById(R.id.contactOwnerButton).setVisibility(View.GONE);
+
         }else{
-            findViewById(R.id.changeAdBtn).setVisibility(View.GONE);
+            findViewById(R.id.changeAdButton).setVisibility(View.GONE);
             findViewById(R.id.contactOwnerButton).setVisibility(View.VISIBLE);
         }
     }
