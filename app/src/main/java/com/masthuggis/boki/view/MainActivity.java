@@ -10,8 +10,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.model.DataModel;
+
+import javax.net.ssl.SNIServerName;
 
 /**
  * MainActivity is the primary view of the application. This is where the application will take you on launch.
@@ -71,6 +74,10 @@ public class MainActivity extends AppCompatActivity {
             switch (menuItem.getItemId()) {
                 case R.id.navigation_home:
                     showFragment(homeFragment);
+                    if (getIntent().getBooleanExtra("snackbar", false)) {
+                        Snackbar snackbar = Snackbar.make(homeFragment.getView(),"test",Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    }
                     break;
                 case R.id.navigation_favorites:
                     showFragment(favoritesFragment);

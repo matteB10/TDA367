@@ -38,7 +38,7 @@ public class DetailsPresenter {
         view.setDate(advertisement.getDatePublished());
         view.setTags(advertisement.getTags());
         setCondition();
-        if (advertisement.getImageUrl() != null) { //the url here isn't what we want
+        if (advertisement.getImageUrl() != null) { //the url here is null right after upload
             view.setImageUrl(advertisement.getImageUrl());
         }
     }
