@@ -42,7 +42,7 @@ public class ChatPresenter implements ChatObserver {
         holder.setUserTextView(c.getReceiverUsername());
         holder.setChatID(c.getChatID());
         holder.setDateTextView("" + c.timeLastMessageSent());
-        holder.setMessageImageView(c.getAdvert().getImageFile().toString());
+        holder.setMessageImageView(c.getAdvert().getImageUrl());
 
     }
 

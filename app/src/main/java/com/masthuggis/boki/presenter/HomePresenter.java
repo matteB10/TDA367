@@ -8,7 +8,7 @@ import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.sorting.SortManager;
 import com.masthuggis.boki.utils.StylingHelper;
-import com.masthuggis.boki.view.FilterCallback;
+import com.masthuggis.boki.view.SearchCallback;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.ArrayList;
@@ -72,8 +72,8 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
         setCondition(a, thumbnailView);
-        if (a.getImageFile() != null) {
-            thumbnailView.setImageURL(a.getImageFile().toURI().toString());
+        if (a.getImageUrl() != null) {
+            thumbnailView.setImageURL(a.getImageUrl());
         }
     }
 
@@ -132,8 +132,9 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
     }
 
     //Should probably run on its own thread
+    //Maybe move to model
     //Filters the advertisements shown to the user by if their title matches the given query
-    public void filter(String query, FilterCallback callback) {
+    public void search(String query, SearchCallback callback) {
         Thread thread = new Thread(() -> DataModel.getInstance().fetchAllAdverts(advertisements -> {
             view.showLoadingScreen();
             if (advertisements != null) {

@@ -2,6 +2,7 @@ package com.masthuggis.boki.utils;
 
 
 import android.content.Context;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -87,9 +88,8 @@ public class StylingHelper {
      */
     public static TableLayout.LayoutParams getTableRowLayoutParams(Context context) {
         int rowHeight = (int)getDPToPixels(context, 20);
-        TableLayout.LayoutParams layoutParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, rowHeight, 1);
+        TableLayout.LayoutParams layoutParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, rowHeight, 1);
         layoutParams.setMargins(0, 0, 0, 8);
-        layoutParams.setMarginEnd(6);
         return layoutParams;
     }
 
@@ -100,6 +100,15 @@ public class StylingHelper {
         TableRow.LayoutParams rowLayoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
         rowLayoutParams.setMarginEnd(6);
         return rowLayoutParams;
+    }
+    /**
+     * @return specified layout parameters for tag items in tableRows
+     */
+    public static LinearLayout.LayoutParams getLinearLayoutChildLayoutParams(Context context) {
+        int rowHeight = (int)getDPToPixels(context, 20);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, rowHeight,1);
+        layoutParams.setMargins(0, 0, 0, 8);
+        return layoutParams;
     }
 
 

@@ -1,5 +1,6 @@
 package com.masthuggis.boki.presenter;
 
+import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.StylingHelper;
@@ -12,6 +13,8 @@ public class ProfilePresenter implements IProductsPresenter {
     private List<Advertisement> adverts;
     private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
     private static final long MIN_CLICK_TIME_INTERVAL = 300;
+
+    private UserRepository userRepo;
 
     public ProfilePresenter(View view) {
         this.view = view;
@@ -30,11 +33,10 @@ public class ProfilePresenter implements IProductsPresenter {
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
         setCondition(a, thumbnailView);
-        if (a.getImageFile() != null) {
-            thumbnailView.setImageURL(a.getImageFile().toURI().toString());
+        if (a.getImageUrl() != null) {
+            thumbnailView.setImageURL(a.getImageUrl());
         }
     }
-
 
     @Override
     public int getItemCount() {
@@ -103,4 +105,5 @@ public class ProfilePresenter implements IProductsPresenter {
     public void onSignInButtonPressed() {
         view.showSignInScreen();
     }
+
 }

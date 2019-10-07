@@ -6,8 +6,10 @@ import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.model.iMessage;
 import com.masthuggis.boki.utils.CurrentTimeHelper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MessagesPresenter implements MessagesObserver {
     private View view;
@@ -31,18 +33,12 @@ public class MessagesPresenter implements MessagesObserver {
     }
 
     private void populateView(List<iMessage> messages) {
-        for (int i = messages.size() - 1; i >= 0; i--) {
-            setMessageBox(messages.get(i).getMessage(), messages.get(i).getSenderID().equals(DataModel.getInstance().getUserID()));
-        }
-        /*for (iMessage message : messages) {
+        List<iMessage> sorted = new ArrayList<>(messages).stream()
+                .sorted((adOne, adTwo) -> ((int) (adOne.getTimeSent() - adTwo.getTimeSent())))
+                .collect(Collectors.toList());
+        for (iMessage message : sorted) {
             setMessageBox(message.getMessage(), message.getSenderID().equals(DataModel.getInstance().getUserID()));
-        }*/
-    }
-
-
-    public void messageActivityStarted() {
-
-        //TODO KOLLA INLOGGAD ANVÄNDARE OSV. SÄTT BILD, ÖPPNA CHATTAR YADA YADA.....
+        }
 
     }
 
@@ -60,7 +56,7 @@ public class MessagesPresenter implements MessagesObserver {
             setMessageBox(messageText, true);
 
             //behövs nog ej.
-           // onChatUpdated();
+            // onChatUpdated();
 
         }
     }
@@ -70,8 +66,8 @@ public class MessagesPresenter implements MessagesObserver {
     }
 
     private void onChatUpdated() {
-        if (DataModel.getInstance().findChatByID(chatID) == null) {
-        } else {
+        if (DataModel.getInstance().findChatByID(chatID) != null) {
+
             chat = DataModel.getInstance().findChatByID(chatID);
             view.update();
             messages = chat.getMessages();

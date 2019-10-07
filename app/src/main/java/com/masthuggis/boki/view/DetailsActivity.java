@@ -2,8 +2,8 @@ package com.masthuggis.boki.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,9 +14,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.presenter.DetailsPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 
@@ -27,6 +26,7 @@ import java.util.List;
  */
 public class DetailsActivity extends AppCompatActivity implements DetailsPresenter.View {
     private DetailsPresenter presenter;
+    private Button contactOwnerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,30 +39,18 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
             presenter = new DetailsPresenter(this, advertID);
         }
 
-        //TODO DETTA KSNEK SKA GÖRAS VIA PRESENTERN IST FÖR VIA DATAMODEL?
 
-        Button contactOwnerButton = findViewById(R.id.contactOwnerButton);
+        contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
-            if (contactOwnerButton.getText().equals("Starta chatt")) {
-                if ((DataModel.getInstance().getUserChats() != null)) {
-                    for (iChat chats : DataModel.getInstance().getUserChats()) {
-                        if (chats.getAdvert().getUniqueID().equals(advertID)) {
+            presenter.contactOwnerButtonClicked(contactOwnerButton.getText().toString());
 
-                            //TODO FIXA SÅ ATT DETTA ÄR ETT HELT AD.
-
-                            presenter.openChat(chats.getChatID());
-                            return;
-                        }
-
-                    }
-                }
-                presenter.createNewChat();
-
-            } else {
-                contactOwnerButton.setText("Starta chatt");
-            }
         });
+
+        Button changeAd = findViewById(R.id.changeAdButton);
+        changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
+
     }
+
 
     @Override
     public void setName(String name) {
@@ -86,7 +74,8 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     public void setImageUrl(String url) {
         // TODO: fetch img, cache it and set it
         ImageView imageView = (ImageView) findViewById(R.id.detailsImage);
-        imageView.setImageURI(Uri.parse(url));
+        Glide.with(this).load(url).into(imageView);
+        //imageView.setImageURI(Uri.parse(url));
     }
 
     @Override
@@ -109,7 +98,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
      *
      * @param tags
      */
-
     @Override
     public void setTags(List<String> tags) {
         LinearLayout parentLayout = findViewById(R.id.detailsTagsTableLayout);
@@ -174,5 +162,29 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         toast.show();
     }
 
+
+    private void setBtnForOwner() {
+        if (presenter.isUserOwner()) {
+            findViewById(R.id.changeAdButton).setVisibility(View.VISIBLE);
+            findViewById(R.id.contactOwnerButton).setVisibility(View.GONE);
+
+        } else {
+            findViewById(R.id.changeAdButton).setVisibility(View.GONE);
+            findViewById(R.id.contactOwnerButton).setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void showEditView(String uniqueID) {
+        Intent intent = new Intent(DetailsActivity.this, EditAdActivity.class);
+        intent.putExtra("advertID", uniqueID);
+        startActivity(intent);
+    }
+
+    @Override
+    public void setOwnerButtonText(String content) {
+        contactOwnerButton.setText(content);
+
+    }
 
 }

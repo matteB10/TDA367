@@ -34,7 +34,7 @@ public class Repository {
      */
 
     //TODO implement functionality for uploading the image of Advert to Firebase
-    public static void saveAdvert(Advertisement advertisement, File imageFile) {
+    public static void saveAdvert(File imageFile, Advertisement advertisement) {
         DataModel.getInstance().addAdvertisement(advertisement);
         HashMap<String, Object> dataMap = new HashMap<>();
         dataMap.put("title", advertisement.getTitle());
@@ -46,7 +46,7 @@ public class Repository {
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
         dataMap.put("advertOwnerID",advertisement.getOwner());
-        BackendDataHandler.getInstance().writeAdvertToFirebase(dataMap, imageFile);
+        BackendDataHandler.getInstance().writeAdvertToFirebase(imageFile,dataMap,null);
 
     }
 
@@ -96,9 +96,9 @@ public class Repository {
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        File imageFile = (File) dataMap.get("imgFile");
         String owner = (String) dataMap.get("advertOwnerID");
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageFile, tags,owner);
+        String imageUrl = (String) dataMap.get("imgUrl");
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageUrl, tags, owner);
     }
 
     /**
@@ -114,7 +114,7 @@ public class Repository {
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
         String owner = (String) dataMap.get("advertOwnerID");
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, null,tags,owner);
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, null, tags, owner);
     } //TODO den här kommer behöva en imageFile den här med
 
 }

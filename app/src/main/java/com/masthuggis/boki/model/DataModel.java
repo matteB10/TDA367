@@ -134,11 +134,11 @@ public class DataModel implements BackendObserver {
     }
 
     public String getUserID() {
-        return this.user.getId();
+        return user.getId();
     }
 
     public String getUserEmail() {
-        return this.getUserEmail();
+        return user.getEmail();
     }
 
     public String getUserDisplayName() {
@@ -146,7 +146,6 @@ public class DataModel implements BackendObserver {
     }
 
     public boolean isLoggedIn() {
-
         return this.user != null;
     }
 
@@ -185,7 +184,14 @@ public class DataModel implements BackendObserver {
             }
         }
         return null;
+    }
 
+    public void removeExistingAdvert(String uniqueID){
+        BackendDataHandler.getInstance().deleteAd(uniqueID);
+    }
+
+    public void updateTitle(String uniqueID){
+        BackendDataHandler.getInstance().editTitle(uniqueID, "title");
     }
 
    /* public void setUsername(String username) {

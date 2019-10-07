@@ -10,7 +10,6 @@ import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.model.iMessage;
 import com.masthuggis.boki.model.iUser;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,6 +68,7 @@ public class UserRepository {
         DataModel.getInstance().loggedIn(user);
     }
 
+
     private void loggedOut() {
         DataModel.getInstance().loggedOut();
 
@@ -101,14 +101,27 @@ public class UserRepository {
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        File imageFile = (File) dataMap.get("imgFile");
+        String imageURL= (String) dataMap.get("imgURL");
         String owner = (String) dataMap.get("advertOwnerID");
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageFile, tags,owner);
+
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageURL, tags,owner);
     }
 
 
 
 
+
+
+    public String userID() {
+        return BackendDataHandler.getInstance().getUserID();
+    }
+
+/*
+    public String userEmail() {
+        return BackendDataHandler.getInstance().getUserEmail();
+    }
+
+ */
 
     public void getMessages(String uniqueChatID, Chat chat, messagesCallback messagesCallback) {
         List<iMessage> messages = new ArrayList<>();

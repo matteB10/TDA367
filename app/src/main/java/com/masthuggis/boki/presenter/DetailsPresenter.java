@@ -3,6 +3,7 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.backend.stringCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.iConditionable;
 
@@ -25,7 +26,6 @@ public class DetailsPresenter {
     public DetailsPresenter(View view, String advertID) {
         this.view = view;
         this.advertisement = DataModel.getInstance().getAdFromAdID(advertID);
-
         setupView();
     }
 
@@ -41,10 +41,9 @@ public class DetailsPresenter {
         view.setDate(advertisement.getDatePublished());
         view.setTags(advertisement.getTags());
         setCondition();
-        if (advertisement.getImageFile() != null) {
-            view.setImageUrl(advertisement.getImageFile().toURI().toString());
+        if (advertisement.getImageUrl() != null) { //the url here is null right after upload
+            view.setImageUrl(advertisement.getImageUrl());
         }
-
     }
 
     private void setCondition() {
@@ -75,6 +74,37 @@ public class DetailsPresenter {
         view.openChat(chatID);
     }
 
+    public boolean isUserOwner() {
+        try {
+            String loggedinUser = DataModel.getInstance().getUserID();
+            String ownerofAd = advertisement.getUniqueOwnerID();
+
+            return loggedinUser.equals(ownerofAd);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public void onChangedAdBtnPressed() {
+        String uniqueID = advertisement.getUniqueID();
+        view.showEditView(uniqueID);
+    }
+
+    public void contactOwnerButtonClicked(String contactOwnerButtonText) {
+        if (contactOwnerButtonText.equals("Starta chatt") && (DataModel.getInstance().getUserChats() != null)) {
+            for (iChat chats : DataModel.getInstance().getUserChats()) {
+                if (chats.getAdvert().getUniqueID().equals(advertisement.getUniqueID())) {
+                    openChat(chats.getChatID());
+                    return;
+                }
+
+            }
+            createNewChat();
+        } else {
+            view.setOwnerButtonText("Starta chatt");
+        }
+    }
+
     public interface View extends iConditionable {
         void setName(String name);
 
@@ -91,6 +121,10 @@ public class DetailsPresenter {
         void openChat(String uniqueOwnerID);
 
         void showToast();
+
+        void showEditView(String uniqueID);
+
+        void setOwnerButtonText(String content);
     }
 
 

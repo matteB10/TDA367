@@ -4,7 +4,6 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.backend.BackendDataHandler;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class Advert implements Advertisement {
     private long price;
     private Condition condition;
     private List<String> tags;
-    private File imageFile; //the imageFile used instead of an imageURL
+    private String imageUrl;
     private String owner;
 
 
@@ -43,7 +42,7 @@ public class Advert implements Advertisement {
         this.owner = DataModel.getInstance().getUserDisplayName();
     }
 
-    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, File file, List<String> tags,String owner) {
+    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, String imageUrl, List<String> tags, String owner) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.uniqueAdID = id;
@@ -51,7 +50,7 @@ public class Advert implements Advertisement {
         this.description = description;
         this.price = price;
         this.condition = condition;
-        this.imageFile = file;
+        this.imageUrl = imageUrl;
         this.tags = tags;
         this.owner = owner;
     }
@@ -61,16 +60,16 @@ public class Advert implements Advertisement {
         return this.datePublished;
     }
 
+
     @Override
-    public File getImageFile() {
-        return this.imageFile;
+    public String getImageUrl() {
+        return this.imageUrl;
     }
 
     @Override
     public String getTitle() {
         return this.title;
     }
-
 
     @Override
     public long getPrice() {
@@ -128,11 +127,6 @@ public class Advert implements Advertisement {
 
     public void setDatePublished(String datePublished) {
         this.datePublished = datePublished;
-    }
-
-    @Override
-    public void setImageFile(File imageFile) {
-        this.imageFile = imageFile;
     }
 
 
