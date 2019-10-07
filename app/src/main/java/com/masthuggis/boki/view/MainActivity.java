@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkNavToast() {
-        if (getIntent().getBooleanExtra("snackbar", false)) {
+        if (getIntent().getBooleanExtra("toast", false)) {
             Toast toast = Toast.makeText(getApplicationContext(), "Din annons har lagts upp!", Toast.LENGTH_LONG);
             toast.show();
             getIntent().putExtra("toast",false); //Reset boolean so it only shows once
