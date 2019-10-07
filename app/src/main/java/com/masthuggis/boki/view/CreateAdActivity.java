@@ -74,10 +74,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     private void updateDataFromModel() {
         if (presenter.getImageUrl() != null) {
-            //Bitmap myBitmap = BitmapFactory.decodeFile(presenter.getImgFile().getAbsolutePath());
-            //imageViewDisplay.setImageBitmap(myBitmap);
             Glide.with(this).load(presenter.getImageUrl()).into(imageViewDisplay);
-        } //Probably won't be possible since we won't be storing images in our adverts
+        }
         title.setText(presenter.getTitle());
         description.setText(presenter.getDescription());
         if (presenter.getIsValidPrice()) {
