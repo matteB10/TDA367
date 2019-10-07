@@ -20,7 +20,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -389,30 +388,70 @@ public class BackendDataHandler implements iBackend {
         DataModel.getInstance().loggedOut();
     }
 
-    public void deleteAd(String adID) {
-        CollectionReference advertPath = db.collection("users").document(getUserID()).collection("adverts");
+
+    public void deleteAd (String adID) {
+        CollectionReference advertPath = db.collection("users")
+                .document(getUserID()).collection("adverts");
+       advertPath.whereEqualTo("uniqueAdID", adID).get()
+               .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        //Log.d(TAG, document.getId());
+                      advertPath.document(document.getId())
+                                .delete();
+                    }
+                }
+            }
+        });
+    }
+
+    private CollectionReference advertPath = db.collection("users")
+            .document(getUserID()).collection("adverts");
+
+    public void editTitle(String adID, String newTitle) {
         advertPath.whereEqualTo("uniqueAdID", adID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                //Log.d(TAG, document.getId());
-                                advertPath.document(document.getId())
-                                        .delete();
+                        if(task.isSuccessful()){
+                            for (QueryDocumentSnapshot documentSnapshot: task.getResult()){
+                                advertPath.document(documentSnapshot.getId())
+                                        .update("title", newTitle);
                             }
                         }
                     }
                 });
     }
+    public void editPrice(String adID, String newPrice) {
+        advertPath.whereEqualTo("uniqueAdID", adID).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for (QueryDocumentSnapshot documentSnapshot: task.getResult()){
+                                advertPath.document(documentSnapshot.getId())
+                                        .update("price", newPrice);
+                            }
+                        }
+                    }
+                });
 
+    }
 
-    public void editTitle(String adID, String newTitle) {
-        //db.collection(id).document(uid).update("title", newTitle)
-
-        CollectionReference adverts = db.collection("users")
-                .document(getUserID()).collection("adverts");
-        Query query = adverts.whereEqualTo("uniqueAdID", adID);
-
+    public void editDescription(String adID, String newDescription) {
+        advertPath.whereEqualTo("uniqueAdID", adID).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for (QueryDocumentSnapshot documentSnapshot: task.getResult()){
+                                advertPath.document(documentSnapshot.getId())
+                                        .update("description", newDescription);
+                            }
+                        }
+                    }
+                });
     }
 }

@@ -11,9 +11,9 @@ import java.util.List;
 
 /**
  * DetailsPresenter is the presenter class for the view called DetailsActivity.
- * <p>
+ *
  * Validates input from the user to
- * <p>
+ *
  * It is the layer between the view and model and should therefore
  */
 

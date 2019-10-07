@@ -190,8 +190,15 @@ public class DataModel implements BackendObserver {
         BackendDataHandler.getInstance().deleteAd(uniqueID);
     }
 
-    public void updateTitle(String uniqueID){
-        BackendDataHandler.getInstance().editTitle(uniqueID, "title");
+    public void updateTitle(String adID, String newTitle){
+        BackendDataHandler.getInstance().editTitle(adID, newTitle);
+    }
+    public void updatePrice(String adID, String newPrice ){
+        BackendDataHandler.getInstance().editPrice(adID,newPrice);
+    }
+
+    public void updateDescription(String adID, String newDescription){
+        BackendDataHandler.getInstance().editDescription(adID, newDescription);
     }
 
    /* public void setUsername(String username) {

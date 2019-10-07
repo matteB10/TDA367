@@ -6,7 +6,6 @@ import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.utils.CurrentTimeHelper;
 import com.masthuggis.boki.utils.FormHelper;
 import com.masthuggis.boki.utils.StylingHelper;
-import com.masthuggis.boki.view.CreateAdActivity;
 
 import java.io.File;
 
@@ -154,7 +153,6 @@ public class CreateAdPresenter {
 
     private void setAdvertDate() {
         advertisement.setDatePublished(CurrentTimeHelper.getCurrentTime());      //Saves current time as a string
-
     }
 
     public String getId() {
