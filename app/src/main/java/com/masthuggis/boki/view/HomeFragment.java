@@ -3,6 +3,8 @@ package com.masthuggis.boki.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,23 +72,48 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
                 if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) { //Make sure stuff happens when enter is pressed
-                    InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
-                    searchField.clearFocus(); //This and two lines above hides keyboard when search is pressed
-                    showLoadingScreen();
-                    presenter.search(searchField.getText().toString(), new SearchCallback() {
-                        @Override
-                        public void onCallback() {
-                            hideLoadingScreen(); //Necessary callback since filtering happens on other thread
-                        }
-                    }); //Actually perform search
-                    return true;
+                    hideKeyboard();
+                    performSearch();
                 }
                 return false;
             }
         });
+
+        searchField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.length() == 0)
+                    performSearch();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
+    private void hideKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+        searchField.clearFocus(); //This and two lines above hides keyboard when search is pressed
+    }
+
+    private boolean performSearch() {
+        showLoadingScreen();
+        presenter.search(searchField.getText().toString(), new SearchCallback() { //Actually perform search
+            @Override
+            public void onCallback() {
+                hideLoadingScreen(); //Necessary callback since search on query happens on other thread
+            }
+        });
+        return true;
+    }
 
     @Override
     public void hideLoadingScreen() {
