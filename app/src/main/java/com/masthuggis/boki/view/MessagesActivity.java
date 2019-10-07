@@ -14,10 +14,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.presenter.ChatPresenter;
+import com.masthuggis.boki.presenter.MessagesPresenter;
 
-public class ChatActivity extends AppCompatActivity implements ChatPresenter.View {
-    private ChatPresenter presenter;
+public class MessagesActivity extends AppCompatActivity implements MessagesPresenter.View {
+    private MessagesPresenter presenter;
 
 
     private ImageView advertImageView;
@@ -41,7 +41,7 @@ public class ChatActivity extends AppCompatActivity implements ChatPresenter.Vie
         messageArea = findViewById(R.id.messageArea);
         scrollView = findViewById(R.id.scrollView);
 
-        this.presenter = new ChatPresenter(this, chatID);
+        this.presenter = new MessagesPresenter(this, chatID);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +55,7 @@ public class ChatActivity extends AppCompatActivity implements ChatPresenter.Vie
 
     @Override
     public void addMessageBox(String messageText, boolean sentByCurrentUser) {
-        TextView textView = new TextView(ChatActivity.this);
+        TextView textView = new TextView(MessagesActivity.this);
         textView.setTextSize(14);
         textView.setText(messageText);
 

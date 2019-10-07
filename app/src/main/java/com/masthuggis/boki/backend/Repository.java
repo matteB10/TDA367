@@ -1,13 +1,10 @@
 package com.masthuggis.boki.backend;
 
-import android.util.Log;
-
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,18 +16,8 @@ import java.util.Map;
  * Data is fetched using the BackendDataHandler class.
  */
 public class Repository {
-    private static final List<RepositoryObserver> observers = new ArrayList<>();
-    private static List<Advertisement> allAds = new ArrayList<>();
 
     private Repository() {
-    }
-
-
-    /**
-     * Fetches data from Firebase and updates local list of Advertisements. Also notifies observers.
-     */
-    public static void updateAdverts() {
-        //this.notifyMarketObservers();
     }
 
     /**
@@ -59,7 +46,8 @@ public class Repository {
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
         dataMap.put("advertOwnerID",advertisement.getOwner());
-        BackendDataHandler.getInstance().writeAdvertToFirebase(imageFile, dataMap, () -> Repository.notifyMarketObservers());
+        BackendDataHandler.getInstance().writeAdvertToFirebase(imageFile,dataMap,null);
+
     }
 
     /**
@@ -78,7 +66,7 @@ public class Repository {
 
     public static void fetchAllAdverts(advertisementCallback advertisementCallback) {
         Thread thread = new Thread(() -> BackendDataHandler.getInstance().readAllAdvertData(advertDataList -> {
-            allAds.clear();
+            List<Advertisement> allAds = new ArrayList<>();
             for (Map<String, Object> dataMap : advertDataList) {
                 allAds.add(retrieveAdvert(dataMap));
             }
@@ -92,15 +80,6 @@ public class Repository {
         return BackendDataHandler.getInstance().getFireBaseID(userID, advertID);
     }
 
-    public static void addRepositoryObserver(RepositoryObserver observer) {
-        observers.add(observer);
-    }
-
-    private static void notifyMarketObservers() {
-        if (!Repository.observers.isEmpty())
-            observers.forEach(observer -> observer.advertsInMarketUpdate(allAds));
-    }
-
     public static void getAllAds(advertisementCallback advertisementCallback) {
         // If there are adverts already stored, return those, else make a request. The stored
         // adverts, if there are any, will be same as the ones stored on the database.
@@ -109,7 +88,7 @@ public class Repository {
     }
 
     private static Advertisement retrieveAdvert(Map<String, Object> dataMap) {
-        String title = (String) dataMap.get("title");
+        String title = "" + (String) dataMap.get("title");
         String description = (String) dataMap.get("description");
         long price = (long) dataMap.get("price");
         List<String> tags = (List<String>) dataMap.get("tags");

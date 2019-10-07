@@ -7,10 +7,10 @@ public interface iChat {
 
     String getReceiver();
     String getChatID();
-     void removeChatObserver(ChatObservers chatObserver);
-     void addChatObserver( ChatObservers chatObserver);
      String getReceiverUsername();
 
 
-    String timeLastMessageSent();
+    long timeLastMessageSent();
+
+    Advertisement getAdvert();
 }

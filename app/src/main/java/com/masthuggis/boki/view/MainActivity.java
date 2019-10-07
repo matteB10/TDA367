@@ -10,8 +10,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.model.DataModel;
+
+import javax.net.ssl.SNIServerName;
 
 /**
  * MainActivity is the primary view of the application. This is where the application will take you on launch.
@@ -20,16 +23,24 @@ public class MainActivity extends AppCompatActivity {
     private Fragment homeFragment = new HomeFragment();
     private Fragment favoritesFragment = new FavoritesFragment();
     private Fragment profileFragment = new ProfileFragment();
-    private Fragment messagesFragment = new MessagesFragment();
+    private Fragment messagesFragment = new ChatFragment();
     private Fragment activeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        checkNavToast();
         setupBottomTabNavigator();
         addFragmentsToViewHierachy();
+    }
+
+    private void checkNavToast() {
+        if (getIntent().getBooleanExtra("toast", false)) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Din annons har lagts upp!", Toast.LENGTH_LONG);
+            toast.show();
+            getIntent().putExtra("toast",false); //Reset boolean so it only shows once
+        }
     }
 
     private void setupBottomTabNavigator() {
@@ -67,7 +78,9 @@ public class MainActivity extends AppCompatActivity {
             }
             Intent intent = new Intent(this, CreateAdActivity.class);
             startActivity(intent);
+
         } else {
+
             switch (menuItem.getItemId()) {
                 case R.id.navigation_home:
                     showFragment(homeFragment);

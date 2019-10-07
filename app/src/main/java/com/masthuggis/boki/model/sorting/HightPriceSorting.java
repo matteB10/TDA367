@@ -5,6 +5,7 @@ import com.masthuggis.boki.model.Advertisement;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 class HightPriceSorting implements SortStrategy {
@@ -18,7 +19,12 @@ class HightPriceSorting implements SortStrategy {
         }
 
         return new ArrayList<>(adverts).stream()
-                .sorted(Comparator.comparing(Advertisement::getPrice).reversed())
+                .sorted(Comparator.comparing(new Function<Advertisement, Long>() {
+                    @Override
+                    public Long apply(Advertisement advertisement) {
+                        return advertisement.getPrice();
+                    }
+                }).reversed())
                 .collect(Collectors.toList());
     }
 

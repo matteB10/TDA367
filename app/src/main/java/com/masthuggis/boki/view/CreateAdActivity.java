@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,13 +27,10 @@ import com.masthuggis.boki.presenter.CreateAdPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,7 +47,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private List<Button> preDefTagButtons = new ArrayList<>();
-    private List<String> userDefTags = new ArrayList<>();
+    private List<Button> userDefTagButtons = new ArrayList<>();
 
     private CreateAdPresenter presenter;
     private File currentImageFile;
@@ -69,15 +67,12 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         displayPreDefTagButtons();
         setListeners();
         updateDataFromModel();
-
     }
 
     private void updateDataFromModel() {
         if (presenter.getImageUrl() != null) {
-            //Bitmap myBitmap = BitmapFactory.decodeFile(presenter.getImgFile().getAbsolutePath());
-            //imageViewDisplay.setImageBitmap(myBitmap);
             Glide.with(this).load(presenter.getImageUrl()).into(imageViewDisplay);
-        } //Probably won't be possible since we won't be storing images in our adverts
+        }
         title.setText(presenter.getTitle());
         description.setText(presenter.getDescription());
         if (presenter.getIsValidPrice()) {
@@ -133,8 +128,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             try {
                 OutputStream out = new FileOutputStream(currentImageFile.getPath());
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
-               // byte[] imageData = out.toByteArray();
-               // ByteArrayInputStream uploadStream = new ByteArrayInputStream(imageData);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -163,7 +156,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         BitmapFactory.Options imageOptions = new BitmapFactory.Options();
         imageOptions.inJustDecodeBounds = true;
         Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 600, 800, true); //TODO change to preferable resolution
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 600, 800, true); //TODO change 200x200 to preferable resolution
         return scaledBitmap;
     }
 
@@ -175,7 +168,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setPublishAdListener();
         setConditionGroupListener();
         setPreDefTagsListeners();
-        setUserDefTagListener();
+        setUserTagTextFieldListener();
 
     }
 
@@ -302,8 +295,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setOnClickListener(view -> {
             Intent intent = new Intent(CreateAdActivity.
-                    this, DetailsActivity.class);
+                    this, MainActivity.class); //Need to send something here to show snackbar
             intent.putExtra("advertID", presenter.getId());
+            intent.putExtra("toast", true);
             presenter.publishAdvert();
             startActivity(intent);
             finish();
@@ -325,7 +319,18 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
     }
 
-    private void setUserDefTagListener() {
+    private void setUserDefTagsListener(Button btn) {
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.userDefTagsChanged(btn.getText().toString());
+
+            }
+        });
+    }
+
+
+    private void setUserTagTextFieldListener() {
         EditText userDefTag = findViewById(R.id.tagsEditText);
         userDefTag.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -384,17 +389,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      * @param tags         a list of buttons
      * @param parentLayout the layout in which buttons will be placed
      */
-    private void populateTagsLayout(List<Button> tags, LinearLayout parentLayout) {
-        TableRow tableRow = new TableRow(this);
+    private void populateTagsLayout(List<Button> tags, ViewGroup parentLayout) {
         for (Button btn : tags) {
-            tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
+            ViewGroup tableRow = getCurrenTagRow(parentLayout.getId());
             tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
-            if (rowFull(tableRow)) {
-                parentLayout.addView(tableRow);
-                tableRow = new TableRow(this);
-            }
         }
-        parentLayout.addView(tableRow);
     }
 
     /**
@@ -441,13 +440,56 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      */
     @Override
     public void displayUserTagButton(String tag) {
-        LinearLayout parentLayout = findViewById(R.id.tagsLinearLayout);
-        //must reset parentView for every new tag added to get tags in right formation
-        parentLayout.removeAllViewsInLayout();
-        userDefTags.add(tag);
-        populateTagsLayout(createTagButtons(userDefTags), parentLayout);
+        Button btn = createTagButton(tag);
+        userDefTagButtons.add(btn);
+        ViewGroup currentUserTagTableRow = getCurrenTagRow(R.id.tagsLinearLayout);
+        setUserDefTagsListener(btn);
+        currentUserTagTableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
     }
 
+    @Override
+    public void removeUserTagButton(String tag) {
+        userDefTagButtons.remove(getButtonFromText(tag));
+        updateUserDefTags();
+    }
 
+    private ViewGroup getCurrenTagRow(int parentViewID) {
+        ViewGroup parentLayout = findViewById(parentViewID);
+        int noOfRows = parentLayout.getChildCount();
+        for (int i = 0; i < noOfRows; i++) {
+            if (!(rowFull((TableRow) parentLayout.getChildAt(i)))) {
+                return (TableRow) parentLayout.getChildAt(i);
+            }
+        }
+        ViewGroup tr = new TableRow(this);
+        parentLayout.addView(tr, StylingHelper.getTableRowLayoutParams(this));
+        return tr;
+    }
+
+    private void updateUserDefTags() {
+        ViewGroup parentLayout = findViewById(R.id.tagsLinearLayout);
+        clearLayout(parentLayout);
+        populateTagsLayout(userDefTagButtons, parentLayout);
+    }
+
+    private Button getButtonFromText(String text) {
+        for (Button btn : userDefTagButtons) {
+            if (btn.getText().toString().equals(text)) {
+                return btn;
+            }
+        }
+        return null;
+    }
+    /**
+     * Clear rows in layout from children
+     */
+    private void clearLayout(ViewGroup layout){
+        ViewGroup tr;
+        int noOfRows = layout.getChildCount();
+        for (int i = 0; i < noOfRows; i++) {
+            tr = (TableRow) layout.getChildAt(i);
+            tr.removeAllViews();
+        }
+    }
 
 }

@@ -1,84 +1,79 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.model.ChatObservers;
+import com.masthuggis.boki.model.ChatObserver;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;
-import com.masthuggis.boki.model.iMessage;
-import com.masthuggis.boki.utils.CurrentTimeHelper;
+import com.masthuggis.boki.view.MessagesRecyclerViewAdapter;
 
-import java.util.HashMap;
 import java.util.List;
 
-public class ChatPresenter implements ChatObservers {
+public class ChatPresenter implements ChatObserver {
+
+    private List<iChat> chats;
     private View view;
-    private iChat chat;
-    private List<iMessage> messages;
 
-    public ChatPresenter(View view, String chatID) {
+    public ChatPresenter(View view) {
         this.view = view;
-        chat = DataModel.getInstance().findChatByID(chatID);
-        chat.addChatObserver(this);
-
-        messages = chat.getMessages();
-        populateView(messages);
-
-
-    }
-
-    private void populateView(List<iMessage> messages) {
-        for(int i=messages.size()-1;i>=0;i--){
-            setMessageBox(messages.get(i).getMessage(),messages.get(i).getSenderID().equals(DataModel.getInstance().getUserID()));
-        }
-        /*for (iMessage message : messages) {
-            setMessageBox(message.getMessage(), message.getSenderID().equals(DataModel.getInstance().getUserID()));
-        }*/
-    }
-
-
-    public void messageActivityStarted() {
-
-        //TODO KOLLA INLOGGAD ANVÄNDARE OSV. SÄTT BILD, ÖPPNA CHATTAR YADA YADA.....
-
-    }
-
-    public void sendMessage(String messageText) {
-
-        HashMap<String, Object> map = new HashMap<>();
-        if (!messageText.equals("")) {
-
-            //Date, message, sender
-            map.put("message", messageText);
-            map.put("sender", DataModel.getInstance().getUserID());
-            map.put("timeSent", CurrentTimeHelper.getCurrentTimeNumerical());
-            DataModel.getInstance().sendMessage(chat.getChatID(), map);
-
-            setMessageBox(messageText, true);
-            onChatUpdated();
+        this.view.showLoadingScreen();
+        if (DataModel.getInstance().isLoggedIn()) {
+            chats = DataModel.getInstance().getUserChats();
+            view.isLoggedIn(this);
 
         }
+        this.view.hideLoadingScreen();
+
+
+        DataModel.getInstance().addChatObserver(this);
+        // UserRepository.getInstance().getUserChats(DataModel.getInstance().getUserID(), chatList -> chats = chatList);
+
     }
 
-    private void setMessageBox(String messageText, boolean sentByCurrentUser) {
-        view.addMessageBox(messageText, sentByCurrentUser);
+    public void onRowPressed(String chatID) {
+        view.showDetailsScreen(chatID);
     }
+
+    public void bindViewHolderAtPosition(int position, MessagesRecyclerViewAdapter.
+            ViewHolder holder) {
+        if (chats.size() < position || chats == null) {
+            return;
+        }
+        iChat c = chats.get(position);
+
+        holder.setUserTextView(c.getReceiverUsername());
+        holder.setChatID(c.getChatID());
+        holder.setDateTextView("" + c.timeLastMessageSent());
+        holder.setMessageImageView(c.getAdvert().getImageUrl());
+
+    }
+
+    public int getItemCount() {
+        if (chats != null) {
+            return chats.size();
+        }
+        return 0;
+    }
+
 
     @Override
     public void onChatUpdated() {
-        view.update();
-        messages = chat.getMessages();
-        populateView(messages);
-
+        this.chats = DataModel.getInstance().getUserChats();
 
     }
 
     public void onDestroy() {
-        chat.removeChatObserver(this);
+        DataModel.getInstance().removeChatObserver(this);
     }
 
+
     public interface View {
+        void showLoadingScreen();
 
-        void addMessageBox(String messageText, boolean sentByCurrentUser);
+        void showThumbnails(ChatPresenter chatPresenter);
 
-        void update();
+        void hideLoadingScreen();
+
+        void showDetailsScreen(String chatID);
+
+        void isLoggedIn(ChatPresenter chatPresenter);
     }
 }

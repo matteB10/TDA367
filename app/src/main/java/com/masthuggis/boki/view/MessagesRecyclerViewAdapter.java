@@ -11,14 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.presenter.MessagesPresenter;
+import com.masthuggis.boki.presenter.ChatPresenter;
 
 public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRecyclerViewAdapter.ViewHolder> {
 
-    private MessagesPresenter presenter;
+    private ChatPresenter presenter;
 
-    public MessagesRecyclerViewAdapter(MessagesPresenter messagesPresenter) {
-        this.presenter = messagesPresenter;
+    public MessagesRecyclerViewAdapter(ChatPresenter chatPresenter) {
+        this.presenter = chatPresenter;
     }
 
 

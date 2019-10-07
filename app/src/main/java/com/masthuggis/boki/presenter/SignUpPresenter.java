@@ -8,18 +8,18 @@ public class SignUpPresenter {
     private UserRepository repo = UserRepository.getInstance();
     private View view;
 
-    public SignUpPresenter (View view){
+    public SignUpPresenter(View view) {
         this.view = view;
     }
 
-    public void onSignInButtonPressed(){
+    public void onSignInButtonPressed() {
         view.showSignInScreen();
     }
 
     public void onSignUpButtonPressed(String email, String password, String username) {
-        DataModel.getInstance().signUp(email,password, () -> {
+        DataModel.getInstance().signUp(email, password, () -> {
             DataModel.getInstance().
-                    signInAfterRegistration(email, password,username);
+                    signInAfterRegistration(email, password, username);
         });
 
         view.signedIn();

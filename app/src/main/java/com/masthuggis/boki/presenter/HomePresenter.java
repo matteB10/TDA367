@@ -2,13 +2,13 @@ package com.masthuggis.boki.presenter;
 
 import android.os.Handler;
 
+import com.masthuggis.boki.model.AdvertisementObserver;
 import com.masthuggis.boki.backend.MockRepository;
-import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.sorting.SortManager;
 import com.masthuggis.boki.utils.StylingHelper;
-import com.masthuggis.boki.view.FilterCallback;
+import com.masthuggis.boki.view.SearchCallback;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * HomePresenter is the presenter class for the view called HomeFragment.
  */
-public class HomePresenter implements IProductsPresenter, RepositoryObserver {
+public class HomePresenter implements IProductsPresenter, AdvertisementObserver {
     private final View view;
     private final SortManager sortManager;
     private List<Advertisement> adverts;
@@ -36,7 +36,7 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
 
         // If using firebase uncommment line below
         getData();
-        DataModel.getInstance().addRepositoryObserver(this);
+        DataModel.getInstance().addAdvertisementObserver(this);
     }
 
     private void getData() {
@@ -132,8 +132,9 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
     }
 
     //Should probably run on its own thread
+    //Maybe move to model
     //Filters the advertisements shown to the user by if their title matches the given query
-    public void filter(String query, FilterCallback callback) {
+    public void search(String query, SearchCallback callback) {
         Thread thread = new Thread(() -> DataModel.getInstance().fetchAllAdverts(advertisements -> {
             view.showLoadingScreen();
             if (advertisements != null) {
@@ -155,11 +156,17 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
         thread.start();
     }
 
-    @Override
+  /*  @Override
     public void advertsInMarketUpdate(List<Advertisement> advertsInMarket) {
         if (advertsInMarket != null && !advertsInMarket.isEmpty()) {
             updateData(advertsInMarket);
         }
+    }*/
+
+    @Override
+    public void onAdvertisementsUpdated() {
+        adverts = DataModel.getInstance().getAllAds();
+
     }
 
 
