@@ -65,6 +65,14 @@ public class DataModel {
         return userAds;
     }
 
+    public List<Advertisement> getAdsFromLoggedInUser() throws UserNotLoggedInException {
+        if (isLoggedIn()) {
+            return getAdsFromUniqueOwnerID(user.getId());
+        } else {
+            throw new UserNotLoggedInException();
+        }
+    }
+
     private void updateAllAds() {
         Repository.fetchAllAdverts(advertisements -> allAds = advertisements);
     }
