@@ -1,5 +1,6 @@
 package com.masthuggis.boki.presenter;
 
+import com.masthuggis.boki.backend.stringCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.StylingHelper;
@@ -19,6 +20,7 @@ import java.util.List;
 public class DetailsPresenter {
     private View view;
     private Advertisement advertisement;
+
 
     public DetailsPresenter(View view, String advertID) {
         this.view = view;
@@ -51,12 +53,26 @@ public class DetailsPresenter {
         view.setCondition(text, drawable);
     }
 
-    public void createNewChat(String uniqueOwnerID, String owner) {
-        if (uniqueOwnerID.equals(DataModel.getInstance().getUserID())) {
+    public void createNewChat() {
+
+        if (advertisement.getUniqueOwnerID().equals(DataModel.getInstance().getUserID())) {
+            view.showToast();
             return;
         }
-        DataModel.getInstance().createNewChat(uniqueOwnerID, owner);
-        view.openChat(uniqueOwnerID);
+        DataModel.getInstance().createNewChat(advertisement, new stringCallback() {
+            @Override
+            public void onCallback(String chatID) {
+
+                view.openChat(chatID);
+            }
+        });
+    }
+
+    //TODO KANSKE ÄNDRA DETTA SÅ ATT DET GÖRS I SAMMA METOD?
+
+
+    public void openChat(String chatID) {
+        view.openChat(chatID);
     }
 
     public interface View extends iConditionable {
@@ -73,6 +89,8 @@ public class DetailsPresenter {
         void setTags(List<String> tags);
 
         void openChat(String uniqueOwnerID);
+
+        void showToast();
     }
 
 

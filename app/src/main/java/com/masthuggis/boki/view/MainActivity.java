@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private Fragment homeFragment = new HomeFragment();
     private Fragment favoritesFragment = new FavoritesFragment();
     private Fragment profileFragment = new ProfileFragment();
-    private Fragment messagesFragment = new MessagesFragment();
+    private Fragment messagesFragment = new ChatFragment();
     private Fragment activeFragment;
 
     @Override

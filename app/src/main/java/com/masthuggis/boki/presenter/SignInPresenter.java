@@ -1,6 +1,7 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.UserRepository;
+import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.FormHelper;
 
 public class SignInPresenter {
@@ -18,7 +19,7 @@ public class SignInPresenter {
             view.showSignInFailedMessage("Felaktig inmatning. Skrev du verkligen rätt?");
             return;
         }
-        repo.signIn(email, password, this::onSignInSuccess, errorMessage -> onSignInFailed(errorMessage));
+        DataModel.getInstance().SignIn(email, password, this::onSignInSuccess, errorMessage -> onSignInFailed(errorMessage));
     }
 
     private boolean fieldsAreBadlyFormatted(String email, String password) {

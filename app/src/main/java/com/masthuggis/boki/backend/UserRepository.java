@@ -2,12 +2,15 @@ package com.masthuggis.boki.backend;
 
 import androidx.annotation.Nullable;
 
+import com.masthuggis.boki.model.Advert;
+import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.Chat;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.model.iMessage;
 import com.masthuggis.boki.model.iUser;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,12 +26,11 @@ public class UserRepository {
         return userRepository;
     }
 
-
     public void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
         BackendDataHandler.getInstance().userSignIn(email, password, () -> {
             loggedIn();
             successCallback.onSuccess();
-        }, errorMessage -> failureCallback.onFailure(errorMessage));
+        }, failureCallback::onFailure);
     }
 
 
@@ -44,8 +46,13 @@ public class UserRepository {
 
             @Override
             public void onSuccess() {
-                setUsername(username);
-                loggedIn();
+                setUsername(username, new SuccessCallback() {
+                    @Override
+                    public void onSuccess() {
+                        loggedIn();
+
+                    }
+                });
             }
         }, new FailureCallback() {
             @Override
@@ -69,19 +76,39 @@ public class UserRepository {
 
     public void getUserChats(String userID, chatCallback chatCallback) {
 
-        List<iChat> chatList = new ArrayList<>();
 
         BackendDataHandler.getInstance().getUserChats(userID, new chatDBCallback() {
             @Override
             public void onCallback(List<Map<String, Object>> chatMap) {
+                List<iChat> chatList = new ArrayList<>();
                 for (Map<String, Object> map : chatMap) {
-                    chatList.add(ChatFactory.createChat(map.get("sender").toString(), map.get("receiver").toString(), map.get("uniqueChatID").toString(), map.get("receiverUsername").toString()));
+                    Advertisement ad = createAdFromMap(map);
+                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString(),ad));
                 }
                 chatCallback.onCallback(chatList);
 
             }
         });
     }
+
+    private Advertisement createAdFromMap(Map<String, Object> dataMap) {
+
+        String title = "" + (String) dataMap.get("title");
+        String description = (String) dataMap.get("description");
+        long price = (long) dataMap.get("price");
+        List<String> tags = (List<String>) dataMap.get("tags");
+        String uniqueOwnerID = (String) dataMap.get("uniqueOwnerID");
+        Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
+        String uniqueAdID = (String) dataMap.get("uniqueAdID");
+        String datePublished = (String) dataMap.get("date");
+        File imageFile = (File) dataMap.get("imgFile");
+        String owner = (String) dataMap.get("advertOwnerID");
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageFile, tags,owner);
+    }
+
+
+
+
 
     public void getMessages(String uniqueChatID, Chat chat, messagesCallback messagesCallback) {
         List<iMessage> messages = new ArrayList<>();
@@ -95,25 +122,26 @@ public class UserRepository {
                 messages.clear();
                 for (Map<String, Object> objectMap : advertDataList) {
                     messages.add(MessageFactory.createMessage(objectMap.get("message")
-                            .toString(), objectMap.get("timeSent").toString(), objectMap.get("sender").toString()));
+                            .toString(), Long.parseLong(objectMap.get("timeSent").toString()), objectMap.get("sender").toString()));
                 }
 
             }
         });
         messagesCallback.onCallback(messages);
+
     }
 
 
-    public void createNewChat(HashMap<String, Object> newChatMap) {
-        BackendDataHandler.getInstance().createNewChat(newChatMap);
+    public void createNewChat(HashMap<String, Object> newChatMap,Advertisement advertisement,stringCallback stringCallback) {
+        BackendDataHandler.getInstance().createNewChat(newChatMap,advertisement,stringCallback);
     }
 
     public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
         BackendDataHandler.getInstance().writeMessage(uniqueChatID, messageMap);
     }
 
-    public void setUsername(String username) {
-        BackendDataHandler.getInstance().setUsername(username);
+    public void setUsername(String username,SuccessCallback successCallback) {
+        BackendDataHandler.getInstance().setUsername(username, successCallback);
     }
 
     public void signOut() {

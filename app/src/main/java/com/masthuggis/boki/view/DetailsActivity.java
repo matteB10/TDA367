@@ -1,5 +1,6 @@
 package com.masthuggis.boki.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,12 +9,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.presenter.DetailsPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 
@@ -35,13 +38,25 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         if (advertID != null) {
             presenter = new DetailsPresenter(this, advertID);
         }
-        String uniqueOwnerID= DataModel.getInstance().getAdFromAdID(advertID).getUniqueOwnerID();
-        String receiverUsername=  DataModel.getInstance().getAdFromAdID(advertID).getOwner();
+
+        //TODO DETTA KSNEK SKA GÖRAS VIA PRESENTERN IST FÖR VIA DATAMODEL?
+
         Button contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
-            //TODO HÄR SKA CHATTEN ÖPPNAS TYP
             if (contactOwnerButton.getText().equals("Starta chatt")) {
-                presenter.createNewChat(uniqueOwnerID,receiverUsername);
+                if ((DataModel.getInstance().getUserChats() != null)) {
+                    for (iChat chats : DataModel.getInstance().getUserChats()) {
+                        if (chats.getAdvert().getUniqueID().equals(advertID)) {
+
+                            //TODO FIXA SÅ ATT DETTA ÄR ETT HELT AD.
+
+                            presenter.openChat(chats.getChatID());
+                            return;
+                        }
+
+                    }
+                }
+                presenter.createNewChat();
 
             } else {
                 contactOwnerButton.setText("Starta chatt");
@@ -91,6 +106,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
     /**
      * Set tags as buttons in details
+     *
      * @param tags
      */
 
@@ -104,14 +120,17 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
             btn = createTagButton(str);
             tableRow = getTableRow(tableRow, parentLayout);
             tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
-            tableRow.addView(btn,StylingHelper.getTableRowChildLayoutParams(this));
+            tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
         }
         parentLayout.addView(tableRow);
     }
 
     @Override
-    public void openChat(String uniqueOwnerID) {
+    public void openChat(String chatID) {
         //TODO ÖPPNA CHATT
+        Intent intent = new Intent(DetailsActivity.this, MessagesActivity.class);
+        intent.putExtra("chatID", chatID);
+        startActivity(intent);
 
     }
 
@@ -127,14 +146,14 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
      * Private method trying to resolve if a tableRow with tags is filled and
      * if a new one should be created.
      *
-     * @param tableRow    the current tableRow
+     * @param tableRow     the current tableRow
      * @param parentLayout width of parent layout
      * @return param tableRow or new tableRow object depending on
      */
     private TableRow getTableRow(TableRow tableRow, LinearLayout parentLayout) {
-        if(tableRow.getChildCount() % 4 == 0) {
-                parentLayout.addView(tableRow);
-                return new TableRow(this);
+        if (tableRow.getChildCount() % 4 == 0) {
+            parentLayout.addView(tableRow);
+            return new TableRow(this);
         }
         return tableRow;
     }
@@ -144,6 +163,15 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         btn.setTextSize(12);
         btn.setTextColor(this.getColor(R.color.colorWhite));
         btn.setElevation(4);
+    }
+
+    public void showToast() {
+        Context context = getApplicationContext();
+        CharSequence text = "Du kan inte skicka meddelanden till dig själv.";
+        int duration = Toast.LENGTH_LONG;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 
 
