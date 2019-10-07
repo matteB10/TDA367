@@ -69,15 +69,12 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         displayPreDefTagButtons();
         setListeners();
         updateDataFromModel();
-
     }
 
     private void updateDataFromModel() {
         if (presenter.getImageUrl() != null) {
-            //Bitmap myBitmap = BitmapFactory.decodeFile(presenter.getImgFile().getAbsolutePath());
-            //imageViewDisplay.setImageBitmap(myBitmap);
             Glide.with(this).load(presenter.getImageUrl()).into(imageViewDisplay);
-        } //Probably won't be possible since we won't be storing images in our adverts
+        }
         title.setText(presenter.getTitle());
         description.setText(presenter.getDescription());
         if (presenter.getIsValidPrice()) {
@@ -302,7 +299,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             Intent intent = new Intent(CreateAdActivity.
                     this, MainActivity.class); //Need to send something here to show snackbar
             intent.putExtra("advertID", presenter.getId());
-            intent.putExtra("snackbar", true);
+            intent.putExtra("toast", true);
             presenter.publishAdvert();
             startActivity(intent);
             finish();
@@ -446,7 +443,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         userDefTags.add(tag);
         populateTagsLayout(createTagButtons(userDefTags), parentLayout);
     }
-
 
 
 }

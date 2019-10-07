@@ -30,9 +30,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        checkNavToast();
         setupBottomTabNavigator();
         addFragmentsToViewHierachy();
+    }
+
+    private void checkNavToast() {
+        if (getIntent().getBooleanExtra("snackbar", false)) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Din annons har lagts upp!", Toast.LENGTH_LONG);
+            toast.show();
+            getIntent().putExtra("toast",false); //Reset boolean so it only shows once
+        }
     }
 
     private void setupBottomTabNavigator() {
@@ -70,14 +78,12 @@ public class MainActivity extends AppCompatActivity {
             }
             Intent intent = new Intent(this, CreateAdActivity.class);
             startActivity(intent);
+
         } else {
+
             switch (menuItem.getItemId()) {
                 case R.id.navigation_home:
                     showFragment(homeFragment);
-                    if (getIntent().getBooleanExtra("snackbar", false)) {
-                        Snackbar snackbar = Snackbar.make(homeFragment.getView(),"test",Snackbar.LENGTH_LONG);
-                        snackbar.show();
-                    }
                     break;
                 case R.id.navigation_favorites:
                     showFragment(favoritesFragment);

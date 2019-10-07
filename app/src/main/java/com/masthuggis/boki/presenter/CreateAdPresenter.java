@@ -52,7 +52,6 @@ public class CreateAdPresenter {
     public void titleChanged(String title) {
         advertisement.setTitle(title);
         view.enablePublishButton(allFieldsValid());
-
     }
 
     /**
