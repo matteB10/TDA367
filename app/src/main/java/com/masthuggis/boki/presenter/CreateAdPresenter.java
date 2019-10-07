@@ -57,7 +57,6 @@ public class CreateAdPresenter {
     public void titleChanged(String title) {
         advertisement.setTitle(title);
         view.enablePublishButton(allFieldsValid());
-
     }
 
     /**
@@ -149,7 +148,7 @@ public class CreateAdPresenter {
     //Need to change imageFile in advert to inputStream from View
     public void publishAdvert() {
         setAdvertDate();
-        Repository.saveAdvert(advertisement, view.getCurrentImageFile());
+        Repository.saveAdvert(view.getCurrentImageFile(), advertisement);
         advertisement = null;
     }
 
@@ -189,6 +188,10 @@ public class CreateAdPresenter {
 
     public int getPrice() {
         return (int) advertisement.getPrice();
+    }
+
+    public String getImageUrl() {
+        return advertisement.getImageUrl();
     }
 
 }

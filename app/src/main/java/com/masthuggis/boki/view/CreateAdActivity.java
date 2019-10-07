@@ -70,7 +70,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         displayPreDefTagButtons();
         setListeners();
         updateDataFromModel();
-
     }
 
     private void updateDataFromModel() {
@@ -132,8 +131,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             try {
                 OutputStream out = new FileOutputStream(currentImageFile.getPath());
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
-               // byte[] imageData = out.toByteArray();
-               // ByteArrayInputStream uploadStream = new ByteArrayInputStream(imageData);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -301,8 +298,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setOnClickListener(view -> {
             Intent intent = new Intent(CreateAdActivity.
-                    this, DetailsActivity.class);
+                    this, MainActivity.class); //Need to send something here to show snackbar
             intent.putExtra("advertID", presenter.getId());
+            intent.putExtra("toast", true);
             presenter.publishAdvert();
             startActivity(intent);
             finish();

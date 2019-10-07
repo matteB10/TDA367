@@ -25,7 +25,7 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
 /**
  * Home page displaying all the adverts that have been published to the market.
- * Will also include filter and sort buttons in the future.
+ * Will also include search and sort buttons in the future.
  */
 public class HomeFragment extends Fragment implements HomePresenter.View, AdapterView.OnItemSelectedListener {
 
@@ -74,7 +74,7 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
                     inputMethodManager.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
                     searchField.clearFocus(); //This and two lines above hides keyboard when search is pressed
                     showLoadingScreen();
-                    presenter.filter(searchField.getText().toString(), new FilterCallback() {
+                    presenter.search(searchField.getText().toString(), new SearchCallback() {
                         @Override
                         public void onCallback() {
                             hideLoadingScreen(); //Necessary callback since filtering happens on other thread
