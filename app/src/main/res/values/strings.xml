@@ -77,5 +77,8 @@
 
     <string name="searchHint">Sök efter titlar...</string>
     <string name="sign_out">Logga ut</string>
+    <string name="newPrice">ange nytt pris</string>
+    <string name="hintNewTitle">ange ny titel</string>
+    <string name="hintnewPrice">ange nytt pris</string>
 
 </resources>

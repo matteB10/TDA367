@@ -75,6 +75,7 @@ public class DetailsPresenter {
 
     public interface View extends iConditionable {
         void setName(String name);
+
         void setPrice(long price);
 
         void setDate(String date);
@@ -86,6 +87,7 @@ public class DetailsPresenter {
         void setTags(List<String> tags);
 
         void openChat(String uniqueOwnerID);
+
         void showEditView(String uniqueID);
     }
 
