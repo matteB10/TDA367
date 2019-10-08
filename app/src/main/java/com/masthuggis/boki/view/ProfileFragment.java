@@ -25,7 +25,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     private View view;
     private RecyclerView recyclerView;
     private ProductsRecyclerViewAdapter adapter;
-    private Button btnSignIn;
+    private Button signOutBtn;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -38,7 +38,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
 
         view = inflater.inflate(R.layout.profile_fragment, container, false);
         setupHeader(view);
-        presenter.isLoggedIn();
+
         return view;
     }
 
@@ -48,8 +48,8 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
         Button settingsButton = v.findViewById(R.id.profileSettingsButton);
         settingsButton.setOnClickListener(view -> presenter.onSettingsButtonPressed());
 
-        btnSignIn = v.findViewById(R.id.signInButton);
-        btnSignIn.setOnClickListener(view -> presenter.onSignInButtonPressed());
+        signOutBtn = v.findViewById(R.id.signInButton);
+        signOutBtn.setOnClickListener(view -> presenter.onSignOutPressed());
 
     }
 
@@ -76,20 +76,6 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     }
 
     @Override
-    public void setIsUserLoggedIn(boolean isUserLoggedIn) {
-        if (isUserLoggedIn) {
-            // TODO: Display the users books on sale
-            btnSignIn.setVisibility(View.INVISIBLE);
-            setupList(view);
-
-
-        } else {
-            // TODO: ask user to log in? What actions should be taken?
-            btnSignIn.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
     public void updateItemsOnSale() {
         if (adapter != null) {
             adapter.notifyDataSetChanged();
@@ -104,7 +90,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
 
 
     @Override
-    public void showSignInScreen() {
+    public void showLoginScreen() {
         Intent intent = new Intent(getContext(), SignInActivity.class);
         startActivity(intent);
     }

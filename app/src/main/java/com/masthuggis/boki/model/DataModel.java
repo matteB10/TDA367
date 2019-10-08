@@ -33,8 +33,15 @@ public class DataModel implements BackendObserver {
     public static DataModel getInstance() {
         if (instance == null) {
             instance = new DataModel();
+            instance.initApp();
         }
         return instance;
+    }
+
+    private void initApp() {
+        if (isLoggedIn()) {
+            UserRepository.getInstance().logUserIn();
+        }
     }
 
     public void addChatObserver(ChatObserver chatObserver) {
@@ -136,7 +143,6 @@ public class DataModel implements BackendObserver {
         return new ArrayList<>(allAds);
     }
 
-
     public void loggedIn(iUser user) {
         this.user = user;
     }
@@ -158,7 +164,7 @@ public class DataModel implements BackendObserver {
     }
 
     public boolean isLoggedIn() {
-        return this.user != null;
+        return UserRepository.getInstance().isUserLoggedIn();
     }
 
     public List<iChat> getUserChats() {

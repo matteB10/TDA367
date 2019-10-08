@@ -283,6 +283,15 @@ public class BackendDataHandler implements iBackend {
         });
     }
 
+    public boolean isUserSignedIn() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     //Downloads the file as a local tempFile rather than as an array of bytes.
     private void testDownloadFromCloudStorage() {
         try {

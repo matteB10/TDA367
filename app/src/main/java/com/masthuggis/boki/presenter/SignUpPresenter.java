@@ -17,14 +17,10 @@ public class SignUpPresenter {
     }
 
     public void onSignUpButtonPressed(String email, String password, String username) {
-        DataModel.getInstance().signUp(email, password, () -> {
-            DataModel.getInstance().
-                    signInAfterRegistration(email, password, username);
+        DataModel.getInstance().signUp(email,password, () -> {
+            DataModel.getInstance().signInAfterRegistration(email, password, username);
+            view.signedIn();
         });
-
-        view.signedIn();
-
-
     }
 
     public interface View {

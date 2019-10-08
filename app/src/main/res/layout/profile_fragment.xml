@@ -50,7 +50,7 @@
                     android:id="@+id/signInButton"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:text="@string/login"
+                    android:text="@string/logOut"
                     android:textSize="8sp"
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"

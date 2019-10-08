@@ -27,7 +27,7 @@ public class UserRepository {
 
     public void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
         BackendDataHandler.getInstance().userSignIn(email, password, () -> {
-            loggedIn();
+            logUserIn();
             successCallback.onSuccess();
         }, failureCallback::onFailure);
     }
@@ -35,8 +35,6 @@ public class UserRepository {
 
     public void signUp(String email, String password, SuccessCallback successCallback) {
         BackendDataHandler.getInstance().userSignUp(email, password, successCallback::onSuccess);
-
-
     }
 
     public void signInAfterRegistration(String email, String password, String username) {
@@ -48,7 +46,7 @@ public class UserRepository {
                 setUsername(username, new SuccessCallback() {
                     @Override
                     public void onSuccess() {
-                        loggedIn();
+                        logUserIn();
 
                     }
                 });
@@ -61,11 +59,15 @@ public class UserRepository {
         });
     }
 
-    private void loggedIn() {
+    public void logUserIn() {
         iUser user;
         Map<String, String> map = BackendDataHandler.getInstance().getUser();
         user = UserFactory.createUser(map.get("email"), map.get("username"), map.get("userID"));
         DataModel.getInstance().loggedIn(user);
+    }
+
+    public boolean isUserLoggedIn() {
+        return BackendDataHandler.getInstance().isUserSignedIn();
     }
 
 

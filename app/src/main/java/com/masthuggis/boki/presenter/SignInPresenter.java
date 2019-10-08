@@ -28,7 +28,7 @@ public class SignInPresenter {
     }
 
     private void onSignInSuccess() {
-        view.showProfileScreen();
+        view.signInSuccess();
     }
 
     private void onSignInFailed(String errorMessage) {
@@ -41,7 +41,7 @@ public class SignInPresenter {
 
     public interface View {
         void showSignUpScreen();
-        void showProfileScreen();
+        void signInSuccess();
         void showSignInFailedMessage(String errorMessage);
     }
 }
