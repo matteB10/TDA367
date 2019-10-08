@@ -3,6 +3,7 @@ package com.masthuggis.boki.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,10 +21,10 @@ import javax.net.ssl.SNIServerName;
  * MainActivity is the primary view of the application. This is where the application will take you on launch.
  */
 public class MainActivity extends AppCompatActivity {
-    private Fragment homeFragment = new HomeFragment();
-    private Fragment favoritesFragment = new FavoritesFragment();
-    private Fragment profileFragment = new ProfileFragment();
-    private Fragment messagesFragment = new MessagesFragment();
+    private Fragment homeFragment;
+    private Fragment favoritesFragment;
+    private Fragment profileFragment;
+    private Fragment messagesFragment;
     private Fragment activeFragment;
 
     @Override
@@ -32,7 +33,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         checkNavToast();
         setupBottomTabNavigator();
-        addFragmentsToViewHierachy();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+
+        if (!DataModel.getInstance().isLoggedIn()) {
+            Log.d("DEBUG", "isLoggedIn FALSE");
+            Intent intent = new Intent(this, SignUpActivity.class);
+            startActivity(intent);
+        } else {
+            Log.d("DEBUG", "isLoggedIn TRUE");
+        }
     }
 
     private void checkNavToast() {
@@ -81,26 +91,26 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
 
-            switch (menuItem.getItemId()) {
-                case R.id.navigation_home:
-                    showFragment(homeFragment);
-                    break;
+            switch(menuItem.getItemId()){
                 case R.id.navigation_favorites:
-                    showFragment(favoritesFragment);
+                    activeFragment = new FavoritesFragment();
                     break;
                 case R.id.navigation_profile:
-                    showFragment(profileFragment);
+                    activeFragment = new ProfileFragment();
                     break;
                 case R.id.navigation_new_ad:
-                    Intent intent = new Intent(MainActivity.this, CreateAdActivity.class);
+                    Intent intent = new Intent(MainActivity.this,CreateAdActivity.class);
                     startActivity(intent);
                     return true;
                 case R.id.navigation_messages:
-                    showFragment(messagesFragment);
+                    activeFragment = new MessagesFragment();
                     break;
                 default:
-                    return false;
+                    activeFragment = new HomeFragment();
+
             }
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,activeFragment).commit();
+            return true;
         }
         return true;
     };

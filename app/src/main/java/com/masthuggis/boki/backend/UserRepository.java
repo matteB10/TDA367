@@ -62,6 +62,10 @@ public class UserRepository {
         DataModel.getInstance().loggedIn(user);
     }
 
+    public boolean isUserLoggedIn() {
+        return BackendDataHandler.getInstance().isUserSignedIn();
+    }
+
 
     private void loggedOut() {
         DataModel.getInstance().loggedOut();

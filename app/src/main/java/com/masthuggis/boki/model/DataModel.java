@@ -88,7 +88,6 @@ public class DataModel {
         return new ArrayList<>(allAds);
     }
 
-
     public void loggedIn(iUser user) {
         this.user = user;
     }
@@ -110,7 +109,7 @@ public class DataModel {
     }
 
     public boolean isLoggedIn() {
-        return this.user != null;
+        return UserRepository.getInstance().isUserLoggedIn();
     }
 
     public List<iChat> getUserChats() {
