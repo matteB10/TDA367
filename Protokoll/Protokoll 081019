@@ -1,0 +1,65 @@
+# Meeting Agenda
+
+Group:Masthuggis
+Date: 09/10 - 19
+Chair: Elin Melander
+Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak Lindgren, Elin Melander
+
+
+## Objectives (5 min) 
+
+- statusrapport, 
+- inför fredag, hur vi tänker kring att skicka in för peer review.
+- översiktlig plan, mål, när vi ska vara klara. Hur vi lägger upp kommande veckor. 
+
+## Discussion items (35 min)
+
+- statusrapport:
+	- Isak har gjort klar chat funktionen. Fungerande. Lite bug fix som behöver göras, samt tester mm. 
+Kommande task: Göra repositories till icke singletons, eller statiska, utan att dataModel istället håller en instans av varje repository.
+	
+	- joel har satsat på fragments state. Exempelvis att scroll och val sparas när vi navigerar mellan fragment för att sen gå tillaka.
+Sortering klar. Tester mm kommer. Fixat bug då dubletter av detalj vyn uppkommer när man dubbelklickar snabbt på en annons.
+Kommande task: Log in -> om en användare inte lyckas logga in, hantera detta och ge bra meddelanden. 
+Tvinga användare att logga in direkt, och att om man stänger app och sen öppnar så ska den komma ihåg dig så att logga in inte krävs igen. 
+
+	-Arvid jobbar med Sökfunktionen. just nu kan man söka på titlar, men endast titlar för tillfället
+Arbetat med glide, att bilder blir tillräckligt komprimerade.
+Just nu problem med förhållandet, så att vissa bilder blir utdragna/ihoptryckta, vilket inte är ultimat. Vi diskuterar hur detta kan tänkas lösas. 
+Om det finns befintliga metoder för detta istället för att hårdkoda ett format. Eller om man istället tar befintligt format och fyller ut bild med vitt, för att behålla förhållandet i bilden. 
+Just nu ligger sökfunktionaliteten i home? vart vill vi ha den? Vill vi ha den i model, tsm med filtreringen? Eget paket? 
+
+	-matilda har fixar taggar och även kollat vidare på sökning av taggar. Just nu  går det att lägga till och ta bort taggar när vi lägger upp en annons.
+kommande task: kommentarer och tester på befintliga klasser och kod. 
+skrivit vidare på RAD.
+
+	- elin har gjort en vy för redigering av en användares egna upplagda annonser, så man kan ändra och uppdatera annonser. 
+kommande task: se till att ta bort bild och istället ladda upp en ny, samt att kunna ändra taggar.
+	
+
+
+
+## Outcomes and assignments (5 min)
+allmänt kolla vidare kolla vidare på livecycle av fragments för vidare utveckling.
+
+* klassdiagram behöver ses över i slutet av veckan. 
+* Se över RAD och SDD inför peerreview
+* se att ha en hyfsat fungerande app på fredag, med samma funktionalitet, men inget ska krasha på grund av fel. 
+
+*codereview 
+
+målet är att vara klara fredag den 18e.
+- vi behöver fixa userstorien om favoriter, hur detta ska lösas?
+
+vad har vi kvar
+-log in flöde
+-två user stories: filtrera och favoriter : planerar in det till nästa vecka.
+-design mässigt att allt hänger ihop, UI.
+
+
+## Wrap up
+
+ - nästa möte torsdag efter lunch
+ - Handledning fredag.
+
+ 

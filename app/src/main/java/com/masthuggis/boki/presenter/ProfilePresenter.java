@@ -19,9 +19,11 @@ public class ProfilePresenter implements IProductsPresenter {
     public ProfilePresenter(View view) {
         this.view = view;
         this.view.showLoadingScreen();
+        /*
         if(DataModel.getInstance().isLoggedIn()){
             this.adverts = DataModel.getInstance().getAdsFromUniqueOwnerID(DataModel.getInstance().getUserID());
         }
+         */
         this.view.hideLoadingScreen();
 
     }
@@ -72,18 +74,7 @@ public class ProfilePresenter implements IProductsPresenter {
         thumbnailView.setCondition(text, drawable);
     }
 
-    public void isLoggedIn() {
-        if (DataModel.getInstance().isLoggedIn()) {
-            view.setIsUserLoggedIn(true);
-        } else {
-            view.setIsUserLoggedIn(false);
-        }
-
-    }
-
     public interface View {
-        void setIsUserLoggedIn(boolean isUserLoggedIn);
-
         void updateItemsOnSale();
 
         void showSettingsScreen();
@@ -92,7 +83,7 @@ public class ProfilePresenter implements IProductsPresenter {
 
         void hideLoadingScreen();
 
-        void showSignInScreen();
+        void showLoginScreen();
 
     }
 
@@ -102,8 +93,9 @@ public class ProfilePresenter implements IProductsPresenter {
         view.showSettingsScreen();
     }
 
-    public void onSignInButtonPressed() {
-        view.showSignInScreen();
+    public void onSignOutPressed() {
+        DataModel.getInstance().signOut();
+        view.showLoginScreen();
     }
 
 }

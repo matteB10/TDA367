@@ -1,7 +1,5 @@
 package com.masthuggis.boki.backend;
 
-import androidx.annotation.Nullable;
-
 import com.masthuggis.boki.backend.callbacks.DBCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
@@ -47,7 +45,7 @@ public class UserRepository {
 
     public void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
         backend.userSignIn(email, password, () -> {
-            loggedIn();
+            logUserIn();
             successCallback.onSuccess();
         }, failureCallback::onFailure);
     }
@@ -59,39 +57,25 @@ public class UserRepository {
      * @param successCallback A callback which indicates what should happen if the login is successful.
      */
 
-    public void signUp(String email, String password, SuccessCallback successCallback) {
-        backend.userSignUp(email, password, successCallback::onSuccess);
-
-
+    public void signUp(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
+        backend.userSignUp(email, password, successCallback, failureCallback);
     }
 
     public void signInAfterRegistration(String email, String password, String username) {
-        backend.userSignIn(email, password, new SuccessCallback() {
+        backend.userSignIn(email, password, () -> setUsername(username, () -> logUserIn()), errorMessage -> {
 
-
-            @Override
-            public void onSuccess() {
-                setUsername(username, new SuccessCallback() {
-                    @Override
-                    public void onSuccess() {
-                        loggedIn();
-
-                    }
-                });
-            }
-        }, new FailureCallback() {
-            @Override
-            public void onFailure(@Nullable String errorMessage) {
-
-            }
         });
     }
 
-    private void loggedIn() {
+    public void logUserIn() {
         iUser user;
         Map<String, String> map = backend.getUser();
         user = UserFactory.createUser(map.get("email"), map.get("username"), map.get("userID"));
         DataModel.getInstance().loggedIn(user);
+    }
+
+    public boolean isUserLoggedIn() {
+        return backend.isUserSignedIn();
     }
 
 

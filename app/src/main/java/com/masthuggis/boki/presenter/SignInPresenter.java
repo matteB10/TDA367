@@ -12,20 +12,20 @@ public class SignInPresenter {
     }
 
     public void onSignInButtonPressed(String email, String password) {
-        if (fieldsAreBadlyFormatted(email, password)) {
+        if (anyFieldIsBadlyFormatted(email, password)) {
             view.showSignInFailedMessage("Felaktig inmatning. Skrev du verkligen rätt?");
             return;
         }
         DataModel.getInstance().SignIn(email, password, this::onSignInSuccess, errorMessage -> onSignInFailed(errorMessage));
     }
 
-    private boolean fieldsAreBadlyFormatted(String email, String password) {
+    private boolean anyFieldIsBadlyFormatted(String email, String password) {
         FormHelper fh = FormHelper.getInstance();
         return !fh.isValidEmail(email) || email.isEmpty() || password.isEmpty();
     }
 
     private void onSignInSuccess() {
-        view.showProfileScreen();
+        view.signInSuccess();
     }
 
     private void onSignInFailed(String errorMessage) {
@@ -38,7 +38,7 @@ public class SignInPresenter {
 
     public interface View {
         void showSignUpScreen();
-        void showProfileScreen();
+        void signInSuccess();
         void showSignInFailedMessage(String errorMessage);
     }
 }

@@ -44,8 +44,15 @@ public class DataModel implements BackendObserver {
     public static DataModel getInstance() {
         if (instance == null) {
             instance = new DataModel();
+            instance.initApp();
         }
         return instance;
+    }
+
+    private void initApp() {
+        if (isLoggedIn()) {
+            userRepository.logUserIn();
+        }
     }
 
     public void addChatObserver(ChatObserver chatObserver) {
@@ -120,6 +127,18 @@ public class DataModel implements BackendObserver {
         return userAds;
     }
 
+    public List<Advertisement> getAdsFromLoggedInUser() throws UserNotLoggedInException {
+        if (isLoggedIn()) {
+            return getAdsFromUniqueOwnerID(user.getId());
+        } else {
+            throw new UserNotLoggedInException();
+        }
+    }
+
+    private void updateAllAds() {
+        repository.fetchAllAdverts(advertisements -> allAds = advertisements);
+    }
+
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
 
         repository.fetchAllAdverts(new advertisementCallback() {
@@ -127,6 +146,7 @@ public class DataModel implements BackendObserver {
             public void onCallback(List<Advertisement> advertisements) {
                 allAds = advertisements;
                 advertisementCallback.onCallback(allAds);
+                notifyAdvertisementObservers();
             }
         });
     }
@@ -134,7 +154,6 @@ public class DataModel implements BackendObserver {
     public List<Advertisement> getAllAds() {
         return new ArrayList<>(allAds);
     }
-
 
     public void loggedIn(iUser user) {
         this.user = user;
@@ -157,7 +176,7 @@ public class DataModel implements BackendObserver {
     }
 
     public boolean isLoggedIn() {
-        return this.user != null;
+        return userRepository.isUserLoggedIn();
     }
 
     public List<iChat> getUserChats() {
@@ -225,8 +244,9 @@ public class DataModel implements BackendObserver {
         userRepository.signOut();
     }
 
-    public void signUp(String email, String password, SuccessCallback successCallback) {
-        userRepository.signUp(email, password, successCallback);
+    public void signUp(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback) {
+        userRepository.signUp(email, password, successCallback, failureCallback);
+        signInAfterRegistration(email, password, username);
     }
 
     @Override

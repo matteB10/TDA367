@@ -29,7 +29,6 @@ public interface iBackend {
 
     String getFireBaseID(String userID, String advertID);
 
-    void userSignUp(String email, String password, SuccessCallback successCallback);
 
     void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
 
@@ -54,4 +53,7 @@ public interface iBackend {
     void readAllAdvertData(DBCallback DBCallback);
 
 
+    boolean isUserSignedIn();
+
+    void userSignUp(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
 }

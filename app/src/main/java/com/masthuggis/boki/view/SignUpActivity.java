@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,6 +22,13 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         setUpBtns();
     }
 
+    private void setUpBtns() {
+        Button btnSignIn = findViewById(R.id.signInButton);
+        btnSignIn.setOnClickListener(view -> presenter.onSignInButtonPressed());
+
+        Button btnSignUp = findViewById(R.id.signUpButton);
+        btnSignUp.setOnClickListener(view -> presenter.onSignUpButtonPressed(getEmail(), getPassword(), getUsername()));
+    }
 
     private String getEmail() {
         EditText email = findViewById(R.id.email);
@@ -37,31 +45,30 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         return username.getText().toString();
     }
 
-
-    private void setUpBtns() {
-        Button btnSignIn = findViewById(R.id.signInButton);
-        btnSignIn.setOnClickListener(view -> presenter.onSignInButtonPressed());
-
-        Button btnSignUp = findViewById(R.id.signUpButton);
-        btnSignUp.setOnClickListener(view -> presenter.onSignUpButtonPressed(getEmail(), getPassword(), getUsername()));
-
+    /**
+     * Exists the app if the user presses back button. Makes it impossible to enter the app without
+     * signing up or logging in.
+     */
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 
-
-    //switch between screens
     @Override
     public void showSignInScreen() {
-        Intent intent = new Intent(SignUpActivity.this, SignInActivity.class);
+        Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
     }
 
     @Override
-    public void signedIn() {
-        finish();
+    public void showSignUpFailedMessage(String errorMessage) {
+        Toast toast = Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG);
+        toast.show();
     }
 
-    public void showProfileScreen() {
-        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+    @Override
+    public void signedIn() {
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 }
