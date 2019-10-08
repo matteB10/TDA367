@@ -21,6 +21,13 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         setUpBtns();
     }
 
+    private void setUpBtns() {
+        Button btnSignIn = findViewById(R.id.signInButton);
+        btnSignIn.setOnClickListener(view -> presenter.onSignInButtonPressed());
+
+        Button btnSignUp = findViewById(R.id.signUpButton);
+        btnSignUp.setOnClickListener(view -> presenter.onSignUpButtonPressed(getEmail(), getPassword(), getUsername()));
+    }
 
     private String getEmail() {
         EditText email = findViewById(R.id.email);
@@ -35,15 +42,6 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
     private String getUsername() {
         EditText username = findViewById(R.id.username_editText);
         return username.getText().toString();
-    }
-
-
-    private void setUpBtns() {
-        Button btnSignIn = findViewById(R.id.signInButton);
-        btnSignIn.setOnClickListener(view -> presenter.onSignInButtonPressed());
-
-        Button btnSignUp = findViewById(R.id.signUpButton);
-        btnSignUp.setOnClickListener(view -> presenter.onSignUpButtonPressed(getEmail(), getPassword(), getUsername()));
     }
 
     /**
