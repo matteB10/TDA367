@@ -2,17 +2,18 @@ package com.masthuggis.boki.presenter;
 
 import android.os.Handler;
 
-import com.masthuggis.boki.model.AdvertisementObserver;
 import com.masthuggis.boki.backend.MockRepository;
+import com.masthuggis.boki.backend.PerformedSearchCallback;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.AdvertisementObserver;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.sorting.SortManager;
+import com.masthuggis.boki.utils.SearchHelper;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.view.SearchCallback;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -132,30 +133,21 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
         adverts = sortManager.sort(pos, adverts);
     }
 
-    //Should probably run on its own thread
-    //Maybe move to utility package
+
     //Filters the advertisements shown to the user by if their title matches the given query
     public void search(String query, SearchCallback callback) {
-        Thread thread = new Thread(() -> DataModel.getInstance().fetchAllAdverts(advertisements -> {
-            view.showLoadingScreen();
-            if (advertisements != null) {
-                adverts = advertisements; //Refreshes the list so it accurately reflects adverts in firebase
+        view.showLoadingScreen();
+        SearchHelper search = new SearchHelper();
+        search.search(query, new PerformedSearchCallback() {
+            @Override
+            public void onCallback(List<Advertisement> searchRes) {
+                updateData(searchRes);
             }
-
-            ArrayList<Advertisement> filteredList = new ArrayList<>();
-            Iterator<Advertisement> iterator = adverts.iterator();
-            while (iterator.hasNext()) {
-                Advertisement ad = iterator.next();
-                if (ad.getTitle().toLowerCase().contains(query.toLowerCase().trim())) {
-                    //Ad advert to result if title matches the search-query
-                    filteredList.add(ad);
-                }
-            }
-            updateData(filteredList);
-            callback.onCallback();
-        }));
-        thread.start();
+        });
+        callback.onCallback();
     }
+
+
 
     @Override
     public void onAdvertisementsUpdated() {
