@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -51,6 +52,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private List<Button> preDefTagButtons = new ArrayList<>();
     private List<Button> userDefTagButtons = new ArrayList<>();
     private CreateAdPresenter presenter;
+    private CheckBox compatibilityCB;
     private File currentImageFile;
     private ImageView imageViewDisplay;
     private EditText title;
@@ -66,6 +68,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         enablePublishButton(false);
         displayPreDefTagButtons();
         setListeners();
+        compatibilityCB = findViewById(R.id.compatabilityCB);
         updateDataFromModel();
     }
 
@@ -79,7 +82,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
                 || Build.MODEL.contains("Android SDK built for x86")
                 || Build.MANUFACTURER.contains("Genymotion")
                 || (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
-                || "google_sdk".equals(Build.PRODUCT);
+                || "google_sdk".equals(Build.PRODUCT)
+                || compatibilityCB.isChecked();
     }
 
     private void updateDataFromModel() {
