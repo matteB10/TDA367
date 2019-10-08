@@ -83,7 +83,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
                 || Build.MANUFACTURER.contains("Genymotion")
                 || (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
                 || "google_sdk".equals(Build.PRODUCT)
-                || compatibilityCB.isChecked();
+                || compatibilityCB.isChecked(); //TODO fix crop activity so all users can use it when uploading adverts, this is temporary fix
     }
 
     private void updateDataFromModel() {
