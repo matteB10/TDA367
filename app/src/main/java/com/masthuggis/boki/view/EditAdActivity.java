@@ -38,10 +38,11 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
     private EditText description;
     private File currentImageFile;
 
+
     private List<Button> preDefTagButtons = new ArrayList<>();
     private List<Button> userDefTagButtons = new ArrayList<>();
 
-
+    private static boolean validPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,10 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
     }
 
 
+
+    private boolean isPriceValid(){
+        return this.validPrice;
+    }
 
     private void setUpBtns() {
         Button removeBtn = findViewById(R.id.removeAdBtn);
@@ -226,7 +231,7 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
     @Override
     public void setPrice(long price) {
         TextView currentPrice = findViewById(R.id.priceEditText);
-        currentPrice.setText(String.valueOf(price));
+        currentPrice.setText(String.valueOf(price) + " kr");
     }
 
     @Override

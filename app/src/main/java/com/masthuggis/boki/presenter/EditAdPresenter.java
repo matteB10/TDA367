@@ -7,6 +7,7 @@ public class EditAdPresenter {
 
     private Advertisement advertisement;
     private View view;
+    private static boolean validPrice;
 
 
     public EditAdPresenter(View view, String advertID){
@@ -26,18 +27,24 @@ public class EditAdPresenter {
         view.setImageUrl(advertisement.getImageUrl());
     }
 
-
+    public boolean isPriceValid() {
+        return this.validPrice;
+    }
 
     public void titleChanged(String title) {
         String adID = advertisement.getUniqueID();
-        advertisement.setTitle(title);
-        DataModel.getInstance().updateTitle(adID, title);
+        if(title != null) {
+            advertisement.setTitle(title);
+            DataModel.getInstance().updateTitle(adID, title);
+        }
     }
 
     public void priceChange(String price){
         String adID = advertisement.getUniqueID();
-        advertisement.setPrice(Integer.parseInt(price));
-        DataModel.getInstance().updatePrice(adID, price);
+        if(isPriceValid()) {
+            advertisement.setPrice(Integer.parseInt(price));
+            DataModel.getInstance().updatePrice(adID, price);
+        }
     }
 
     public void descriptionChanged(String description){
@@ -57,7 +64,6 @@ public class EditAdPresenter {
         view.styleConditionButtonPressed(condition);
 
     }
-
 
     public interface View {
         void setTitle(String name);
