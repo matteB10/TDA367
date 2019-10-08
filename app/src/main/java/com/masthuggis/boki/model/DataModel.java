@@ -129,14 +129,10 @@ public class DataModel implements BackendObserver {
     }
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
-
-        Repository.fetchAllAdverts(new advertisementCallback() {
-            @Override
-            public void onCallback(List<Advertisement> advertisements) {
-                allAds = advertisements;
-                advertisementCallback.onCallback(allAds);
-                notifyAdvertisementObservers();
-            }
+        Repository.fetchAllAdverts(advertisements -> {
+            allAds = advertisements;
+            advertisementCallback.onCallback(allAds);
+            notifyAdvertisementObservers();
         });
     }
 
