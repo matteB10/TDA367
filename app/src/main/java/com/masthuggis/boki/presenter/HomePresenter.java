@@ -133,7 +133,7 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
     }
 
     //Should probably run on its own thread
-    //Maybe move to model
+    //Maybe move to utility package
     //Filters the advertisements shown to the user by if their title matches the given query
     public void search(String query, SearchCallback callback) {
         Thread thread = new Thread(() -> DataModel.getInstance().fetchAllAdverts(advertisements -> {
@@ -147,7 +147,7 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
             while (iterator.hasNext()) {
                 Advertisement ad = iterator.next();
                 if (ad.getTitle().toLowerCase().contains(query.toLowerCase().trim())) {
-                    //Only search capability on tile of advert
+                    //Ad advert to result if title matches the search-query
                     filteredList.add(ad);
                 }
             }

@@ -112,9 +112,6 @@ public class BackendDataHandler implements iBackend {
         writeToDatabase(data);
     }
 
-    private boolean completedWriteToDatabase() {
-        return !isWritingAdvertToDatabase && !isWritingImageToDatabase;
-    }
 
     private void writeToDatabase(HashMap<String, Object> data) {
         isWritingAdvertToDatabase = true;
@@ -276,14 +273,6 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    //Small method for manually testing if firebase returns the correct ID's for users and adverts
-    String getFireBaseID(String userID, String advertID) {
-        if (advertID != null)
-            return db.collection("users").document(userID).collection("adverts").document(advertID).getId();
-        return db.collection("users").document(userID).getId();
-    }
-
-
     public void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -323,9 +312,7 @@ public class BackendDataHandler implements iBackend {
     }
 
     public String getUserID() {
-        String id = auth.getUid();
-
-        return id;
+        return auth.getUid();
     }
 
     public Map<String, String> getUser() {

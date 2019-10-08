@@ -75,16 +75,6 @@ public class Repository {
         thread.start();
     }
 
-    public String getFireBaseID(String userID, String advertID) {
-        return BackendDataHandler.getInstance().getFireBaseID(userID, advertID);
-    }
-
-    public static void getAllAds(advertisementCallback advertisementCallback) {
-        // If there are adverts already stored, return those, else make a request. The stored
-        // adverts, if there are any, will be same as the ones stored on the database.
-        // TODO: make a setup so it does not have to do fetch every time (only if necessary)
-        fetchAllAdverts(advertisementCallback);
-    }
 
     private static Advertisement retrieveAdvert(Map<String, Object> dataMap) {
         String title = "" + (String) dataMap.get("title");

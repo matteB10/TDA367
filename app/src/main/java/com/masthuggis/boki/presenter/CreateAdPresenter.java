@@ -149,7 +149,6 @@ public class CreateAdPresenter {
     public void publishAdvert() {
         setAdvertDate();
         Repository.saveAdvert(view.getCurrentImageFile(), advertisement);
-
         advertisement = null;
     }
 

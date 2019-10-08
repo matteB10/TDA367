@@ -142,14 +142,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageViewDisplay.setImageBitmap(bitmap);
     }
 
-    public void imageFileChanged(File image) {
-        imageViewDisplay.setImageBitmap(BitmapFactory.decodeFile(image.getPath()));
-    }
 
     /**
      * Helper method to decode bitmap
-     *
-     * @return
      */
 
     private Bitmap compressBitmap() {
@@ -304,7 +299,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
         });
     }
-
 
     private void setPreDefTagsListeners() {
         for (Button btn : preDefTagButtons) {
