@@ -3,7 +3,6 @@ package com.masthuggis.boki.backend;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -11,15 +10,7 @@ import java.util.List;
  */
 public class AdFactory {
 
-
-    /*public static Advertisement createAd(Date datePublished, String uniqueOwnerID, String uniqueAdID, String title, String description, long price, Advert.Condition condition) {
-
-
-        return new Advert(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition);
-    }*/
-
-
-    public static Advertisement createAd(String datePublished, String uniqueOwnerID, String id, String title, String description, long price,
+     static Advertisement createAd(String datePublished, String uniqueOwnerID, String id, String title, String description, long price,
                                          Advert.Condition condition,String imageUrl, List<String> tags,String owner) {
 
         return new Advert(datePublished, uniqueOwnerID, id, title, description, price, condition, imageUrl, tags, owner);

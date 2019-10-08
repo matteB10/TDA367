@@ -1,5 +1,6 @@
 package com.masthuggis.boki.backend;
 
+import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
@@ -17,24 +18,19 @@ import java.util.Map;
  */
 public class Repository {
 
-    private Repository() {
+    private final iBackend backend;
+
+    Repository(iBackend backend) {
+        this.backend = backend;
     }
 
-    /**
-     * Creates a new empty Advertisement, used during creation of a new ad
-     *
-     * @return an empty Advertisement
-     */
-    public Advertisement createAdvert() {
-        return AdFactory.createAd();
-    }
 
     /**
      * @param advertisement gets saved into temporary list as well as in firebase
      */
 
     //TODO implement functionality for uploading the image of Advert to Firebase
-    public static void saveAdvert(File imageFile, Advertisement advertisement) {
+    public void saveAdvert(File imageFile, Advertisement advertisement) {
         DataModel.getInstance().addAdvertisement(advertisement);
         HashMap<String, Object> dataMap = new HashMap<>();
         dataMap.put("title", advertisement.getTitle());
@@ -45,8 +41,8 @@ public class Repository {
         dataMap.put("tags", advertisement.getTags());
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
-        dataMap.put("advertOwnerID",advertisement.getOwner());
-        BackendDataHandler.getInstance().writeAdvertToFirebase(imageFile,dataMap,null);
+        dataMap.put("advertOwnerID", advertisement.getOwner());
+        backend.writeAdvertToFirebase(imageFile, dataMap, null);
 
     }
 
@@ -56,7 +52,7 @@ public class Repository {
      */
     public void fetchAdvertsFromUserIDFirebase(String userID, advertisementCallback advertisementCallback) {
         List<Advertisement> userIDAdverts = new ArrayList<>();
-        BackendDataHandler.getInstance().readUserIDAdverts(advertDataList -> {
+        backend.readUserIDAdverts(advertDataList -> {
             for (Map<String, Object> dataMap : advertDataList) {
                 userIDAdverts.add(retrieveAdvertWithUserID(dataMap, userID));
             }
@@ -64,8 +60,8 @@ public class Repository {
         }, userID);
     }
 
-    public static void fetchAllAdverts(advertisementCallback advertisementCallback) {
-        Thread thread = new Thread(() -> BackendDataHandler.getInstance().readAllAdvertData(advertDataList -> {
+    public void fetchAllAdverts(advertisementCallback advertisementCallback) {
+        Thread thread = new Thread(() -> backend.readAllAdvertData(advertDataList -> {
             List<Advertisement> allAds = new ArrayList<>();
             for (Map<String, Object> dataMap : advertDataList) {
                 allAds.add(retrieveAdvert(dataMap));
@@ -77,17 +73,17 @@ public class Repository {
     }
 
     public String getFireBaseID(String userID, String advertID) {
-        return BackendDataHandler.getInstance().getFireBaseID(userID, advertID);
+        return backend.getFireBaseID(userID, advertID);
     }
 
-    public static void getAllAds(advertisementCallback advertisementCallback) {
+    public void getAllAds(advertisementCallback advertisementCallback) {
         // If there are adverts already stored, return those, else make a request. The stored
         // adverts, if there are any, will be same as the ones stored on the database.
         // TODO: make a setup so it does not have to do fetch every time (only if necessary)
         fetchAllAdverts(advertisementCallback);
     }
 
-    private static Advertisement retrieveAdvert(Map<String, Object> dataMap) {
+    private Advertisement retrieveAdvert(Map<String, Object> dataMap) {
         String title = "" + (String) dataMap.get("title");
         String description = (String) dataMap.get("description");
         long price = (long) dataMap.get("price");
@@ -117,6 +113,22 @@ public class Repository {
         return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, null, tags, owner);
     } //TODO den här kommer behöva en imageFile den här med
 
+    public void deleteAd(String uniqueID) {
+
+    }
+
+    public void editTitle(String adID, String newTitle) {
+    }
+
+    public void editPrice(String adID, String newPrice) {
+    }
+
+    public void editDescription(String adID, String newDescription) {
+    }
+
+    public void addObserverToBackend(DataModel dataModel) {
+        backend.addBackendObserver(dataModel);
+    }
 }
 
 

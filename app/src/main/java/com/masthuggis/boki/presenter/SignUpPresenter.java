@@ -1,11 +1,9 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.model.DataModel;
 
 public class SignUpPresenter {
 
-    private UserRepository repo = UserRepository.getInstance();
     private View view;
 
     public SignUpPresenter(View view) {

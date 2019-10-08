@@ -1,6 +1,6 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.stringCallback;
+import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;

@@ -1,7 +1,5 @@
 package com.masthuggis.boki.model;
 
-import com.masthuggis.boki.backend.UserRepository;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +14,7 @@ public class User implements iUser {
         this.email = email;
         this.displayname = displayname;
         this.userID = userID;
-      //  UserRepository.getInstance().getUserChats(userID, chatsList -> chats = chatsList);
-        UserRepository.getInstance().getUserChats(userID, chatsList -> {
+        DataModel.getInstance().fetchUserChats(userID, chatsList -> {
             chats = null;
             chats = new ArrayList<>(chatsList);
         });
