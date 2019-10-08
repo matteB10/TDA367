@@ -87,8 +87,7 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
                     startActivity(intent);
                     return true;
                 case R.id.navigation_messages:
-                    intent = new Intent(this, MessagesActivity.class);
-                    startActivity(intent);
+                    activeFragment = new ChatFragment();
                     break;
                 default:
                     activeFragment = new HomeFragment();
