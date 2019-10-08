@@ -295,7 +295,7 @@ public class BackendDataHandler implements iBackend {
         }
     }
 
-    public void userSignUp(String email, String password, SuccessCallback successCallback) {
+    public void userSignUp(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
         try {
             auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -303,8 +303,8 @@ public class BackendDataHandler implements iBackend {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 successCallback.onSuccess();
-
                             } else {
+                                failureCallback.onFailure(task.getException().getMessage());
                             }
                         }
                     });

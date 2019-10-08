@@ -232,8 +232,9 @@ public class DataModel implements BackendObserver {
         UserRepository.getInstance().signOut();
     }
 
-    public void signUp(String email, String password, SuccessCallback successCallback) {
-        UserRepository.getInstance().signUp(email, password, successCallback);
+    public void signUp(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback) {
+        UserRepository.getInstance().signUp(email, password, successCallback, failureCallback);
+        signInAfterRegistration(email, password, username);
     }
 
     @Override

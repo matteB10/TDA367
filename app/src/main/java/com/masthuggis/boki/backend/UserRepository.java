@@ -33,29 +33,13 @@ public class UserRepository {
     }
 
 
-    public void signUp(String email, String password, SuccessCallback successCallback) {
-        BackendDataHandler.getInstance().userSignUp(email, password, successCallback::onSuccess);
+    public void signUp(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
+        BackendDataHandler.getInstance().userSignUp(email, password, successCallback, failureCallback);
     }
 
     public void signInAfterRegistration(String email, String password, String username) {
-        BackendDataHandler.getInstance().userSignIn(email, password, new SuccessCallback() {
+        BackendDataHandler.getInstance().userSignIn(email, password, () -> setUsername(username, () -> logUserIn()), errorMessage -> {
 
-
-            @Override
-            public void onSuccess() {
-                setUsername(username, new SuccessCallback() {
-                    @Override
-                    public void onSuccess() {
-                        logUserIn();
-
-                    }
-                });
-            }
-        }, new FailureCallback() {
-            @Override
-            public void onFailure(@Nullable String errorMessage) {
-
-            }
         });
     }
 

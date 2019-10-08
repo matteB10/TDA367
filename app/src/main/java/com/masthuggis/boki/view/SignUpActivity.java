@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -57,6 +58,12 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
     public void showSignInScreen() {
         Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void showSignUpFailedMessage(String errorMessage) {
+        Toast toast = Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG);
+        toast.show();
     }
 
     @Override
