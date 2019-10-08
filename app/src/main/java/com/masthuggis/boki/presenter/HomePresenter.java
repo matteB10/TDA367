@@ -166,7 +166,6 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
     @Override
     public void onAdvertisementsUpdated() {
         adverts = DataModel.getInstance().getAllAds();
-
     }
 
 

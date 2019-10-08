@@ -116,6 +116,7 @@ public class DataModel implements BackendObserver {
             public void onCallback(List<Advertisement> advertisements) {
                 allAds = advertisements;
                 advertisementCallback.onCallback(allAds);
+                notifyAdvertisementObservers();
             }
         });
     }
