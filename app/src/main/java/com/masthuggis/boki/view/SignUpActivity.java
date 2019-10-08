@@ -44,24 +44,17 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
 
         Button btnSignUp = findViewById(R.id.signUpButton);
         btnSignUp.setOnClickListener(view -> presenter.onSignUpButtonPressed(getEmail(), getPassword(), getUsername()));
-
     }
 
-
-    //switch between screens
     @Override
     public void showSignInScreen() {
-        Intent intent = new Intent(SignUpActivity.this, SignInActivity.class);
+        Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void signedIn() {
-        finish();
-    }
-
-    public void showProfileScreen() {
-        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 }

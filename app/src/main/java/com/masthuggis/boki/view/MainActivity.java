@@ -14,17 +14,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.model.DataModel;
-
-import javax.net.ssl.SNIServerName;
+import com.masthuggis.boki.presenter.MainPresenter;
 
 /**
  * MainActivity is the primary view of the application. This is where the application will take you on launch.
  */
-public class MainActivity extends AppCompatActivity {
-    private Fragment homeFragment;
-    private Fragment favoritesFragment;
-    private Fragment profileFragment;
-    private Fragment messagesFragment;
+public class MainActivity extends AppCompatActivity implements MainPresenter.View {
+    private MainPresenter presenter;
     private Fragment activeFragment;
 
     @Override
@@ -33,16 +29,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         checkNavToast();
         setupBottomTabNavigator();
-
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
 
-        if (!DataModel.getInstance().isLoggedIn()) {
-            Log.d("DEBUG", "isLoggedIn FALSE");
-            Intent intent = new Intent(this, SignUpActivity.class);
-            startActivity(intent);
-        } else {
-            Log.d("DEBUG", "isLoggedIn TRUE");
-        }
+        this.presenter = new MainPresenter(this);
+    }
+
+    @Override
+    public void showLoginScreen() {
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
     }
 
     private void checkNavToast() {
@@ -57,18 +52,6 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
     }
-
-    private void addFragmentsToViewHierachy() {
-        FragmentManager fm = getSupportFragmentManager();
-        activeFragment = homeFragment;
-
-        // Adds all fragments to MainActivity container but hides all but homeFragment.
-        fm.beginTransaction().add(R.id.fragment_container, favoritesFragment).hide(favoritesFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, profileFragment).hide(profileFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, messagesFragment).hide(messagesFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, homeFragment).commit();
-    }
-
 
     /**
      * This is a method handling the navigation between fractals which are parts of the view of the mainActivity class.
@@ -115,9 +98,5 @@ public class MainActivity extends AppCompatActivity {
         return true;
     };
 
-    private void showFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().hide(activeFragment).show(fragment).commit();
-        activeFragment = fragment;
-    }
 }
 

@@ -17,7 +17,11 @@ public class SignUpPresenter {
     }
 
     public void onSignUpButtonPressed(String email, String password, String username) {
-        DataModel.getInstance().signUp(email,password, () -> view.signedIn());
+        DataModel.getInstance().signUp(email,password, this::onSignUpSuccess);
+    }
+
+    private void onSignUpSuccess() {
+        view.signedIn();
     }
 
     public interface View {

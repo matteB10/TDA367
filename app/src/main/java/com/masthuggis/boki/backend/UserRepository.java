@@ -34,8 +34,6 @@ public class UserRepository {
 
     public void signUp(String email, String password, SuccessCallback successCallback) {
         BackendDataHandler.getInstance().userSignUp(email, password, successCallback::onSuccess);
-
-
     }
 
     public void signInAfterRegistration(String email, String password, String username) {
