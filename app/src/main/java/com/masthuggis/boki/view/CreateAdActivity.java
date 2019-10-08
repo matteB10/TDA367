@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -49,7 +50,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     static final int REQUEST_IMAGE_CROP = 2;
     private List<Button> preDefTagButtons = new ArrayList<>();
     private List<Button> userDefTagButtons = new ArrayList<>();
-
     private CreateAdPresenter presenter;
     private File currentImageFile;
     private ImageView imageViewDisplay;
@@ -57,7 +57,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private EditText price;
     private EditText description;
     private Button publishAdButton;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +67,19 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         displayPreDefTagButtons();
         setListeners();
         updateDataFromModel();
+    }
+
+    //If image can be cropped or not depends on if the app is run on an emulator or not
+    //Can't start crop request on emulator for some unknown reason...
+    private boolean isEmulator() {
+        return Build.FINGERPRINT.startsWith("generic")
+                || Build.FINGERPRINT.startsWith("unknown")
+                || Build.MODEL.contains("google_sdk")
+                || Build.MODEL.contains("Emulator")
+                || Build.MODEL.contains("Android SDK built for x86")
+                || Build.MANUFACTURER.contains("Genymotion")
+                || (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
+                || "google_sdk".equals(Build.PRODUCT);
     }
 
     private void updateDataFromModel() {
@@ -112,12 +124,10 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             cropIntent.putExtra("crop", true);
             cropIntent.putExtra("aspectX", 1);
             cropIntent.putExtra("aspectY", 1);
-            cropIntent.putExtra("outputX",128);
-            cropIntent.putExtra("outputY",128);
+            cropIntent.putExtra("outputX", 220); //TODO set resolution and aspect ratio so image looks acceptable
+            cropIntent.putExtra("outputY", 300);
             cropIntent.putExtra("return-data", true);
             startActivityForResult(cropIntent, REQUEST_IMAGE_CROP);
-
-
         } catch (ActivityNotFoundException exception) {
             exception.printStackTrace();
         }
@@ -142,18 +152,34 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageViewDisplay = findViewById(R.id.addImageView);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            //Picture has been taken, needs to be cropped
-            Uri.Builder builder = new Uri.Builder();
-            builder.encodedPath(currentImageFile.getAbsolutePath());
-            Uri imageUri = builder.build(); //Build Uri
-            cropImage(imageUri);
-        }
-        else if(requestCode == REQUEST_IMAGE_CROP) {
+            if (isEmulator()) { //TODO maybe remove this when development is done
+                //Do stuff without cropping image since you can't crop on emulator
+                compressOnEmulator();
+            } else {
+                //Picture has been taken, needs to be cropped
+                Uri.Builder builder = new Uri.Builder();
+                builder.encodedPath(currentImageFile.getAbsolutePath());
+                Uri imageUri = builder.build(); //Build Uri
+                cropImage(imageUri);
+            }
+        } else if (requestCode == REQUEST_IMAGE_CROP) {
             if (data != null) {
                 Bundle extras = data.getExtras();
                 Bitmap croppedBitmap = extras.getParcelable("data");
                 setImageView(croppedBitmap);
             }
+        }
+    }
+
+    //Compresses images without trying to crop image with android OS
+    private void compressOnEmulator() {
+        Bitmap bitmap = compressBitmap();
+        setImageView(bitmap);
+        try {
+            OutputStream out = new FileOutputStream(currentImageFile.getPath());
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -166,17 +192,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
 
-    private void oldOnImageTaken() {
-        Bitmap bitmap = compressBitmap();
-        setImageView(bitmap);
-        try {
-            OutputStream out = new FileOutputStream(currentImageFile.getPath());
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Helper method to decode bitmap
      */
@@ -185,8 +200,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         BitmapFactory.Options imageOptions = new BitmapFactory.Options();
         imageOptions.inJustDecodeBounds = true;
         Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, 1080, 1920, false); //TODO is this even necessary?
-        return scaledBitmap;
+        return Bitmap.createScaledBitmap(bitmap, 1080, 1920, false); //TODO is this even necessary?
     }
 
     private void setListeners() {
