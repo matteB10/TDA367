@@ -34,7 +34,6 @@ import com.masthuggis.boki.utils.UniqueIdCreator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -128,7 +127,7 @@ public class BackendDataHandler implements iBackend {
                 });
     }
 
-    private void uploadImageToFirebase(File imageFile, String uniqueAdID) {
+    public void uploadImageToFirebase(File imageFile, String uniqueAdID) {
         isWritingImageToDatabase = true;
         try {
             InputStream uploadStream = new FileInputStream(imageFile);

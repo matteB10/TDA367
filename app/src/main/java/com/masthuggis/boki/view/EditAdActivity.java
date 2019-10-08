@@ -1,7 +1,10 @@
 package com.masthuggis.boki.view;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.Button;
@@ -10,19 +13,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.EditAdPresenter;
+import com.masthuggis.boki.utils.UniqueIdCreator;
+
+import java.io.File;
+import java.io.IOException;
+
+import static com.masthuggis.boki.view.CreateAdActivity.REQUEST_IMAGE_CAPTURE;
 
 public class EditAdActivity extends AppCompatActivity implements EditAdPresenter.View {
 
     private EditAdPresenter presenter;
-    private Button removeBtn;
     private Button saveBtn;
     private EditText title;
     private EditText price;
     private EditText description;
+    private File currentImageFile;
 
 
 
@@ -47,12 +57,12 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
     }
 
     //set listeners-------------------------------------------------------------
-
     private void setListeners() {
         setTitleListener();
         setPriceListener();
         setDescriptionListener();
         setSaveAdListener();
+        setNewImageListener();
     }
 
     private void setTitleListener() {
@@ -111,6 +121,37 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         });
     }
 
+    private void setNewImageListener(){
+        ImageView image = findViewById(R.id.bookImageView);
+        image.setOnClickListener(view -> dispatchTakePictureIntent());
+    }
+
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            try {
+                currentImageFile = createImageFile();
+            } catch (Exception i) {
+                System.out.println("error creating file");
+            }
+            if (currentImageFile != null) {
+                Uri imageURI = FileProvider.getUriForFile(this,
+                        "com.masthuggis.boki.fileprovider", currentImageFile);
+                System.out.println(imageURI);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        String photoFileName = "IMG_" + UniqueIdCreator.getUniqueID();
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(photoFileName, ".jpg", storageDir);
+        return image;
+    }
+
     private void setSaveAdListener(){
         saveBtn = findViewById(R.id.saveAdBtn);
         saveBtn.setOnClickListener(view -> {
@@ -127,7 +168,7 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
     @Override
     public void setTitle(String name) {
         TextView title = findViewById(R.id.titleEditText);
-        title.setText(name);
+        title.setText("" + name);
     }
 
     @Override

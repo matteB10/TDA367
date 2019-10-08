@@ -49,6 +49,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         Button changeAd = findViewById(R.id.changeAdButton);
         changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
 
+        setBtnForOwner();
     }
 
 

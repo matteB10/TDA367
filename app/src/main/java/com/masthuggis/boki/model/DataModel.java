@@ -9,6 +9,7 @@ import com.masthuggis.boki.backend.advertisementCallback;
 import com.masthuggis.boki.backend.messagesCallback;
 import com.masthuggis.boki.backend.stringCallback;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -213,6 +214,10 @@ public class DataModel implements BackendObserver {
 
     public void updateDescription(String adID, String newDescription){
         BackendDataHandler.getInstance().editDescription(adID, newDescription);
+    }
+
+    public void updateImage(File imageFile, String adID){
+        BackendDataHandler.getInstance().uploadImageToFirebase(imageFile, adID);
     }
 
    /* public void setUsername(String username) {
