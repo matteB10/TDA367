@@ -135,9 +135,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * Creates an empty file and specifies unique file name.
-     *
-     * @return
-     * @throws IOException
+     * @throws IOException if image creation fails
      */
     private File createImageFile() throws IOException {
         String photoFileName = "IMG_" + UniqueIdCreator.getUniqueID();
@@ -151,12 +149,12 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         super.onActivityResult(requestCode, resultCode, data);
         imageViewDisplay = findViewById(R.id.addImageView);
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { //When image has been taken
             if (isEmulator()) { //TODO maybe remove this when development is done
                 //Do stuff without cropping image since you can't crop on emulator
                 compressOnEmulator();
             } else {
-                //Picture has been taken, needs to be cropped
+                //Picture has been taken, needs to be cropped, not on emulator
                 Uri.Builder builder = new Uri.Builder();
                 builder.encodedPath(currentImageFile.getAbsolutePath());
                 Uri imageUri = builder.build(); //Build Uri
@@ -165,7 +163,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         } else if (requestCode == REQUEST_IMAGE_CROP) {
             if (data != null) {
                 Bundle extras = data.getExtras();
-                Bitmap croppedBitmap = extras.getParcelable("data");
+                Bitmap croppedBitmap = extras.getParcelable("data"); //Crops image to given resolution and aspect-ratio
                 setImageView(croppedBitmap);
             }
         }
@@ -177,7 +175,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setImageView(bitmap);
         try {
             OutputStream out = new FileOutputStream(currentImageFile.getPath());
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -192,15 +190,12 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
 
-    /**
-     * Helper method to decode bitmap
-     */
-
+    //Compresses image, sets resolution, should probably only be used when running app on emulator
     private Bitmap compressBitmap() {
         BitmapFactory.Options imageOptions = new BitmapFactory.Options();
         imageOptions.inJustDecodeBounds = true;
         Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
-        return Bitmap.createScaledBitmap(bitmap, 1080, 1920, false); //TODO is this even necessary?
+        return Bitmap.createScaledBitmap(bitmap, 800, 800, false); //TODO is this even necessary?
     }
 
     private void setListeners() {
