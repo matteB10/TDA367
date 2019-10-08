@@ -188,15 +188,8 @@ public class DataModel implements BackendObserver {
     public void createNewChat(Advertisement advertisement, stringCallback stringCallback) {
 
         HashMap<String, Object> newChatMap = new HashMap<>();
-        //newChatMap.put("advertisement", advertisement);
-        newChatMap.put("sender", this.getUserID());
-/*
-        newChatMap.put("receiver", uniqueReceiverID);
         newChatMap.put("sender", this.getUserID());
 
-        newChatMap.put("receiverUsername", advertisement.getOwner());
-        newChatMap.put("imgURL", imgURL);
-        newChatMap.put("advertID", advertID);*/
         userRepository.createNewChat(newChatMap, advertisement, stringCallback);
     }
 

@@ -7,29 +7,33 @@ import com.masthuggis.boki.view.MessagesRecyclerViewAdapter;
 
 import java.util.List;
 
+/**
+ * ChatPresenter is the presenter class for the view called ChatFragment.
+ */
+
 public class ChatPresenter implements ChatObserver {
 
     private List<iChat> chats;
     private View view;
+    private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
+    private static final long MIN_THUMBNAIL_CLICK_TIME_INTERVAL = 300;
 
     public ChatPresenter(View view) {
         this.view = view;
         this.view.showLoadingScreen();
-        if (DataModel.getInstance().isLoggedIn()) {
-            chats = DataModel.getInstance().getUserChats();
-            view.isLoggedIn(this);
-
-        }
+        chats = DataModel.getInstance().getUserChats();
+        view.showUserChats(this);
         this.view.hideLoadingScreen();
-
-
         DataModel.getInstance().addChatObserver(this);
-        // UserRepository.getInstance().getUserChats(DataModel.getInstance().getUserID(), chatList -> chats = chatList);
 
     }
 
+    /**
+     * Depending on which position of the recyclerview is pressed, different messagesScreens are displayed.
+     */
+
     public void onRowPressed(String chatID) {
-        view.showDetailsScreen(chatID);
+        view.showMessagesScreen(chatID);
     }
 
     public void bindViewHolderAtPosition(int position, MessagesRecyclerViewAdapter.
@@ -46,6 +50,10 @@ public class ChatPresenter implements ChatObserver {
 
     }
 
+    /**
+     * Used by the recyclerview to decide how many items to display in the view.
+     */
+
     public int getItemCount() {
         if (chats != null) {
             return chats.size();
@@ -53,7 +61,9 @@ public class ChatPresenter implements ChatObserver {
         return 0;
     }
 
-
+    /**
+     * Updates chat view when the model is updated.
+     */
     @Override
     public void onChatUpdated() {
         this.chats = DataModel.getInstance().getUserChats();
@@ -64,6 +74,16 @@ public class ChatPresenter implements ChatObserver {
         DataModel.getInstance().removeChatObserver(this);
     }
 
+    public boolean canProceedWithTapAction() {
+        boolean canProceed = tapActionWasNotTooFast();
+        lastTimeThumbnailWasClicked = System.currentTimeMillis();
+        return canProceed;
+    }
+    private boolean tapActionWasNotTooFast() {
+        long elapsedTimeSinceLastClick = System.currentTimeMillis() - lastTimeThumbnailWasClicked;
+        return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
+    }
+
 
     public interface View {
         void showLoadingScreen();
@@ -72,8 +92,8 @@ public class ChatPresenter implements ChatObserver {
 
         void hideLoadingScreen();
 
-        void showDetailsScreen(String chatID);
+        void showMessagesScreen(String chatID);
 
-        void isLoggedIn(ChatPresenter chatPresenter);
+        void showUserChats(ChatPresenter chatPresenter);
     }
 }

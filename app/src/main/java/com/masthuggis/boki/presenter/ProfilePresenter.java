@@ -1,6 +1,5 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.StylingHelper;
@@ -14,16 +13,10 @@ public class ProfilePresenter implements IProductsPresenter {
     private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
     private static final long MIN_CLICK_TIME_INTERVAL = 300;
 
-    private UserRepository userRepo;
 
     public ProfilePresenter(View view) {
         this.view = view;
         this.view.showLoadingScreen();
-        /*
-        if(DataModel.getInstance().isLoggedIn()){
-            this.adverts = DataModel.getInstance().getAdsFromUniqueOwnerID(DataModel.getInstance().getUserID());
-        }
-         */
         this.view.hideLoadingScreen();
 
     }

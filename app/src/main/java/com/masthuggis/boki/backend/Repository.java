@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Class providing the functionality to convert data from backend into Book-objects to be used
+ * Class providing the functionality to convert data from backend into objects to be used
  * by the domain-layer of the application.
- * Data is fetched using the BackendDataHandler class.
+ * Data is fetched through the iBackend interface.
  */
 public class Repository {
 
@@ -29,7 +29,6 @@ public class Repository {
      * @param advertisement gets saved into temporary list as well as in firebase
      */
 
-    //TODO implement functionality for uploading the image of Advert to Firebase
     public void saveAdvert(File imageFile, Advertisement advertisement) {
         DataModel.getInstance().addAdvertisement(advertisement);
         HashMap<String, Object> dataMap = new HashMap<>();
@@ -111,7 +110,7 @@ public class Repository {
         String datePublished = (String) dataMap.get("date");
         String owner = (String) dataMap.get("advertOwnerID");
         return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, null, tags, owner);
-    } //TODO den här kommer behöva en imageFile den här med
+    }
 
     public void deleteAd(String uniqueID) {
 

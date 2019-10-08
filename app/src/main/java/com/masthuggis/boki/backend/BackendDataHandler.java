@@ -212,7 +212,6 @@ public class BackendDataHandler implements iBackend {
                 Log.w(TAG, "Listen failed.", e);
                 return;
             }
-            //TODO ADD IMG URI TO CREATION OF CHATS.
             if (queryDocumentSnapshots.size() <= 0 || queryDocumentSnapshots == null) {
                 return;
             }
@@ -240,7 +239,6 @@ public class BackendDataHandler implements iBackend {
                     Log.d(TAG, "DocumentSnapshot successfully written!");
                     newChatMap.put("receiverUsername", DataModel.getInstance().getUserDisplayName());
 
-                    //TODO REVERSE SENDER AND RECEIVER
                     newChatMap.put("receiver", sender);
                     newChatMap.put("sender", receiver);
 

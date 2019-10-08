@@ -17,6 +17,11 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.ChatPresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
+/**
+ * Fragment for displaying active chats of the current user.
+ *
+ */
+
 public class ChatFragment extends Fragment implements ChatPresenter.View {
     private ChatPresenter presenter;
     private View view;
@@ -45,6 +50,9 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
     }
 
 
+    /**
+     * Instantiates the recyclerview which displays the chat_listitems.
+     */
     private void setupList(ChatPresenter chatPresenter) {
         RecyclerView recyclerView = view.findViewById(R.id.messages_recyclerview);
         adapter = new MessagesRecyclerViewAdapter(chatPresenter);
@@ -58,6 +66,9 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
 
     }
 
+    /**
+     * Displays a loadingscreen in form of a progressbar if needed.
+     */
     @Override
     public void showLoadingScreen() {
         ProgressBar progressBar = view.findViewById(R.id.loadingProgressBar);
@@ -65,12 +76,19 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
 
     }
 
+    /**
+     * Displays chats in the form of list items when desired.
+     *
+     */
     @Override
     public void showThumbnails(ChatPresenter chatPresenter) {
         setupList(chatPresenter);
 
     }
 
+    /**
+     * Hides loadingscreen.
+     */
     @Override
     public void hideLoadingScreen() {
         ProgressBar progressBar = view.findViewById(R.id.loadingProgressBar);
@@ -78,16 +96,26 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
 
     }
 
+    /**
+     * Displays the messages screen of the chosen chat.
+     *
+     */
+
     @Override
-    public void showDetailsScreen(String chatID) {
+    public void showMessagesScreen(String chatID) {
         Intent intent = new Intent(getContext(), MessagesActivity.class);
         intent.putExtra("chatID",chatID);
         startActivity(intent);
 
     }
 
+    /**
+     * Displays the chats of the current user.
+     *
+     */
+
     @Override
-    public void isLoggedIn(ChatPresenter chatPresenter) {
+    public void showUserChats(ChatPresenter chatPresenter) {
         showLoadingScreen();
         showThumbnails(chatPresenter);
         hideLoadingScreen();

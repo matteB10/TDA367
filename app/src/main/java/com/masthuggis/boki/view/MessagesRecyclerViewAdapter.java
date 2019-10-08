@@ -14,10 +14,12 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.ChatPresenter;
 
 public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRecyclerViewAdapter.ViewHolder> {
-
+    /**
+     * MessagesRecyclerViewAdapter is the adapter class of the recycler view used in MessagesFragment.
+     */
     private ChatPresenter presenter;
 
-    public MessagesRecyclerViewAdapter(ChatPresenter chatPresenter) {
+    MessagesRecyclerViewAdapter(ChatPresenter chatPresenter) {
         this.presenter = chatPresenter;
     }
 
@@ -29,6 +31,9 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
                 .getContext()).inflate(R.layout.messages_listitem, parent, false));
     }
 
+    /**
+     * Binds a messages_listitme to a specific position based on its position in a list.
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
@@ -36,9 +41,15 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
 
     }
 
+    /**
+     * Used to know how many items it's supposed to display in the view.
+     *
+     * @return
+     */
+
     @Override
     public int getItemCount() {
-        if(presenter==null){
+        if (presenter == null) {
             return 0;
         }
         return presenter.getItemCount();
@@ -51,7 +62,7 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
         private ImageView messageImageView;
         private String chatID;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             userTextView = itemView.findViewById(R.id.message_user);
             dateTextView = itemView.findViewById(R.id.message_time);
@@ -62,9 +73,19 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
         }
 
         private void setupOnPressActionFor(View v) {
-            v.setOnClickListener(view -> presenter.onRowPressed(chatID));
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onItemClicked();
+                }
+            });
         }
 
+        private void onItemClicked() {
+            if (presenter.canProceedWithTapAction()) {
+                presenter.onRowPressed(chatID);
+            }
+        }
         public void setUserTextView(String userTextView) {
             this.userTextView.setText(userTextView);
         }

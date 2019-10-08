@@ -11,9 +11,9 @@ import java.util.List;
 
 /**
  * DetailsPresenter is the presenter class for the view called DetailsActivity.
- *
+ * <p>
  * Validates input from the user to
- *
+ * <p>
  * It is the layer between the view and model and should therefore
  */
 
@@ -52,7 +52,7 @@ public class DetailsPresenter {
         view.setCondition(text, drawable);
     }
 
-    public void createNewChat() {
+    private void createNewChat() {
 
         if (advertisement.getUniqueOwnerID().equals(DataModel.getInstance().getUserID())) {
             view.showToast();
@@ -67,10 +67,9 @@ public class DetailsPresenter {
         });
     }
 
-    //TODO KANSKE ÄNDRA DETTA SÅ ATT DET GÖRS I SAMMA METOD?
 
 
-    public void openChat(String chatID) {
+    private void openChat(String chatID) {
         view.openChat(chatID);
     }
 
@@ -99,8 +98,8 @@ public class DetailsPresenter {
                 }
 
             }
-            createNewChat();
         } else {
+            createNewChat();
             view.setOwnerButtonText("Starta chatt");
         }
     }

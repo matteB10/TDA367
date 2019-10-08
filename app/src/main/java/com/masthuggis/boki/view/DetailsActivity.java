@@ -27,6 +27,9 @@ import java.util.List;
 public class DetailsActivity extends AppCompatActivity implements DetailsPresenter.View {
     private DetailsPresenter presenter;
     private Button contactOwnerButton;
+    private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
+    private static final long MIN_THUMBNAIL_CLICK_TIME_INTERVAL = 300;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,10 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
         contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
-            presenter.contactOwnerButtonClicked(contactOwnerButton.getText().toString());
+            if(canProceedWithTapAction()){
+                presenter.contactOwnerButtonClicked(contactOwnerButton.getText().toString());
+            }
+
 
         });
 
@@ -185,6 +191,16 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     public void setOwnerButtonText(String content) {
         contactOwnerButton.setText(content);
 
+    }
+
+    public boolean canProceedWithTapAction() {
+        boolean canProceed = tapActionWasNotTooFast();
+        lastTimeThumbnailWasClicked = System.currentTimeMillis();
+        return canProceed;
+    }
+    private boolean tapActionWasNotTooFast() {
+        long elapsedTimeSinceLastClick = System.currentTimeMillis() - lastTimeThumbnailWasClicked;
+        return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
     }
 
 }
