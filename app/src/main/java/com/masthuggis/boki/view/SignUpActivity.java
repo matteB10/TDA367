@@ -46,6 +46,15 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
         btnSignUp.setOnClickListener(view -> presenter.onSignUpButtonPressed(getEmail(), getPassword(), getUsername()));
     }
 
+    /**
+     * Exists the app if the user presses back button. Makes it impossible to enter the app without
+     * signing up or logging in.
+     */
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
     @Override
     public void showSignInScreen() {
         Intent intent = new Intent(this, SignInActivity.class);

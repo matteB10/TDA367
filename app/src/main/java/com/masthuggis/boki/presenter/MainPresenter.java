@@ -10,12 +10,15 @@ public class MainPresenter {
         this.view = view;
         this.dataModel = DataModel.getInstance();
 
-        if (!dataModel.isLoggedIn()) {
+        if (dataModel.isLoggedIn()) {
+            view.showMainScreen();
+        } else {
             view.showSignUpScreen();
         }
     }
 
     public interface View {
         void showSignUpScreen();
+        void showMainScreen();
     }
 }

@@ -25,10 +25,6 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        checkNavToast();
-        setupBottomTabNavigator();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
-
         this.presenter = new MainPresenter(this);
     }
 
@@ -36,6 +32,13 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
     public void showSignUpScreen() {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void showMainScreen() {
+        checkNavToast();
+        setupBottomTabNavigator();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
     }
 
     private void checkNavToast() {

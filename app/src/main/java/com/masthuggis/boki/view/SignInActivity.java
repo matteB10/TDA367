@@ -44,7 +44,15 @@ public class SignInActivity extends AppCompatActivity implements SignInPresenter
         btnSignUp.setOnClickListener(view -> presenter.onSignUpButtonPressed());
     }
 
-
+    /**
+     * Navigate to sign up page when back button is pressed. Used to make it impossible for the user
+     * to enter the app without signing in.
+     */
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
+    }
 
     @Override
     public void showSignUpScreen() {
