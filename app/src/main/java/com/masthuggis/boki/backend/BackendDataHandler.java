@@ -64,6 +64,7 @@ public class BackendDataHandler implements iBackend {
 
     private boolean isWritingImageToDatabase = false;
     private boolean isWritingAdvertToDatabase = false;
+    private int advertDataListCount = 0;
 
 
     private BackendDataHandler() {
@@ -167,23 +168,12 @@ public class BackendDataHandler implements iBackend {
 
     //Fetch data for all adverts from all users
     //might want to run this on separate thread created by caller
-    void readAllAdvertData(DBCallback DBCallback) {
-        List<Map<String, Object>> advertDataList = new ArrayList<>();
+    void readAllAdvertData(DBCallback dbCallback) {
         db.collectionGroup("adverts").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
-                for (DocumentSnapshot snapshot : adverts) {
-                    Map<String, Object> toBeAdded = snapshot.getData();
-                    getFirebaseURL((String) toBeAdded.get("uniqueAdID"), new UrlCallback() {
-                        @Override
-                        public void onCallback(String url) {
-                            toBeAdded.put("imgUrl", url);
-                            advertDataList.add(toBeAdded);
-                            DBCallback.onCallBack(advertDataList);
-                        }
-                    });
-                }
+                updateAdvertsDataListWithImgUrl(adverts, advertDataList -> dbCallback.onCallBack(advertDataList));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -194,6 +184,24 @@ public class BackendDataHandler implements iBackend {
         });
     }
 
+    private void updateAdvertsDataListWithImgUrl(List<DocumentSnapshot> adverts, DBCallback dbCallback) {
+        List<Map<String, Object>> advertDataList = new ArrayList<>();
+        for (DocumentSnapshot snapshot : adverts) {
+            Map<String, Object> toBeAdded = snapshot.getData();
+            getFirebaseURL((String) toBeAdded.get("uniqueAdID"), new UrlCallback() {
+                @Override
+                public void onCallback(String url) {
+                    toBeAdded.put("imgUrl", url);
+                    advertDataList.add(toBeAdded);
+                    advertDataListCount += 1;
+                    if (advertDataListCount == adverts.size()) {
+                        advertDataListCount = 0;
+                        dbCallback.onCallBack(advertDataList);
+                    }
+                }
+            });
+        }
+    }
 
     public void getFirebaseURL(String uniqueID, UrlCallback urlCallback) {
         imagesRef.child(uniqueID).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {

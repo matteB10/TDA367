@@ -73,7 +73,6 @@ public class Repository {
             advertisementCallback.onCallback(allAds);
         }));
         thread.start();
-
     }
 
     public String getFireBaseID(String userID, String advertID) {

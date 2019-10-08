@@ -24,6 +24,7 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
     private List<Advertisement> adverts;
     private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
     private static final long MIN_THUMBNAIL_CLICK_TIME_INTERVAL = 300;
+    private int selectedSortOption = 0;
 
     public HomePresenter(View view) {
         this.view = view;
@@ -54,14 +55,14 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
     }
 
     private void updateData(List<Advertisement> adverts) {
+        if (adverts == null) {
+            return;
+        }
+
         this.adverts = new ArrayList<>(adverts);
-        sortUsingTheStandardSortingOption(); // TODO: sort using the selected value instead
+        sort(selectedSortOption);
         this.view.hideLoadingScreen();
         this.view.updateThumbnails();
-    }
-
-    private void sortUsingTheStandardSortingOption() {
-        sortOptionSelected(0);
     }
 
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
@@ -119,16 +120,16 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
     }
 
     public void sortOptionSelected(int pos) {
+        selectedSortOption = pos;
+        updateData(adverts);
+    }
+
+    private void sort(int pos) {
         if (adverts == null || adverts.size() == 0) {
             return;
         }
 
-        List<Advertisement> sortedList = sortManager.sort(pos, adverts);
-        if (sortedList == null)
-            return;
-
-        adverts = new ArrayList<>(sortedList);
-        view.updateThumbnails();
+        adverts = sortManager.sort(pos, adverts);
     }
 
     //Should probably run on its own thread
@@ -156,18 +157,10 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
         thread.start();
     }
 
-  /*  @Override
-    public void advertsInMarketUpdate(List<Advertisement> advertsInMarket) {
-        if (advertsInMarket != null && !advertsInMarket.isEmpty()) {
-            updateData(advertsInMarket);
-        }
-    }*/
-
     @Override
     public void onAdvertisementsUpdated() {
-        adverts = DataModel.getInstance().getAllAds();
+        updateData(DataModel.getInstance().getAllAds());
     }
-
 
     public interface View {
         void showLoadingScreen();

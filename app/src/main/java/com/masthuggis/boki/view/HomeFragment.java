@@ -144,8 +144,9 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
     public void updateThumbnails() {
         if (recyclerViewAdapter == null) {
             setupList();
+        } else {
+            recyclerViewAdapter.notifyDataSetChanged();
         }
-        recyclerViewAdapter.notifyDataSetChanged();
     }
 
     /**
