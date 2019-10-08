@@ -3,16 +3,17 @@ package com.masthuggis.boki.model;
 import com.masthuggis.boki.backend.BackendDataHandler;
 import com.masthuggis.boki.backend.FailureCallback;
 import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.backend.SuccessCallback;
 import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.backend.advertisementCallback;
+import com.masthuggis.boki.backend.messagesCallback;
+import com.masthuggis.boki.backend.stringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class DataModel {
+public class DataModel implements BackendObserver {
 
 
     private static DataModel instance;
@@ -20,8 +21,13 @@ public class DataModel {
     private List<Advertisement> allAds = new ArrayList<>();
     private List<Advertisement> currentUserAds = new ArrayList<>();
 
+    private final List<ChatObserver> chatObservers = new ArrayList<>();
+    private final List<AdvertisementObserver> advertisementObservers = new ArrayList<>();
+    private final List<MessagesObserver> messagesObservers = new ArrayList<>();
+
 
     private DataModel() {
+        BackendDataHandler.getInstance().addBackendObserver(this);
     }
 
     public static DataModel getInstance() {
@@ -30,15 +36,53 @@ public class DataModel {
         }
         return instance;
     }
-    public void addRepositoryObserver(RepositoryObserver observer) {
-        Repository.addRepositoryObserver(observer);
-    }
-    public  void signUp(String email, String password, SuccessCallback successCallback) {
-        UserRepository.getInstance().signUp(email,password,successCallback);
+
+    public void addChatObserver(ChatObserver chatObserver) {
+        this.chatObservers.add(chatObserver);
     }
 
-    public  void SignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
-        UserRepository.getInstance().signIn(email,password,successCallback,failureCallback);
+    public void addMessagesObserver(MessagesObserver messagesObserver) {
+        this.messagesObservers.add(messagesObserver);
+    }
+
+    public void addAdvertisementObserver(AdvertisementObserver advertisementObserver) {
+        this.advertisementObservers.add(advertisementObserver);
+    }
+
+    public void removeChatObserver(ChatObserver chatObserver) {
+        this.chatObservers.remove(chatObserver);
+    }
+
+    public void removeMessagesObserver(MessagesObserver messagesObserver) {
+        this.messagesObservers.remove(messagesObserver);
+    }
+
+    public void removeAdvertisementObserver(AdvertisementObserver advertisementObserver) {
+        this.advertisementObservers.remove(advertisementObserver);
+    }
+
+
+    private void notifyChatObservers() {
+        for (ChatObserver chatObserver : chatObservers) {
+            chatObserver.onChatUpdated();
+        }
+    }
+
+    private void notifyMessagesObserver() {
+        for (MessagesObserver messagesObserver : messagesObservers) {
+            messagesObserver.onMessagesChanged();
+        }
+    }
+
+    private void notifyAdvertisementObservers() {
+        for (AdvertisementObserver advertisementObserver : advertisementObservers) {
+            advertisementObserver.onAdvertisementsUpdated();
+        }
+    }
+
+
+    public void SignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
+        UserRepository.getInstance().signIn(email, password, successCallback, failureCallback);
     }
 
     public void addAdvertisement(Advertisement ad) {
@@ -79,12 +123,16 @@ public class DataModel {
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
 
-        Repository.fetchAllAdverts(advertisementCallback);
-        updateAllAds();
+        Repository.fetchAllAdverts(new advertisementCallback() {
+            @Override
+            public void onCallback(List<Advertisement> advertisements) {
+                allAds = advertisements;
+                advertisementCallback.onCallback(allAds);
+            }
+        });
     }
 
     public List<Advertisement> getAllAds() {
-        Repository.updateAdverts();
         return new ArrayList<>(allAds);
     }
 
@@ -119,13 +167,19 @@ public class DataModel {
     }
 
 
-    public void createNewChat(String uniqueReceiverID,String owner) {
+    public void createNewChat(Advertisement advertisement, stringCallback stringCallback) {
 
         HashMap<String, Object> newChatMap = new HashMap<>();
+        //newChatMap.put("advertisement", advertisement);
+        newChatMap.put("sender", this.getUserID());
+/*
         newChatMap.put("receiver", uniqueReceiverID);
         newChatMap.put("sender", this.getUserID());
-        newChatMap.put("receiverUsername",owner);
-        UserRepository.getInstance().createNewChat(newChatMap);
+
+        newChatMap.put("receiverUsername", advertisement.getOwner());
+        newChatMap.put("imgURL", imgURL);
+        newChatMap.put("advertID", advertID);*/
+        UserRepository.getInstance().createNewChat(newChatMap,advertisement, stringCallback);
     }
 
     public void sendMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
@@ -134,9 +188,11 @@ public class DataModel {
 
     public iChat findChatByID(String ID) {
         List<iChat> chats = user.getChats();
-        for (iChat chat : chats) {
-            if (chat.getChatID().equals(ID)) {
-                return chat;
+        if (!(chats == null)) {
+            for (iChat chat : chats) {
+                if (chat.getChatID().equals(ID)) {
+                    return chat;
+                }
             }
         }
         return null;
@@ -146,18 +202,60 @@ public class DataModel {
         BackendDataHandler.getInstance().deleteAd(uniqueID);
     }
 
-    public void updateTitle(String uniqueID){
-        BackendDataHandler.getInstance().editTitle(uniqueID, "title");
+    public void updateTitle(String adID, String newTitle){
+        BackendDataHandler.getInstance().editTitle(adID, newTitle);
+    }
+    public void updatePrice(String adID, String newPrice ){
+        BackendDataHandler.getInstance().editPrice(adID,newPrice);
     }
 
-    public void setUsername(String username) {
-        UserRepository.getInstance().setUsername(username);
+    public void updateDescription(String adID, String newDescription){
+        BackendDataHandler.getInstance().editDescription(adID, newDescription);
     }
-    public void signInAfterRegistration(String email, String password, String username){
-        UserRepository.getInstance().signInAfterRegistration(email,password,username);
+
+   /* public void setUsername(String username) {
+        UserRepository.getInstance().setUsername(username);
+    }*/
+
+    public void signInAfterRegistration(String email, String password, String username) {
+        UserRepository.getInstance().signInAfterRegistration(email, password, username);
     }
 
     public void signOut() {
         UserRepository.getInstance().signOut();
     }
+
+    public void signUp(String email, String password, SuccessCallback successCallback) {
+        UserRepository.getInstance().signUp(email, password, successCallback);
+    }
+
+    @Override
+    public void onMessagesChanged() {
+        notifyMessagesObserver();
+
+    }
+
+    @Override
+    public void onAdvertisementsChanged() {
+        notifyAdvertisementObservers();
+
+    }
+
+    @Override
+    public void onChatsChanged() {
+        notifyChatObservers();
+
+    }
+
+    public void getMessages(String uniqueChatID, Chat chat, messagesCallback messagesCallback) {
+        UserRepository.getInstance().getMessages(uniqueChatID, chat, new messagesCallback() {
+            @Override
+            public void onCallback(List<iMessage> messagesList) {
+                messagesCallback.onCallback(messagesList);
+                notifyMessagesObserver();
+            }
+        });
+    }
+
+
 }

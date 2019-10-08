@@ -5,7 +5,7 @@ import com.masthuggis.boki.model.iMessage;
 
 public class MessageFactory {
 
-    public static iMessage createMessage(String message, String timeSent,String senderID){
+    public static iMessage createMessage(String message, long timeSent,String senderID){
         return new Message(message,timeSent,senderID);
     }
 }

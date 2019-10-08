@@ -1,13 +1,11 @@
 package com.masthuggis.boki.model;
 
-import java.util.Date;
-
 public class Message implements iMessage {
     private String message;
-    private String timeSent;
+    private long timeSent;
     private String senderID;
 
-    public Message(String message, String timeSent, String senderID) {
+    public Message(String message, long timeSent, String senderID) {
         this.message= message;
         this.timeSent=timeSent;
         this.senderID=senderID;
@@ -23,7 +21,7 @@ public class Message implements iMessage {
     }
 
     @Override
-    public String getTimeSent() {
+    public long getTimeSent() {
         return this.timeSent;
     }
 

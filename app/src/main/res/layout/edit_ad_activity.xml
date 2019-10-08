@@ -98,27 +98,13 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view5">
 
-                    <TextView
-                        android:id="@+id/titelTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/addAdvertTitle" />
-
-                    <Button
-                        android:id="@+id/editTitleBtn"
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:text="ändra Titel" />
-
                     <EditText
                         android:id="@+id/titleEditText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:hint="@string/titleHint"
-                        android:visibility="gone"
+                        android:hint="@string/hintNewTitle"
                         android:inputType="textPersonName" />
                 </LinearLayout>
 
@@ -137,27 +123,13 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/titleLayout">
 
-                    <TextView
-                        android:id="@+id/priceTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/addAdvertPrice" />
-
-                    <Button
-                        android:id="@+id/editPriceBtn"
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:text="ändra Pris" />
-
                     <EditText
                         android:id="@+id/priceEditText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:visibility="gone"
-                        android:hint="@string/priceHint"
+                        android:hint="@string/hintnewPrice"
                         android:inputType="textPersonName" />
 
                 </LinearLayout>
@@ -178,27 +150,14 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/priceLayout">
 
-                    <TextView
-                        android:id="@+id/descriptionTextView"
-                        android:layout_width="34dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/addAdvertOtherInfo" />
-
-                    <Button
-                        android:id="@+id/editDescriptionBtn"
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:text="ändra Beskrivning" />
-
                     <EditText
                         android:id="@+id/descriptionEditText"
-                        android:imeOptions="actionDone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:visibility="gone"
+                        android:hint="ange ny beskrivning"
+                        android:imeOptions="actionDone"
                         android:inputType="textPersonName" />
 
                 </LinearLayout>
@@ -386,7 +345,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/tagsEditText" />
 
                 <Button
-                    android:id="@+id/saveBtn"
+                    android:id="@+id/saveAdBtn"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

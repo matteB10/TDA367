@@ -7,7 +7,7 @@
     android:background="#ffffff"
 
     android:orientation="vertical"
-    tools:context="com.masthuggis.boki.view.ChatActivity">
+    tools:context="com.masthuggis.boki.view.MessagesActivity">
 
     <ScrollView
         android:layout_width="match_parent"

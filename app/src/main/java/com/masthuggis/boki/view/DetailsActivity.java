@@ -1,5 +1,6 @@
 package com.masthuggis.boki.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,13 +9,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.presenter.DetailsPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 
@@ -25,6 +26,7 @@ import java.util.List;
  */
 public class DetailsActivity extends AppCompatActivity implements DetailsPresenter.View {
     private DetailsPresenter presenter;
+    private Button contactOwnerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,20 +39,11 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
             presenter = new DetailsPresenter(this, advertID);
         }
 
-        String uniqueOwnerID= DataModel.getInstance().getAdFromAdID(advertID).getUniqueOwnerID();
 
-        setBtnForOwner();
-
-        String receiverUsername=  DataModel.getInstance().getAdFromAdID(advertID).getOwner();
-        Button contactOwnerButton = findViewById(R.id.contactOwnerButton);
+        contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
-            //TODO HÄR SKA CHATTEN ÖPPNAS TYP
-            if (contactOwnerButton.getText().equals("Starta chatt")) {
-                presenter.createNewChat(uniqueOwnerID,receiverUsername);
+            presenter.contactOwnerButtonClicked(contactOwnerButton.getText().toString());
 
-            } else {
-                contactOwnerButton.setText("Starta chatt");
-            }
         });
 
         Button changeAd = findViewById(R.id.changeAdButton);
@@ -102,6 +95,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
     /**
      * Set tags as buttons in details
+     *
      * @param tags
      */
     @Override
@@ -114,14 +108,17 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
             btn = createTagButton(str);
             tableRow = getTableRow(tableRow, parentLayout);
             tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
-            tableRow.addView(btn,StylingHelper.getTableRowChildLayoutParams(this));
+            tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
         }
         parentLayout.addView(tableRow);
     }
 
     @Override
-    public void openChat(String uniqueOwnerID) {
+    public void openChat(String chatID) {
         //TODO ÖPPNA CHATT
+        Intent intent = new Intent(DetailsActivity.this, MessagesActivity.class);
+        intent.putExtra("chatID", chatID);
+        startActivity(intent);
 
     }
 
@@ -137,14 +134,14 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
      * Private method trying to resolve if a tableRow with tags is filled and
      * if a new one should be created.
      *
-     * @param tableRow    the current tableRow
+     * @param tableRow     the current tableRow
      * @param parentLayout width of parent layout
      * @return param tableRow or new tableRow object depending on
      */
     private TableRow getTableRow(TableRow tableRow, LinearLayout parentLayout) {
-        if(tableRow.getChildCount() % 4 == 0) {
-                parentLayout.addView(tableRow);
-                return new TableRow(this);
+        if (tableRow.getChildCount() % 4 == 0) {
+            parentLayout.addView(tableRow);
+            return new TableRow(this);
         }
         return tableRow;
     }
@@ -156,23 +153,38 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         btn.setElevation(4);
     }
 
+    public void showToast() {
+        Context context = getApplicationContext();
+        CharSequence text = "Du kan inte skicka meddelanden till dig själv.";
+        int duration = Toast.LENGTH_LONG;
 
-    private void setBtnForOwner(){
-        if (presenter.isUserOwner()){
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
+
+
+    private void setBtnForOwner() {
+        if (presenter.isUserOwner()) {
             findViewById(R.id.changeAdButton).setVisibility(View.VISIBLE);
             findViewById(R.id.contactOwnerButton).setVisibility(View.GONE);
 
-        }else{
+        } else {
             findViewById(R.id.changeAdButton).setVisibility(View.GONE);
             findViewById(R.id.contactOwnerButton).setVisibility(View.VISIBLE);
         }
     }
 
     @Override
-    public void showEditView(String uniqueID){
+    public void showEditView(String uniqueID) {
         Intent intent = new Intent(DetailsActivity.this, EditAdActivity.class);
         intent.putExtra("advertID", uniqueID);
         startActivity(intent);
+    }
+
+    @Override
+    public void setOwnerButtonText(String content) {
+        contactOwnerButton.setText(content);
+
     }
 
 }

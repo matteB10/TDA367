@@ -2,8 +2,8 @@ package com.masthuggis.boki.presenter;
 
 import android.os.Handler;
 
+import com.masthuggis.boki.model.AdvertisementObserver;
 import com.masthuggis.boki.backend.MockRepository;
-import com.masthuggis.boki.backend.RepositoryObserver;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.sorting.SortManager;
@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * HomePresenter is the presenter class for the view called HomeFragment.
  */
-public class HomePresenter implements IProductsPresenter, RepositoryObserver {
+public class HomePresenter implements IProductsPresenter, AdvertisementObserver {
     private final View view;
     private final SortManager sortManager;
     private List<Advertisement> adverts;
@@ -36,7 +36,7 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
 
         // If using firebase uncommment line below
         getData();
-        DataModel.getInstance().addRepositoryObserver(this);
+        DataModel.getInstance().addAdvertisementObserver(this);
     }
 
     private void getData() {
@@ -156,11 +156,17 @@ public class HomePresenter implements IProductsPresenter, RepositoryObserver {
         thread.start();
     }
 
-    @Override
+  /*  @Override
     public void advertsInMarketUpdate(List<Advertisement> advertsInMarket) {
         if (advertsInMarket != null && !advertsInMarket.isEmpty()) {
             updateData(advertsInMarket);
         }
+    }*/
+
+    @Override
+    public void onAdvertisementsUpdated() {
+        adverts = DataModel.getInstance().getAllAds();
+
     }
 
 

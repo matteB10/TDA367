@@ -1,62 +1,93 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.model.MessagesObserver;
 import com.masthuggis.boki.model.iChat;
-import com.masthuggis.boki.view.MessagesRecyclerViewAdapter;
+import com.masthuggis.boki.model.iMessage;
+import com.masthuggis.boki.utils.CurrentTimeHelper;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class MessagesPresenter {
-
-    private List<iChat> chats;
+public class MessagesPresenter implements MessagesObserver {
     private View view;
+    private iChat chat;
+    private List<iMessage> messages;
+    private String chatID;
 
-    public MessagesPresenter(View view) {
+    public MessagesPresenter(View view, String chatID) {
         this.view = view;
-        this.view.showLoadingScreen();
-        if (DataModel.getInstance().isLoggedIn()) {
-            chats= DataModel.getInstance().getUserChats();
-            view.isLoggedIn( this);
+        this.chatID = chatID;
+        DataModel.getInstance().addMessagesObserver(this);
+        chat = DataModel.getInstance().findChatByID(chatID);
+        if (chat != null) {
+            messages = chat.getMessages();
+            if (messages != null || messages.size() > 0) {
+                populateView(messages);
+            }
         }
 
 
-
-            // UserRepository.getInstance().getUserChats(DataModel.getInstance().getUserID(), chatList -> chats = chatList);
-
     }
-    public void onRowPressed(String chatID) {
-        view.showDetailsScreen(chatID);
-    }
-    public void bindViewHolderAtPosition(int position, MessagesRecyclerViewAdapter.
-            ViewHolder holder) {
-        if (chats.size() < position || chats == null) {
-            return;
+
+    private void populateView(List<iMessage> messages) {
+        List<iMessage> sorted = new ArrayList<>(messages).stream()
+                .sorted((adOne, adTwo) -> ((int) (adOne.getTimeSent() - adTwo.getTimeSent())))
+                .collect(Collectors.toList());
+        for (iMessage message : sorted) {
+            setMessageBox(message.getMessage(), message.getSenderID().equals(DataModel.getInstance().getUserID()));
         }
-        iChat c = chats.get(position);
-
-        holder.setUserTextView(c.getReceiverUsername());
-        holder.setChatID(c.getChatID());
-        holder.setDateTextView(c.timeLastMessageSent());
 
     }
 
-    public int getItemCount() {
-        if (chats != null) {
-            return chats.size();
+    public void sendMessage(String messageText) {
+
+        HashMap<String, Object> map = new HashMap<>();
+        if (!messageText.equals("")) {
+            //TODO FIX TIME OF MESSAGE SENT, MAKE SURE TO NOT OVEREXTEND THE MAXIMUM VALUE OF INTEGER
+            //Date, message, sender
+            map.put("message", messageText);
+            map.put("sender", DataModel.getInstance().getUserID());
+            map.put("timeSent", CurrentTimeHelper.getCurrentTimeNumerical());
+            DataModel.getInstance().sendMessage(chat.getChatID(), map);
+
+            setMessageBox(messageText, true);
+
+            //behövs nog ej.
+            // onChatUpdated();
+
         }
-        return 0;
     }
 
+    private void setMessageBox(String messageText, boolean sentByCurrentUser) {
+        view.addMessageBox(messageText, sentByCurrentUser);
+    }
+
+    private void onChatUpdated() {
+        if (DataModel.getInstance().findChatByID(chatID) != null) {
+
+            chat = DataModel.getInstance().findChatByID(chatID);
+            view.update();
+            messages = chat.getMessages();
+            populateView(messages);
+        }
+    }
+
+    public void onDestroy() {
+        DataModel.getInstance().removeMessagesObserver(this);
+    }
+
+    @Override
+    public void onMessagesChanged() {
+        onChatUpdated();
+    }
 
     public interface View {
-        void showLoadingScreen();
 
-        void showThumbnails(MessagesPresenter messagesPresenter);
+        void addMessageBox(String messageText, boolean sentByCurrentUser);
 
-        void hideLoadingScreen();
-
-        void showDetailsScreen(String chatID);
-
-        void isLoggedIn(MessagesPresenter messagesPresenter);
+        void update();
     }
 }
