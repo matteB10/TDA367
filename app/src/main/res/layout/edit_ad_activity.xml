@@ -70,19 +70,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/bookImageView" />
 
 
-                <Button
-                    android:id="@+id/removeAdBtn"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/primary_button"
-                    android:text="Ta bort annons"
-                    android:textColor="@color/colorWhite"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.498"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
                 <LinearLayout
 
                     android:id="@+id/titleLayout"
@@ -225,7 +212,7 @@
 
                     <Button
                         android:id="@+id/conditionOkButton"
-                        android:layout_width="50dp"
+                        android:layout_width="45dp"
                         android:layout_height="50dp"
                         android:layout_marginStart="30dp"
                         android:layout_marginTop="15dp"
@@ -294,21 +281,21 @@
                     android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:layout_marginStart="30dp"
+                    android:layout_marginTop="20dp"
                     android:text="@string/addAdvertTags"
                     android:textSize="20sp"
-                    tools:layout_editor_absoluteX="30dp"
-                    tools:layout_editor_absoluteY="930dp"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view3"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    tools:layout_editor_absoluteX="30dp"
+                    tools:layout_editor_absoluteY="930dp" />
 
                 <LinearLayout
                     android:id="@+id/tagsLinearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
                     android:layout_marginStart="30dp"
+                    android:layout_marginTop="30dp"
                     android:layout_marginEnd="30dp"
                     android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -358,7 +345,18 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view4" />
 
-
+                <Button
+                    android:id="@+id/removeAdBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/primary_button"
+                    android:text="Ta bort annons"
+                    android:textColor="@color/colorWhite"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.136"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view4" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

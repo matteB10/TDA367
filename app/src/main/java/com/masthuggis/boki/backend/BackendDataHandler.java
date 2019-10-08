@@ -399,7 +399,6 @@ public class BackendDataHandler implements iBackend {
 
 
     public void editTitle(String adID, String newTitle) {
-
         advertPath.whereEqualTo("uniqueAdID", adID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

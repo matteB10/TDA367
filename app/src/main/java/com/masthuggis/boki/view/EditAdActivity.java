@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,10 +19,13 @@ import androidx.core.content.FileProvider;
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.EditAdPresenter;
+import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.masthuggis.boki.view.CreateAdActivity.REQUEST_IMAGE_CAPTURE;
 
@@ -33,6 +37,9 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
     private EditText price;
     private EditText description;
     private File currentImageFile;
+
+    private List<Button> preDefTagButtons = new ArrayList<>();
+    private List<Button> userDefTagButtons = new ArrayList<>();
 
 
 
@@ -56,13 +63,13 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         removeBtn.setOnClickListener(view -> presenter.removeAdBtnPressed());
     }
 
-    //set listeners-------------------------------------------------------------
     private void setListeners() {
         setTitleListener();
         setPriceListener();
         setDescriptionListener();
         setSaveAdListener();
         setNewImageListener();
+        setConditionGroupListener();
     }
 
     private void setTitleListener() {
@@ -162,6 +169,51 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
 
         });
     }
+    //condition buttons --------------------------------------------
+    private void setConditionGroupListener() {
+        Button conditionGoodButton = findViewById(R.id.conditionGoodButton);
+        Button conditionNewButton = findViewById(R.id.conditionNewButton);
+        Button conditionOKButton = findViewById(R.id.conditionOkButton);
+
+
+        conditionGoodButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.conditionChanged(R.string.conditionGood);
+
+            }
+        });
+        conditionNewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.conditionChanged(R.string.conditionNew);
+            }
+        });
+        conditionOKButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.conditionChanged(R.string.conditionOk);
+            }
+        });
+    }
+
+    @Override
+    public void styleConditionButtonPressed(int conditionButtonPressed) {
+        Button conditionButton = new Button(this);
+        switch (conditionButtonPressed) {
+            case R.string.conditionNew:
+                conditionButton = findViewById(R.id.conditionNewButton);
+                break;
+            case R.string.conditionGood:
+                conditionButton = findViewById(R.id.conditionGoodButton);
+                break;
+            case R.string.conditionOk:
+                conditionButton = findViewById(R.id.conditionOkButton);
+                break;
+        }
+        conditionButton.setElevation(StylingHelper.getDPToPixels(this, 4));
+    }
+
 
 
     //getting old information ---------------------------------------
@@ -174,7 +226,7 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
     @Override
     public void setPrice(long price) {
         TextView currentPrice = findViewById(R.id.priceEditText);
-        currentPrice.setText(price + " kr");
+        currentPrice.setText(String.valueOf(price));
     }
 
     @Override

@@ -3,8 +3,6 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 
-import java.io.File;
-
 public class EditAdPresenter {
 
     private Advertisement advertisement;
@@ -48,19 +46,17 @@ public class EditAdPresenter {
         DataModel.getInstance().updateDescription(adID, description);
     }
 
-    public void imageChanged(File imageFile){
-        String adID = advertisement.getUniqueID();
-        DataModel.getInstance().updateImage(imageFile,adID);
-
-    }
-
 
     public void removeAdBtnPressed(){
         String adID = advertisement.getUniqueID();
         DataModel.getInstance().removeExistingAdvert(adID);
     }
 
+    public void conditionChanged(int condition) {
+        advertisement.setCondition(condition);
+        view.styleConditionButtonPressed(condition);
 
+    }
 
 
     public interface View {
@@ -71,5 +67,7 @@ public class EditAdPresenter {
         void setImageUrl(String url);
 
         void setDescription(String description);
+
+        void styleConditionButtonPressed(int condition);
     }
 }
