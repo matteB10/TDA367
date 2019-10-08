@@ -11,11 +11,11 @@ public class MainPresenter {
         this.dataModel = DataModel.getInstance();
 
         if (!dataModel.isLoggedIn()) {
-            view.showLoginScreen();
+            view.showSignUpScreen();
         }
     }
 
     public interface View {
-        void showLoginScreen();
+        void showSignUpScreen();
     }
 }
