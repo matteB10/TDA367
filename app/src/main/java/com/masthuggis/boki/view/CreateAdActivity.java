@@ -1,5 +1,6 @@
 package com.masthuggis.boki.view;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -45,7 +46,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-
+    static final int REQUEST_IMAGE_CROP = 2;
     private List<Button> preDefTagButtons = new ArrayList<>();
     private List<Button> userDefTagButtons = new ArrayList<>();
 
@@ -104,6 +105,24 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
     }
 
+    private void cropImage(Uri imageUri) {
+        try {
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            cropIntent.setDataAndType(imageUri, "image/*");
+            cropIntent.putExtra("crop", true);
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            cropIntent.putExtra("outputX",128);
+            cropIntent.putExtra("outputY",128);
+            cropIntent.putExtra("return-data", true);
+            startActivityForResult(cropIntent, REQUEST_IMAGE_CROP);
+
+
+        } catch (ActivityNotFoundException exception) {
+            exception.printStackTrace();
+        }
+    }
+
     /**
      * Creates an empty file and specifies unique file name.
      *
@@ -123,13 +142,17 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageViewDisplay = findViewById(R.id.addImageView);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bitmap bitmap = compressBitmap();
-            setImageView(bitmap);
-            try {
-                OutputStream out = new FileOutputStream(currentImageFile.getPath());
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+            //Picture has been taken, needs to be cropped
+            Uri.Builder builder = new Uri.Builder();
+            builder.encodedPath(currentImageFile.getAbsolutePath());
+            Uri imageUri = builder.build(); //Build Uri
+            cropImage(imageUri);
+        }
+        else if(requestCode == REQUEST_IMAGE_CROP) {
+            if (data != null) {
+                Bundle extras = data.getExtras();
+                Bitmap croppedBitmap = extras.getParcelable("data");
+                setImageView(croppedBitmap);
             }
         }
     }
@@ -142,6 +165,17 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageViewDisplay.setImageBitmap(bitmap);
     }
 
+
+    private void oldOnImageTaken() {
+        Bitmap bitmap = compressBitmap();
+        setImageView(bitmap);
+        try {
+            OutputStream out = new FileOutputStream(currentImageFile.getPath());
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Helper method to decode bitmap
@@ -474,10 +508,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
         return null;
     }
+
     /**
      * Clear rows in layout from children
      */
-    private void clearLayout(ViewGroup layout){
+    private void clearLayout(ViewGroup layout) {
         ViewGroup tr;
         int noOfRows = layout.getChildCount();
         for (int i = 0; i < noOfRows; i++) {
