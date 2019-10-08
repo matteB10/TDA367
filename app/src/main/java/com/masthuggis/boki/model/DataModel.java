@@ -132,7 +132,6 @@ public class DataModel implements BackendObserver {
         Repository.fetchAllAdverts(advertisements -> {
             allAds = advertisements;
             advertisementCallback.onCallback(allAds);
-            notifyAdvertisementObservers();
         });
     }
 

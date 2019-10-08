@@ -106,7 +106,8 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
 
     private boolean performSearch() {
         showLoadingScreen();
-        presenter.search(searchField.getText().toString(), new SearchCallback() { //Actually perform search
+        String query = searchField.getText().toString(); //Query from textfield is loaded properly
+        presenter.search(query, new SearchCallback() { //Actually perform search
             @Override
             public void onCallback() {
                 hideLoadingScreen(); //Necessary callback since search on query happens on other thread
@@ -129,7 +130,6 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
         progressBar.setVisibility(View.VISIBLE);
         RecyclerView recyclerView = view.findViewById(R.id.advertsRecyclerView);
         recyclerView.setVisibility(View.GONE);
-
     }
 
     @Override
