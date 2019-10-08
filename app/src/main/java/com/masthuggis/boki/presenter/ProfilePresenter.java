@@ -74,18 +74,7 @@ public class ProfilePresenter implements IProductsPresenter {
         thumbnailView.setCondition(text, drawable);
     }
 
-    public void isLoggedIn() {
-        if (DataModel.getInstance().isLoggedIn()) {
-            view.setIsUserLoggedIn(true);
-        } else {
-            view.setIsUserLoggedIn(false);
-        }
-
-    }
-
     public interface View {
-        void setIsUserLoggedIn(boolean isUserLoggedIn);
-
         void updateItemsOnSale();
 
         void showSettingsScreen();
@@ -94,7 +83,7 @@ public class ProfilePresenter implements IProductsPresenter {
 
         void hideLoadingScreen();
 
-        void showSignInScreen();
+        void showLoginScreen();
 
     }
 
@@ -104,8 +93,9 @@ public class ProfilePresenter implements IProductsPresenter {
         view.showSettingsScreen();
     }
 
-    public void onSignInButtonPressed() {
-        view.showSignInScreen();
+    public void onSignOutPressed() {
+        DataModel.getInstance().signOut();
+        view.showLoginScreen();
     }
 
 }
