@@ -60,13 +60,16 @@ public class BackendDataHandler implements iBackend {
     private StorageReference imagesRef = mainRef.child("images"); //Reference to storage location of images
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private final List<BackendObserver> backendObservers = new ArrayList<>();
+    private CollectionReference advertPath;
 
     private boolean isWritingImageToDatabase = false;
     private boolean isWritingAdvertToDatabase = false;
 
 
     private BackendDataHandler() {
-
+        if (getUserID() != null) //Otherwise throws NullPointer on app launch
+            advertPath = db.collection("users")
+                    .document(getUserID()).collection("adverts");
     }
 
     public static BackendDataHandler getInstance() {
@@ -292,20 +295,6 @@ public class BackendDataHandler implements iBackend {
         }
     }
 
-    //Downloads the file as a local tempFile rather than as an array of bytes.
-    private void testDownloadFromCloudStorage() {
-        try {
-            File localFile = File.createTempFile("images", "jpg");
-            imagesRef.getFile(localFile).addOnSuccessListener(taskSnapshot -> {
-                //Reference downloaded file from here
-            }).addOnFailureListener(e -> {
-                //Handle any errors
-            });
-        } catch (IOException exc) {
-            exc.printStackTrace();
-        }
-    }
-
     public void userSignUp(String email, String password, SuccessCallback successCallback) {
         try {
             auth.createUserWithEmailAndPassword(email, password)
@@ -376,8 +365,6 @@ public class BackendDataHandler implements iBackend {
     void setUsername(String username, SuccessCallback successCallback) {
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
-
-
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
             user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
@@ -398,34 +385,33 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    public void deleteAd (String adID) {
+    public void deleteAd(String adID) {
         CollectionReference advertPath = db.collection("users")
                 .document(getUserID()).collection("adverts");
-       advertPath.whereEqualTo("uniqueAdID", adID).get()
-               .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>(){
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        //Log.d(TAG, document.getId());
-                      advertPath.document(document.getId())
-                                .delete();
-                    }
-                }
-            }
-        });
-    }
-
-    private CollectionReference advertPath = db.collection("users")
-            .document(getUserID()).collection("adverts");
-
-    public void editTitle(String adID, String newTitle) {
         advertPath.whereEqualTo("uniqueAdID", adID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for (QueryDocumentSnapshot documentSnapshot: task.getResult()){
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                //Log.d(TAG, document.getId());
+                                advertPath.document(document.getId())
+                                        .delete();
+                            }
+                        }
+                    }
+                });
+    }
+
+
+    public void editTitle(String adID, String newTitle) {
+
+        advertPath.whereEqualTo("uniqueAdID", adID).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 advertPath.document(documentSnapshot.getId())
                                         .update("title", newTitle);
                             }
@@ -433,13 +419,14 @@ public class BackendDataHandler implements iBackend {
                     }
                 });
     }
+
     public void editPrice(String adID, String newPrice) {
         advertPath.whereEqualTo("uniqueAdID", adID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for (QueryDocumentSnapshot documentSnapshot: task.getResult()){
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 advertPath.document(documentSnapshot.getId())
                                         .update("price", newPrice);
                             }
@@ -454,8 +441,8 @@ public class BackendDataHandler implements iBackend {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for (QueryDocumentSnapshot documentSnapshot: task.getResult()){
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 advertPath.document(documentSnapshot.getId())
                                         .update("description", newDescription);
                             }
