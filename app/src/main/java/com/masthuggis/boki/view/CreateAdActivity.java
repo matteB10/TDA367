@@ -74,6 +74,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     //If image can be cropped or not depends on if the app is run on an emulator or not
     //Can't start crop request on emulator for some unknown reason...
+    /*
     private boolean isEmulator() {
         return Build.FINGERPRINT.startsWith("generic")
                 || Build.FINGERPRINT.startsWith("unknown")
@@ -84,7 +85,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
                 || (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
                 || "google_sdk".equals(Build.PRODUCT)
                 || compatibilityCB.isChecked(); //TODO fix crop activity so all users can use it when uploading adverts, this is temporary fix
-    }
+    }*/
 
     private void updateDataFromModel() {
         if (presenter.getImageUrl() != null) {
@@ -121,6 +122,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
     }
 
+    /*
     private void cropImage(Uri imageUri) {
         try {
             Intent cropIntent = new Intent("com.android.camera.action.CROP");
@@ -135,10 +137,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         } catch (ActivityNotFoundException exception) {
             exception.printStackTrace();
         }
-    }
+    }*/
 
     /**
      * Creates an empty file and specifies unique file name.
+     *
      * @throws IOException if image creation fails
      */
     private File createImageFile() throws IOException {
@@ -154,32 +157,19 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageViewDisplay = findViewById(R.id.addImageView);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { //When image has been taken
-            if (isEmulator()) { //TODO maybe remove this when development is done
-                //Do stuff without cropping image since you can't crop on emulator
-                compressOnEmulator();
-            } else {
-                //Picture has been taken, needs to be cropped, not on emulator
-                Uri.Builder builder = new Uri.Builder();
-                builder.encodedPath(currentImageFile.getAbsolutePath());
-                Uri imageUri = builder.build(); //Build Uri
-                cropImage(imageUri);
-            }
-        } else if (requestCode == REQUEST_IMAGE_CROP) {
-            if (data != null) {
-                Bundle extras = data.getExtras();
-                Bitmap croppedBitmap = extras.getParcelable("data"); //Crops image to given resolution and aspect-ratio
-                setImageView(croppedBitmap);
-            }
+            compressOnEmulator();
         }
     }
+
 
     //Compresses images without trying to crop image with android OS
     private void compressOnEmulator() {
         Bitmap bitmap = compressBitmap();
-        setImageView(bitmap);
         try {
             OutputStream out = new FileOutputStream(currentImageFile.getPath());
             bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
+            Bitmap image = BitmapFactory.decodeFile(currentImageFile.getPath());
+            setImageView(image); //Set compressed and scaled image so user sees actual result
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -336,11 +326,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void setPublishAdListener() {
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setOnClickListener(view -> {
-            // Intent intent = new Intent(this, MainActivity.class); //Need to send something here to show snackbar
-            //intent.putExtra("advertID", presenter.getId());
-            //intent.putExtra("toast", true);
+            Intent intent = new Intent(this, MainActivity.class); //Need to send something here to show snackbar
+            intent.putExtra("advertID", presenter.getId());
+            intent.putExtra("toast", true);
             presenter.publishAdvert();
-            //startActivity(intent);
+            startActivity(intent);
             finish();
 
         });

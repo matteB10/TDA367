@@ -200,7 +200,7 @@ public class BackendDataHandler implements iBackend {
         }
     }
 
-    public void getFirebaseURL(String uniqueID, UrlCallback urlCallback) {
+    private void getFirebaseURL(String uniqueID, UrlCallback urlCallback) {
         imagesRef.child(uniqueID).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
