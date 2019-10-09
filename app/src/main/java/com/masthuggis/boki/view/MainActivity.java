@@ -3,10 +3,12 @@ package com.masthuggis.boki.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.masthuggis.boki.R;
@@ -19,6 +21,10 @@ import com.masthuggis.boki.presenter.MainPresenter;
 
 public class MainActivity extends AppCompatActivity implements MainPresenter.View {
     private MainPresenter presenter;
+    private Fragment homeFragment;
+    private Fragment favoritesFragment;
+    private Fragment profileFragment;
+    private Fragment chatFragment;
     private Fragment activeFragment;
 
     @Override
@@ -38,7 +44,15 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
     public void showMainScreen() {
         checkNavToast();
         setupBottomTabNavigator();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        addFragmentsToViewHierachy();
+    }
+
+    /**
+     * If back button is pressed the app exists. Is it better to show the previously active tab?
+     */
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 
     private void checkNavToast() {
@@ -54,50 +68,57 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         bottomNav.setOnNavigationItemSelectedListener(navListener);
     }
 
+    private void addFragmentsToViewHierachy() {
+        FragmentManager fm = getSupportFragmentManager();
+        initFragments();
+
+        // Adds all fragments to MainActivity container but hides all but homeFragment.
+        fm.beginTransaction().add(R.id.fragment_container, favoritesFragment).hide(favoritesFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, profileFragment).hide(profileFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, chatFragment).hide(chatFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, homeFragment).commit();
+    }
+
+    private void initFragments() {
+        homeFragment = new HomeFragment();
+        favoritesFragment = new FavoritesFragment();
+        profileFragment = new ProfileFragment();
+        chatFragment = new ChatFragment();
+        activeFragment = homeFragment;
+    }
+
     /**
      * This is a method handling the navigation between fractals which are parts of the view of the mainActivity class.
      * It does this through the defined ID:s of the different fragments.
      */
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = menuItem -> {
-
-        if (menuItem.getItemId() == R.id.navigation_new_ad) {
-            if (!DataModel.getInstance().isLoggedIn()) {
-                Context context = getApplicationContext();
-                CharSequence text = "Du måste logga in för att kunna lägga upp en ny annons!";
-                int duration = Toast.LENGTH_LONG;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
-                return false;
-            }
-            Intent intent = new Intent(this, CreateAdActivity.class);
-            startActivity(intent);
-
-        } else {
-            Intent intent;
-            switch(menuItem.getItemId()){
+            switch (menuItem.getItemId()) {
+                case R.id.navigation_home:
+                    showFragment(homeFragment);
+                    break;
                 case R.id.navigation_favorites:
-                    activeFragment = new FavoritesFragment();
+                    showFragment(favoritesFragment);
                     break;
                 case R.id.navigation_profile:
-                    activeFragment = new ProfileFragment();
+                    showFragment(profileFragment);
                     break;
                 case R.id.navigation_new_ad:
-                    intent = new Intent(this, CreateAdActivity.class);
+                    Intent intent = new Intent(this, CreateAdActivity.class);
                     startActivity(intent);
                     return true;
                 case R.id.navigation_messages:
-                    activeFragment = new ChatFragment();
+                    showFragment(chatFragment);
                     break;
                 default:
-                    activeFragment = new HomeFragment();
-
+                    return false;
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,activeFragment).commit();
-            return true;
-        }
         return true;
     };
+
+    private void showFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().hide(activeFragment).show(fragment).commit();
+        activeFragment = fragment;
+    }
 
 }
 

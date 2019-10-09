@@ -55,6 +55,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         Button changeAd = findViewById(R.id.changeAdButton);
         changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
 
+        setBtnForOwner();
     }
 
 
@@ -80,7 +81,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     public void setImageUrl(String url) {
         // TODO: fetch img, cache it and set it
         ImageView imageView = (ImageView) findViewById(R.id.detailsImage);
-        Glide.with(this).load(url).into(imageView);
+        Glide.with(this).load(url).override(220,300).into(imageView);
         //imageView.setImageURI(Uri.parse(url));
     }
 

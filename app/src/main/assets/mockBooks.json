@@ -44,7 +44,10 @@
       "yearPublished" : 2016,
       "price" : 250,
       "condition" : "OK",
-      "date": "02/01/19 10:12:55"
+      "date": "02/01/19 10:12:55",
+      "userTags" : [
+        "Cool"
+        ]
     }, {
       "title" : "Clean Code",
       "author" : "Robert C. Martin",

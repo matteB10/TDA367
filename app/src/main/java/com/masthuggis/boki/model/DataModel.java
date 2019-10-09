@@ -231,6 +231,10 @@ public class DataModel implements BackendObserver {
         repository.editDescription(adID, newDescription);
     }
 
+    public void updateImage(File imageFile, String adID){
+        repository.uploadImageToFirebase(imageFile, adID);
+    }
+
    /* public void setUsername(String username) {
         userRepository.setUsername(username);
     }*/

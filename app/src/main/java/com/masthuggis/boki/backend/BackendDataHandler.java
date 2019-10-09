@@ -68,6 +68,7 @@ public class BackendDataHandler implements iBackend {
 
     private boolean isWritingImageToDatabase = false;
     private boolean isWritingAdvertToDatabase = false;
+    private int advertDataListCount = 0;
 
 
     BackendDataHandler() {
@@ -110,9 +111,6 @@ public class BackendDataHandler implements iBackend {
         writeToDatabase(data);
     }
 
-    private boolean completedWriteToDatabase() {
-        return !isWritingAdvertToDatabase && !isWritingImageToDatabase;
-    }
 
     private void writeToDatabase(HashMap<String, Object> data) {
         isWritingAdvertToDatabase = true;
@@ -129,7 +127,7 @@ public class BackendDataHandler implements iBackend {
                 });
     }
 
-    private void uploadImageToFirebase(File imageFile, String uniqueAdID) {
+    public void uploadImageToFirebase(File imageFile, String uniqueAdID) {
         isWritingImageToDatabase = true;
         try {
             InputStream uploadStream = new FileInputStream(imageFile);
@@ -172,20 +170,7 @@ public class BackendDataHandler implements iBackend {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
-                for (DocumentSnapshot snapshot : adverts) {
-                    Map<String, Object> toBeAdded = snapshot.getData();
-                    getFirebaseURL((String) toBeAdded.get("uniqueAdID"), new UrlCallback() {
-                        @Override
-                        public void onCallback(String url) {
-                            toBeAdded.put("imgUrl", url);
-                            advertDataList.add(toBeAdded);
-                            //flytta ut denna så den inte körs varje gång i loopen
-                            if (advertDataList.size() == adverts.size()) {
-                                DBCallback.onCallBack(advertDataList);
-                            }
-                        }
-                    });
-                }
+                updateAdvertsDataListWithImgUrl(adverts, advertDataList -> dbCallback.onCallBack(advertDataList));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -196,6 +181,24 @@ public class BackendDataHandler implements iBackend {
         });
     }
 
+    private void updateAdvertsDataListWithImgUrl(List<DocumentSnapshot> adverts, DBCallback dbCallback) {
+        List<Map<String, Object>> advertDataList = new ArrayList<>();
+        for (DocumentSnapshot snapshot : adverts) {
+            Map<String, Object> toBeAdded = snapshot.getData();
+            getFirebaseURL((String) toBeAdded.get("uniqueAdID"), new UrlCallback() {
+                @Override
+                public void onCallback(String url) {
+                    toBeAdded.put("imgUrl", url);
+                    advertDataList.add(toBeAdded);
+                    advertDataListCount += 1;
+                    if (advertDataListCount == adverts.size()) {
+                        advertDataListCount = 0;
+                        dbCallback.onCallBack(advertDataList);
+                    }
+                }
+            });
+        }
+    }
 
     public void getFirebaseURL(String uniqueID, UrlCallback urlCallback) {
         imagesRef.child(uniqueID).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -316,9 +319,7 @@ public class BackendDataHandler implements iBackend {
     }
 
     public String getUserID() {
-        String id = auth.getUid();
-
-        return id;
+        return auth.getUid();
     }
 
     public Map<String, String> getUser() {
@@ -406,7 +407,6 @@ public class BackendDataHandler implements iBackend {
 
 
     public void editTitle(String adID, String newTitle) {
-
         advertPath.whereEqualTo("uniqueAdID", adID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
