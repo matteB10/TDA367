@@ -1,8 +1,9 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.model.observers.ChatObserver;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;
+import com.masthuggis.boki.model.observers.ChatObserver;
+import com.masthuggis.boki.utils.ClickDelayHelper;
 import com.masthuggis.boki.view.MessagesRecyclerViewAdapter;
 
 import java.util.List;
@@ -15,8 +16,7 @@ public class ChatPresenter implements ChatObserver {
 
     private List<iChat> chats;
     private View view;
-    private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
-    private static final long MIN_THUMBNAIL_CLICK_TIME_INTERVAL = 300;
+
 
     public ChatPresenter(View view) {
         this.view = view;
@@ -77,15 +77,12 @@ public class ChatPresenter implements ChatObserver {
         DataModel.getInstance().removeChatObserver(this);
     }
 
+    /**
+     * Makes sure the user cant open multiple chats at the same time by tapping a chat multiple times in a row.
+     *
+     */
     public boolean canProceedWithTapAction() {
-        boolean canProceed = tapActionWasNotTooFast();
-        lastTimeThumbnailWasClicked = System.currentTimeMillis();
-        return canProceed;
-    }
-
-    private boolean tapActionWasNotTooFast() {
-        long elapsedTimeSinceLastClick = System.currentTimeMillis() - lastTimeThumbnailWasClicked;
-        return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
+        return ClickDelayHelper.canProceedWithTapAction();
     }
 
 

@@ -41,6 +41,7 @@ public class Advert implements Advertisement {
         this.owner = DataModel.getInstance().getUserDisplayName();
     }
 
+
     public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, String imageUrl, List<String> tags, String owner) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;

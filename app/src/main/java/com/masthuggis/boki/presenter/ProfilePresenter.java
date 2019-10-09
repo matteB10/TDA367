@@ -2,6 +2,7 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.utils.ClickDelayHelper;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
 
@@ -10,8 +11,6 @@ import java.util.List;
 public class ProfilePresenter implements IProductsPresenter {
     private final View view;
     private List<Advertisement> adverts;
-    private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
-    private static final long MIN_CLICK_TIME_INTERVAL = 300;
 
 
     public ProfilePresenter(View view) {
@@ -50,11 +49,7 @@ public class ProfilePresenter implements IProductsPresenter {
 
     @Override
     public boolean canProceedWithTapAction() {
-        long now = System.currentTimeMillis();
-        boolean canProceed;
-        canProceed = now - lastTimeThumbnailWasClicked >= MIN_CLICK_TIME_INTERVAL;
-        lastTimeThumbnailWasClicked = now;
-        return canProceed;
+        return ClickDelayHelper.canProceedWithTapAction();
     }
 
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {

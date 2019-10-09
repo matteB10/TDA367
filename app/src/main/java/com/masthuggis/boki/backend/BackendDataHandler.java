@@ -179,7 +179,10 @@ public class BackendDataHandler implements iBackend {
                         public void onCallback(String url) {
                             toBeAdded.put("imgUrl", url);
                             advertDataList.add(toBeAdded);
-                            DBCallback.onCallBack(advertDataList);
+                            //flytta ut denna så den inte körs varje gång i loopen
+                            if (advertDataList.size() == adverts.size()) {
+                                DBCallback.onCallBack(advertDataList);
+                            }
                         }
                     });
                 }

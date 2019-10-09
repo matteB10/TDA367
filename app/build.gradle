@@ -54,5 +54,17 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:6.0.2'
     implementation 'com.google.firebase:firebase-storage:19.1.0'
 
+
+    //Mockito
+    dependencies {
+        // ... more entries
+        testImplementation 'junit:junit:4.12'
+
+        // required if you want to use Mockito for unit tests
+        testImplementation 'org.mockito:mockito-core:2.7.22'
+        // required if you want to use Mockito for Android tests
+        androidTestImplementation 'org.mockito:mockito-android:2.7.22'
+    }
+
 }
 apply plugin: 'com.google.gms.google-services'

@@ -19,9 +19,11 @@ import java.util.Map;
 public class Repository {
 
     private final iBackend backend;
+    private DataModel dataModel;
 
-    Repository(iBackend backend) {
+    Repository(iBackend backend, DataModel dataModel) {
         this.backend = backend;
+        this.dataModel =dataModel;
     }
 
 
@@ -30,7 +32,7 @@ public class Repository {
      */
 
     public void saveAdvert(File imageFile, Advertisement advertisement) {
-        DataModel.getInstance().addAdvertisement(advertisement);
+        dataModel.addAdvertisement(advertisement);
         HashMap<String, Object> dataMap = new HashMap<>();
         dataMap.put("title", advertisement.getTitle());
         dataMap.put("description", advertisement.getDescription());

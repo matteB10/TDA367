@@ -27,18 +27,19 @@ import java.util.Map;
 public class UserRepository {
 
     private iBackend backend;
+    private DataModel dataModel;
 
-     UserRepository(iBackend backend) {
+    UserRepository(iBackend backend, DataModel dataModel) {
+        this.dataModel = dataModel;
         this.backend = backend;
     }
 
     /**
-     *
-     * @param email email used for signing in.
-     * @param password password which needs to match the password belonging to email.
+     * @param email           email used for signing in.
+     * @param password        password which needs to match the password belonging to email.
      * @param successCallback A callback which indicates what should happen if the login is successful.
      * @param failureCallback A callback which indicates what should happen if the login failed.
-     *
+     *                        <p>
      *                        This method asks the backend to try and log in. Depending on its success
      *                        it either tells the model to log in or not.
      */
@@ -51,9 +52,8 @@ public class UserRepository {
     }
 
     /**
-     *
-     * @param email email used for signing up.
-     * @param password password which needs to match the password belonging to email.
+     * @param email           email used for signing up.
+     * @param password        password which needs to match the password belonging to email.
      * @param successCallback A callback which indicates what should happen if the login is successful.
      */
 
@@ -80,8 +80,8 @@ public class UserRepository {
     public void logUserIn() {
         iUser user;
         Map<String, String> map = backend.getUser();
-        user = UserFactory.createUser(map.get("email"), map.get("username"), map.get("userID"));
-        DataModel.getInstance().loggedIn(user);
+        user = UserFactory.createUser(map.get("email"), map.get("username"), map.get("userID"),dataModel);
+        dataModel.loggedIn(user);
     }
 
     public boolean isUserLoggedIn() {
@@ -90,11 +90,11 @@ public class UserRepository {
 
 
     private void loggedOut() {
-        DataModel.getInstance().loggedOut();
+        dataModel.loggedOut();
 
     }
 
-    public void getUserChats(String userID, chatCallback chatCallback) {
+    public void getUserChats(String userID, chatCallback chatCallback, DataModel dataModel) {
 
 
         backend.getUserChats(userID, new chatDBCallback() {
@@ -103,7 +103,7 @@ public class UserRepository {
                 List<iChat> chatList = new ArrayList<>();
                 for (Map<String, Object> map : chatMap) {
                     Advertisement ad = createAdFromMap(map);
-                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString(),ad,map.get("receiver").toString(),map.get("sender").toString()));
+                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString(), ad, map.get("receiver").toString(), map.get("sender").toString(), dataModel));
                 }
                 chatCallback.onCallback(chatList);
 
@@ -121,27 +121,18 @@ public class UserRepository {
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        String imageURL= (String) dataMap.get("imgURL");
+        String imageURL = (String) dataMap.get("imgURL");
         String owner = (String) dataMap.get("advertOwner");
 
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageURL, tags,owner);
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageURL, tags, owner);
     }
-
-
-
-
 
 
     public String userID() {
         return backend.getUserID();
     }
 
-/*
-    public String userEmail() {
-        return BackendDataHandler.getInstance().getUserEmail();
-    }
 
- */
 
     public void getMessages(String uniqueChatID, Chat chat, messagesCallback messagesCallback) {
         List<iMessage> messages = new ArrayList<>();
@@ -166,14 +157,14 @@ public class UserRepository {
 
 
     public void createNewChat(HashMap<String, Object> newChatMap, Advertisement advertisement, stringCallback stringCallback) {
-        backend.createNewChat(newChatMap,advertisement,stringCallback);
+        backend.createNewChat(newChatMap, advertisement, stringCallback);
     }
 
     public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
         backend.writeMessage(uniqueChatID, messageMap);
     }
 
-    private void setUsername(String username,SuccessCallback successCallback) {
+    private void setUsername(String username, SuccessCallback successCallback) {
         backend.setUsername(username, successCallback);
     }
 

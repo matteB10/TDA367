@@ -8,13 +8,15 @@ public class User implements iUser {
     private String displayname;
     private String userID;
     private List<iChat> chats;
-    iFavoriteCollection favoriteCollection;
+    private DataModel dataModel;
+    private iFavoriteCollection favoriteCollection;
 
-    public User(String email, String displayname, String userID) {
+    public User(String email, String displayname, String userID,DataModel dataModel) {
         this.email = email;
         this.displayname = displayname;
         this.userID = userID;
-        DataModel.getInstance().fetchUserChats(userID, chatsList -> {
+        this.dataModel = dataModel;
+        dataModel.fetchUserChats(userID, chatsList -> {
             chats = null;
             chats = new ArrayList<>(chatsList);
         });

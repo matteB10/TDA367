@@ -7,6 +7,7 @@ import com.masthuggis.boki.backend.MockRepository;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.sorting.SortManager;
+import com.masthuggis.boki.utils.ClickDelayHelper;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.view.SearchCallback;
 import com.masthuggis.boki.view.ThumbnailView;
@@ -22,8 +23,7 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
     private final View view;
     private final SortManager sortManager;
     private List<Advertisement> adverts;
-    private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
-    private static final long MIN_THUMBNAIL_CLICK_TIME_INTERVAL = 300;
+
 
     public HomePresenter(View view) {
         this.view = view;
@@ -90,14 +90,7 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
 
     @Override
     public boolean canProceedWithTapAction() {
-        boolean canProceed = tapActionWasNotTooFast();
-        lastTimeThumbnailWasClicked = System.currentTimeMillis();
-        return canProceed;
-    }
-
-    private boolean tapActionWasNotTooFast() {
-        long elapsedTimeSinceLastClick = System.currentTimeMillis() - lastTimeThumbnailWasClicked;
-        return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
+      return ClickDelayHelper.canProceedWithTapAction();
     }
 
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
@@ -155,13 +148,6 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
         }));
         thread.start();
     }
-
-  /*  @Override
-    public void advertsInMarketUpdate(List<Advertisement> advertsInMarket) {
-        if (advertsInMarket != null && !advertsInMarket.isEmpty()) {
-            updateData(advertsInMarket);
-        }
-    }*/
 
     @Override
     public void onAdvertisementsUpdated() {
