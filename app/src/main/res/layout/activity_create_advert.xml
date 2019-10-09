@@ -371,15 +371,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view4" />
 
-                <CheckBox
-                    android:id="@+id/compatabilityCB"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="23dp"
-                    android:text="@string/compability_mode"
-                    app:layout_constraintBottom_toTopOf="@+id/view5"
-                    app:layout_constraintStart_toStartOf="parent" />
-
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

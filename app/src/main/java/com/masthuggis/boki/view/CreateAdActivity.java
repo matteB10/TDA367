@@ -50,11 +50,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    static final int REQUEST_IMAGE_CROP = 2;
     private List<Button> preDefTagButtons = new ArrayList<>();
     private List<Button> userDefTagButtons = new ArrayList<>();
     private CreateAdPresenter presenter;
-    private CheckBox compatibilityCB;
     private File currentImageFile;
     private ImageView imageViewDisplay;
     private EditText title;
@@ -70,24 +68,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         enablePublishButton(false);
         displayPreDefTagButtons();
         setListeners();
-        compatibilityCB = findViewById(R.id.compatabilityCB);
         updateDataFromModel();
     }
-
-    //If image can be cropped or not depends on if the app is run on an emulator or not
-    //Can't start crop request on emulator for some unknown reason...
-    /*
-    private boolean isEmulator() {
-        return Build.FINGERPRINT.startsWith("generic")
-                || Build.FINGERPRINT.startsWith("unknown")
-                || Build.MODEL.contains("google_sdk")
-                || Build.MODEL.contains("Emulator")
-                || Build.MODEL.contains("Android SDK built for x86")
-                || Build.MANUFACTURER.contains("Genymotion")
-                || (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
-                || "google_sdk".equals(Build.PRODUCT)
-                || compatibilityCB.isChecked(); //TODO fix crop activity so all users can use it when uploading adverts, this is temporary fix
-    }*/
 
     private void updateDataFromModel() {
         if (presenter.getImageUrl() != null) {
@@ -123,23 +105,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             }
         }
     }
-
-    /*
-    private void cropImage(Uri imageUri) {
-        try {
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            cropIntent.setDataAndType(imageUri, "image/*");
-            cropIntent.putExtra("crop", true);
-            cropIntent.putExtra("aspectX", 1);
-            cropIntent.putExtra("aspectY", 1);
-            cropIntent.putExtra("outputX", 220); //TODO set resolution and aspect ratio so image looks acceptable
-            cropIntent.putExtra("outputY", 300);
-            cropIntent.putExtra("return-data", true);
-            startActivityForResult(cropIntent, REQUEST_IMAGE_CROP);
-        } catch (ActivityNotFoundException exception) {
-            exception.printStackTrace();
-        }
-    }*/
 
     /**
      * Creates an empty file and specifies unique file name.
