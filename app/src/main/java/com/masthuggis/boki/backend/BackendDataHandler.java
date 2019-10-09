@@ -115,7 +115,8 @@ public class BackendDataHandler implements iBackend {
     private void writeToDatabase(HashMap<String, Object> data) {
         isWritingAdvertToDatabase = true;
         String uniqueOwnerID = (String) data.get("uniqueOwnerID");
-        db.collection("users").document(uniqueOwnerID).collection("adverts").document()
+        db.collection("users").document(uniqueOwnerID)
+                .collection("adverts").document()
                 .set(data).addOnSuccessListener(aVoid -> {
             Log.d(TAG, "DocumentSnapshot successfully written!");
             isWritingAdvertToDatabase = false;
@@ -131,13 +132,10 @@ public class BackendDataHandler implements iBackend {
         isWritingImageToDatabase = true;
         try {
             InputStream uploadStream = new FileInputStream(imageFile);
-            UploadTask uploadTask = imagesRef.child(uniqueAdID).putStream(uploadStream); //Starts upload to firebase
+            UploadTask uploadTask = imagesRef.child(uniqueAdID).putStream(uploadStream);
             uploadTask.addOnSuccessListener(taskSnapshot -> {
                 isWritingImageToDatabase = false;
-
-            }).addOnFailureListener(e -> {
-                isWritingImageToDatabase = false;
-                //Handle errors here
+            }).addOnFailureListener(e -> {isWritingImageToDatabase = false;
                 e.printStackTrace();
             });
         } catch (FileNotFoundException exception) {
@@ -372,13 +370,14 @@ public class BackendDataHandler implements iBackend {
         }
     }
 
-
     void signOut() {
         auth.signOut();
         DataModel.getInstance().loggedOut();
     }
 
 
+    /**Deleting an ad with the specific adID from the database
+     * @param adID */
     public void deleteAd(String adID) {
         CollectionReference advertPath = db.collection("users")
                 .document(getUserID()).collection("adverts");
@@ -398,6 +397,9 @@ public class BackendDataHandler implements iBackend {
     }
 
 
+    /** Updating the ad title in a specific ad, using the adID and the given new title.
+     * @param adID
+     * @param newTitle*/
     public void editTitle(String adID, String newTitle) {
         advertPath.whereEqualTo("uniqueAdID", adID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -413,6 +415,10 @@ public class BackendDataHandler implements iBackend {
                 });
     }
 
+    /**Updating the ad price in a specific ad, using the adID and the given new price
+     * @param adID
+     * @param newPrice
+     */
     public void editPrice(String adID, String newPrice) {
         advertPath.whereEqualTo("uniqueAdID", adID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -429,6 +435,10 @@ public class BackendDataHandler implements iBackend {
 
     }
 
+    /**Updating the ad description in a specific ad, using the adID and the new given description
+     * @param adID
+     * @param newDescription
+     */
     public void editDescription(String adID, String newDescription) {
         advertPath.whereEqualTo("uniqueAdID", adID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

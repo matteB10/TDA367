@@ -1,16 +1,24 @@
 package com.masthuggis.boki.view;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,26 +31,31 @@ import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.masthuggis.boki.view.CreateAdActivity.REQUEST_IMAGE_CAPTURE;
+import static com.masthuggis.boki.view.CreateAdActivity.REQUEST_IMAGE_CROP;
 
 public class EditAdActivity extends AppCompatActivity implements EditAdPresenter.View {
 
     private EditAdPresenter presenter;
+    private CheckBox compatibilityCB;
     private Button saveBtn;
     private EditText title;
     private EditText price;
     private EditText description;
     private File currentImageFile;
-
+    private ImageView bookImageView;
 
     private List<Button> preDefTagButtons = new ArrayList<>();
     private List<Button> userDefTagButtons = new ArrayList<>();
 
-    private static boolean validPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,16 +64,11 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
 
         Intent intent = getIntent();
         String advertID = intent.getExtras().getString("advertID");
-
+        compatibilityCB = findViewById(R.id.compatabilityCB);
         presenter = new EditAdPresenter(this, advertID);
         setUpBtns();
         setListeners();
-    }
-
-
-
-    private boolean isPriceValid(){
-        return this.validPrice;
+        displayPreDefTagButtons();
     }
 
     private void setUpBtns() {
@@ -133,9 +141,9 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         });
     }
 
-    private void setNewImageListener(){
-        ImageView image = findViewById(R.id.bookImageView);
-        image.setOnClickListener(view -> dispatchTakePictureIntent());
+    private void setNewImageListener() {
+        ImageView bookImageView = findViewById(R.id.bookImageView);
+        bookImageView.setOnClickListener(view -> dispatchTakePictureIntent());
     }
 
 
@@ -144,13 +152,13 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             try {
                 currentImageFile = createImageFile();
+                presenter.imageUpdate(currentImageFile);
             } catch (Exception i) {
                 System.out.println("error creating file");
             }
             if (currentImageFile != null) {
                 Uri imageURI = FileProvider.getUriForFile(this,
                         "com.masthuggis.boki.fileprovider", currentImageFile);
-                System.out.println(imageURI);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
@@ -164,6 +172,80 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         return image;
     }
 
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        bookImageView = findViewById(R.id.bookImageView);
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { //When image has been taken
+            if (isEmulator()) { //TODO maybe remove this when development is done
+                //Do stuff without cropping image since you can't crop on emulator
+                compressOnEmulator();
+            } else {
+                //Picture has been taken, needs to be cropped, not on emulator
+                Uri.Builder builder = new Uri.Builder();
+                builder.encodedPath(currentImageFile.getAbsolutePath());
+                Uri imageUri = builder.build(); //Build Uri
+                cropImage(imageUri);
+            }
+        } else if (requestCode == REQUEST_IMAGE_CROP) {
+            if (data != null) {
+                Bundle extras = data.getExtras();
+                Bitmap croppedBitmap = extras.getParcelable("data"); //Crops image to given resolution and aspect-ratio
+                setImageView(croppedBitmap);
+            }
+        }
+    }
+    private boolean isEmulator() {
+        return Build.FINGERPRINT.startsWith("generic")
+                || Build.FINGERPRINT.startsWith("unknown")
+                || Build.MODEL.contains("google_sdk")
+                || Build.MODEL.contains("Emulator")
+                || Build.MODEL.contains("Android SDK built for x86")
+                || Build.MANUFACTURER.contains("Genymotion")
+                || (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
+                || "google_sdk".equals(Build.PRODUCT)
+                || compatibilityCB.isChecked(); //TODO fix crop activity so all users can use it when uploading adverts, this is temporary fix
+    }
+    private void cropImage(Uri imageUri) {
+        try {
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            cropIntent.setDataAndType(imageUri, "image/*");
+            cropIntent.putExtra("crop", true);
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            cropIntent.putExtra("outputX", 220); //TODO set resolution and aspect ratio so image looks acceptable
+            cropIntent.putExtra("outputY", 300);
+            cropIntent.putExtra("return-data", true);
+            startActivityForResult(cropIntent, REQUEST_IMAGE_CROP);
+        } catch (ActivityNotFoundException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    private void setImageView(Bitmap bitmap) {
+        bookImageView.setImageBitmap(bitmap);
+    }
+
+    private void compressOnEmulator() {
+        Bitmap bitmap = compressBitmap();
+        setImageView(bitmap);
+        try {
+            OutputStream out = new FileOutputStream(currentImageFile.getPath());
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+    private Bitmap compressBitmap() {
+        BitmapFactory.Options imageOptions = new BitmapFactory.Options();
+        imageOptions.inJustDecodeBounds = true;
+        Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
+        return Bitmap.createScaledBitmap(bitmap, 800, 800, false); //TODO is this even necessary?
+    }
+
+    //-----------------------------------------------------------------------------------------
+
     private void setSaveAdListener(){
         saveBtn = findViewById(R.id.saveAdBtn);
         saveBtn.setOnClickListener(view -> {
@@ -171,9 +253,9 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
             intent.putExtra("advertID", presenter.getID());
             startActivity(intent);
             finish();
-
         });
     }
+
     //condition buttons --------------------------------------------
     private void setConditionGroupListener() {
         Button conditionGoodButton = findViewById(R.id.conditionGoodButton);
@@ -245,4 +327,58 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         TextView currentDescription = findViewById(R.id.descriptionEditText);
         currentDescription.setText(description);
     }
+    //----------------------------------------------------------------
+
+    private void displayPreDefTagButtons() {
+        LinearLayout preDefTagsLayout = findViewById(R.id.preDefTagsLinearLayout);
+        List<Button> tagButtons = createTagButtons(getPreDefTagStrings());
+        preDefTagButtons = tagButtons;
+        populateTagsLayout(tagButtons, preDefTagsLayout);
+    }
+    private void populateTagsLayout(List<Button> tags, ViewGroup parentLayout) {
+        for (Button btn : tags) {
+            ViewGroup tableRow = getCurrenTagRow(parentLayout.getId());
+            tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
+        }
+    }
+    private List<String> getPreDefTagStrings() {
+        String[] strArr = getResources().getStringArray(R.array.preDefSubjectTags);
+        return Arrays.asList(strArr);
+    }
+
+    private ViewGroup getCurrenTagRow(int parentViewID) {
+        ViewGroup parentLayout = findViewById(parentViewID);
+        int noOfRows = parentLayout.getChildCount();
+        for (int i = 0; i < noOfRows; i++) {
+            if (!(rowFull((TableRow) parentLayout.getChildAt(i)))) {
+                return (TableRow) parentLayout.getChildAt(i);
+            }
+        }
+        ViewGroup tr = new TableRow(this);
+        parentLayout.addView(tr, StylingHelper.getTableRowLayoutParams(this));
+        return tr;
+    }
+    private boolean rowFull(TableRow tableRow) {
+        return (tableRow.getChildCount() % 3 == 0 && tableRow.getChildCount() != 0);
+    }
+    private Button createTagButton(String text) {
+        Button b = new Button(this);
+        b.setText(text);
+        styleTagButtons(b, false);
+        return b;
+    }    private void styleTagButtons(Button btn, boolean isSelected) {
+        btn.setBackgroundResource(presenter.getTagDrawable(isSelected));
+        btn.setTextSize(12);
+        btn.setTextColor(this.getColor(R.color.colorWhite));
+        btn.setElevation(StylingHelper.getDPToPixels(this, 4));
+    }
+    private List<Button> createTagButtons(List<String> strTags) {
+        List<Button> btnList = new ArrayList<>();
+        for (String str : strTags) {
+            Button btn = createTagButton(str);
+            btnList.add(btn);
+        }
+        return btnList;
+    }
+
 }

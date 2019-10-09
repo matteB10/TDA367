@@ -39,7 +39,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
             presenter = new DetailsPresenter(this, advertID);
         }
 
-
         contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
             presenter.contactOwnerButtonClicked(contactOwnerButton.getText().toString());
@@ -163,18 +162,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         toast.show();
     }
 
-
-    private void setBtnForOwner() {
-        if (presenter.isUserOwner()) {
-            findViewById(R.id.changeAdButton).setVisibility(View.VISIBLE);
-            findViewById(R.id.contactOwnerButton).setVisibility(View.GONE);
-
-        } else {
-            findViewById(R.id.changeAdButton).setVisibility(View.GONE);
-            findViewById(R.id.contactOwnerButton).setVisibility(View.VISIBLE);
-        }
-    }
-
     @Override
     public void showEditView(String uniqueID) {
         Intent intent = new Intent(DetailsActivity.this, EditAdActivity.class);
@@ -185,7 +172,20 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     @Override
     public void setOwnerButtonText(String content) {
         contactOwnerButton.setText(content);
+    }
 
+    /**Setting up buttons depending of if the user is the owner of the specific ad.
+       If the user is the owner, this will show the edit button instead of the contact button
+     */
+    private void setBtnForOwner() {
+        if (presenter.isUserOwner()) {
+            findViewById(R.id.changeAdButton).setVisibility(View.VISIBLE);
+            findViewById(R.id.contactOwnerButton).setVisibility(View.GONE);
+
+        } else {
+            findViewById(R.id.changeAdButton).setVisibility(View.GONE);
+            findViewById(R.id.contactOwnerButton).setVisibility(View.VISIBLE);
+        }
     }
 
 }
