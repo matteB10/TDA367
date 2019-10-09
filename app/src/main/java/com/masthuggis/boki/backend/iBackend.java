@@ -22,6 +22,7 @@ public interface iBackend {
 
     void editPrice(String adID, String newPrice);
 
+    void editDescription(String adID, String newDescription);
 
     void writeAdvertToFirebase(File imageFile, HashMap<String, Object> dataMap, @Nullable SuccessCallback callback);
 
@@ -59,5 +60,5 @@ public interface iBackend {
 
     void userSignUp(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
 
-    void editDescription(String adID, String newDescription);
+    //void editTags(String adID, String newTag);
 }

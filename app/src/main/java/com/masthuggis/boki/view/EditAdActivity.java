@@ -11,11 +11,15 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +37,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class EditAdActivity extends AppCompatActivity implements EditAdPresenter.View {
@@ -62,6 +67,8 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
 
         setListeners();
         compatibilityCB = findViewById(R.id.compatabilityCB);
+
+        displayPreDefTagButtons();
     }
 
     private void setRemoveBtn() {
@@ -78,12 +85,7 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
     private void setSaveAdListener() {
         saveBtn = findViewById(R.id.saveAdBtn);
         saveBtn.setOnClickListener(view -> {
-            try {
-                presenter.saveAdBtnPressed( createImageFile());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            Intent intent = new Intent(EditAdActivity.this, DetailsActivity.class);
+            Intent intent = new Intent(EditAdActivity.this, MainActivity.class);
             intent.putExtra("advertID", presenter.getID());
             startActivity(intent);
             finish();
@@ -99,6 +101,9 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         setConditionGroupListener();
         setRemoveBtn();
         setImageViewListener();
+
+        setPreDefTagsListeners();
+        setUserTagTextFieldListener();
     }
 
     private void setImageViewListener() {
@@ -168,7 +173,17 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         bookImageView.setOnClickListener(view -> dispatchTakePictureIntent());
     }
 
+    private void setTagListener(Button btn){
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.userDefTagsChanged(btn.getText().toString());
 
+            }
+        });
+    }
+
+    //----------------------------------------------------------------
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -311,7 +326,7 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         presenter.imageUpdate(currentImageFile);
     }
 
-    //getting old information ---------------------------------------
+    //setting up old information ---------------------------------------
     @Override
     public void setTitle(String name) {
         TextView title = findViewById(R.id.titleEditText);
@@ -333,5 +348,181 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         currentDescription.setText(description);
     }
 
-    //
+    //Tag-methods from createad and detailview-----------------------------------------
+    @Override
+    public void setTags(List<String> tags) {
+        LinearLayout parentLayout = findViewById(R.id.tagsLinearLayout);
+        TableRow tableRow = new TableRow(this);
+        Button btn;
+
+        for (String str : tags) {
+            btn = createTagButton(str);
+            tableRow = getTableRow(tableRow, parentLayout);
+            tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
+            tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
+        }
+        parentLayout.addView(tableRow);
+    }
+
+    private TableRow getTableRow(TableRow tableRow, LinearLayout parentLayout) {
+        if (tableRow.getChildCount() % 4 == 0) {
+            parentLayout.addView(tableRow);
+            return new TableRow(this);
+        }
+        return tableRow;
+    }
+
+
+    private void setPreDefTagsListeners() {
+        for (Button btn : preDefTagButtons) {
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Prevent scrollview from auto scrolling to textfields in focus
+                    btn.requestFocus();
+                    presenter.preDefTagsChanged(btn.getText().toString());
+                }
+            });
+        }
+    }
+
+    private void setUserDefTagsListener(Button btn) {
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.userDefTagsChanged(btn.getText().toString());
+
+            }
+        });
+    }
+    private void setUserTagTextFieldListener() {
+        EditText userDefTag = findViewById(R.id.tagsEditText);
+        userDefTag.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SPACE)) {
+                    presenter.userDefTagsChanged(userDefTag.getText().toString());
+                    userDefTag.setText("");
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+    private List<String> getPreDefTagStrings() {
+        String[] strArr = getResources().getStringArray(R.array.preDefSubjectTags);
+        return Arrays.asList(strArr);
+    }
+    private List<Button> createTagButtons(List<String> strTags) {
+        List<Button> btnList = new ArrayList<>();
+        for (String str : strTags) {
+            Button btn = createTagButton(str);
+            btnList.add(btn);
+        }
+        return btnList;
+    }
+    private Button createTagButton(String btnTxt) {
+        Button btn = new Button(this);
+        btn.setText(btnTxt);
+        setTagStyling(btn);
+        return btn;
+    }
+
+
+    private void setTagStyling(Button btn) {
+        btn.setBackgroundResource(R.drawable.subject_tag_shape_normal);
+        btn.setTextSize(12);
+        btn.setTextColor(this.getColor(R.color.colorWhite));
+        btn.setElevation(4);
+    }
+    private void populateTagsLayout(List<Button> tags, ViewGroup parentLayout) {
+        for (Button btn : tags) {
+            ViewGroup tableRow = getCurrenTagRow(parentLayout.getId());
+            tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
+        }
+    }
+    private boolean rowFull(TableRow tableRow) {
+        return (tableRow.getChildCount() % 3 == 0 && tableRow.getChildCount() != 0);
+    }
+    private void displayPreDefTagButtons() {
+        LinearLayout preDefTagsLayout = findViewById(R.id.preDefTagsLinearLayout);
+        List<Button> tagButtons = createTagButtons(getPreDefTagStrings());
+        preDefTagButtons = tagButtons;
+        populateTagsLayout(tagButtons, preDefTagsLayout);
+    }
+
+
+    private void styleTagButtons(Button btn, boolean isSelected) {
+        btn.setBackgroundResource(presenter.getTagDrawable(isSelected));
+        btn.setTextSize(12);
+        btn.setTextColor(this.getColor(R.color.colorWhite));
+        btn.setElevation(StylingHelper.getDPToPixels(this, 4));
+    }
+
+    @Override
+    public void setTagStyling(String tag, boolean isSelected) {
+        for (Button btn : preDefTagButtons) {
+            if (btn.getText().equals(tag)) {
+                styleTagButtons(btn, isSelected);
+            }
+        }
+    }
+    @Override
+    public void displayUserTagButton(String tag) {
+        Button btn = createTagButton(tag);
+        userDefTagButtons.add(btn);
+        ViewGroup currentUserTagTableRow = getCurrenTagRow(R.id.tagsLinearLayout);
+        setUserDefTagsListener(btn);
+        currentUserTagTableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
+    }
+
+    @Override
+    public void removeUserTagButton(String tag) {
+        userDefTagButtons.remove(getButtonFromText(tag));
+        updateUserDefTags();
+    }
+
+    @Override
+    public File getCurrentImageFile() {
+        return null;
+    }
+
+    private ViewGroup getCurrenTagRow(int parentViewID) {
+        ViewGroup parentLayout = findViewById(parentViewID);
+        int noOfRows = parentLayout.getChildCount();
+        for (int i = 0; i < noOfRows; i++) {
+            if (!(rowFull((TableRow) parentLayout.getChildAt(i)))) {
+                return (TableRow) parentLayout.getChildAt(i);
+            }
+        }
+        ViewGroup tr = new TableRow(this);
+        parentLayout.addView(tr, StylingHelper.getTableRowLayoutParams(this));
+        return tr;
+    }
+
+    private void updateUserDefTags() {
+        ViewGroup parentLayout = findViewById(R.id.tagsLinearLayout);
+        clearLayout(parentLayout);
+        populateTagsLayout(userDefTagButtons, parentLayout);
+    }
+
+    private Button getButtonFromText(String text) {
+        for (Button btn : userDefTagButtons) {
+            if (btn.getText().toString().equals(text)) {
+                return btn;
+            }
+        }
+        return null;
+    }
+
+    private void clearLayout(ViewGroup layout) {
+        ViewGroup tr;
+        int noOfRows = layout.getChildCount();
+        for (int i = 0; i < noOfRows; i++) {
+            tr = (TableRow) layout.getChildAt(i);
+            tr.removeAllViews();
+        }
+    }
+
 }

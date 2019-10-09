@@ -462,4 +462,23 @@ public class BackendDataHandler implements iBackend {
                     }
                 });
     }
+
+/*
+    //TODO ad tags to tag-array
+    public void editTags(String adID, String newTag){
+        advertPath.whereEqualTo("uniqueAdID", adID).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (!("tags".contains(newTag))) {
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                advertPath.document(documentSnapshot.getId());
+
+                            }
+                        }
+                    }
+                });
+    }
+
+ */
 }

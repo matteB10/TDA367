@@ -130,6 +130,9 @@ public class Repository {
         backend.editDescription(adID, newDescription);
     }
 
+    public void editTags(String adID, String newTag){
+       // backend.editTags(adID,newTag);
+    }
     public void addObserverToBackend(DataModel dataModel) {
         backend.addBackendObserver(dataModel);
     }
