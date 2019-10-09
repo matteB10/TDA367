@@ -4,7 +4,6 @@ import com.masthuggis.boki.backend.BackendFactory;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryFactory;
 import com.masthuggis.boki.backend.UserRepository;
-import com.masthuggis.boki.backend.callbacks.DBCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
@@ -23,21 +22,21 @@ import java.util.List;
 
 public class DataModel implements BackendObserver {
 
-
     private static DataModel instance;
     private iUser user;
     private List<Advertisement> allAds = new ArrayList<>();
 
     private final List<ChatObserver> chatObservers = new ArrayList<>();
-    private final List<AdvertisementObserver> advertisementObservers = new ArrayList<>();
+    private final List<AdvertisementObserver> marketAdvertisementObservers = new ArrayList<>();
+    private final List<AdvertisementObserver> userAdvertisementObservers = new ArrayList<>();
     private final List<MessagesObserver> messagesObservers = new ArrayList<>();
     private Repository repository;
     private UserRepository userRepository;
 
 
     private DataModel() {
-
         initBackend();
+        initUser();
     }
 
     private void initBackend() {
@@ -49,12 +48,11 @@ public class DataModel implements BackendObserver {
     public static DataModel getInstance() {
         if (instance == null) {
             instance = new DataModel();
-            instance.initApp();
         }
         return instance;
     }
 
-    private void initApp() {
+    private void initUser() {
         if (isLoggedIn()) {
             userRepository.logUserIn();
         }
@@ -68,8 +66,12 @@ public class DataModel implements BackendObserver {
         this.messagesObservers.add(messagesObserver);
     }
 
-    public void addAdvertisementObserver(AdvertisementObserver advertisementObserver) {
-        this.advertisementObservers.add(advertisementObserver);
+    public void addMarketAdvertisementObserver(AdvertisementObserver advertisementObserver) {
+        this.marketAdvertisementObservers.add(advertisementObserver);
+    }
+
+    public void addUserAdvertisementObserver(AdvertisementObserver advertisementObserver) {
+        this.userAdvertisementObservers.add(advertisementObserver);
     }
 
     public void removeChatObserver(ChatObserver chatObserver) {
@@ -81,7 +83,7 @@ public class DataModel implements BackendObserver {
     }
 
     public void removeAdvertisementObserver(AdvertisementObserver advertisementObserver) {
-        this.advertisementObservers.remove(advertisementObserver);
+        this.marketAdvertisementObservers.remove(advertisementObserver);
     }
 
 
@@ -97,12 +99,17 @@ public class DataModel implements BackendObserver {
         }
     }
 
-    private void notifyAdvertisementObservers() {
-        for (AdvertisementObserver advertisementObserver : advertisementObservers) {
+    private void notifyMarketAdvertisementObservers() {
+        for (AdvertisementObserver advertisementObserver : marketAdvertisementObservers) {
             advertisementObserver.onAdvertisementsUpdated();
         }
     }
 
+    private void notifyUserAdvertisementObservers() {
+        for (AdvertisementObserver advertisementObserver : userAdvertisementObservers) {
+            advertisementObserver.onAdvertisementsUpdated();
+        }
+    }
 
     public void SignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
         userRepository.signIn(email, password, successCallback, failureCallback);
@@ -154,7 +161,7 @@ public class DataModel implements BackendObserver {
             public void onCallback(List<Advertisement> advertisements) {
                 allAds = advertisements;
                 advertisementCallback.onCallback(allAds);
-                notifyAdvertisementObservers();
+                notifyMarketAdvertisementObservers();
             }
         });
     }
@@ -265,19 +272,16 @@ public class DataModel implements BackendObserver {
     @Override
     public void onMessagesChanged() {
         notifyMessagesObserver();
-
     }
 
     @Override
     public void onAdvertisementsChanged() {
-        notifyAdvertisementObservers();
-
+        notifyMarketAdvertisementObservers();
     }
 
     @Override
     public void onChatsChanged() {
         notifyChatObservers();
-
     }
 
     void getMessages(String uniqueChatID, Chat chat, messagesCallback messagesCallback) {

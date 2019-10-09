@@ -3,19 +3,21 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.model.observers.AdvertisementObserver;
 import com.masthuggis.boki.utils.ClickDelayHelper;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.List;
 
-public class ProfilePresenter implements IProductsPresenter {
+public class ProfilePresenter implements IProductsPresenter, AdvertisementObserver {
     private final View view;
     private List<Advertisement> adverts;
 
     public ProfilePresenter(View view) {
         this.view = view;
         getData();
+        DataModel.getInstance().addMarketAdvertisementObserver(this);
     }
 
     private void getData() {
@@ -68,6 +70,11 @@ public class ProfilePresenter implements IProductsPresenter {
         int drawable = StylingHelper.getConditionDrawable(a.getCondition());
         int text = StylingHelper.getConditionText(a.getCondition());
         thumbnailView.setCondition(text, drawable);
+    }
+
+    @Override
+    public void onAdvertisementsUpdated() {
+        getData();
     }
 
     public interface View {

@@ -36,7 +36,7 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
 
         // If using firebase uncommment line below
         getData();
-        DataModel.getInstance().addAdvertisementObserver(this);
+        DataModel.getInstance().addMarketAdvertisementObserver(this);
     }
 
     private void getData() {
