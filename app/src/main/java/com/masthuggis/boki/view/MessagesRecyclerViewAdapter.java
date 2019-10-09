@@ -1,6 +1,6 @@
 package com.masthuggis.boki.view;
 
-import android.net.Uri;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,16 +10,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.ChatPresenter;
 
 public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRecyclerViewAdapter.ViewHolder> {
+    private Context mContext;
     /**
      * MessagesRecyclerViewAdapter is the adapter class of the recycler view used in MessagesFragment.
      */
     private ChatPresenter presenter;
 
-    MessagesRecyclerViewAdapter(ChatPresenter chatPresenter) {
+    MessagesRecyclerViewAdapter(Context context, ChatPresenter chatPresenter) {
+        this.mContext = context;
         this.presenter = chatPresenter;
     }
 
@@ -86,6 +89,7 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
                 presenter.onRowPressed(chatID);
             }
         }
+
         public void setUserTextView(String userTextView) {
             this.userTextView.setText(userTextView);
         }
@@ -98,7 +102,8 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
             if (messageImageView == null) {
                 return;
             }
-            this.messageImageView.setImageURI(Uri.parse(messageImageView));
+            Glide.with(mContext).load(messageImageView).into(this.messageImageView);
+         //   this.messageImageView.setImageURI(Uri.parse(messageImageView));
         }
 
         public void setChatID(String chatID) {

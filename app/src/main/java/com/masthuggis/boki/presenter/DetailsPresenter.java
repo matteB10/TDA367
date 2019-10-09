@@ -68,7 +68,6 @@ public class DetailsPresenter {
     }
 
 
-
     private void openChat(String chatID) {
         view.openChat(chatID);
     }
@@ -90,16 +89,17 @@ public class DetailsPresenter {
     }
 
     public void contactOwnerButtonClicked(String contactOwnerButtonText) {
-        if (contactOwnerButtonText.equals("Starta chatt") && (DataModel.getInstance().getUserChats() != null)) {
-            for (iChat chats : DataModel.getInstance().getUserChats()) {
-                if (chats.getAdvert().getUniqueID().equals(advertisement.getUniqueID())) {
-                    openChat(chats.getChatID());
-                    return;
+        if (contactOwnerButtonText.equals("Starta chatt")) {
+            if (DataModel.getInstance().getUserChats() != null) {
+                for (iChat chats : DataModel.getInstance().getUserChats()) {
+                    if (chats.getAdvert().getUniqueID().equals(advertisement.getUniqueID())) {
+                        openChat(chats.getChatID());
+                        return;
+                    }
                 }
-
             }
-        } else {
             createNewChat();
+        } else {
             view.setOwnerButtonText("Starta chatt");
         }
     }
@@ -117,7 +117,7 @@ public class DetailsPresenter {
 
         void setTags(List<String> tags);
 
-        void openChat(String uniqueOwnerID);
+        void openChat(String chatID);
 
         void showToast();
 

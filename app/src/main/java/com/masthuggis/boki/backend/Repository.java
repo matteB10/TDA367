@@ -40,7 +40,7 @@ public class Repository {
         dataMap.put("tags", advertisement.getTags());
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
-        dataMap.put("advertOwnerID", advertisement.getOwner());
+        dataMap.put("advertOwner", advertisement.getOwner());
         backend.writeAdvertToFirebase(imageFile, dataMap, null);
 
     }
@@ -91,7 +91,7 @@ public class Repository {
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        String owner = (String) dataMap.get("advertOwnerID");
+        String owner = (String) dataMap.get("advertOwner");
         String imageUrl = (String) dataMap.get("imgUrl");
         return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageUrl, tags, owner);
     }
@@ -108,7 +108,7 @@ public class Repository {
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        String owner = (String) dataMap.get("advertOwnerID");
+        String owner = (String) dataMap.get("advertOwner");
         return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, null, tags, owner);
     }
 

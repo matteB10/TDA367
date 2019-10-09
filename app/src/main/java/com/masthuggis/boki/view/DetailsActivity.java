@@ -121,7 +121,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
     @Override
     public void openChat(String chatID) {
-        //TODO ÖPPNA CHATT
         Intent intent = new Intent(DetailsActivity.this, MessagesActivity.class);
         intent.putExtra("chatID", chatID);
         startActivity(intent);

@@ -9,18 +9,22 @@
     android:elevation="3dp">
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="46dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="horizontal">
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="51dp"
+        android:layout_weight="1">
+
 
         <ImageView
             android:id="@+id/messageImageView"
-            android:layout_width="94dp"
+            android:layout_width="35dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
             android:scaleType="fitStart"
             app:srcCompat="@drawable/diskret" />
 
@@ -28,15 +32,30 @@
             android:id="@+id/message_user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="47dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:layout_toEndOf="@+id/messageImageView"
             android:text="Random User"
+            android:textAlignment="center"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/message_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
+            android:layout_width="153dp"
+            android:layout_height="26dp"
+
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="21dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="13dp"
+            android:layout_toEndOf="@+id/message_user"
+            android:text="TESTDATE"
+            android:textAlignment="textStart"
             android:textSize="18sp" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

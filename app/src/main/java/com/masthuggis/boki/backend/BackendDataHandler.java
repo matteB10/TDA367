@@ -32,7 +32,7 @@ import com.masthuggis.boki.backend.callbacks.UrlCallback;
 import com.masthuggis.boki.backend.callbacks.chatDBCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.model.BackendObserver;
+import com.masthuggis.boki.model.observers.BackendObserver;
 import com.masthuggis.boki.model.Chat;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.UniqueIdCreator;
@@ -72,8 +72,8 @@ public class BackendDataHandler implements iBackend {
 
     BackendDataHandler() {
         if (getUserID() != null) //Otherwise throws NullPointer on app launch
-        advertPath = db.collection("users")
-                .document(getUserID()).collection("adverts");
+            advertPath = db.collection("users")
+                    .document(getUserID()).collection("adverts");
 
     }
 
@@ -230,19 +230,24 @@ public class BackendDataHandler implements iBackend {
         String uniqueChatID = UniqueIdCreator.getUniqueID();
         newChatMap.put("uniqueChatID", uniqueChatID);
 
-        String sender = DataModel.getInstance().getUserID();
-        String receiver = advertisement.getUniqueOwnerID();
-        DocumentReference df = db.collection("users").document(sender).collection("conversations").document();
+        String senderID = DataModel.getInstance().getUserID();
+        String receiverID = advertisement.getUniqueOwnerID();
+        String receiver = advertisement.getOwner();
+        String sender = DataModel.getInstance().getUserDisplayName();
+        newChatMap.put("sender", sender);
+        newChatMap.put("receiver", receiver);
+        DocumentReference df = db.collection("users").document(senderID).collection("conversations").document();
         addAdvertisementToMap(newChatMap, advertisement);
         df.set(newChatMap)
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "DocumentSnapshot successfully written!");
                     newChatMap.put("receiverUsername", DataModel.getInstance().getUserDisplayName());
+                    newChatMap.put("receiverID", senderID);
+                    newChatMap.put("senderID", receiverID);
+                    newChatMap.put("receiver", receiver);
+                    newChatMap.put("sender", sender);
 
-                    newChatMap.put("receiver", sender);
-                    newChatMap.put("sender", receiver);
-
-                    db.collection("users").document(receiver).collection("conversations")
+                    db.collection("users").document(receiverID).collection("conversations")
                             .document().set(newChatMap);
 
                     stringCallback.onCallback(newChatMap.get("uniqueChatID").toString());
@@ -260,7 +265,7 @@ public class BackendDataHandler implements iBackend {
         dataMap.put("tags", advertisement.getTags());
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
-        dataMap.put("advertOwnerID", advertisement.getOwner());
+        dataMap.put("advertOwner", advertisement.getOwner());
         dataMap.put("imgURL", advertisement.getImageUrl());
     }
 
@@ -271,8 +276,6 @@ public class BackendDataHandler implements iBackend {
             return db.collection("users").document(userID).collection("adverts").document(advertID).getId();
         return db.collection("users").document(userID).getId();
     }
-
-
 
 
     public void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
@@ -287,11 +290,7 @@ public class BackendDataHandler implements iBackend {
 
     public boolean isUserSignedIn() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return user != null;
     }
 
     public void userSignUp(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {

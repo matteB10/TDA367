@@ -1,6 +1,6 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.model.ChatObserver;
+import com.masthuggis.boki.model.observers.ChatObserver;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.view.MessagesRecyclerViewAdapter;
@@ -43,7 +43,10 @@ public class ChatPresenter implements ChatObserver {
         }
         iChat c = chats.get(position);
 
-        holder.setUserTextView(c.getReceiverUsername());
+        //TODO FIXA SÅ ATT TIDEN SYNS HÄR MED ETT VETTIGT DATUMSYSTEM
+        //  String timeLastMessageSent = c.timeLastMessageSent();
+
+        holder.setUserTextView(c.getDisplayName());
         holder.setChatID(c.getChatID());
         holder.setDateTextView("" + c.timeLastMessageSent());
         holder.setMessageImageView(c.getAdvert().getImageUrl());
@@ -79,6 +82,7 @@ public class ChatPresenter implements ChatObserver {
         lastTimeThumbnailWasClicked = System.currentTimeMillis();
         return canProceed;
     }
+
     private boolean tapActionWasNotTooFast() {
         long elapsedTimeSinceLastClick = System.currentTimeMillis() - lastTimeThumbnailWasClicked;
         return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;

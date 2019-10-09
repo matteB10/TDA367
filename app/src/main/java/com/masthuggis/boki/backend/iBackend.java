@@ -8,7 +8,7 @@ import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.chatDBCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.model.BackendObserver;
+import com.masthuggis.boki.model.observers.BackendObserver;
 import com.masthuggis.boki.model.Chat;
 
 import java.io.File;

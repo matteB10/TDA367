@@ -25,7 +25,6 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 public class ChatFragment extends Fragment implements ChatPresenter.View {
     private ChatPresenter presenter;
     private View view;
-    private MessagesRecyclerViewAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -40,7 +39,7 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         Log.e("DEBUG", "onResume of MessageFragment");
         super.onResume();
         if(this.presenter!=null){
-            setupList(presenter);
+           // setupList(presenter);
         }
     }
     @Override
@@ -55,7 +54,7 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
      */
     private void setupList(ChatPresenter chatPresenter) {
         RecyclerView recyclerView = view.findViewById(R.id.messages_recyclerview);
-        adapter = new MessagesRecyclerViewAdapter(chatPresenter);
+        MessagesRecyclerViewAdapter adapter = new MessagesRecyclerViewAdapter(this.getContext(),chatPresenter);
         recyclerView.setAdapter(adapter);
         int spanCount = 1;
         int spacing = 10;

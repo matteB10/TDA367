@@ -10,6 +10,10 @@ import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.backend.callbacks.chatCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
+import com.masthuggis.boki.model.observers.AdvertisementObserver;
+import com.masthuggis.boki.model.observers.BackendObserver;
+import com.masthuggis.boki.model.observers.ChatObserver;
+import com.masthuggis.boki.model.observers.MessagesObserver;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -161,6 +165,8 @@ public class DataModel implements BackendObserver {
 
     public void loggedOut() {
         this.user = null;
+        notifyChatObservers();
+        notifyMessagesObserver();
     }
 
     public String getUserID() {
@@ -188,7 +194,7 @@ public class DataModel implements BackendObserver {
     public void createNewChat(Advertisement advertisement, stringCallback stringCallback) {
 
         HashMap<String, Object> newChatMap = new HashMap<>();
-        newChatMap.put("sender", this.getUserID());
+        newChatMap.put("senderID", this.getUserID());
 
         userRepository.createNewChat(newChatMap, advertisement, stringCallback);
     }
@@ -238,8 +244,14 @@ public class DataModel implements BackendObserver {
     }
 
     public void signUp(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback) {
-        userRepository.signUp(email, password, successCallback, failureCallback);
-        signInAfterRegistration(email, password, username);
+        userRepository.signUp(email, password, new SuccessCallback() {
+            @Override
+            public void onSuccess() {
+                signInAfterRegistration(email, password, username);
+                successCallback.onSuccess();
+
+            }
+        }, failureCallback);
     }
 
     @Override

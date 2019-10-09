@@ -52,11 +52,7 @@ public class ProfilePresenter implements IProductsPresenter {
     public boolean canProceedWithTapAction() {
         long now = System.currentTimeMillis();
         boolean canProceed;
-        if (now - lastTimeThumbnailWasClicked < MIN_CLICK_TIME_INTERVAL) {
-            canProceed = false;
-        } else {
-            canProceed = true;
-        }
+        canProceed = now - lastTimeThumbnailWasClicked >= MIN_CLICK_TIME_INTERVAL;
         lastTimeThumbnailWasClicked = now;
         return canProceed;
     }

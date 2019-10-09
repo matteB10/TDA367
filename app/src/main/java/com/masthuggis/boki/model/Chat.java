@@ -4,18 +4,22 @@ import java.util.List;
 
 public class Chat implements iChat {
     private List<iMessage> messages;
-    private String sender;
-    private String receiver;
+    private String senderID;
+    private String receiverID;
     private String chatID;
     private String receiverUsername;
     private Advertisement advertisement;
+    private String senderUsername;
 
 
-    public Chat(String uniqueChatID,Advertisement advert) {
-        this.sender = DataModel.getInstance().getUserID();
-        this.receiver = advert.getUniqueOwnerID();
+    public Chat(String uniqueChatID, Advertisement advert, String receiverUsername, String senderUsername) {
+        this.senderID = DataModel.getInstance().getUserID();
+        this.receiverID = advert.getUniqueOwnerID();
         this.chatID = uniqueChatID;
-        this.receiverUsername = advert.getOwner();
+
+        // TODO stoppa in receiverusername här istället, blir kaoz annars.
+        this.receiverUsername = receiverUsername;
+        this.senderUsername = senderUsername;
         this.advertisement = advert;
         DataModel.getInstance().getMessages(uniqueChatID, this, messagesList -> messages = messagesList);
     }
@@ -25,12 +29,12 @@ public class Chat implements iChat {
         return this.messages;
     }
 
-    public String getSender() {
-        return sender;
+    public String getSenderID() {
+        return this.senderID;
     }
 
-    public String getReceiver() {
-        return receiver;
+    public String getReceiverID() {
+        return this.receiverID;
     }
 
     @Override
@@ -45,6 +49,11 @@ public class Chat implements iChat {
 
     public String getReceiverUsername() {
         return receiverUsername;
+    }
+
+    @Override
+    public String getSenderUsername() {
+        return this.senderUsername;
     }
 
     @Override
@@ -63,5 +72,16 @@ public class Chat implements iChat {
     @Override
     public Advertisement getAdvert() {
         return this.advertisement;
+    }
+
+    @Override
+    public String getDisplayName() {
+        String currentUsername = DataModel.getInstance().getUserDisplayName();
+
+        if (!(senderUsername.equals(currentUsername))) {
+            return senderUsername;
+        } else {
+            return receiverUsername;
+        }
     }
 }

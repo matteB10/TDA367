@@ -10,7 +10,7 @@ import com.masthuggis.boki.model.iChat;
 
 class ChatFactory {
 
-    static iChat createChat(String uniqueChatID, Advertisement advertisement){
-        return new Chat( uniqueChatID,advertisement);
+    static iChat createChat(String uniqueChatID, Advertisement advertisement,String receiverUsername,String senderUsername){
+        return new Chat( uniqueChatID,advertisement,receiverUsername,senderUsername);
     }
 }

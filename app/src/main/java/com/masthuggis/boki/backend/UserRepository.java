@@ -62,7 +62,17 @@ public class UserRepository {
     }
 
     public void signInAfterRegistration(String email, String password, String username) {
-        backend.userSignIn(email, password, () -> setUsername(username, () -> logUserIn()), errorMessage -> {
+        backend.userSignIn(email, password, new SuccessCallback() {
+            @Override
+            public void onSuccess() {
+                UserRepository.this.setUsername(username, new SuccessCallback() {
+                    @Override
+                    public void onSuccess() {
+                        UserRepository.this.logUserIn();
+                    }
+                });
+            }
+        }, errorMessage -> {
 
         });
     }
@@ -93,7 +103,7 @@ public class UserRepository {
                 List<iChat> chatList = new ArrayList<>();
                 for (Map<String, Object> map : chatMap) {
                     Advertisement ad = createAdFromMap(map);
-                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString(),ad));
+                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString(),ad,map.get("receiver").toString(),map.get("sender").toString()));
                 }
                 chatCallback.onCallback(chatList);
 
@@ -112,7 +122,7 @@ public class UserRepository {
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
         String imageURL= (String) dataMap.get("imgURL");
-        String owner = (String) dataMap.get("advertOwnerID");
+        String owner = (String) dataMap.get("advertOwner");
 
         return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageURL, tags,owner);
     }

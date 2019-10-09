@@ -1,7 +1,7 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.model.MessagesObserver;
+import com.masthuggis.boki.model.observers.MessagesObserver;
 import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.model.iMessage;
 import com.masthuggis.boki.utils.CurrentTimeHelper;
