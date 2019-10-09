@@ -2,7 +2,6 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.utils.StylingHelper;
 
 import java.io.File;
 
@@ -34,10 +33,6 @@ public class EditAdPresenter {
         return this.validPrice;
     }
 
-    public int getTagDrawable(boolean isPressed) {
-        return StylingHelper.getTagDrawable(isPressed);
-    }
-
     public void titleChanged(String title) {
         String adID = advertisement.getUniqueID();
         if(title != null) {
@@ -66,20 +61,18 @@ public class EditAdPresenter {
         DataModel.getInstance().removeExistingAdvert(adID);
     }
 
+    public void saveAdBtnPressed(File currentImageFile){
+        view.imageUpdate(currentImageFile);
+    }
+
     public void imageUpdate(File imageFile){
         String adID = advertisement.getUniqueID();
         DataModel.getInstance().updateImage(imageFile,adID);
     }
 
-
-
     public void conditionChanged(int condition) {
         advertisement.setCondition(condition);
         view.styleConditionButtonPressed(condition);
-    }
-
-    public String getImageUrl() {
-        return advertisement.getImageUrl();
     }
 
     public interface View {
@@ -93,5 +86,7 @@ public class EditAdPresenter {
 
         void styleConditionButtonPressed(int condition);
 
+        void imageUpdate(File imageFile);
     }
+
 }

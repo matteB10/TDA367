@@ -63,7 +63,6 @@ public class CreateAdPresenter {
      *
      * @param price
      */
-
     public void priceChanged(String price) {
         if (FormHelper.getInstance().isValidPrice(price)) {
             advertisement.setPrice(Integer.parseInt(price));

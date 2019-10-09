@@ -12,13 +12,10 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,7 +33,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class EditAdActivity extends AppCompatActivity implements EditAdPresenter.View {
@@ -65,8 +61,6 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         presenter = new EditAdPresenter(this, advertID);
 
         setListeners();
-        displayPreDefTagButtons();
-
         compatibilityCB = findViewById(R.id.compatabilityCB);
     }
 
@@ -80,9 +74,15 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
             finish();
         });
     }
-    private void setSaveAdListener(){
+
+    private void setSaveAdListener() {
         saveBtn = findViewById(R.id.saveAdBtn);
         saveBtn.setOnClickListener(view -> {
+            try {
+                presenter.saveAdBtnPressed( createImageFile());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Intent intent = new Intent(EditAdActivity.this, DetailsActivity.class);
             intent.putExtra("advertID", presenter.getID());
             startActivity(intent);
@@ -106,6 +106,7 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         bookImageView.setOnClickListener(view -> dispatchTakePictureIntent());
 
     }
+
     private void setTitleListener() {
         title = findViewById(R.id.titleEditText);
         title.addTextChangedListener(new TextWatcher() {
@@ -124,7 +125,7 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         });
     }
 
-    private void setPriceListener(){
+    private void setPriceListener() {
         price = findViewById(R.id.priceEditText);
         price.addTextChangedListener(new TextWatcher() {
             @Override
@@ -173,6 +174,7 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             try {
                 currentImageFile = createImageFile();
+               //TODO WHHYYYY?
                 presenter.imageUpdate(currentImageFile);
             } catch (Exception i) {
                 System.out.println("error creating file");
@@ -185,12 +187,14 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
             }
         }
     }
+
     private File createImageFile() throws IOException {
         String photoFileName = "IMG_" + UniqueIdCreator.getUniqueID();
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(photoFileName, ".jpg", storageDir);
         return image;
     }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         bookImageView = findViewById(R.id.bookImageView);
@@ -286,7 +290,6 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
             }
         });
     }
-
     @Override
     public void styleConditionButtonPressed(int conditionButtonPressed) {
         Button conditionButton = new Button(this);
@@ -303,6 +306,10 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         }
         conditionButton.setElevation(StylingHelper.getDPToPixels(this, 4));
     }
+    @Override
+    public void imageUpdate(File currentImageFile) {
+        presenter.imageUpdate(currentImageFile);
+    }
 
     //getting old information ---------------------------------------
     @Override
@@ -310,77 +317,21 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         TextView title = findViewById(R.id.titleEditText);
         title.setText("" + name);
     }
-
     @Override
     public void setPrice(long price) {
         TextView currentPrice = findViewById(R.id.priceEditText);
         currentPrice.setText(String.valueOf(price) + " kr");
     }
-
     @Override
     public void setImageUrl(String url) {
         ImageView imageView = (ImageView) findViewById(R.id.bookImageView);
         Glide.with(this).load(url).into(imageView);
     }
-
     @Override
     public void setDescription(String description) {
         TextView currentDescription = findViewById(R.id.descriptionEditText);
         currentDescription.setText(description);
     }
-    //----------------------------------------------------------------
 
-    private void displayPreDefTagButtons() {
-        LinearLayout preDefTagsLayout = findViewById(R.id.preDefTagsLinearLayout);
-        List<Button> tagButtons = createTagButtons(getPreDefTagStrings());
-        preDefTagButtons = tagButtons;
-        populateTagsLayout(tagButtons, preDefTagsLayout);
-    }
-    private void populateTagsLayout(List<Button> tags, ViewGroup parentLayout) {
-        for (Button btn : tags) {
-            ViewGroup tableRow = getCurrenTagRow(parentLayout.getId());
-            tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
-        }
-    }
-    private List<String> getPreDefTagStrings() {
-        String[] strArr = getResources().getStringArray(R.array.preDefSubjectTags);
-        return Arrays.asList(strArr);
-    }
-    private ViewGroup getCurrenTagRow(int parentViewID) {
-        ViewGroup parentLayout = findViewById(parentViewID);
-        int noOfRows = parentLayout.getChildCount();
-        for (int i = 0; i < noOfRows; i++) {
-            if (!(rowFull((TableRow) parentLayout.getChildAt(i)))) {
-                return (TableRow) parentLayout.getChildAt(i);
-            }
-        }
-        ViewGroup tr = new TableRow(this);
-        parentLayout.addView(tr, StylingHelper.getTableRowLayoutParams(this));
-        return tr;
-    }
-    private boolean rowFull(TableRow tableRow) {
-        return (tableRow.getChildCount() % 3 == 0 && tableRow.getChildCount() != 0);
-    }
-    private Button createTagButton(String text) {
-        Button b = new Button(this);
-        b.setText(text);
-        styleTagButtons(b, false);
-        return b;
-    }
-    private void styleTagButtons(Button btn, boolean isSelected) {
-        btn.setBackgroundResource(presenter.getTagDrawable(isSelected));
-        btn.setTextSize(12);
-        btn.setTextColor(this.getColor(R.color.colorWhite));
-        btn.setElevation(StylingHelper.getDPToPixels(this, 4));
-    }
-    private List<Button> createTagButtons(List<String> strTags) {
-        List<Button> btnList = new ArrayList<>();
-        for (String str : strTags) {
-            Button btn = createTagButton(str);
-            btnList.add(btn);
-        }
-        return btnList;
-    }
-    //--------------------------------------------------------------------
-
+    //
 }

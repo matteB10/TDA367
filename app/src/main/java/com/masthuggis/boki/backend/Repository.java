@@ -135,7 +135,7 @@ public class Repository {
     }
 
     public void uploadImageToFirebase(File imageFile, String adID) {
-       // backend.uploadImageToFirebase(imageFile,adID);
+        backend.uploadImageToFirebase(imageFile, adID);
     }
 }
 
