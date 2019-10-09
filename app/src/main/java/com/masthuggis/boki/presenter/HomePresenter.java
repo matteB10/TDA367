@@ -31,8 +31,6 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
         this.view = view;
         this.sortManager = SortManager.getInstance();
 
-        this.view.showLoadingScreen();
-
         // Used when using local JSON, comment if using firebase
         //useTestData();
 
@@ -42,6 +40,7 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
     }
 
     private void getData() {
+        view.showLoadingScreen();
         DataModel.getInstance().fetchAllAdverts((advertisements -> {
             if (advertisements != null) {
                 updateData(advertisements);

@@ -4,6 +4,7 @@ import com.masthuggis.boki.backend.BackendFactory;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryFactory;
 import com.masthuggis.boki.backend.UserRepository;
+import com.masthuggis.boki.backend.callbacks.DBCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
@@ -121,22 +122,25 @@ public class DataModel implements BackendObserver {
         return null; //TODO Fix a better solution to handle NPExc....
     }
 
-    //Returns a list of advertisements of the current user.
-    public List<Advertisement> getAdsFromUniqueOwnerID(String ID) {
+    public void getAdsFromLoggedInUser(advertisementCallback advertisementCallback) {
+        if (user == null) {
+            return;
+        }
+
+        if (allAds == null || allAds.isEmpty()) {
+            fetchAllAdverts(advertisements -> advertisementCallback.onCallback(retrieveAdsFromUserID(advertisements)));
+        } else {
+            advertisementCallback.onCallback(retrieveAdsFromUserID(allAds));
+        }
+    }
+
+    private List<Advertisement> retrieveAdsFromUserID(List<Advertisement> adverts) {
         List<Advertisement> userAds = new ArrayList<>();
-        for (Advertisement ad : allAds) {
-            if (ad.getUniqueOwnerID().equals(ID))
+        for (Advertisement ad : adverts) {
+            if (ad.getUniqueOwnerID().equals(user.getId()))
                 userAds.add(ad);
         }
         return userAds;
-    }
-
-    public List<Advertisement> getAdsFromLoggedInUser() throws UserNotLoggedInException {
-        if (isLoggedIn()) {
-            return getAdsFromUniqueOwnerID(user.getId());
-        } else {
-            throw new UserNotLoggedInException();
-        }
     }
 
     private void updateAllAds() {

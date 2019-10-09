@@ -21,46 +21,37 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
  * button to navigate to the app-wide settings.
  */
 public class ProfileFragment extends Fragment implements ProfilePresenter.View {
-    private ProfilePresenter presenter = new ProfilePresenter(this);
+    private ProfilePresenter presenter;
     private View view;
     private RecyclerView recyclerView;
     private ProductsRecyclerViewAdapter adapter;
     private Button signOutBtn;
 
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-        View v = inflater.inflate(R.layout.profile_fragment,container,false);
-
-        setupHeader(v);
-        setupList(v);
-
-        view = inflater.inflate(R.layout.profile_fragment, container, false);
-        setupHeader(view);
-
+        this.view = inflater.inflate(R.layout.profile_fragment,container,false);
+        this.presenter = new ProfilePresenter(this);
+        setupHeader();
         return view;
     }
 
 
-    private void setupHeader(View v) {
-
-        Button settingsButton = v.findViewById(R.id.profileSettingsButton);
+    private void setupHeader() {
+        Button settingsButton = view.findViewById(R.id.profileSettingsButton);
         settingsButton.setOnClickListener(view -> presenter.onSettingsButtonPressed());
 
-        signOutBtn = v.findViewById(R.id.signInButton);
+        signOutBtn = view.findViewById(R.id.signInButton);
         signOutBtn.setOnClickListener(view -> presenter.onSignOutPressed());
-
     }
 
-    private void setupList(View v) {
-        setupRecycler(v);
+    private void setupList() {
+        setupRecycler();
         setupAdapter();
         setupListLayout();
     }
 
-    private void setupRecycler(View v) {
-        recyclerView = v.findViewById(R.id.profileRecyclerView);
+    private void setupRecycler() {
+        recyclerView = view.findViewById(R.id.profileRecyclerView);
         recyclerView.setNestedScrollingEnabled(false);
     }
 
@@ -76,8 +67,10 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     }
 
     @Override
-    public void updateItemsOnSale() {
-        if (adapter != null) {
+    public void updateThumbnails() {
+        if (adapter == null) {
+            setupList();
+        } else {
             adapter.notifyDataSetChanged();
         }
     }
