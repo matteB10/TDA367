@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -20,13 +19,7 @@ public class MessagesActivity extends AppCompatActivity implements MessagesPrese
     private MessagesPresenter presenter;
 
 
-    private ImageView advertImageView;
-    private TextView username;
-
-
     private LinearLayout layout;
-    private RelativeLayout layout_2;
-    private ImageView sendButton;
     private EditText messageArea;
     private ScrollView scrollView;
 
@@ -36,8 +29,7 @@ public class MessagesActivity extends AppCompatActivity implements MessagesPrese
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         layout = findViewById(R.id.layout1);
-        layout_2 = findViewById(R.id.layout2);
-        sendButton = findViewById(R.id.sendButton);
+        ImageView sendButton = findViewById(R.id.sendButton);
         messageArea = findViewById(R.id.messageArea);
         scrollView = findViewById(R.id.scrollView);
 

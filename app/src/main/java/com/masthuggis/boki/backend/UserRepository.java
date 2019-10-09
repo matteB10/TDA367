@@ -1,7 +1,12 @@
 package com.masthuggis.boki.backend;
 
-import androidx.annotation.Nullable;
-
+import com.masthuggis.boki.backend.callbacks.DBCallback;
+import com.masthuggis.boki.backend.callbacks.FailureCallback;
+import com.masthuggis.boki.backend.callbacks.SuccessCallback;
+import com.masthuggis.boki.backend.callbacks.chatCallback;
+import com.masthuggis.boki.backend.callbacks.chatDBCallback;
+import com.masthuggis.boki.backend.callbacks.messagesCallback;
+import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.Chat;
@@ -15,61 +20,90 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * UserRepository is a repository which is used for retrieving information related to the user of the application.
+ * Information like current user, current users chats, messages, etc.
+ */
 public class UserRepository {
-    private static UserRepository userRepository;
 
-    public static UserRepository getInstance() {
-        if (userRepository == null) {
-            userRepository = new UserRepository();
-        }
-        return userRepository;
+    private iBackend backend;
+    private DataModel dataModel;
+
+    UserRepository(iBackend backend, DataModel dataModel) {
+        this.dataModel = dataModel;
+        this.backend = backend;
     }
 
+    /**
+     * @param email           email used for signing in.
+     * @param password        password which needs to match the password belonging to email.
+     * @param successCallback A callback which indicates what should happen if the login is successful.
+     * @param failureCallback A callback which indicates what should happen if the login failed.
+     *                        <p>
+     *                        This method asks the backend to try and log in. Depending on its success
+     *                        it either tells the model to log in or not.
+     */
+
     public void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
-        BackendDataHandler.getInstance().userSignIn(email, password, () -> {
+        backend.userSignIn(email, password, () -> {
             logUserIn();
             successCallback.onSuccess();
         }, failureCallback::onFailure);
     }
 
+    /**
+     * @param email           email used for signing up.
+     * @param password        password which needs to match the password belonging to email.
+     * @param successCallback A callback which indicates what should happen if the login is successful.
+     */
 
     public void signUp(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
-        BackendDataHandler.getInstance().userSignUp(email, password, successCallback, failureCallback);
+        backend.userSignUp(email, password, successCallback, failureCallback);
     }
 
     public void signInAfterRegistration(String email, String password, String username) {
-        BackendDataHandler.getInstance().userSignIn(email, password, () -> setUsername(username, () -> logUserIn()), errorMessage -> {
+        backend.userSignIn(email, password, new SuccessCallback() {
+            @Override
+            public void onSuccess() {
+                UserRepository.this.setUsername(username, new SuccessCallback() {
+                    @Override
+                    public void onSuccess() {
+                        UserRepository.this.logUserIn();
+                    }
+                });
+            }
+        }, errorMessage -> {
 
         });
     }
 
     public void logUserIn() {
         iUser user;
-        Map<String, String> map = BackendDataHandler.getInstance().getUser();
-        user = UserFactory.createUser(map.get("email"), map.get("username"), map.get("userID"));
-        DataModel.getInstance().loggedIn(user);
+        Map<String, String> map = backend.getUser();
+        user = UserFactory.createUser(map.get("email"), map.get("username"), map.get("userID"),dataModel);
+        dataModel.loggedIn(user);
     }
 
     public boolean isUserLoggedIn() {
-        return BackendDataHandler.getInstance().isUserSignedIn();
+        return backend.isUserSignedIn();
     }
 
 
     private void loggedOut() {
-        DataModel.getInstance().loggedOut();
+        dataModel.loggedOut();
 
     }
 
-    public void getUserChats(String userID, chatCallback chatCallback) {
+    public void getUserChats(String userID, chatCallback chatCallback, DataModel dataModel) {
 
 
-        BackendDataHandler.getInstance().getUserChats(userID, new chatDBCallback() {
+        backend.getUserChats(userID, new chatDBCallback() {
             @Override
             public void onCallback(List<Map<String, Object>> chatMap) {
                 List<iChat> chatList = new ArrayList<>();
                 for (Map<String, Object> map : chatMap) {
                     Advertisement ad = createAdFromMap(map);
-                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString(),ad));
+                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString(), ad, map.get("receiver").toString(), map.get("sender").toString(), dataModel));
                 }
                 chatCallback.onCallback(chatList);
 
@@ -87,32 +121,23 @@ public class UserRepository {
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        String imageURL= (String) dataMap.get("imgURL");
-        String owner = (String) dataMap.get("advertOwnerID");
+        String imageURL = (String) dataMap.get("imgURL");
+        String owner = (String) dataMap.get("advertOwner");
 
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageURL, tags,owner);
+        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageURL, tags, owner);
     }
-
-
-
-
 
 
     public String userID() {
-        return BackendDataHandler.getInstance().getUserID();
+        return backend.getUserID();
     }
 
-/*
-    public String userEmail() {
-        return BackendDataHandler.getInstance().getUserEmail();
-    }
 
- */
 
     public void getMessages(String uniqueChatID, Chat chat, messagesCallback messagesCallback) {
         List<iMessage> messages = new ArrayList<>();
 
-        BackendDataHandler.getInstance().getMessages(uniqueChatID, chat, new DBCallback() {
+        backend.getMessages(uniqueChatID, chat, new DBCallback() {
             @Override
             public void onCallBack(List<Map<String, Object>> advertDataList) {
                 if (advertDataList.size() == 0) {
@@ -131,20 +156,20 @@ public class UserRepository {
     }
 
 
-    public void createNewChat(HashMap<String, Object> newChatMap,Advertisement advertisement,stringCallback stringCallback) {
-        BackendDataHandler.getInstance().createNewChat(newChatMap,advertisement,stringCallback);
+    public void createNewChat(HashMap<String, Object> newChatMap, Advertisement advertisement, stringCallback stringCallback) {
+        backend.createNewChat(newChatMap, advertisement, stringCallback);
     }
 
     public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
-        BackendDataHandler.getInstance().writeMessage(uniqueChatID, messageMap);
+        backend.writeMessage(uniqueChatID, messageMap);
     }
 
-    public void setUsername(String username,SuccessCallback successCallback) {
-        BackendDataHandler.getInstance().setUsername(username, successCallback);
+    private void setUsername(String username, SuccessCallback successCallback) {
+        backend.setUsername(username, successCallback);
     }
 
     public void signOut() {
-        BackendDataHandler.getInstance().signOut();
+        backend.signOut();
     }
 }
 

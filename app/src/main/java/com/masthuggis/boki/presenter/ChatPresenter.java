@@ -1,35 +1,39 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.model.ChatObserver;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;
+import com.masthuggis.boki.model.observers.ChatObserver;
+import com.masthuggis.boki.utils.ClickDelayHelper;
 import com.masthuggis.boki.view.MessagesRecyclerViewAdapter;
 
 import java.util.List;
+
+/**
+ * ChatPresenter is the presenter class for the view called ChatFragment.
+ */
 
 public class ChatPresenter implements ChatObserver {
 
     private List<iChat> chats;
     private View view;
 
+
     public ChatPresenter(View view) {
         this.view = view;
         this.view.showLoadingScreen();
-        if (DataModel.getInstance().isLoggedIn()) {
-            chats = DataModel.getInstance().getUserChats();
-            view.isLoggedIn(this);
-
-        }
+        chats = DataModel.getInstance().getUserChats();
+        view.showUserChats(this);
         this.view.hideLoadingScreen();
-
-
         DataModel.getInstance().addChatObserver(this);
-        // UserRepository.getInstance().getUserChats(DataModel.getInstance().getUserID(), chatList -> chats = chatList);
 
     }
 
+    /**
+     * Depending on which position of the recyclerview is pressed, different messagesScreens are displayed.
+     */
+
     public void onRowPressed(String chatID) {
-        view.showDetailsScreen(chatID);
+        view.showMessagesScreen(chatID);
     }
 
     public void bindViewHolderAtPosition(int position, MessagesRecyclerViewAdapter.
@@ -39,12 +43,19 @@ public class ChatPresenter implements ChatObserver {
         }
         iChat c = chats.get(position);
 
-        holder.setUserTextView(c.getReceiverUsername());
+        //TODO FIXA SÅ ATT TIDEN SYNS HÄR MED ETT VETTIGT DATUMSYSTEM
+        //  String timeLastMessageSent = c.timeLastMessageSent();
+
+        holder.setUserTextView(c.getDisplayName());
         holder.setChatID(c.getChatID());
         holder.setDateTextView("" + c.timeLastMessageSent());
         holder.setMessageImageView(c.getAdvert().getImageUrl());
 
     }
+
+    /**
+     * Used by the recyclerview to decide how many items to display in the view.
+     */
 
     public int getItemCount() {
         if (chats != null) {
@@ -53,7 +64,9 @@ public class ChatPresenter implements ChatObserver {
         return 0;
     }
 
-
+    /**
+     * Updates chat view when the model is updated.
+     */
     @Override
     public void onChatUpdated() {
         this.chats = DataModel.getInstance().getUserChats();
@@ -64,6 +77,14 @@ public class ChatPresenter implements ChatObserver {
         DataModel.getInstance().removeChatObserver(this);
     }
 
+    /**
+     * Makes sure the user cant open multiple chats at the same time by tapping a chat multiple times in a row.
+     *
+     */
+    public boolean canProceedWithTapAction() {
+        return ClickDelayHelper.canProceedWithTapAction();
+    }
+
 
     public interface View {
         void showLoadingScreen();
@@ -72,8 +93,8 @@ public class ChatPresenter implements ChatObserver {
 
         void hideLoadingScreen();
 
-        void showDetailsScreen(String chatID);
+        void showMessagesScreen(String chatID);
 
-        void isLoggedIn(ChatPresenter chatPresenter);
+        void showUserChats(ChatPresenter chatPresenter);
     }
 }

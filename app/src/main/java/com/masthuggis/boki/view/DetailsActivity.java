@@ -27,6 +27,9 @@ import java.util.List;
 public class DetailsActivity extends AppCompatActivity implements DetailsPresenter.View {
     private DetailsPresenter presenter;
     private Button contactOwnerButton;
+    private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
+    private static final long MIN_THUMBNAIL_CLICK_TIME_INTERVAL = 300;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +44,10 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
         contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
-            presenter.contactOwnerButtonClicked(contactOwnerButton.getText().toString());
+            if(canProceedWithTapAction()){
+                presenter.contactOwnerButtonClicked(contactOwnerButton.getText().toString());
+            }
+
 
         });
 
@@ -115,7 +121,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
     @Override
     public void openChat(String chatID) {
-        //TODO ÖPPNA CHATT
         Intent intent = new Intent(DetailsActivity.this, MessagesActivity.class);
         intent.putExtra("chatID", chatID);
         startActivity(intent);
@@ -186,6 +191,16 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
             findViewById(R.id.changeAdButton).setVisibility(View.GONE);
             findViewById(R.id.contactOwnerButton).setVisibility(View.VISIBLE);
         }
+    }
+
+    public boolean canProceedWithTapAction() {
+        boolean canProceed = tapActionWasNotTooFast();
+        lastTimeThumbnailWasClicked = System.currentTimeMillis();
+        return canProceed;
+    }
+    private boolean tapActionWasNotTooFast() {
+        long elapsedTimeSinceLastClick = System.currentTimeMillis() - lastTimeThumbnailWasClicked;
+        return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.masthuggis.boki.backend;
 
+import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
@@ -11,31 +12,27 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Class providing the functionality to convert data from backend into Book-objects to be used
+ * Class providing the functionality to convert data from backend into objects to be used
  * by the domain-layer of the application.
- * Data is fetched using the BackendDataHandler class.
+ * Data is fetched through the iBackend interface.
  */
 public class Repository {
 
-    private Repository() {
+    private final iBackend backend;
+    private DataModel dataModel;
+
+    Repository(iBackend backend, DataModel dataModel) {
+        this.backend = backend;
+        this.dataModel =dataModel;
     }
 
-    /**
-     * Creates a new empty Advertisement, used during creation of a new ad
-     *
-     * @return an empty Advertisement
-     */
-    public Advertisement createAdvert() {
-        return AdFactory.createAd();
-    }
 
     /**
      * @param advertisement gets saved into temporary list as well as in firebase
      */
 
-    //TODO implement functionality for uploading the image of Advert to Firebase
-    public static void saveAdvert(File imageFile, Advertisement advertisement) {
-        DataModel.getInstance().addAdvertisement(advertisement);
+    public void saveAdvert(File imageFile, Advertisement advertisement) {
+        dataModel.addAdvertisement(advertisement);
         HashMap<String, Object> dataMap = new HashMap<>();
         dataMap.put("title", advertisement.getTitle());
         dataMap.put("description", advertisement.getDescription());
@@ -45,8 +42,8 @@ public class Repository {
         dataMap.put("tags", advertisement.getTags());
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
-        dataMap.put("advertOwnerID",advertisement.getOwner());
-        BackendDataHandler.getInstance().writeAdvertToFirebase(imageFile,dataMap,null);
+        dataMap.put("advertOwner", advertisement.getOwner());
+        backend.writeAdvertToFirebase(imageFile, dataMap, null);
 
     }
 
@@ -56,7 +53,7 @@ public class Repository {
      */
     public void fetchAdvertsFromUserIDFirebase(String userID, advertisementCallback advertisementCallback) {
         List<Advertisement> userIDAdverts = new ArrayList<>();
-        BackendDataHandler.getInstance().readUserIDAdverts(advertDataList -> {
+        backend.readUserIDAdverts(advertDataList -> {
             for (Map<String, Object> dataMap : advertDataList) {
                 userIDAdverts.add(retrieveAdvertWithUserID(dataMap, userID));
             }
@@ -64,8 +61,8 @@ public class Repository {
         }, userID);
     }
 
-    public static void fetchAllAdverts(advertisementCallback advertisementCallback) {
-        Thread thread = new Thread(() -> BackendDataHandler.getInstance().readAllAdvertData(advertDataList -> {
+    public void fetchAllAdverts(advertisementCallback advertisementCallback) {
+        Thread thread = new Thread(() -> backend.readAllAdvertData(advertDataList -> {
             List<Advertisement> allAds = new ArrayList<>();
             for (Map<String, Object> dataMap : advertDataList) {
                 allAds.add(retrieveAdvert(dataMap));
@@ -73,10 +70,21 @@ public class Repository {
             advertisementCallback.onCallback(allAds);
         }));
         thread.start();
+
     }
 
+    public String getFireBaseID(String userID, String advertID) {
+        return backend.getFireBaseID(userID, advertID);
+    }
 
-    private static Advertisement retrieveAdvert(Map<String, Object> dataMap) {
+    public void getAllAds(advertisementCallback advertisementCallback) {
+        // If there are adverts already stored, return those, else make a request. The stored
+        // adverts, if there are any, will be same as the ones stored on the database.
+        // TODO: make a setup so it does not have to do fetch every time (only if necessary)
+        fetchAllAdverts(advertisementCallback);
+    }
+
+    private Advertisement retrieveAdvert(Map<String, Object> dataMap) {
         String title = "" + (String) dataMap.get("title");
         String description = (String) dataMap.get("description");
         long price = (long) dataMap.get("price");
@@ -85,7 +93,7 @@ public class Repository {
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        String owner = (String) dataMap.get("advertOwnerID");
+        String owner = (String) dataMap.get("advertOwner");
         String imageUrl = (String) dataMap.get("imgUrl");
         return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageUrl, tags, owner);
     }
@@ -102,10 +110,33 @@ public class Repository {
         Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
-        String owner = (String) dataMap.get("advertOwnerID");
+        String owner = (String) dataMap.get("advertOwner");
         return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, null, tags, owner);
-    } //TODO den här kommer behöva en imageFile den här med
+    }
 
+    public void deleteAd(String uniqueID) {
+        backend.deleteAd(uniqueID);
+    }
+
+    public void editTitle(String adID, String newTitle) {
+        backend.editTitle(adID,newTitle);
+    }
+
+    public void editPrice(String adID, String newPrice) {
+        backend.editPrice(adID, newPrice);
+    }
+
+    public void editDescription(String adID, String newDescription) {
+        backend.editDescription(adID, newDescription);
+    }
+
+    public void addObserverToBackend(DataModel dataModel) {
+        backend.addBackendObserver(dataModel);
+    }
+
+    public void uploadImageToFirebase(File imageFile, String adID) {
+       // backend.uploadImageToFirebase(imageFile,adID);
+    }
 }
 
 

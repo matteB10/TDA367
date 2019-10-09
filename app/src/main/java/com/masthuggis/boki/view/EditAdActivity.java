@@ -39,9 +39,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.masthuggis.boki.view.CreateAdActivity.REQUEST_IMAGE_CAPTURE;
-import static com.masthuggis.boki.view.CreateAdActivity.REQUEST_IMAGE_CROP;
-
 public class EditAdActivity extends AppCompatActivity implements EditAdPresenter.View {
 
     private EditAdPresenter presenter;
@@ -55,25 +52,42 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
 
     private List<Button> preDefTagButtons = new ArrayList<>();
     private List<Button> userDefTagButtons = new ArrayList<>();
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_IMAGE_CROP = 2;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_ad_activity);
-
         Intent intent = getIntent();
         String advertID = intent.getExtras().getString("advertID");
-        compatibilityCB = findViewById(R.id.compatabilityCB);
         presenter = new EditAdPresenter(this, advertID);
-        setUpBtns();
+
         setListeners();
         displayPreDefTagButtons();
+
+        compatibilityCB = findViewById(R.id.compatabilityCB);
     }
 
-    private void setUpBtns() {
+    private void setRemoveBtn() {
         Button removeBtn = findViewById(R.id.removeAdBtn);
-        removeBtn.setOnClickListener(view -> presenter.removeAdBtnPressed());
+        removeBtn.setOnClickListener(view -> {
+            presenter.removeAdBtnPressed();
+            Intent intent = new Intent(EditAdActivity.this, MainActivity.class);
+            intent.putExtra("advertID", presenter.getID());
+            startActivity(intent);
+            finish();
+        });
+    }
+    private void setSaveAdListener(){
+        saveBtn = findViewById(R.id.saveAdBtn);
+        saveBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(EditAdActivity.this, DetailsActivity.class);
+            intent.putExtra("advertID", presenter.getID());
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void setListeners() {
@@ -83,8 +97,15 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         setSaveAdListener();
         setNewImageListener();
         setConditionGroupListener();
+        setRemoveBtn();
+        setImageViewListener();
     }
 
+    private void setImageViewListener() {
+        bookImageView = findViewById(R.id.bookImageView);
+        bookImageView.setOnClickListener(view -> dispatchTakePictureIntent());
+
+    }
     private void setTitleListener() {
         title = findViewById(R.id.titleEditText);
         title.addTextChangedListener(new TextWatcher() {
@@ -164,25 +185,20 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
             }
         }
     }
-
     private File createImageFile() throws IOException {
         String photoFileName = "IMG_" + UniqueIdCreator.getUniqueID();
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(photoFileName, ".jpg", storageDir);
         return image;
     }
-
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         bookImageView = findViewById(R.id.bookImageView);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { //When image has been taken
-            if (isEmulator()) { //TODO maybe remove this when development is done
-                //Do stuff without cropping image since you can't crop on emulator
+            if (isEmulator()) {
                 compressOnEmulator();
             } else {
-                //Picture has been taken, needs to be cropped, not on emulator
                 Uri.Builder builder = new Uri.Builder();
                 builder.encodedPath(currentImageFile.getAbsolutePath());
                 Uri imageUri = builder.build(); //Build Uri
@@ -222,11 +238,9 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
             exception.printStackTrace();
         }
     }
-
     private void setImageView(Bitmap bitmap) {
         bookImageView.setImageBitmap(bitmap);
     }
-
     private void compressOnEmulator() {
         Bitmap bitmap = compressBitmap();
         setImageView(bitmap);
@@ -244,17 +258,6 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         return Bitmap.createScaledBitmap(bitmap, 800, 800, false); //TODO is this even necessary?
     }
 
-    //-----------------------------------------------------------------------------------------
-
-    private void setSaveAdListener(){
-        saveBtn = findViewById(R.id.saveAdBtn);
-        saveBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(EditAdActivity.this, DetailsActivity.class);
-            intent.putExtra("advertID", presenter.getID());
-            startActivity(intent);
-            finish();
-        });
-    }
 
     //condition buttons --------------------------------------------
     private void setConditionGroupListener() {
@@ -301,8 +304,6 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         conditionButton.setElevation(StylingHelper.getDPToPixels(this, 4));
     }
 
-
-
     //getting old information ---------------------------------------
     @Override
     public void setTitle(String name) {
@@ -345,7 +346,6 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         String[] strArr = getResources().getStringArray(R.array.preDefSubjectTags);
         return Arrays.asList(strArr);
     }
-
     private ViewGroup getCurrenTagRow(int parentViewID) {
         ViewGroup parentLayout = findViewById(parentViewID);
         int noOfRows = parentLayout.getChildCount();
@@ -366,7 +366,8 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         b.setText(text);
         styleTagButtons(b, false);
         return b;
-    }    private void styleTagButtons(Button btn, boolean isSelected) {
+    }
+    private void styleTagButtons(Button btn, boolean isSelected) {
         btn.setBackgroundResource(presenter.getTagDrawable(isSelected));
         btn.setTextSize(12);
         btn.setTextColor(this.getColor(R.color.colorWhite));
@@ -380,5 +381,6 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         }
         return btnList;
     }
+    //--------------------------------------------------------------------
 
 }

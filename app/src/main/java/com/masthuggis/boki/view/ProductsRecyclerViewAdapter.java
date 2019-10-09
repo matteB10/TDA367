@@ -1,9 +1,6 @@
 package com.masthuggis.boki.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,21 +15,18 @@ import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.IProductsPresenter;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-
 public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder> {
 
     private IProductsPresenter presenter;
     private Context mContext;
 
-    public ProductsRecyclerViewAdapter(Context context, IProductsPresenter presenter) {
+    ProductsRecyclerViewAdapter(Context context, IProductsPresenter presenter) {
         this.mContext = context;
         this.presenter = presenter;
         getItemCount();
     }
 
-    public void addDecorator(RecyclerView.ItemDecoration decorator) {
+    private void addDecorator(RecyclerView.ItemDecoration decorator) {
         this.addDecorator(decorator);
     }
 
@@ -82,6 +76,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
                 presenter.onRowPressed(id);
             }
         }
+
 
         @Override
         public void setTitle(String name) {

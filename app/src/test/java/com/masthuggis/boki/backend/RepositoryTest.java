@@ -1,4 +1,4 @@
-package com.masthuggis.boki;
+package com.masthuggis.boki.backend;
 
 
 public class RepositoryTest {
