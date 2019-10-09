@@ -55,5 +55,7 @@ public interface iBackend {
 
     boolean isUserSignedIn();
 
+    void uploadImageToFirebase(File imageFile, String uniqueAdID);
+
     void userSignUp(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
 }

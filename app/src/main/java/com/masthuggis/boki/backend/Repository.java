@@ -130,6 +130,10 @@ public class Repository {
     public void addObserverToBackend(DataModel dataModel) {
         backend.addBackendObserver(dataModel);
     }
+
+    public void uploadImageToFirebase(File imageFile, String adID) {
+        backend.uploadImageToFirebase(imageFile,adID);
+    }
 }
 
 

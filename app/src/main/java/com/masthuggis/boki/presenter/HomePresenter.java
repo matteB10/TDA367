@@ -2,15 +2,14 @@ package com.masthuggis.boki.presenter;
 
 import android.os.Handler;
 
-import com.masthuggis.boki.model.observers.AdvertisementObserver;
 import com.masthuggis.boki.backend.MockRepository;
 import com.masthuggis.boki.backend.PerformedSearchCallback;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.model.AdvertisementObserver;
 import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.model.observers.AdvertisementObserver;
 import com.masthuggis.boki.model.sorting.SortManager;
-import com.masthuggis.boki.utils.SearchHelper;
 import com.masthuggis.boki.utils.ClickDelayHelper;
+import com.masthuggis.boki.utils.SearchHelper;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.view.SearchCallback;
 import com.masthuggis.boki.view.ThumbnailView;

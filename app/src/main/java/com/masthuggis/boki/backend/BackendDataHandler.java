@@ -170,7 +170,7 @@ public class BackendDataHandler implements iBackend {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
-                updateAdvertsDataListWithImgUrl(adverts, advertDataList -> dbCallback.onCallBack(advertDataList));
+                updateAdvertsDataListWithImgUrl(adverts, advertDataList -> DBCallback.onCallBack(advertDataList));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
