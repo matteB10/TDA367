@@ -30,11 +30,6 @@ public class SearchHelper {
             if (advertisements != null) {
                 tempList = new ArrayList<>(advertisements); //temporary list of all adsRefreshes the list so it accurately reflects adverts in firebase
             }
-
-            if (queryStr.equals("")) { //if empty string, no need to perform search
-                callback.onCallback(tempList);
-            }
-
             searchMatchTitle(searchRes, queryStr, tempList); //search if query matches title. run first, highest priority
             searchMatchTags(searchRes, queryStr, tempList); //search if query matches tag. run second, second highest priority
             searchContainsTitle(searchRes, queryStr, tempList); //search if title contains query.
