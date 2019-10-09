@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
     }
 
     /**
-     * If back button is pressed the app exists. Is it better to show the previously active tab?
+     * If back button is pressed the app exits. Is it better to show the previously active tab?
      */
     @Override
     public void onBackPressed() {
