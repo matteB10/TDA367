@@ -66,6 +66,17 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
         this.view.updateThumbnails();
     }
 
+    //TODO: fix better solution for this, may be needed when filtering later
+    private void updateDataWithoutSorting(List<Advertisement> adverts) {
+        if (adverts == null) {
+            return;
+        }
+
+        this.adverts = new ArrayList<>(adverts);
+        this.view.hideLoadingScreen();
+        this.view.updateThumbnails();
+    }
+
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
         if (adverts.size() < position || adverts == null)
             return;
@@ -134,19 +145,22 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
     }
 
 
-    //Filters the advertisements shown to the user by if their title matches the given query
+    //Search the advertisements shown to the user by if their title or tags matches/contains the given query
     public void search(String query, SearchCallback callback) {
         view.showLoadingScreen();
-        SearchHelper search = new SearchHelper();
-        search.search(query, new PerformedSearchCallback() {
-            @Override
-            public void onCallback(List<Advertisement> searchRes) {
-                updateData(searchRes);
-            }
-        });
-        callback.onCallback();
-    }
+        if(query.equals("")) {
+            getData(); //if query is empty string, update view use standard sorting //TODO: Maybe rename method
+        }else {
+            SearchHelper.search(query, new PerformedSearchCallback() {
+                @Override
+                public void onCallback(List<Advertisement> searchRes) {
+                    updateDataWithoutSorting(searchRes);
+                    callback.onCallback();
+                }
+            });
+        }
 
+    }
 
 
     @Override

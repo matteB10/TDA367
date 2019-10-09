@@ -5,6 +5,8 @@ import com.masthuggis.boki.presenter.CreateAdPresenter;
 
 import org.junit.Test;
 
+import java.io.File;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
@@ -45,6 +47,16 @@ public class CreateAdPresenterTest {
         @Override
         public void displayUserTagButton(String tag){
             
+        }
+
+        @Override
+        public void removeUserTagButton(String tag) {
+
+        }
+
+        @Override
+        public File getCurrentImageFile() {
+            return null;
         }
     }
 

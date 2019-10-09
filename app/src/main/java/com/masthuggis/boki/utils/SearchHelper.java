@@ -1,5 +1,6 @@
 package com.masthuggis.boki.utils;
 
+import com.masthuggis.boki.backend.MockRepository;
 import com.masthuggis.boki.backend.PerformedSearchCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
@@ -7,41 +8,58 @@ import com.masthuggis.boki.model.DataModel;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Helper class managing searching ads with an input search string.
+ */
+
 public class SearchHelper {
 
-    private List<Advertisement> currentSearchRes = new ArrayList<>();
 
-    public SearchHelper() {
+    private SearchHelper() {
     }
 
-    public void search(String query, PerformedSearchCallback callback) {
+
+    public static void search(String query, PerformedSearchCallback callback) {
+
 
         Thread thread = new Thread(() -> DataModel.getInstance().fetchAllAdverts(advertisements -> {
             List<Advertisement> tempList = new ArrayList<>();
+            List<Advertisement> searchRes = new ArrayList<>(); //new list with searchresults
+            String queryStr = query.toLowerCase().trim();
+
             if (advertisements != null) {
                 tempList = new ArrayList<>(advertisements); //temporary list of all adsRefreshes the list so it accurately reflects adverts in firebase
             }
-            List<Advertisement> searchRes = new ArrayList<>(); //new list with searchresults
-            String queryStr = query.toLowerCase().trim();
+
+            if (queryStr.equals("")) { //if empty string, no need to perform search
+                callback.onCallback(tempList);
+            }
 
             searchMatchTitle(searchRes, queryStr, tempList); //search if query matches title. run first, highest priority
             searchMatchTags(searchRes, queryStr, tempList); //search if query matches tag. run second, second highest priority
             searchContainsTitle(searchRes, queryStr, tempList); //search if title contains query.
             searchContainsTags(searchRes, queryStr, tempList); //search if at least one of ads tags matches query.
 
+
             callback.onCallback(searchRes);
         }));
         thread.start();
     }
 
-    /**
-     *
-     * @return searchResult
-     */
+    public static void mockSearch(String query, PerformedSearchCallback callback) {
 
-    public List<Advertisement> getResultFromSearch() {
-        return currentSearchRes;
+        List<Advertisement> tempList = MockRepository.getInstance().getLocalJSONAds();
+        List<Advertisement> searchRes = new ArrayList<>(); //new list with searchresults
+        String queryStr = query.toLowerCase().trim();
+
+        searchMatchTitle(searchRes, queryStr, tempList); //search if query matches title. run first, highest priority
+        searchMatchTags(searchRes, queryStr, tempList); //search if query matches tag. run second, second highest priority
+        searchContainsTitle(searchRes, queryStr, tempList); //search if title contains query.
+        searchContainsTags(searchRes, queryStr, tempList); //search if at least one of ads tags matches query.
+
+        callback.onCallback(searchRes);
     }
+
     /**
      * Checks if title matches search string and ads that Advert to search result
      * if true.
@@ -50,7 +68,7 @@ public class SearchHelper {
      * @param query     the search string
      * @param ads       list of adverts
      */
-    private void searchMatchTitle(List<Advertisement> searchRes, String
+    private static void searchMatchTitle(List<Advertisement> searchRes, String
             query, List<Advertisement> ads) {
         Advertisement ad;
         for (int i = 0; i < ads.size(); i++) {
@@ -74,7 +92,7 @@ public class SearchHelper {
      * @param ads       list of adverts
      */
 
-    private void searchMatchTags(List<Advertisement> searchRes, String
+    private static void searchMatchTags(List<Advertisement> searchRes, String
             query, List<Advertisement> ads) {
         Advertisement ad;
         for (int i = 0; i < ads.size(); i++) {
@@ -95,7 +113,7 @@ public class SearchHelper {
      * @param ads       list of adverts
      */
 
-    private void searchContainsTitle(List<Advertisement> searchRes, String
+    private static void searchContainsTitle(List<Advertisement> searchRes, String
             query, List<Advertisement> ads) {
         Advertisement ad;
         for (int i = 0; i < ads.size(); i++) {
@@ -113,7 +131,7 @@ public class SearchHelper {
      * @param ads
      */
 
-    private void searchContainsTags(List<Advertisement> searchRes, String
+    private static void searchContainsTags(List<Advertisement> searchRes, String
             query, List<Advertisement> ads) {
         Advertisement ad;
         for (int i = 0; i < ads.size(); i++) {
@@ -131,7 +149,7 @@ public class SearchHelper {
      * @return true if title matches query
      */
 
-    private boolean titleStartsWithQuery(String title, String query) {
+    private static boolean titleStartsWithQuery(String title, String query) {
         if (title.length() >= query.length()) {
             String titleStart = title.substring(0, query.length());
             return (titleStart.equals(query));
@@ -145,7 +163,7 @@ public class SearchHelper {
      * @return true if at least one tag matches the query string
      */
 
-    private boolean tagsStartWithQuery(List<String> tags, String query) {
+    private static boolean tagsStartWithQuery(List<String> tags, String query) {
         String substring;
         for (String tag : tags) {
             if (tag.trim().length() >= query.length()) {
@@ -163,7 +181,7 @@ public class SearchHelper {
      * @param query search string
      * @return true if at least one tag contains the query string
      */
-    private boolean tagsContainsQuery(List<String> tags, String query) {
+    private static boolean tagsContainsQuery(List<String> tags, String query) {
         for (String tag : tags) {
             if (tag.toLowerCase().trim().contains(query)) {
                 return true;
