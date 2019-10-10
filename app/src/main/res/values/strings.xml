@@ -37,7 +37,8 @@
     <string name="createAdButton">Lägg upp annons</string>
 
 
-    <string name="addAdvertHeader">Lägg till en bok</string>
+    <string name="addAdvertHeader">Skapa ny annons</string>
+    <string name="addAdvertHeaderEdit">Redigera din annons</string>
     <string name="addAdvertCondition">I vilket skick är din bok?</string>
     <string name="addAdvertSubjects">Välj ett eller flera ämnen:</string>
     <string name="addAdvertTags">Egna taggar (valfritt):</string>
@@ -54,13 +55,13 @@
         <item>Fysik</item>
         <item>IT/Data</item>
         <item>Elektronik</item>
-        <item>Maskinteknik</item>
         <item>Arkitektur</item>
         <item>Miljö</item>
         <item>Ekonomi</item>
         <item>Design</item>
         <item>Kemi</item>
         <item>Bioteknik</item>
+        <item>Maskinteknik</item>
     </string-array>
 
     <!-- login and signup activity-->

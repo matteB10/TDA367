@@ -1,22 +1,18 @@
 package com.masthuggis.boki.view;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,7 +22,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
@@ -360,10 +355,10 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      * @param strTags, list of button text strings
      * @return a list of buttons
      */
-    private List<Button> createTagButtons(List<String> strTags) {
+    private List<Button> createPreDefTagButtons(List<String> strTags) {
         List<Button> btnList = new ArrayList<>();
         for (String str : strTags) {
-            Button btn = createTagButton(str);
+            Button btn = createTagButton(str, false);
             btnList.add(btn);
         }
         return btnList;
@@ -375,10 +370,10 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      * @param text
      * @return a button
      */
-    private Button createTagButton(String text) {
+    private Button createTagButton(String text, boolean isSelected) {
         Button b = new Button(this);
         b.setText(text);
-        styleTagButtons(b, false);
+        StylingHelper.setTagButtonStyling(b, isSelected);
         return b;
     }
 
@@ -408,24 +403,17 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      */
     private void displayPreDefTagButtons() {
         LinearLayout preDefTagsLayout = findViewById(R.id.preDefTagsLinearLayout);
-        List<Button> tagButtons = createTagButtons(getPreDefTagStrings());
+        List<Button> tagButtons = createPreDefTagButtons(getPreDefTagStrings());
         preDefTagButtons = tagButtons;
         populateTagsLayout(tagButtons, preDefTagsLayout);
     }
 
 
-    private void styleTagButtons(Button btn, boolean isSelected) {
-        btn.setBackgroundResource(presenter.getTagDrawable(isSelected));
-        btn.setTextSize(12);
-        btn.setTextColor(this.getColor(R.color.colorWhite));
-        btn.setElevation(StylingHelper.getDPToPixels(this, 4));
-    }
-
     @Override
     public void setTagStyling(String tag, boolean isSelected) {
         for (Button btn : preDefTagButtons) {
             if (btn.getText().equals(tag)) {
-                styleTagButtons(btn, isSelected);
+                StylingHelper.setTagButtonStyling(btn, isSelected);
             }
         }
     }
@@ -437,7 +425,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      */
     @Override
     public void displayUserTagButton(String tag) {
-        Button btn = createTagButton(tag);
+        Button btn = createTagButton(tag,true);
         userDefTagButtons.add(btn);
         ViewGroup currentUserTagTableRow = getCurrenTagRow(R.id.tagsLinearLayout);
         setUserDefTagsListener(btn);

@@ -2,10 +2,11 @@ package com.masthuggis.boki.utils;
 
 
 import android.content.Context;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
+import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.model.Advert;
 
@@ -73,21 +74,21 @@ public class StylingHelper {
     }
 
     /**
-     *
      * @return styling drawable for primary action buttons
      * depending on state
      */
     public static int getPrimaryButtonDrawable(boolean isEnabled) {
-        if(isEnabled){
+        if (isEnabled) {
             return R.drawable.primary_button;
         }
         return R.drawable.disabled_primary_button;
     }
+
     /**
      * @return specified layout parameters for tag tableRows
      */
     public static TableLayout.LayoutParams getTableRowLayoutParams(Context context) {
-        int rowHeight = (int)getDPToPixels(context, 20);
+        int rowHeight = (int) getDPToPixels(context, 20);
         TableLayout.LayoutParams layoutParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, rowHeight, 1);
         layoutParams.setMargins(0, 0, 0, 8);
         return layoutParams;
@@ -101,16 +102,22 @@ public class StylingHelper {
         rowLayoutParams.setMarginEnd(6);
         return rowLayoutParams;
     }
+
     /**
-     * @return specified layout parameters for tag items in tableRows
+     * Sets styling of a tagButton
+     *
+     * @param btn the button to be styled
      */
-    public static LinearLayout.LayoutParams getLinearLayoutChildLayoutParams(Context context) {
-        int rowHeight = (int)getDPToPixels(context, 20);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, rowHeight,1);
-        layoutParams.setMargins(0, 0, 0, 8);
-        return layoutParams;
+
+    public static void setTagButtonStyling(Button btn, boolean isSelected) {
+        if (isSelected) {
+            btn.setBackgroundResource(R.drawable.subject_tag_shape_pressed);
+        } else {
+            btn.setBackgroundResource(R.drawable.subject_tag_shape_normal);
+        }
+        btn.setTextSize(12);
+        btn.setTextColor(Boki.getAppContext().getColor(R.color.colorGreyDark));
+        btn.setElevation(4);
     }
-
-
 
 }
