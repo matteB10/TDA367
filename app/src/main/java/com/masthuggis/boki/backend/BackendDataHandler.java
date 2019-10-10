@@ -398,14 +398,8 @@ public class BackendDataHandler implements iBackend {
     }
 
     public void editPrice(String adID, String newPrice) {
-        advertPath.document(adID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    task.getResult().getData().put("price", newPrice);
-                }
-            }
-        });
+        DocumentReference advert = advertPath.document(adID);
+        advert.update("price",newPrice);
     }
 
     public void editDescription(String adID, String newDescription) {

@@ -112,9 +112,11 @@ public class Repository {
     }
 
     public void editPrice(String adID, String newPrice) {
+        backend.editPrice(adID, newPrice);
     }
 
     public void editDescription(String adID, String newDescription) {
+
     }
 
     public void addObserverToBackend(DataModel dataModel) {

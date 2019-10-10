@@ -1,7 +1,11 @@
 package com.masthuggis.boki.presenter;
 
+import android.provider.ContactsContract;
+
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
+
+import java.io.File;
 
 public class EditAdPresenter {
 
@@ -57,6 +61,10 @@ public class EditAdPresenter {
     public void removeAdBtnPressed(){
         String adID = advertisement.getUniqueID();
         DataModel.getInstance().removeExistingAdvert(adID);
+    }
+
+    public void saveAdBtnPressed() {
+        DataModel.getInstance().saveAdvert(new File(advertisement.getImageUrl()),advertisement); //This is never run????
     }
 
     public void conditionChanged(int condition) {
