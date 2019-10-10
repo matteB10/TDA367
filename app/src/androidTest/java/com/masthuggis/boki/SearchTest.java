@@ -63,7 +63,7 @@ public class SearchTest {
         });
 
     }
-    //TODO: Rewrite mockrepository to test search with tags
+    //TODO: Rewrite mockrepository to test searchPerformed with tags
 
 
 

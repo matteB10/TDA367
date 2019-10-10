@@ -138,20 +138,13 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
 
 
     //Search the advertisements shown to the user by if their title or tags matches/contains the given query
-    public void search(String query, SearchCallback callback) {
+    public void searchPerformed(String query) {
         view.showLoadingScreen();
-        if(query.equals("")) {
+        if (query.equals("")) {
             getData(); //if query is empty string, update view use standard sorting //TODO: Maybe rename method
-        }else {
-            SearchHelper.search(query, new PerformedSearchCallback() {
-                @Override
-                public void onCallback(List<Advertisement> searchRes) {
-                    updateDataWithoutSorting(searchRes);
-                    callback.onCallback();
-                }
-            });
+        } else {
+            SearchHelper.search(query, searchRes -> updateData(searchRes));
         }
-
     }
 
 
