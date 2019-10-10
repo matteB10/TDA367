@@ -1,0 +1,45 @@
+# Meeting Agenda
+
+Group:Masthuggis
+Date: 10/10 - 19
+Chair: Arvid Sundbom
+Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak Lindgren, Elin Melander
+
+
+## Objectives (5 min) 
+- vad ska vara klart till imorgon då det är inlämning av koden för peer-review?
+- RAD och SDD inför inlämningen imorgon
+- UML-diagram inför inlämningen imorgon
+
+## Discussion items (35 min)
+- vad ska vara klart i koden till peer-review?
+	Gärna ha klart redigeringsfunktionen av annonser som laddats upp.
+	En del saker som är kvar att göra, särskilt för att spara den nya bilden som tagits i redigeringen.
+	Göra klart omstruktureringen av firebase, både gällande chattar och annonser.
+	Fixa dependency injection på alla presenters, så att man kan injecta dem med vår DataModel och sedan testa dem m.h.a Mockito.
+	Och med det även fixa fler tester, det gör gruppen tillsammans imorgon, fredag den 11:e, innan inlämningen.
+	Kommentera koden så att gruppen som gör review på vår kod enklare kan sätta sig in i den och förstå hur den fungerar.
+	Implementera grundläggande funktionalitet för att användare ska kunna favoritmarkera annonser och att dessa visas under favoriter-fliken i appen.
+	I allmänhet se till att appen fungerar som den ska i stort sett, en måttstock på det är att två användare ska kunna logga in på appen, en ska kunna ladda upp en annons 
+	och den andra användaren ska kunna se den. Användarna ska kunna chatta med varandra via denna annons. Allt detta ska ske utan att större fel uppstår i appen under körning.
+	Städa upp i appens struktur, se till att klasser ligger i rätt packages och att funktionalitet rörande logik ligger där den ska.
+
+- RAD och SDD inför inlämningen
+	RAD:en är i princip klar (inför inlämningen), det mesta som behövs i den finns, flödet mellan olika screens saknas men allt annat finns.
+	SDD:en kollar gruppen på tillsammans efter det programmeringsmässiga arbetet inför inlämningen färdigställts.
+	
+- UML-diagram inför inlämningen
+	Designmodellen kollar gruppen på tillsammans imorgon, fredag, eftersom programmeringen som är kvar att göra innan inlämningen lär förändra och förhoppningsvis förbättra vissa delar av kodens struktur
+	
+
+
+## Outcomes and assignments (5 min)
+Allmänt arbete med programmeringen fortsätter till imorgon, gruppen ses även då och ser över design- och domänmodell samt SDD-dokumentet
+Code review vore bra att hinna med, men blir nog efter koden lämnats in på review.
+
+
+## Wrap up
+
+ - Nästa möte imorgon, arbetet med att programmera fortsätter frenetiskt med förhoppningen att bli i princip färdiga till imorgon så att arbetet med
+	dokument och diagram kan göras innan de ska lämnas in på Canvas.
+ 
