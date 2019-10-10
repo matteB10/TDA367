@@ -101,6 +101,8 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
 
     @Override
     public void showDetailsScreen(String id) {
-
+        Intent intent = new Intent(getContext(), DetailsActivity.class);
+        intent.putExtra("advertID", id);
+        startActivity(intent);
     }
 }
