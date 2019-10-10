@@ -1,5 +1,7 @@
 package com.masthuggis.boki.presenter;
 
+import android.provider.ContactsContract;
+
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
@@ -102,6 +104,10 @@ public class DetailsPresenter {
         } else {
             view.setOwnerButtonText("Starta chatt");
         }
+    }
+
+    public void onFavouritesIconPressed() {
+        DataModel.getInstance().addToFavourites(advertisement.getUniqueID());
     }
 
     public interface View extends iConditionable {

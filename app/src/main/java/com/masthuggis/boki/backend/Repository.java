@@ -126,6 +126,10 @@ public class Repository {
     public void uploadImageToFirebase(File imageFile, String adID) {
         backend.uploadImageToFirebase(imageFile,adID);
     }
+
+    public void addToFavourites(String adID, String userID) {
+        backend.addAdToFavourites(adID, userID);
+    }
 }
 
 

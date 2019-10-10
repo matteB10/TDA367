@@ -277,6 +277,24 @@ public class BackendDataHandler implements iBackend {
         return db.collection("users").document(userID).getId();
     }
 
+    @Override
+    public void addAdToFavourites(String adID, String userID) {
+        db.collection("users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                try {
+                    List<String> favourites = (List<String>) task.getResult().getData().get("favourites");
+                    favourites.add(adID);
+                    db.collection("users").document(userID).update("favourites", favourites); //Should write updated favourites to firebase
+                } catch (NullPointerException e) { //Is thrown if users favourite-array is currently empty
+                    List<String> favourites = new ArrayList<>();
+                    favourites.add(adID);
+                    db.collection("users").document(userID).update("favourites", favourites); //Adds initial ad as user favourite
+                }
+            }
+        });
+    }
+
 
     public void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
