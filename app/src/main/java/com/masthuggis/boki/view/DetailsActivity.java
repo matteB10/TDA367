@@ -53,13 +53,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
         Button changeAd = findViewById(R.id.changeAdButton);
         changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
-
-        favouritesIcon = findViewById(R.id.favouritesIcon);
-        favouritesIcon.setOnClickListener(view -> {
-                    presenter.onFavouritesIconPressed(); //gör den bara sättbar till en början :)
-                }
-        );
-
+        setUpFavouriteIcon();
         setBtnForOwner();
     }
 
@@ -179,6 +173,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         }
     }
 
+
     @Override
     public void showEditView(String uniqueID) {
         Intent intent = new Intent(DetailsActivity.this, EditAdActivity.class);
@@ -201,6 +196,19 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     private boolean tapActionWasNotTooFast() {
         long elapsedTimeSinceLastClick = System.currentTimeMillis() - lastTimeThumbnailWasClicked;
         return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
+    }
+
+    private void setUpFavouriteIcon() {
+        favouritesIcon = findViewById(R.id.favouritesIcon);
+        if (presenter.isUserOwner()) {
+            favouritesIcon.setVisibility(View.INVISIBLE);
+        } else {
+            favouritesIcon.setOnClickListener(view -> {
+                        presenter.onFavouritesIconPressed(); //gör den bara sättbar till en början :)
+                    }
+            );
+        }
+
     }
 
 }
