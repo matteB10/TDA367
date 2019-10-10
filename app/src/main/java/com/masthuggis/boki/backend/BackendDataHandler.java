@@ -71,10 +71,7 @@ public class BackendDataHandler implements iBackend {
 
 
     BackendDataHandler() {
-        if (getUserID() != null) //Otherwise throws NullPointer on app launch
-            advertPath = db.collection("users")
-                    .document(getUserID()).collection("adverts");
-
+        advertPath = db.collection("market");
     }
 
     public void addBackendObserver(BackendObserver backendObserver) {
@@ -114,7 +111,7 @@ public class BackendDataHandler implements iBackend {
     private void writeToDatabase(HashMap<String, Object> data) {
         isWritingAdvertToDatabase = true;
         String uniqueOwnerID = (String) data.get("uniqueOwnerID");
-        db.collection("users").document(uniqueOwnerID).collection("adverts").document()
+        db.collection("market").document((String) data.get("uniqueAdID"))
                 .set(data).addOnSuccessListener(aVoid -> {
             Log.d(TAG, "DocumentSnapshot successfully written!");
             isWritingAdvertToDatabase = false;
@@ -165,7 +162,7 @@ public class BackendDataHandler implements iBackend {
     //might want to run this on separate thread created by caller
     public void readAllAdvertData(DBCallback DBCallback) {
         List<Map<String, Object>> advertDataList = new ArrayList<>();
-        db.collectionGroup("adverts").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        db.collection("market").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
@@ -385,67 +382,34 @@ public class BackendDataHandler implements iBackend {
 
 
     public void deleteAd(String adID) {
-        CollectionReference advertPath = db.collection("users")
-                .document(getUserID()).collection("adverts");
-        advertPath.whereEqualTo("uniqueAdID", adID).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                //Log.d(TAG, document.getId());
-                                advertPath.document(document.getId())
-                                        .delete();
-                            }
-                        }
-                    }
-                });
+        advertPath.document(adID).delete();
     }
 
 
     public void editTitle(String adID, String newTitle) {
-        advertPath.whereEqualTo("uniqueAdID", adID).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                advertPath.document(documentSnapshot.getId())
-                                        .update("title", newTitle);
-                            }
-                        }
-                    }
-                });
+        advertPath.document(adID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    task.getResult().getData().put("title", newTitle);
+                }
+            }
+        });
     }
 
     public void editPrice(String adID, String newPrice) {
-        advertPath.whereEqualTo("uniqueAdID", adID).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                advertPath.document(documentSnapshot.getId())
-                                        .update("price", newPrice);
-                            }
-                        }
-                    }
-                });
-
+        DocumentReference advert = advertPath.document(adID);
+        advert.update("price",newPrice);
     }
 
     public void editDescription(String adID, String newDescription) {
-        advertPath.whereEqualTo("uniqueAdID", adID).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                advertPath.document(documentSnapshot.getId())
-                                        .update("description", newDescription);
-                            }
-                        }
-                    }
-                });
+        advertPath.document(adID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    task.getResult().getData().put("description", newDescription);
+                }
+            }
+        });
     }
 }

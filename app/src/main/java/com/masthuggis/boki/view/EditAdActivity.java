@@ -58,21 +58,31 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
     }
 
 
-
-    private boolean isPriceValid(){
+    private boolean isPriceValid() {
         return this.validPrice;
     }
 
     private void setUpBtns() {
         Button removeBtn = findViewById(R.id.removeAdBtn);
-        removeBtn.setOnClickListener(view -> presenter.removeAdBtnPressed());
+        removeBtn.setOnClickListener(view -> {
+            presenter.removeAdBtnPressed();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        });
+        Button saveBtn = findViewById(R.id.saveAdBtn);
+        saveBtn.setOnClickListener(view -> {
+            presenter.saveAdBtnPressed();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        });
+
     }
 
     private void setListeners() {
         setTitleListener();
         setPriceListener();
         setDescriptionListener();
-        setSaveAdListener();
+        //setSaveAdListener();
         setNewImageListener();
         setConditionGroupListener();
     }
@@ -95,7 +105,7 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         });
     }
 
-    private void setPriceListener(){
+    private void setPriceListener() {
         price = findViewById(R.id.priceEditText);
         price.addTextChangedListener(new TextWatcher() {
             @Override
@@ -133,7 +143,7 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         });
     }
 
-    private void setNewImageListener(){
+    private void setNewImageListener() {
         ImageView image = findViewById(R.id.bookImageView);
         image.setOnClickListener(view -> dispatchTakePictureIntent());
     }
@@ -164,16 +174,6 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         return image;
     }
 
-    private void setSaveAdListener(){
-        saveBtn = findViewById(R.id.saveAdBtn);
-        saveBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(EditAdActivity.this, DetailsActivity.class);
-            intent.putExtra("advertID", presenter.getID());
-            startActivity(intent);
-            finish();
-
-        });
-    }
     //condition buttons --------------------------------------------
     private void setConditionGroupListener() {
         Button conditionGoodButton = findViewById(R.id.conditionGoodButton);
@@ -218,7 +218,6 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         }
         conditionButton.setElevation(StylingHelper.getDPToPixels(this, 4));
     }
-
 
 
     //getting old information ---------------------------------------
