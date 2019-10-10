@@ -71,8 +71,7 @@ public class BackendDataHandler implements iBackend {
 
 
     BackendDataHandler() {
-        if (getUserID() != null) //Otherwise throws NullPointer on app launch
-            advertPath = db.collection("market");
+        advertPath = db.collection("market");
     }
 
     public void addBackendObserver(BackendObserver backendObserver) {
@@ -163,7 +162,7 @@ public class BackendDataHandler implements iBackend {
     //might want to run this on separate thread created by caller
     public void readAllAdvertData(DBCallback DBCallback) {
         List<Map<String, Object>> advertDataList = new ArrayList<>();
-        db.collectionGroup("adverts").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        db.collection("market").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
@@ -383,8 +382,7 @@ public class BackendDataHandler implements iBackend {
 
 
     public void deleteAd(String adID) {
-        CollectionReference advertPath = db.collection("users")
-                .document(getUserID()).collection("adverts");
+        CollectionReference advertPath = db.collection("market");
         advertPath.whereEqualTo("uniqueAdID", adID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
