@@ -169,7 +169,7 @@ public class BackendDataHandler implements iBackend {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
-                updateAdvertsDataListWithImgUrl(adverts, advertDataList -> DBCallback.onCallBack(advertDataList));
+                updateAdvertsDataListWithImgUrl(adverts, DBCallback::onCallBack);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -209,54 +209,74 @@ public class BackendDataHandler implements iBackend {
 
 
     public void getUserChats(String userID, chatDBCallback chatDBCallback) {
-        db.collection("users").document(userID).collection("conversations").addSnapshotListener((queryDocumentSnapshots, e) -> {
+        db.collection("users").document(userID).collection("myConversations").addSnapshotListener((queryDocumentSnapshots, e) -> {
             List<Map<String, Object>> chatDataList = new ArrayList<>();
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e);
                 return;
             }
-            if (queryDocumentSnapshots.size() <= 0 || queryDocumentSnapshots == null) {
+            if (queryDocumentSnapshots == null || queryDocumentSnapshots.size() <= 0) {
                 return;
             }
+            SuccessCallback successCallback = new SuccessCallback() {
+                @Override
+                public void onSuccess() {
+                    chatDBCallback.onCallback(chatDataList);
+                    notifyChatObservers();
+                }
+            };
             for (QueryDocumentSnapshot q : queryDocumentSnapshots) {
-                chatDataList.add(q.getData());
+                String uniqueChatID = (q.getData().get("uniqueChatID").toString());
+                db.collection("chats").document(uniqueChatID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Map<String, Object> data = documentSnapshot.getData();
+                        data.put("uniqueChatID",uniqueChatID);
+                        chatDataList.add(data);
+                        if (chatDataList.size() == queryDocumentSnapshots.size()) {
+                            successCallback.onSuccess();
+                        }
+                    }
+                });
+
+
             }
-            if (chatDataList.size() == 0 || chatDataList == null) {
-                return;
-            }
-            chatDBCallback.onCallback(chatDataList);
-            notifyChatObservers();
+
+
         });
     }
 
-    public void createNewChat(HashMap<String, Object> newChatMap, Advertisement advertisement, stringCallback stringCallback) {
+    public void createNewChat(String uniqueOwnerID, String advertID, stringCallback stringCallback, String receiverUsername) {
+
+        //Här stoppar vi in uniquechatID i en map för att kunna sätta i båda användarnas firebase så de båda hittar sin chatt.
+
         String uniqueChatID = UniqueIdCreator.getUniqueID();
-        newChatMap.put("uniqueChatID", uniqueChatID);
+        HashMap<String, Object> chatMap = new HashMap<>();
+        chatMap.put("uniqueChatID", uniqueChatID);
 
         String senderID = DataModel.getInstance().getUserID();
-        String receiverID = advertisement.getUniqueOwnerID();
-        String receiver = advertisement.getOwner();
-        String sender = DataModel.getInstance().getUserDisplayName();
-        newChatMap.put("sender", sender);
-        newChatMap.put("receiver", receiver);
-        DocumentReference df = db.collection("users").document(senderID).collection("conversations").document();
-        addAdvertisementToMap(newChatMap, advertisement);
-        df.set(newChatMap)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "DocumentSnapshot successfully written!");
-                    newChatMap.put("receiverUsername", DataModel.getInstance().getUserDisplayName());
-                    newChatMap.put("receiverID", senderID);
-                    newChatMap.put("senderID", receiverID);
-                    newChatMap.put("receiver", receiver);
-                    newChatMap.put("sender", sender);
+        String receiverID = uniqueOwnerID;
 
-                    db.collection("users").document(receiverID).collection("conversations")
-                            .document().set(newChatMap);
 
-                    stringCallback.onCallback(newChatMap.get("uniqueChatID").toString());
+        HashMap<String, Object> messagesMap = new HashMap<>();
 
-                })
-                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+        messagesMap.put("userOneName", DataModel.getInstance().getUserDisplayName());
+        messagesMap.put("userTwoName", receiverUsername);
+        messagesMap.put("userOneID", senderID);
+        messagesMap.put("userTwoID", receiverID);
+        messagesMap.put("advertID", advertID);
+
+
+        DocumentReference dfSender = db.collection("users").document(senderID).collection("myConversations").document();
+        DocumentReference dfReceiver = db.collection("users").document(receiverID).collection("myConversations").document();
+        DocumentReference dfUniqueChat = db.collection("chats").document(uniqueChatID);
+        dfUniqueChat.set(messagesMap).addOnSuccessListener(aVoid -> {
+            dfSender.set(chatMap).addOnSuccessListener(bVoid -> {
+                dfReceiver.set(chatMap).addOnSuccessListener(cVoid -> {
+                    stringCallback.onCallback(uniqueChatID);
+                });
+            });
+        });
     }
 
     private void addAdvertisementToMap(HashMap<String, Object> dataMap, Advertisement advertisement) {
@@ -332,7 +352,7 @@ public class BackendDataHandler implements iBackend {
     }
 
     public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
-        db.collection("messages").document(uniqueChatID).collection("messages").document().set(messageMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+        db.collection("chats").document(uniqueChatID).collection("messages").document().set(messageMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
 
@@ -348,7 +368,7 @@ public class BackendDataHandler implements iBackend {
 
 
     public void getMessages(String uniqueChatID, Chat chat, DBCallback messageCallback) {
-        db.collection("messages").document(uniqueChatID).collection("messages").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        db.collection("chats").document(uniqueChatID).collection("messages").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 List<Map<String, Object>> messageMap = new ArrayList<>();

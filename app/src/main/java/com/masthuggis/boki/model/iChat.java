@@ -17,7 +17,8 @@ public interface iChat {
 
     long timeLastMessageSent();
 
-    Advertisement getAdvert();
 
     String getDisplayName();
+
+    String getUniqueIDAdID();
 }
