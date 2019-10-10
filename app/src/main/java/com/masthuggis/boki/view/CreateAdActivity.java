@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
@@ -48,11 +50,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    static final int REQUEST_IMAGE_CROP = 2;
     private List<Button> preDefTagButtons = new ArrayList<>();
     private List<Button> userDefTagButtons = new ArrayList<>();
     private CreateAdPresenter presenter;
-    private CheckBox compatibilityCB;
     private File currentImageFile;
     private ImageView imageViewDisplay;
     private EditText title;
@@ -68,22 +68,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         enablePublishButton(false);
         displayPreDefTagButtons();
         setListeners();
-        compatibilityCB = findViewById(R.id.compatabilityCB);
         updateDataFromModel();
-    }
-
-    //If image can be cropped or not depends on if the app is run on an emulator or not
-    //Can't start crop request on emulator for some unknown reason...
-    private boolean isEmulator() {
-        return Build.FINGERPRINT.startsWith("generic")
-                || Build.FINGERPRINT.startsWith("unknown")
-                || Build.MODEL.contains("google_sdk")
-                || Build.MODEL.contains("Emulator")
-                || Build.MODEL.contains("Android SDK built for x86")
-                || Build.MANUFACTURER.contains("Genymotion")
-                || (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
-                || "google_sdk".equals(Build.PRODUCT)
-                || compatibilityCB.isChecked(); //TODO fix crop activity so all users can use it when uploading adverts, this is temporary fix
     }
 
     private void updateDataFromModel() {
@@ -121,24 +106,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
     }
 
-    private void cropImage(Uri imageUri) {
-        try {
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            cropIntent.setDataAndType(imageUri, "image/*");
-            cropIntent.putExtra("crop", true);
-            cropIntent.putExtra("aspectX", 1);
-            cropIntent.putExtra("aspectY", 1);
-            cropIntent.putExtra("outputX", 220); //TODO set resolution and aspect ratio so image looks acceptable
-            cropIntent.putExtra("outputY", 300);
-            cropIntent.putExtra("return-data", true);
-            startActivityForResult(cropIntent, REQUEST_IMAGE_CROP);
-        } catch (ActivityNotFoundException exception) {
-            exception.printStackTrace();
-        }
-    }
-
     /**
      * Creates an empty file and specifies unique file name.
+     *
      * @throws IOException if image creation fails
      */
     private File createImageFile() throws IOException {
@@ -154,32 +124,19 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageViewDisplay = findViewById(R.id.addImageView);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { //When image has been taken
-            if (isEmulator()) { //TODO maybe remove this when development is done
-                //Do stuff without cropping image since you can't crop on emulator
-                compressOnEmulator();
-            } else {
-                //Picture has been taken, needs to be cropped, not on emulator
-                Uri.Builder builder = new Uri.Builder();
-                builder.encodedPath(currentImageFile.getAbsolutePath());
-                Uri imageUri = builder.build(); //Build Uri
-                cropImage(imageUri);
-            }
-        } else if (requestCode == REQUEST_IMAGE_CROP) {
-            if (data != null) {
-                Bundle extras = data.getExtras();
-                Bitmap croppedBitmap = extras.getParcelable("data"); //Crops image to given resolution and aspect-ratio
-                setImageView(croppedBitmap);
-            }
+            compressOnEmulator();
         }
     }
+
 
     //Compresses images without trying to crop image with android OS
     private void compressOnEmulator() {
         Bitmap bitmap = compressBitmap();
-        setImageView(bitmap);
         try {
             OutputStream out = new FileOutputStream(currentImageFile.getPath());
             bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
+            Bitmap image = BitmapFactory.decodeFile(currentImageFile.getPath());
+            setImageView(image); //Set compressed and scaled image so user sees actual result
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -336,11 +293,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void setPublishAdListener() {
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setOnClickListener(view -> {
-            // Intent intent = new Intent(this, MainActivity.class); //Need to send something here to show snackbar
-            //intent.putExtra("advertID", presenter.getId());
-            //intent.putExtra("toast", true);
+            Intent intent = new Intent(this, MainActivity.class); //Need to send something here to show snackbar
+            intent.putExtra("advertID", presenter.getId());
+            intent.putExtra("toast", true);
             presenter.publishAdvert();
-            //startActivity(intent);
+            startActivity(intent);
             finish();
 
         });
@@ -532,5 +489,12 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             tr.removeAllViews();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent); //TODO check here to see what fragment was the previous one, maybe
+    }
+
 
 }

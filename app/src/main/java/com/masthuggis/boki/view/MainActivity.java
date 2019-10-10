@@ -48,20 +48,22 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
     }
 
     /**
-     * If back button is pressed the app exists. Is it better to show the previously active tab?
+     * If back button is pressed the app exits. Is it better to show the previously active tab?
      */
     @Override
     public void onBackPressed() {
         moveTaskToBack(true);
     }
 
+    //TODO make this less shit
     private void checkNavToast() {
         if (getIntent().getBooleanExtra("toast", false)) {
             Toast toast = Toast.makeText(getApplicationContext(), "Din annons har lagts upp!", Toast.LENGTH_LONG);
             toast.show();
-            getIntent().putExtra("toast",false); //Reset boolean so it only shows once
+            getIntent().putExtra("toast", false); //Reset boolean so it only shows once
         }
     }
+
 
     private void setupBottomTabNavigator() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
@@ -92,26 +94,26 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
      * It does this through the defined ID:s of the different fragments.
      */
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = menuItem -> {
-            switch (menuItem.getItemId()) {
-                case R.id.navigation_home:
-                    showFragment(homeFragment);
-                    break;
-                case R.id.navigation_favorites:
-                    showFragment(favoritesFragment);
-                    break;
-                case R.id.navigation_profile:
-                    showFragment(profileFragment);
-                    break;
-                case R.id.navigation_new_ad:
-                    Intent intent = new Intent(this, CreateAdActivity.class);
-                    startActivity(intent);
-                    return true;
-                case R.id.navigation_messages:
-                    showFragment(chatFragment);
-                    break;
-                default:
-                    return false;
-            }
+        switch (menuItem.getItemId()) {
+            case R.id.navigation_home:
+                showFragment(homeFragment);
+                break;
+            case R.id.navigation_favorites:
+                showFragment(favoritesFragment);
+                break;
+            case R.id.navigation_profile:
+                showFragment(profileFragment);
+                break;
+            case R.id.navigation_new_ad:
+                Intent intent = new Intent(this, CreateAdActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.navigation_messages:
+                showFragment(chatFragment);
+                break;
+            default:
+                return false;
+        }
         return true;
     };
 

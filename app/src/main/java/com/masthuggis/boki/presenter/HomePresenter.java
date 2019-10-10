@@ -102,7 +102,7 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
 
     @Override
     public boolean canProceedWithTapAction() {
-      return ClickDelayHelper.canProceedWithTapAction();
+        return ClickDelayHelper.canProceedWithTapAction();
     }
 
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
@@ -132,28 +132,19 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
         if (adverts == null || adverts.size() == 0) {
             return;
         }
-
         adverts = sortManager.sort(pos, adverts);
     }
 
 
     //Search the advertisements shown to the user by if their title or tags matches/contains the given query
-    public void search(String query, SearchCallback callback) {
+    public void searchPerformed(String query) {
         view.showLoadingScreen();
-        if(query.equals("")) {
+        if (query.equals("")) {
             getData(); //if query is empty string, update view use standard sorting //TODO: Maybe rename method
-        }else {
-            SearchHelper.search(query, new PerformedSearchCallback() {
-                @Override
-                public void onCallback(List<Advertisement> searchRes) {
-                    updateDataWithoutSorting(searchRes);
-                    callback.onCallback();
-                }
-            });
+        } else {
+            SearchHelper.search(query, searchRes -> updateData(searchRes));
         }
-
     }
-
 
     @Override
     public void onAdvertisementsUpdated() {

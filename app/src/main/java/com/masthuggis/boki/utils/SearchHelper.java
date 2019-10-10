@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Helper class managing searching ads with an input search string.
+ * Helper class managing searching ads with an input searchPerformed string.
  */
 
 public class SearchHelper {
@@ -24,19 +24,18 @@ public class SearchHelper {
 
         Thread thread = new Thread(() -> DataModel.getInstance().fetchAllAdverts(advertisements -> {
             List<Advertisement> tempList = new ArrayList<>();
-            List<Advertisement> searchRes = new ArrayList<>(); //new list with searchresults
+            List<Advertisement> searchRes = new ArrayList<>(); //new list with search results
             String queryStr = query.toLowerCase().trim();
 
             if (advertisements != null) {
                 tempList = new ArrayList<>(advertisements); //temporary list of all adsRefreshes the list so it accurately reflects adverts in firebase
             }
-            searchMatchTitle(searchRes, queryStr, tempList); //search if query matches title. run first, highest priority
-            searchMatchTags(searchRes, queryStr, tempList); //search if query matches tag. run second, second highest priority
-            searchContainsTitle(searchRes, queryStr, tempList); //search if title contains query.
-            searchContainsTags(searchRes, queryStr, tempList); //search if at least one of ads tags matches query.
+            searchMatchTitle(searchRes, queryStr, tempList); //searchPerformed if query matches title. run first, highest priority
+            searchMatchTags(searchRes, queryStr, tempList); //searchPerformed if query matches tag. run second, second highest priority
+            searchContainsTitle(searchRes, queryStr, tempList); //searchPerformed if title contains query.
+            searchContainsTags(searchRes, queryStr, tempList); //searchPerformed if at least one of ads tags matches query.
 
-
-            callback.onCallback(searchRes);
+            callback.onCallback(searchRes); //searchRes contains correct adverts here
         }));
         thread.start();
     }
@@ -47,20 +46,19 @@ public class SearchHelper {
         List<Advertisement> searchRes = new ArrayList<>(); //new list with searchresults
         String queryStr = query.toLowerCase().trim();
 
-        searchMatchTitle(searchRes, queryStr, tempList); //search if query matches title. run first, highest priority
-        searchMatchTags(searchRes, queryStr, tempList); //search if query matches tag. run second, second highest priority
-        searchContainsTitle(searchRes, queryStr, tempList); //search if title contains query.
-        searchContainsTags(searchRes, queryStr, tempList); //search if at least one of ads tags matches query.
+        searchMatchTitle(searchRes, queryStr, tempList); //searchPerformed if query matches title. run first, highest priority
+        searchMatchTags(searchRes, queryStr, tempList); //searchPerformed if query matches tag. run second, second highest priority
+        searchContainsTitle(searchRes, queryStr, tempList); //searchPerformed if title contains query.
+        searchContainsTags(searchRes, queryStr, tempList); //searchPerformed if at least one of ads tags matches query.
 
         callback.onCallback(searchRes);
     }
 
     /**
-     * Checks if title matches search string and ads that Advert to search result
+     * Checks if title matches searchPerformed string and ads that Advert to searchPerformed result
      * if true.
-     *
      * @param searchRes list to add matching advert
-     * @param query     the search string
+     * @param query     the searchPerformed string
      * @param ads       list of adverts
      */
     private static void searchMatchTitle(List<Advertisement> searchRes, String
@@ -79,11 +77,11 @@ public class SearchHelper {
     }
 
     /**
-     * Checks if at least one tag matches search string and ads that Advert to search result
+     * Checks if at least one tag matches searchPerformed string and ads that Advert to searchPerformed result
      * if true.
      *
      * @param searchRes list to add matching advert
-     * @param query     the search string
+     * @param query     the searchPerformed string
      * @param ads       list of adverts
      */
 
@@ -100,11 +98,11 @@ public class SearchHelper {
     }
 
     /**
-     * Checks if title contains search string and ads Advert to search result
+     * Checks if title contains searchPerformed string and ads Advert to searchPerformed result
      * if true.
      *
      * @param searchRes list to add matching advert
-     * @param query     the search string
+     * @param query     the searchPerformed string
      * @param ads       list of adverts
      */
 
@@ -140,7 +138,7 @@ public class SearchHelper {
 
     /**
      * @param title
-     * @param query search string
+     * @param query searchPerformed string
      * @return true if title matches query
      */
 
@@ -154,7 +152,7 @@ public class SearchHelper {
 
     /**
      * @param tags  list of an ads tags
-     * @param query search string
+     * @param query searchPerformed string
      * @return true if at least one tag matches the query string
      */
 
@@ -173,7 +171,7 @@ public class SearchHelper {
 
     /**
      * @param tags  list of an ads tags
-     * @param query search string
+     * @param query searchPerformed string
      * @return true if at least one tag contains the query string
      */
     private static boolean tagsContainsQuery(List<String> tags, String query) {

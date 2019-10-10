@@ -68,7 +68,6 @@ public class BackendDataHandler implements iBackend {
 
     private boolean isWritingImageToDatabase = false;
     private boolean isWritingAdvertToDatabase = false;
-    private int advertDataListCount = 0;
 
 
     BackendDataHandler() {
@@ -190,9 +189,7 @@ public class BackendDataHandler implements iBackend {
                 public void onCallback(String url) {
                     toBeAdded.put("imgUrl", url);
                     advertDataList.add(toBeAdded);
-                    advertDataListCount += 1;
-                    if (advertDataListCount == adverts.size()) {
-                        advertDataListCount = 0;
+                    if (advertDataList.size() == adverts.size()) {
                         dbCallback.onCallBack(advertDataList);
                     }
                 }
@@ -200,7 +197,7 @@ public class BackendDataHandler implements iBackend {
         }
     }
 
-    public void getFirebaseURL(String uniqueID, UrlCallback urlCallback) {
+    private void getFirebaseURL(String uniqueID, UrlCallback urlCallback) {
         imagesRef.child(uniqueID).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
