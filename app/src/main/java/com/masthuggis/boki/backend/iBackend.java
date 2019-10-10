@@ -29,6 +29,7 @@ public interface iBackend {
 
     String getFireBaseID(String userID, String advertID);
 
+    void addAdToFavourites(String adID, String userID);
 
     void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
 

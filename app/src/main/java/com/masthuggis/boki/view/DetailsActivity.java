@@ -27,6 +27,7 @@ import java.util.List;
 public class DetailsActivity extends AppCompatActivity implements DetailsPresenter.View {
     private DetailsPresenter presenter;
     private Button contactOwnerButton;
+    private ImageView favouritesIcon;
     private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
     private static final long MIN_THUMBNAIL_CLICK_TIME_INTERVAL = 300;
 
@@ -45,15 +46,19 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
         contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
-            if(canProceedWithTapAction()){
+            if (canProceedWithTapAction()) {
                 presenter.contactOwnerButtonClicked(contactOwnerButton.getText().toString());
             }
-
-
         });
 
         Button changeAd = findViewById(R.id.changeAdButton);
         changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
+
+        favouritesIcon = findViewById(R.id.favouritesIcon);
+        favouritesIcon.setOnClickListener(view -> {
+                    presenter.onFavouritesIconPressed(); //gör den bara sättbar till en början :)
+                }
+        );
 
         setBtnForOwner();
     }
@@ -81,7 +86,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     public void setImageUrl(String url) {
         // TODO: fetch img, cache it and set it
         ImageView imageView = (ImageView) findViewById(R.id.detailsImage);
-        Glide.with(this).load(url).override(220,300).into(imageView);
+        Glide.with(this).load(url).override(220, 300).into(imageView);
         //imageView.setImageURI(Uri.parse(url));
     }
 
@@ -112,7 +117,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         Button btn;
 
         for (String str : tags) {
-            btn = createTagButton(str,true);
+            btn = createTagButton(str, true);
             tableRow = getTableRow(tableRow, parentLayout);
             tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
             tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
@@ -144,6 +149,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         }
         return tableRow;
     }
+
     private Button createTagButton(String buttonText, boolean isSelected) {
         Button btn = new Button(this);
         btn.setText(buttonText);
@@ -191,6 +197,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         lastTimeThumbnailWasClicked = System.currentTimeMillis();
         return canProceed;
     }
+
     private boolean tapActionWasNotTooFast() {
         long elapsedTimeSinceLastClick = System.currentTimeMillis() - lastTimeThumbnailWasClicked;
         return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
