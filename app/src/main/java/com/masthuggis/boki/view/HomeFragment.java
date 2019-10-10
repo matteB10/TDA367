@@ -27,7 +27,7 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
 /**
  * Home page displaying all the adverts that have been published to the market.
- * Will also include search and sort buttons in the future.
+ * Will also include searchPerformed and sort buttons in the future.
  */
 public class HomeFragment extends Fragment implements HomePresenter.View, AdapterView.OnItemSelectedListener {
 
@@ -63,20 +63,17 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 30, true));
     }
 
-    //Adds a listener for when the user performs a search, reacts to when enter key is pressed
-    //makes the keyboard disappear then calls on the presenter to perform the search with given input
+    //Adds a listener for when the user performs a searchPerformed, reacts to when enter key is pressed
+    //makes the keyboard disappear then calls on the presenter to perform the searchPerformed with given input
     private void setupSearchField() {
         searchField = view.findViewById(R.id.searchFieldEditText);
-        searchField.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER)) { //Make sure stuff happens when enter is pressed
-                    hideKeyboard();
-                    performSearch();
-                }
-                return false;
+        searchField.setOnKeyListener((view, keyCode, keyEvent) -> {
+            if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
+                    (keyCode == KeyEvent.KEYCODE_ENTER)) { //Make sure stuff happens when enter is pressed
+                hideKeyboard();
+                performSearch();
             }
+            return false;
         });
 
         searchField.addTextChangedListener(new TextWatcher() {
@@ -101,19 +98,12 @@ public class HomeFragment extends Fragment implements HomePresenter.View, Adapte
     private void hideKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
-        searchField.clearFocus(); //This and two lines above hides keyboard when search is pressed
+        searchField.clearFocus(); //This and two lines above hides keyboard when searchPerformed is pressed
     }
 
-    private boolean performSearch() {
-        showLoadingScreen();
-        String query = searchField.getText().toString(); //Query from textfield is loaded properly
-        presenter.search(query, new SearchCallback() { //Actually perform search
-            @Override
-            public void onCallback() {
-                hideLoadingScreen(); //Necessary callback since search on query happens on other thread
-            }
-        });
-        return true;
+    private void performSearch() {
+        String query = searchField.getText().toString();
+        presenter.searchPerformed(query);
     }
 
     @Override

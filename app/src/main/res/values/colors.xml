@@ -6,16 +6,17 @@
 
 
     <color name="colorTeal">#50A18E</color>
-    <color name="colorTealLight">#b3d9d0</color>
-    <color name="colorTealDark">#4A9483</color>
+    <color name="colorTealLight">#98cdc0</color>
+    <color name="colorTealDark">#3d7b6c</color>
     <color name="colorCoral">#F26E50</color>
-    <color name="colorCoralLight">#FF8A70</color>
+    <color name="colorCoralLight">#fac4b8</color>
     <color name="colorCoralDark">#DB5A3D</color>
     <color name="colorYellow">#FFC527</color>
-    <color name="colorYellowLight">#FFD359</color>
-    <color name="colorYellowDark">#F5BA18</color>
+    <color name="colorYellowLight">#fff0c7</color>
+    <color name="colorYellowDark">#e6a800</color>
     <color name="colorGreyDark">#707070</color>
     <color name="colorGreyLight">#A2A6A7</color>
+    <color name="colorGreyExtraLight">#d2d4d5</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
 

@@ -27,6 +27,9 @@ import java.util.List;
 public class DetailsActivity extends AppCompatActivity implements DetailsPresenter.View {
     private DetailsPresenter presenter;
     private Button contactOwnerButton;
+    private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
+    private static final long MIN_THUMBNAIL_CLICK_TIME_INTERVAL = 300;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,10 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
         contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
-            presenter.contactOwnerButtonClicked(contactOwnerButton.getText().toString());
+            if(canProceedWithTapAction()){
+                presenter.contactOwnerButtonClicked(contactOwnerButton.getText().toString());
+            }
+
 
         });
 
@@ -106,7 +112,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         Button btn;
 
         for (String str : tags) {
-            btn = createTagButton(str);
+            btn = createTagButton(str,true);
             tableRow = getTableRow(tableRow, parentLayout);
             tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
             tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
@@ -116,20 +122,12 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
     @Override
     public void openChat(String chatID) {
-        //TODO ÖPPNA CHATT
         Intent intent = new Intent(DetailsActivity.this, MessagesActivity.class);
         intent.putExtra("chatID", chatID);
         startActivity(intent);
 
     }
 
-
-    private Button createTagButton(String btnTxt) {
-        Button btn = new Button(this);
-        btn.setText(btnTxt);
-        setTagStyling(btn);
-        return btn;
-    }
 
     /**
      * Private method trying to resolve if a tableRow with tags is filled and
@@ -140,19 +138,19 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
      * @return param tableRow or new tableRow object depending on
      */
     private TableRow getTableRow(TableRow tableRow, LinearLayout parentLayout) {
-        if (tableRow.getChildCount() % 4 == 0) {
+        if (tableRow.getChildCount() % 3 == 0) {
             parentLayout.addView(tableRow);
             return new TableRow(this);
         }
         return tableRow;
     }
-
-    private void setTagStyling(Button btn) {
-        btn.setBackgroundResource(R.drawable.subject_tag_shape_normal);
-        btn.setTextSize(12);
-        btn.setTextColor(this.getColor(R.color.colorWhite));
-        btn.setElevation(4);
+    private Button createTagButton(String buttonText, boolean isSelected) {
+        Button btn = new Button(this);
+        btn.setText(buttonText);
+        StylingHelper.setTagButtonStyling(btn, isSelected);
+        return btn;
     }
+
 
     public void showToast() {
         Context context = getApplicationContext();
@@ -186,6 +184,16 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     public void setOwnerButtonText(String content) {
         contactOwnerButton.setText(content);
 
+    }
+
+    public boolean canProceedWithTapAction() {
+        boolean canProceed = tapActionWasNotTooFast();
+        lastTimeThumbnailWasClicked = System.currentTimeMillis();
+        return canProceed;
+    }
+    private boolean tapActionWasNotTooFast() {
+        long elapsedTimeSinceLastClick = System.currentTimeMillis() - lastTimeThumbnailWasClicked;
+        return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
     }
 
 }

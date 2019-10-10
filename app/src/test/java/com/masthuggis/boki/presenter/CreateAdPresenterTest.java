@@ -1,5 +1,6 @@
-package com.masthuggis.boki;
+package com.masthuggis.boki.presenter;
 
+import com.masthuggis.boki.R;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
 

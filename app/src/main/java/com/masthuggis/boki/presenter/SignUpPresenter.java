@@ -20,7 +20,7 @@ public class SignUpPresenter {
             view.showSignUpFailedMessage("Felaktig inmatning. Skrev du verkligen rätt?");
             return;
         }
-        DataModel.getInstance().signUp(email, password, username, this::onSignUpSuccess, (errorMessage -> onSignUpFailed(errorMessage)));
+        DataModel.getInstance().signUp(email, password, username, this::onSignUpSuccess, (this::onSignUpFailed));
     }
 
     private boolean anyFieldIsBadlyFormatted(String email, String password, String username) {

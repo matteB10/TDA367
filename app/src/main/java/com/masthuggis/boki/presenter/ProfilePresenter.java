@@ -1,31 +1,37 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.UserRepository;
+import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.model.observers.AdvertisementObserver;
+import com.masthuggis.boki.utils.ClickDelayHelper;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.List;
 
-public class ProfilePresenter implements IProductsPresenter {
+public class ProfilePresenter implements IProductsPresenter, AdvertisementObserver {
     private final View view;
     private List<Advertisement> adverts;
-    private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
-    private static final long MIN_CLICK_TIME_INTERVAL = 300;
-
-    private UserRepository userRepo;
 
     public ProfilePresenter(View view) {
         this.view = view;
-        this.view.showLoadingScreen();
-        /*
-        if(DataModel.getInstance().isLoggedIn()){
-            this.adverts = DataModel.getInstance().getAdsFromUniqueOwnerID(DataModel.getInstance().getUserID());
-        }
-         */
-        this.view.hideLoadingScreen();
+        getData();
+        DataModel.getInstance().addMarketAdvertisementObserver(this);
+    }
 
+    private void getData() {
+        this.view.showLoadingScreen();
+        DataModel.getInstance().getAdsFromLoggedInUser(advertisements -> updateData(advertisements));
+    }
+
+    private void updateData(List<Advertisement> adverts) {
+        if (adverts == null)
+            return;
+
+        this.adverts = adverts;
+        view.hideLoadingScreen();
+        view.updateThumbnails();
     }
 
     @Override
@@ -57,15 +63,7 @@ public class ProfilePresenter implements IProductsPresenter {
 
     @Override
     public boolean canProceedWithTapAction() {
-        long now = System.currentTimeMillis();
-        boolean canProceed;
-        if (now - lastTimeThumbnailWasClicked < MIN_CLICK_TIME_INTERVAL) {
-            canProceed = false;
-        } else {
-            canProceed = true;
-        }
-        lastTimeThumbnailWasClicked = now;
-        return canProceed;
+        return ClickDelayHelper.canProceedWithTapAction();
     }
 
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
@@ -74,8 +72,13 @@ public class ProfilePresenter implements IProductsPresenter {
         thumbnailView.setCondition(text, drawable);
     }
 
+    @Override
+    public void onAdvertisementsUpdated() {
+        getData();
+    }
+
     public interface View {
-        void updateItemsOnSale();
+        void updateThumbnails();
 
         void showSettingsScreen();
 

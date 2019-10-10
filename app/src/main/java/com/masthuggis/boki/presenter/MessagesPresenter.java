@@ -1,7 +1,7 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.model.MessagesObserver;
+import com.masthuggis.boki.model.observers.MessagesObserver;
 import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.model.iMessage;
 import com.masthuggis.boki.utils.CurrentTimeHelper;
@@ -46,8 +46,6 @@ public class MessagesPresenter implements MessagesObserver {
 
         HashMap<String, Object> map = new HashMap<>();
         if (!messageText.equals("")) {
-            //TODO FIX TIME OF MESSAGE SENT, MAKE SURE TO NOT OVEREXTEND THE MAXIMUM VALUE OF INTEGER
-            //Date, message, sender
             map.put("message", messageText);
             map.put("sender", DataModel.getInstance().getUserID());
             map.put("timeSent", CurrentTimeHelper.getCurrentTimeNumerical());
@@ -55,8 +53,6 @@ public class MessagesPresenter implements MessagesObserver {
 
             setMessageBox(messageText, true);
 
-            //behövs nog ej.
-            // onChatUpdated();
 
         }
     }

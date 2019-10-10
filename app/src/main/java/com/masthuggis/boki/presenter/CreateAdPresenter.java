@@ -1,12 +1,10 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.AdFactory;
-import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.CurrentTimeHelper;
 import com.masthuggis.boki.utils.FormHelper;
-import com.masthuggis.boki.utils.StylingHelper;
 
 import java.io.File;
 
@@ -148,7 +146,7 @@ public class CreateAdPresenter {
     //Need to change imageFile in advert to inputStream from View
     public void publishAdvert() {
         setAdvertDate();
-        Repository.saveAdvert(view.getCurrentImageFile(), advertisement);
+        DataModel.getInstance().saveAdvert(view.getCurrentImageFile(), advertisement);
         advertisement = null;
     }
 
@@ -165,9 +163,6 @@ public class CreateAdPresenter {
         return advertisement;
     }
 
-    public int getTagDrawable(boolean isPressed) {
-        return StylingHelper.getTagDrawable(isPressed);
-    }
 
     public View getView() {
         return view;

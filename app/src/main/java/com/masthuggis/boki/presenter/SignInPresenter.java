@@ -1,16 +1,13 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.FormHelper;
 
 public class SignInPresenter {
-    private UserRepository repo;
     private View view;
 
     public SignInPresenter(View view) {
         this.view = view;
-        this.repo = UserRepository.getInstance();
 
     }
 

@@ -3,9 +3,13 @@ package com.masthuggis.boki.backend;
 import com.masthuggis.boki.model.Message;
 import com.masthuggis.boki.model.iMessage;
 
-public class MessageFactory {
+/**
+ * Factory for creating objects of the iMessage-type.
+ */
 
-    public static iMessage createMessage(String message, long timeSent,String senderID){
+class MessageFactory {
+
+    static iMessage createMessage(String message, long timeSent, String senderID){
         return new Message(message,timeSent,senderID);
     }
 }

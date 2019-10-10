@@ -1,4 +1,4 @@
-package com.masthuggis.boki.model;
+package com.masthuggis.boki.model.observers;
 
 public interface AdvertisementObserver {
     void onAdvertisementsUpdated();
