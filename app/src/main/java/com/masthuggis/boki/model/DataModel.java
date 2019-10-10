@@ -116,7 +116,6 @@ public class DataModel implements BackendObserver {
     }
 
     public void addAdvertisement(Advertisement ad) {
-
         this.allAds.add(ad);
     }
 
@@ -150,9 +149,6 @@ public class DataModel implements BackendObserver {
         return userAds;
     }
 
-    private void updateAllAds() {
-        repository.fetchAllAdverts(advertisements -> allAds = advertisements);
-    }
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
 
@@ -163,10 +159,6 @@ public class DataModel implements BackendObserver {
                 advertisementCallback.onCallback(allAds);
             }
         });
-    }
-
-    public List<Advertisement> getAllAds() {
-        return new ArrayList<>(allAds);
     }
 
     public void loggedIn(iUser user) {
@@ -293,6 +285,10 @@ public class DataModel implements BackendObserver {
         });
     }
 
+    public void addToFavourites(String adID) {
+        String userID = getUserID();
+        repository.addToFavourites(adID, userID);
+    }
 
     public void saveAdvert(File currentImageFile, Advertisement advertisement) {
         repository.saveAdvert(currentImageFile, advertisement);
