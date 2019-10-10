@@ -34,10 +34,6 @@ public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePres
         super.updateData();
     }
 
-    public void onSettingsButtonPressed() {
-        profileView.showSettingsScreen();
-    }
-
     public void onSignOutPressed() {
         DataModel.getInstance().signOut();
         profileView.showLoginScreen();
@@ -45,6 +41,5 @@ public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePres
 
     public interface View {
         void showLoginScreen();
-        void showSettingsScreen();
     }
 }
