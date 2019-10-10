@@ -10,6 +10,9 @@ public class MainPresenter {
         this.view = view;
         this.dataModel = DataModel.getInstance();
 
+        // Initilize the data by fetching the newest version from database.
+        dataModel.fetchAllAdverts(advertisements -> {});
+
         if (dataModel.isLoggedIn()) {
             view.showMainScreen();
         } else {
