@@ -61,7 +61,7 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
         recyclerView.setAdapter(recyclerViewAdapter);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 30, true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 56, true));
     }
 
     //Adds a listener for when the user performs a searchPerformed, reacts to when enter key is pressed
