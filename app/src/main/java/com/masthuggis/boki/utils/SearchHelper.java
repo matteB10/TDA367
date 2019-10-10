@@ -24,7 +24,7 @@ public class SearchHelper {
 
         Thread thread = new Thread(() -> DataModel.getInstance().fetchAllAdverts(advertisements -> {
             List<Advertisement> tempList = new ArrayList<>();
-            List<Advertisement> searchRes = new ArrayList<>(); //new list with searchresults
+            List<Advertisement> searchRes = new ArrayList<>(); //new list with search results
             String queryStr = query.toLowerCase().trim();
 
             if (advertisements != null) {
@@ -35,7 +35,7 @@ public class SearchHelper {
             searchContainsTitle(searchRes, queryStr, tempList); //search if title contains query.
             searchContainsTags(searchRes, queryStr, tempList); //search if at least one of ads tags matches query.
 
-            callback.onCallback(searchRes);
+            callback.onCallback(searchRes); //searchRes contains correct adverts here
         }));
         thread.start();
     }
