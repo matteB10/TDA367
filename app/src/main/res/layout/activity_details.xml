@@ -9,16 +9,20 @@
 
 
     <ScrollView
+        android:id="@+id/detailsScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:minHeight="560dp"
+            app:layout_constraintBottom_toBottomOf="parent">
 
 
             <TextView
@@ -26,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:text="TextView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -34,8 +38,8 @@
 
             <ImageView
                 android:id="@+id/detailsImage"
-                android:layout_width="220dp"
-                android:layout_height="300dp"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
                 android:layout_marginTop="40dp"
                 android:contentDescription="TODO"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -47,11 +51,12 @@
                 android:id="@+id/detailsName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="30dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="50dp"
                 android:text="Diskret matematik"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -61,13 +66,15 @@
                 android:id="@+id/detailsPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="30dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"
+                android:layout_marginEnd="50dp"
                 android:text="300 kr"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="28sp"
                 app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/detailsName" />
 
@@ -75,31 +82,30 @@
                 android:id="@+id/detailsTagsTableLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toTopOf="@+id/details_description"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detailsPrice"
-                />
+                app:layout_constraintTop_toBottomOf="@+id/detailsPrice" />
 
             <TextView
                 android:id="@+id/details_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="30dp"
-                android:layout_marginBottom="60dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="50dp"
                 android:text="Lorem ipsum"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detailsTagsTableLayout"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/contactOwnerButton"
-                app:layout_constraintTop_toBottomOf="@+id/detailsTagsTableLayout" />
+                 />
 
             <Button
                 android:id="@+id/contactOwnerButton"
@@ -112,9 +118,9 @@
                 android:autoLink="phone"
                 android:background="@drawable/primary_button"
                 android:text="Kontakta ägaren?"
-                android:visibility="visible"
                 android:textColor="@color/colorWhite"
                 android:textSize="24sp"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -125,7 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/primary_button"
                 android:text="redigera annons"
                 android:textColor="@color/colorWhite"
@@ -141,8 +147,8 @@
                 android:id="@+id/conditionConstraintLayout"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="184dp"
-                android:layout_marginBottom="250dp"
+                android:layout_marginStart="148dp"
+                android:layout_marginBottom="152dp"
                 android:background="@drawable/button_good_condition"
                 app:layout_constraintBottom_toBottomOf="@+id/detailsImage"
                 app:layout_constraintStart_toStartOf="@+id/detailsImage">
@@ -152,7 +158,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:layout_marginTop="5dp"
                     android:layout_marginEnd="15dp"
                     android:text="@string/conditionGood"
                     android:textColor="@color/colorWhite"
