@@ -27,7 +27,6 @@
         <activity android:name=".view.DetailsActivity" />
         <activity android:name=".view.SettingsActivity" />
         <activity android:name=".view.HomeFragment" />
-        <activity android:name=".view.EditAdActivity"/>
         <activity android:name=".view.CreateAdActivity"
             android:windowSoftInputMode="stateHidden"
             />

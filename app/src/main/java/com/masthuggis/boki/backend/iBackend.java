@@ -13,16 +13,13 @@ import com.masthuggis.boki.model.Chat;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public interface iBackend {
     void deleteAd(String uniqueID);
 
-    void editTitle(String adID, String newTitle);
-
-    void editPrice(String adID, String newPrice);
-
-    void editDescription(String adID, String newDescription);
+    void updateAd(String adID, String newTitle, Long newPrice, String newDescription, List<String> newTagList, String newCondition);
 
     void writeAdvertToFirebase(File imageFile, HashMap<String, Object> dataMap, @Nullable SuccessCallback callback);
 
@@ -30,6 +27,7 @@ public interface iBackend {
 
     String getFireBaseID(String userID, String advertID);
 
+    void addAdToFavourites(String adID, String userID);
 
     void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
 
@@ -60,5 +58,4 @@ public interface iBackend {
 
     void userSignUp(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
 
-    //void editTags(String adID, String newTag);
 }

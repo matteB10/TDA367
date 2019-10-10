@@ -71,10 +71,7 @@ public class BackendDataHandler implements iBackend {
 
 
     BackendDataHandler() {
-        if (getUserID() != null) //Otherwise throws NullPointer on app launch
-            advertPath = db.collection("users")
-                    .document(getUserID()).collection("adverts");
-
+        advertPath = db.collection("market");
     }
 
     public void addBackendObserver(BackendObserver backendObserver) {
@@ -114,7 +111,7 @@ public class BackendDataHandler implements iBackend {
     private void writeToDatabase(HashMap<String, Object> data) {
         isWritingAdvertToDatabase = true;
         String uniqueOwnerID = (String) data.get("uniqueOwnerID");
-        db.collection("users").document(uniqueOwnerID).collection("adverts").document()
+        db.collection("market").document((String) data.get("uniqueAdID"))
                 .set(data).addOnSuccessListener(aVoid -> {
             Log.d(TAG, "DocumentSnapshot successfully written!");
             isWritingAdvertToDatabase = false;
@@ -161,24 +158,23 @@ public class BackendDataHandler implements iBackend {
         });
     }
 
-    //Fetch data for all adverts from all users
+    //TODO Använd snapshotlistener för att uppdatera den lokala listan i DataModel så fort en förändring skett i databasen
     //might want to run this on separate thread created by caller
     public void readAllAdvertData(DBCallback DBCallback) {
         List<Map<String, Object>> advertDataList = new ArrayList<>();
-        db.collectionGroup("adverts").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        db.collection("market").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) { //Runs every time change happens i market
+                if (e != null) { //Can't attach listener, is path correct to firebase?
+                    Log.w(TAG, "Listen failed", e);
+                    return;
+                }//Have to notify
                 List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
-                updateAdvertsDataListWithImgUrl(adverts, advertDataList -> DBCallback.onCallBack(advertDataList));
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                System.out.println("Read from firebase failed.");
-
+                updateAdvertsDataListWithImgUrl(adverts, DBCallback::onCallBack); //TODO change this to update local list in DataModel
             }
         });
     }
+
 
     private void updateAdvertsDataListWithImgUrl(List<DocumentSnapshot> adverts, DBCallback dbCallback) {
         List<Map<String, Object>> advertDataList = new ArrayList<>();
@@ -278,6 +274,24 @@ public class BackendDataHandler implements iBackend {
         if (advertID != null)
             return db.collection("users").document(userID).collection("adverts").document(advertID).getId();
         return db.collection("users").document(userID).getId();
+    }
+
+    @Override
+    public void addAdToFavourites(String adID, String userID) {
+        db.collection("users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                try {
+                    List<String> favourites = (List<String>) task.getResult().getData().get("favourites");
+                    favourites.add(adID);
+                    db.collection("users").document(userID).update("favourites", favourites); //Should write updated favourites to firebase
+                } catch (NullPointerException e) { //Is thrown if users favourite-array is currently empty
+                    List<String> favourites = new ArrayList<>();
+                    favourites.add(adID);
+                    db.collection("users").document(userID).update("favourites", favourites); //Adds initial ad as user favourite
+                }
+            }
+        });
     }
 
 
@@ -387,28 +401,11 @@ public class BackendDataHandler implements iBackend {
     /**Deleting an ad with the specific adID from the database
      * @param adID */
     public void deleteAd(String adID) {
-        CollectionReference advertPath = db.collection("users")
-                .document(getUserID()).collection("adverts");
-        advertPath.whereEqualTo("uniqueAdID", adID).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                //Log.d(TAG, document.getId());
-                                advertPath.document(document.getId())
-                                        .delete();
-                            }
-                        }
-                    }
-                });
+        advertPath.document(adID).delete();
     }
 
-
-    /** Updating the ad title in a specific ad, using the adID and the given new title.
-     * @param adID
-     * @param newTitle*/
-    public void editTitle(String adID, String newTitle) {
+    public void updateAd(String adID, String newTitle, Long newPrice, String newDescription,
+                         List<String> tags, String newCondition) {
         advertPath.whereEqualTo("uniqueAdID", adID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -417,59 +414,15 @@ public class BackendDataHandler implements iBackend {
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 advertPath.document(documentSnapshot.getId())
                                         .update("title", newTitle);
-                            }
-                        }
-                    }
-                });
-    }
-
-    /**Updating the ad price in a specific ad, using the adID and the given new price
-     * @param adID
-     * @param newPrice*/
-    public void editPrice(String adID, String newPrice) {
-        advertPath.whereEqualTo("uniqueAdID", adID).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 advertPath.document(documentSnapshot.getId())
                                         .update("price", newPrice);
-                            }
-                        }
-                    }
-                });
-
-    }
-
-    /**Updating the ad description in a specific ad, using the adID and the new given description
-     * @param adID
-     * @param newDescription*/
-    public void editDescription(String adID, String newDescription) {
-        advertPath.whereEqualTo("uniqueAdID", adID).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 advertPath.document(documentSnapshot.getId())
                                         .update("description", newDescription);
-                            }
-                        }
-                    }
-                });
-    }
+                                advertPath.document(documentSnapshot.getId())
+                                        .update("condition", newCondition);
 
-/*
-    //TODO ad tags to tag-array
-    public void editTags(String adID, String newTag){
-        advertPath.whereEqualTo("uniqueAdID", adID).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (!("tags".contains(newTag))) {
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                advertPath.document(documentSnapshot.getId());
+                                advertPath.document(documentSnapshot.getId())
+                                        .update("tags", tags);
 
                             }
                         }
@@ -477,5 +430,5 @@ public class BackendDataHandler implements iBackend {
                 });
     }
 
- */
+
 }

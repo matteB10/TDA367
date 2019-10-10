@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.presenter.AdvertsPresenterView;
 import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
@@ -29,7 +30,7 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
  * Home page displaying all the adverts that have been published to the market.
  * Will also include searchPerformed and sort buttons in the future.
  */
-public class HomeFragment extends Fragment implements HomePresenter.View, AdapterView.OnItemSelectedListener {
+public class HomeFragment extends Fragment implements AdvertsPresenterView, AdapterView.OnItemSelectedListener {
 
     private HomePresenter presenter;
     private View view;

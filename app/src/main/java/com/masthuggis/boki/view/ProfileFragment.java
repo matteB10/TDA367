@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.presenter.AdvertsPresenterView;
 import com.masthuggis.boki.presenter.ProfilePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
@@ -20,7 +21,7 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
  * Profile page used for displaying the adverts that the user have published. Also have an settings
  * button to navigate to the app-wide settings.
  */
-public class ProfileFragment extends Fragment implements ProfilePresenter.View {
+public class ProfileFragment extends Fragment implements ProfilePresenter.View, AdvertsPresenterView {
     private ProfilePresenter presenter;
     private View view;
     private RecyclerView recyclerView;
@@ -96,7 +97,10 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View {
     @Override
     public void hideLoadingScreen() {
         // TODO: hide loading animation
+    }
 
+    @Override
+    public void showDetailsScreen(String id) {
 
     }
 }

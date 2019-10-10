@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -60,10 +61,19 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_advert);
         presenter = new CreateAdPresenter(this);
+
+        Intent intent  = getIntent();
+        if(intent.getExtras()!= null) {
+            String advertID = intent.getExtras().getString("advertID");
+            presenter.getAdbyID(advertID);
+        }
+
         enablePublishButton(false);
         displayPreDefTagButtons();
         setListeners();
         updateDataFromModel();
+        setRemoveBtn();
+        setSaveAdBtn();
     }
 
     private void updateDataFromModel() {
@@ -78,6 +88,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             showInputPrompt();
         }
     }
+
 
     private void showInputPrompt() {
         price.setText("");
@@ -163,7 +174,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setConditionGroupListener();
         setPreDefTagsListeners();
         setUserTagTextFieldListener();
-
     }
 
     private void setConditionGroupListener() {
@@ -219,7 +229,28 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setEnabled(b);
         publishAdButton.setBackground(getDrawable(StylingHelper.getPrimaryButtonDrawable(b)));
+    }
 
+
+    private void setRemoveBtn() {
+        Button removeBtn = findViewById(R.id.removeAdBtn);
+        removeBtn.setOnClickListener(view -> {
+            presenter.removeAdBtnPressed();
+            Intent intent = new Intent(CreateAdActivity.this, MainActivity.class);
+            intent.putExtra("advertID", presenter.getID());
+            startActivity(intent);
+            finish();
+        });
+    }
+    private void setSaveAdBtn() {
+        Button saveBtn = findViewById(R.id.saveAdBtn);
+        saveBtn.setOnClickListener(view -> {
+            presenter.saveAdBtnPressed();
+            Intent intent = new Intent(CreateAdActivity.this, MainActivity.class);
+            intent.putExtra("advertID", presenter.getID());
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void setImageViewListener() {
@@ -233,7 +264,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         title.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -271,14 +301,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         description.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 presenter.descriptionChanged(description.getText().toString());
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
             }
@@ -288,13 +315,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void setPublishAdListener() {
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setOnClickListener(view -> {
-            Intent intent = new Intent(this, MainActivity.class); //Need to send something here to show snackbar
-            intent.putExtra("advertID", presenter.getId());
-            intent.putExtra("toast", true);
             presenter.publishAdvert();
-            startActivity(intent);
             finish();
-
         });
     }
 
@@ -316,7 +338,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             @Override
             public void onClick(View view) {
                 presenter.userDefTagsChanged(btn.getText().toString());
-
             }
         });
     }
@@ -408,7 +429,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         populateTagsLayout(tagButtons, preDefTagsLayout);
     }
 
-
     @Override
     public void setTagStyling(String tag, boolean isSelected) {
         for (Button btn : preDefTagButtons) {
@@ -484,5 +504,32 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         startActivity(intent); //TODO check here to see what fragment was the previous one, maybe
     }
 
+    @Override
+    public void setTitle(String name) {
+        TextView title = findViewById(R.id.titleEditText);
+        title.setText("" + name);
+    }
+
+    @Override
+    public void setPrice(long price) {
+        TextView currentPrice = findViewById(R.id.priceEditText);
+        currentPrice.setText(String.valueOf(price) + " kr");
+    }
+
+    @Override
+    public void setImageUrl(String url) {
+        ImageView imageView = (ImageView) findViewById(R.id.addImageView);
+        if (imageView != null ){
+            imageView.setImageDrawable(getDrawable(R.drawable.add_pic));
+        }else {
+            Glide.with(this).load(url).into(imageView);
+        }
+    }
+
+    @Override
+    public void setDescription(String description) {
+        TextView currentDescription = findViewById(R.id.descriptionEditText);
+        currentDescription.setText(description);
+    }
 
 }

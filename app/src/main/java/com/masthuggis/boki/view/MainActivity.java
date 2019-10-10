@@ -1,10 +1,7 @@
 package com.masthuggis.boki.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -12,7 +9,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.presenter.MainPresenter;
 
 /**
@@ -42,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
 
     @Override
     public void showMainScreen() {
-        checkNavToast();
         setupBottomTabNavigator();
         addFragmentsToViewHierachy();
     }
@@ -54,16 +49,6 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
     public void onBackPressed() {
         moveTaskToBack(true);
     }
-
-    //TODO make this less shit
-    private void checkNavToast() {
-        if (getIntent().getBooleanExtra("toast", false)) {
-            Toast toast = Toast.makeText(getApplicationContext(), "Din annons har lagts upp!", Toast.LENGTH_LONG);
-            toast.show();
-            getIntent().putExtra("toast", false); //Reset boolean so it only shows once
-        }
-    }
-
 
     private void setupBottomTabNavigator() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);

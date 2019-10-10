@@ -116,7 +116,6 @@ public class DataModel implements BackendObserver {
     }
 
     public void addAdvertisement(Advertisement ad) {
-
         this.allAds.add(ad);
     }
 
@@ -150,9 +149,6 @@ public class DataModel implements BackendObserver {
         return userAds;
     }
 
-    private void updateAllAds() {
-        repository.fetchAllAdverts(advertisements -> allAds = advertisements);
-    }
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
 
@@ -229,31 +225,15 @@ public class DataModel implements BackendObserver {
         repository.deleteAd(uniqueID);
     }
 
-    public void updateTitle(String adID, String newTitle) {
-        repository.editTitle(adID, newTitle);
+    public void updateAd(Advertisement ad){
+        String adID = ad.getUniqueID();
+        String title = ad.getTitle();
+        Long price = ad.getPrice();
+        String description = ad.getDescription();
+        List<String> tagList = ad.getTags();
+        String condition = ad.getCondition().toString();
+        repository.updateAd(adID,title, price, description,tagList, condition);
     }
-
-    public void updatePrice(String adID, String newPrice) {
-        repository.editPrice(adID, newPrice);
-    }
-
-    public void updateDescription(String adID, String newDescription) {
-        repository.editDescription(adID, newDescription);
-    }
-
-    public void updateImage(File imageFile, String adID){
-        repository.uploadImageToFirebase(imageFile, adID);
-    }
-/*
-    public void updateTags(String adID, String newTags){
-        repository.editTags(adID,newTags);
-    }
-
- */
-
-   /* public void setUsername(String username) {
-        userRepository.setUsername(username);
-    }*/
 
     public void signInAfterRegistration(String email, String password, String username) {
         userRepository.signInAfterRegistration(email, password, username);
@@ -299,6 +279,10 @@ public class DataModel implements BackendObserver {
         });
     }
 
+    public void addToFavourites(String adID) {
+        String userID = getUserID();
+        repository.addToFavourites(adID, userID);
+    }
 
     public void saveAdvert(File currentImageFile, Advertisement advertisement) {
         repository.saveAdvert(currentImageFile, advertisement);

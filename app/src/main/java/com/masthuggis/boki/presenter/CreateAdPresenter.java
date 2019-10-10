@@ -1,5 +1,7 @@
 package com.masthuggis.boki.presenter;
 
+import android.widget.Button;
+
 import com.masthuggis.boki.backend.AdFactory;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
@@ -16,6 +18,8 @@ import java.io.File;
 public class CreateAdPresenter {
 
     private static Advertisement advertisement;
+    private String adID;
+    private Button saveBtn;
 
 
     private View view;
@@ -23,8 +27,34 @@ public class CreateAdPresenter {
 
 
     public CreateAdPresenter(View view) {
+        this.adID = adID;
         advertisement = AdFactory.createAd();
         this.view = view;
+
+        setUpView();
+    }
+
+    public void getAdbyID(String adID){
+        advertisement = DataModel.getInstance().getAdFromAdID(adID);
+    }
+
+    public void removeAdBtnPressed(){
+        String adID = advertisement.getUniqueID();
+        DataModel.getInstance().removeExistingAdvert(adID);
+    }
+    public void saveAdBtnPressed(){
+        DataModel.getInstance().updateAd(advertisement);
+    }
+
+    private void setUpView(){
+            view.setTitle(advertisement.getTitle());
+            view.setPrice(advertisement.getPrice());
+            view.setDescription(advertisement.getDescription());
+            view.setImageUrl(advertisement.getImageUrl());
+    }
+
+    public String getID(){
+        return advertisement.getUniqueID();
     }
 
     public boolean getIsValidPrice() {
@@ -32,6 +62,14 @@ public class CreateAdPresenter {
     }
 
     public interface View {
+
+        void setTitle(String name);
+
+        void setPrice(long price);
+
+        void setImageUrl(String url);
+
+        void setDescription(String description);
 
         void enablePublishButton(boolean isEnabled);
 
@@ -55,6 +93,7 @@ public class CreateAdPresenter {
     public void titleChanged(String title) {
         advertisement.setTitle(title);
         view.enablePublishButton(allFieldsValid());
+
     }
 
     /**
@@ -150,7 +189,7 @@ public class CreateAdPresenter {
     }
 
     private void setAdvertDate() {
-        advertisement.setDatePublished(CurrentTimeHelper.getCurrentTime());      //Saves current time as a string
+        advertisement.setDatePublished(CurrentTimeHelper.getCurrentTime());
     }
 
     public String getId() {

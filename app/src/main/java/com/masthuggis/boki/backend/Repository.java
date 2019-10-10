@@ -70,7 +70,6 @@ public class Repository {
             advertisementCallback.onCallback(allAds);
         }));
         thread.start();
-
     }
 
 
@@ -108,27 +107,18 @@ public class Repository {
         backend.deleteAd(uniqueID);
     }
 
-    public void editTitle(String adID, String newTitle) {
-        backend.editTitle(adID,newTitle);
+
+    public void updateAd(String adID, String newTitle, Long newPrice, String newDescription,
+                         List<String> newTagList, String newCondition) {
+        backend.updateAd(adID,newTitle,newPrice,newDescription, newTagList, newCondition);
     }
 
-    public void editPrice(String adID, String newPrice) {
-        backend.editPrice(adID, newPrice);
-    }
-
-    public void editDescription(String adID, String newDescription) {
-        backend.editDescription(adID, newDescription);
-    }
-
-    public void editTags(String adID, String newTag){
-       // backend.editTags(adID,newTag);
-    }
     public void addObserverToBackend(DataModel dataModel) {
         backend.addBackendObserver(dataModel);
     }
 
-    public void uploadImageToFirebase(File imageFile, String adID) {
-        backend.uploadImageToFirebase(imageFile, adID);
+    public void addToFavourites(String adID, String userID) {
+        backend.addAdToFavourites(adID, userID);
     }
 }
 
