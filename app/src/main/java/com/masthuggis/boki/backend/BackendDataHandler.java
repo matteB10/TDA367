@@ -158,24 +158,23 @@ public class BackendDataHandler implements iBackend {
         });
     }
 
-    //Fetch data for all adverts from all users
+    //TODO Använd snapshotlistener för att uppdatera den lokala listan i DataModel så fort en förändring skett i databasen
     //might want to run this on separate thread created by caller
     public void readAllAdvertData(DBCallback DBCallback) {
         List<Map<String, Object>> advertDataList = new ArrayList<>();
-        db.collection("market").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        db.collection("market").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) { //Runs every time change happens i market
+                if (e != null) { //Can't attach listener, is path correct to firebase?
+                    Log.w(TAG, "Listen failed", e);
+                    return;
+                }//Have to notify
                 List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
-                updateAdvertsDataListWithImgUrl(adverts, advertDataList -> DBCallback.onCallBack(advertDataList));
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                System.out.println("Read from firebase failed.");
-
+                updateAdvertsDataListWithImgUrl(adverts, DBCallback::onCallBack); //TODO change this to update local list in DataModel
             }
         });
     }
+
 
     private void updateAdvertsDataListWithImgUrl(List<DocumentSnapshot> adverts, DBCallback dbCallback) {
         List<Map<String, Object>> advertDataList = new ArrayList<>();
@@ -417,7 +416,7 @@ public class BackendDataHandler implements iBackend {
 
     public void editPrice(String adID, String newPrice) {
         DocumentReference advert = advertPath.document(adID);
-        advert.update("price",newPrice);
+        advert.update("price", newPrice);
     }
 
     public void editDescription(String adID, String newDescription) {

@@ -70,7 +70,6 @@ public class Repository {
             advertisementCallback.onCallback(allAds);
         }));
         thread.start();
-
     }
 
 
