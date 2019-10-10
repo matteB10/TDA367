@@ -382,20 +382,7 @@ public class BackendDataHandler implements iBackend {
 
 
     public void deleteAd(String adID) {
-        CollectionReference advertPath = db.collection("market");
-        advertPath.whereEqualTo("uniqueAdID", adID).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                //Log.d(TAG, document.getId());
-                                advertPath.document(document.getId())
-                                        .delete();
-                            }
-                        }
-                    }
-                });
+        advertPath.document(adID).delete();
     }
 
 
@@ -415,8 +402,7 @@ public class BackendDataHandler implements iBackend {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    DocumentSnapshot advert = task.getResult();
-                    advert.getData().put("price", newPrice);
+                    task.getResult().getData().put("price", newPrice);
                 }
             }
         });
@@ -427,8 +413,7 @@ public class BackendDataHandler implements iBackend {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    DocumentSnapshot advert = task.getResult();
-                    advert.getData().put("description", newDescription);
+                    task.getResult().getData().put("description", newDescription);
                 }
             }
         });

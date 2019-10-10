@@ -65,7 +65,12 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
 
     private void setUpBtns() {
         Button removeBtn = findViewById(R.id.removeAdBtn);
-        removeBtn.setOnClickListener(view -> presenter.removeAdBtnPressed());
+        removeBtn.setOnClickListener(view -> {
+            presenter.removeAdBtnPressed();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        });
+
     }
 
     private void setListeners() {

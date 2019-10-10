@@ -105,7 +105,7 @@ public class Repository {
     }
 
     public void deleteAd(String uniqueID) {
-
+        backend.deleteAd(uniqueID);
     }
 
     public void editTitle(String adID, String newTitle) {
