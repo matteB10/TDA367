@@ -18,12 +18,12 @@ public class MainPresenter {
             dataModel.fetchAllAdverts(advertisements -> {});
             view.showMainScreen();
         } else {
-            view.showSignUpScreen();
+            view.showSignInScreen();
         }
     }
 
     public interface View {
-        void showSignUpScreen();
+        void showSignInScreen();
         void showMainScreen();
     }
 }
