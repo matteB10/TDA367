@@ -35,7 +35,6 @@ public class SearchHelper {
             searchContainsTitle(searchRes, queryStr, tempList); //search if title contains query.
             searchContainsTags(searchRes, queryStr, tempList); //search if at least one of ads tags matches query.
 
-
             callback.onCallback(searchRes);
         }));
         thread.start();
@@ -58,7 +57,6 @@ public class SearchHelper {
     /**
      * Checks if title matches search string and ads that Advert to search result
      * if true.
-     *
      * @param searchRes list to add matching advert
      * @param query     the search string
      * @param ads       list of adverts
