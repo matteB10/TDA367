@@ -7,8 +7,6 @@ import com.masthuggis.boki.backend.callbacks.chatCallback;
 import com.masthuggis.boki.backend.callbacks.chatDBCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
-import com.masthuggis.boki.model.Advert;
-import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.Chat;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;
@@ -102,8 +100,8 @@ public class UserRepository {
             public void onCallback(List<Map<String, Object>> chatMap) {
                 List<iChat> chatList = new ArrayList<>();
                 for (Map<String, Object> map : chatMap) {
-                    Advertisement ad = createAdFromMap(map);
-                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString(), ad, map.get("receiver").toString(), map.get("sender").toString(), dataModel));
+                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString(),map.get("userOneID").toString()
+                            ,map.get("userTwoID").toString(),map.get("advertID").toString(),map.get("userTwoName").toString(),map.get("userOneName").toString(),dataModel));
                 }
                 chatCallback.onCallback(chatList);
 
@@ -111,21 +109,7 @@ public class UserRepository {
         });
     }
 
-    private Advertisement createAdFromMap(Map<String, Object> dataMap) {
 
-        String title = "" + (String) dataMap.get("title");
-        String description = (String) dataMap.get("description");
-        long price = (long) dataMap.get("price");
-        List<String> tags = (List<String>) dataMap.get("tags");
-        String uniqueOwnerID = (String) dataMap.get("uniqueOwnerID");
-        Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
-        String uniqueAdID = (String) dataMap.get("uniqueAdID");
-        String datePublished = (String) dataMap.get("date");
-        String imageURL = (String) dataMap.get("imgURL");
-        String owner = (String) dataMap.get("advertOwner");
-
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageURL, tags, owner);
-    }
 
 
     public String userID() {
@@ -156,8 +140,8 @@ public class UserRepository {
     }
 
 
-    public void createNewChat(HashMap<String, Object> newChatMap, Advertisement advertisement, stringCallback stringCallback) {
-        backend.createNewChat(newChatMap, advertisement, stringCallback);
+    public void createNewChat(String uniqueOwnerID,String advertID, stringCallback stringCallback,String receiverUsername) {
+        backend.createNewChat(uniqueOwnerID, advertID, stringCallback,receiverUsername);
     }
 
     public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {

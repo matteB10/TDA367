@@ -55,6 +55,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private EditText price;
     private EditText description;
     private Button publishAdButton;
+    private Button saveAdButton;
+    private Button deleteAdButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,18 +64,38 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setContentView(R.layout.activity_create_advert);
         presenter = new CreateAdPresenter(this);
 
-        Intent intent  = getIntent();
-        if(intent.getExtras()!= null) {
-            String advertID = intent.getExtras().getString("advertID");
-            presenter.getAdbyID(advertID);
-        }
-
-        enablePublishButton(false);
+        Intent intent = getIntent();
         displayPreDefTagButtons();
         setListeners();
         updateDataFromModel();
-        setRemoveBtn();
-        setSaveAdBtn();
+        setUpView();
+
+        if (intent.getExtras() != null) {
+            String advertID = intent.getExtras().getString("advertID");
+            presenter.getAdbyID(advertID);
+        }
+    }
+
+    private void setUpView(){
+        TextView headerTextView = findViewById(R.id.headerTextView);
+        if(getIntent().getExtras()!= null){
+            headerTextView.setText("Ändra din annons"); //TODO lägga till i strings
+        }
+        setButtonVisibility();
+        setTextViews();
+    }
+
+    private void setListeners() {
+        setImageViewListener();
+        setTitleListener();
+        setPriceListener();
+        setDescriptionListener();
+        setPublishAdListener();
+        setConditionGroupListener();
+        setPreDefTagsListeners();
+        setUserTagTextFieldListener();
+        setDeleteBtnListener();
+        setSaveBtnListener();
     }
 
     private void updateDataFromModel() {
@@ -89,11 +111,62 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
     }
 
-
     private void showInputPrompt() {
         price.setText("");
     }
 
+    private void setTextViews(){
+        if (getIntent().getExtras() != null) {
+            TextView currentTags = findViewById(R.id.textView3);
+            currentTags.setText("Dina nuvarande taggar"); //TODO lägga till i strings
+        }
+    }
+
+
+    private void setButtonVisibility() {
+        if (getIntent().getExtras() == null) {
+            enablePublishButton(false);
+            deleteAdButton.setVisibility(View.GONE);
+            saveAdButton.setVisibility(View.GONE);
+        } else {
+            publishAdButton.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void styleConditionButtonPressed(int conditionButtonPressed) {
+        Button conditionButton = new Button(this);
+        switch (conditionButtonPressed) {
+            case R.string.conditionNew:
+                conditionButton = findViewById(R.id.conditionNewButton);
+                break;
+            case R.string.conditionGood:
+                conditionButton = findViewById(R.id.conditionGoodButton);
+                break;
+            case R.string.conditionOk:
+                conditionButton = findViewById(R.id.conditionOkButton);
+                break;
+        }
+        conditionButton.setElevation(StylingHelper.getDPToPixels(this, 4));
+    }
+
+    /**
+     * Enables publish ad button when all mandatory fields contains
+     * valid input.*/
+    @Override
+    public void enablePublishButton(boolean b) {
+        publishAdButton = findViewById(R.id.publishAdButton);
+        publishAdButton.setEnabled(b);
+        publishAdButton.setBackground(getDrawable(StylingHelper.getPrimaryButtonDrawable(b)));
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent); //TODO check here to see what fragment was the previous one, maybe
+    }
+
+    //images--------------------------------------------------------
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -124,7 +197,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         return image;
     }
 
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         imageViewDisplay = findViewById(R.id.addImageView);
@@ -133,7 +205,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             compressOnEmulator();
         }
     }
-
 
     //Compresses images without trying to crop image with android OS
     private void compressOnEmulator() {
@@ -156,7 +227,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageViewDisplay.setImageBitmap(bitmap);
     }
 
-
     //Compresses image, sets resolution, should probably only be used when running app on emulator
     private Bitmap compressBitmap() {
         BitmapFactory.Options imageOptions = new BitmapFactory.Options();
@@ -164,207 +234,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
         return Bitmap.createScaledBitmap(bitmap, 800, 800, false); //TODO is this even necessary?
     }
-
-    private void setListeners() {
-        setImageViewListener();
-        setTitleListener();
-        setPriceListener();
-        setDescriptionListener();
-        setPublishAdListener();
-        setConditionGroupListener();
-        setPreDefTagsListeners();
-        setUserTagTextFieldListener();
-    }
-
-    private void setConditionGroupListener() {
-        Button conditionGoodButton = findViewById(R.id.conditionGoodButton);
-        Button conditionNewButton = findViewById(R.id.conditionNewButton);
-        Button conditionOKButton = findViewById(R.id.conditionOkButton);
-
-
-        conditionGoodButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.conditionChanged(R.string.conditionGood);
-
-            }
-        });
-        conditionNewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.conditionChanged(R.string.conditionNew);
-            }
-        });
-        conditionOKButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.conditionChanged(R.string.conditionOk);
-            }
-        });
-    }
-
-    @Override
-    public void styleConditionButtonPressed(int conditionButtonPressed) {
-        Button conditionButton = new Button(this);
-        switch (conditionButtonPressed) {
-            case R.string.conditionNew:
-                conditionButton = findViewById(R.id.conditionNewButton);
-                break;
-            case R.string.conditionGood:
-                conditionButton = findViewById(R.id.conditionGoodButton);
-                break;
-            case R.string.conditionOk:
-                conditionButton = findViewById(R.id.conditionOkButton);
-                break;
-        }
-        conditionButton.setElevation(StylingHelper.getDPToPixels(this, 4));
-    }
+    //Tags----------------------------------------------------------
 
     /**
-     * Enables publish ad button when all mandatory fields contains
-     * valid input.
-     */
-    @Override
-    public void enablePublishButton(boolean b) {
-        publishAdButton = findViewById(R.id.publishAdButton);
-        publishAdButton.setEnabled(b);
-        publishAdButton.setBackground(getDrawable(StylingHelper.getPrimaryButtonDrawable(b)));
-    }
-
-
-    private void setRemoveBtn() {
-        Button removeBtn = findViewById(R.id.removeAdBtn);
-        removeBtn.setOnClickListener(view -> {
-            presenter.removeAdBtnPressed();
-            Intent intent = new Intent(CreateAdActivity.this, MainActivity.class);
-            intent.putExtra("advertID", presenter.getID());
-            startActivity(intent);
-            finish();
-        });
-    }
-    private void setSaveAdBtn() {
-        Button saveBtn = findViewById(R.id.saveAdBtn);
-        saveBtn.setOnClickListener(view -> {
-            presenter.saveAdBtnPressed();
-            Intent intent = new Intent(CreateAdActivity.this, MainActivity.class);
-            intent.putExtra("advertID", presenter.getID());
-            startActivity(intent);
-            finish();
-        });
-    }
-
-    private void setImageViewListener() {
-        imageViewDisplay = findViewById(R.id.addImageView);
-        imageViewDisplay.setOnClickListener(view -> dispatchTakePictureIntent());
-
-    }
-
-    private void setTitleListener() {
-        title = findViewById(R.id.titleEditText);
-        title.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                presenter.titleChanged(title.getText().toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-    }
-
-    private void setPriceListener() {
-        price = findViewById(R.id.priceEditText);
-        price.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                presenter.priceChanged(price.getText().toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-    }
-
-    private void setDescriptionListener() {
-        description = findViewById(R.id.descriptionEditText);
-        description.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                presenter.descriptionChanged(description.getText().toString());
-            }
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-    }
-
-    private void setPublishAdListener() {
-        publishAdButton = findViewById(R.id.publishAdButton);
-        publishAdButton.setOnClickListener(view -> {
-            presenter.publishAdvert();
-            finish();
-        });
-    }
-
-    private void setPreDefTagsListeners() {
-        for (Button btn : preDefTagButtons) {
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //Prevent scrollview from auto scrolling to textfields in focus
-                    btn.requestFocus();
-                    presenter.preDefTagsChanged(btn.getText().toString());
-                }
-            });
-        }
-    }
-
-    private void setUserDefTagsListener(Button btn) {
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.userDefTagsChanged(btn.getText().toString());
-            }
-        });
-    }
-
-
-    private void setUserTagTextFieldListener() {
-        EditText userDefTag = findViewById(R.id.tagsEditText);
-        userDefTag.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SPACE)) {
-                    presenter.userDefTagsChanged(userDefTag.getText().toString());
-                    //clear text field for new user input
-                    userDefTag.setText("");
-                    return true;
-                }
-                return false;
-            }
-        });
-    }
-
-    /**
-     * Reads pre defined subject strings from resources,
-     *
-     * @return all strings in a list.
-     */
+     * Reads predefined subject strings from resources,
+     * @return all strings in a list.*/
     private List<String> getPreDefTagStrings() {
         String[] strArr = getResources().getStringArray(R.array.preDefSubjectTags);
         return Arrays.asList(strArr);
@@ -372,10 +246,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * Creates a list with buttons from a list of strings.
-     *
      * @param strTags, list of button text strings
-     * @return a list of buttons
-     */
+     * @return a list of buttons*/
     private List<Button> createPreDefTagButtons(List<String> strTags) {
         List<Button> btnList = new ArrayList<>();
         for (String str : strTags) {
@@ -387,10 +259,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * Create a tag button with correct styling
-     *
      * @param text
-     * @return a button
-     */
+     * @return a button */
     private Button createTagButton(String text, boolean isSelected) {
         Button b = new Button(this);
         b.setText(text);
@@ -400,28 +270,24 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * @param tags         a list of buttons
-     * @param parentLayout the layout in which buttons will be placed
-     */
+     * @param parentLayout the layout in which buttons will be placed */
     private void populateTagsLayout(List<Button> tags, ViewGroup parentLayout) {
         for (Button btn : tags) {
-            ViewGroup tableRow = getCurrenTagRow(parentLayout.getId());
+            ViewGroup tableRow = getCurrentTagRow(parentLayout.getId());
             tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
         }
     }
 
     /**
      * Method to check if row is full
-     *
      * @param tableRow the row to be checked
-     * @return true if row is full
-     */
+     * @return true if row is full */
     private boolean rowFull(TableRow tableRow) {
         return (tableRow.getChildCount() % 3 == 0 && tableRow.getChildCount() != 0);
     }
 
     /**
-     * Called in onCreate, create tag buttons and add them to the view
-     */
+     * Called in onCreate, create tag buttons and add them to the view */
     private void displayPreDefTagButtons() {
         LinearLayout preDefTagsLayout = findViewById(R.id.preDefTagsLinearLayout);
         List<Button> tagButtons = createPreDefTagButtons(getPreDefTagStrings());
@@ -440,14 +306,12 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * Called in presenter when a user defined a new tag
-     *
-     * @param tag
-     */
+     * @param tag */
     @Override
     public void displayUserTagButton(String tag) {
-        Button btn = createTagButton(tag,true);
+        Button btn = createTagButton(tag, true);
         userDefTagButtons.add(btn);
-        ViewGroup currentUserTagTableRow = getCurrenTagRow(R.id.tagsLinearLayout);
+        ViewGroup currentUserTagTableRow = getCurrentTagRow(R.id.tagsLinearLayout);
         setUserDefTagsListener(btn);
         currentUserTagTableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
     }
@@ -458,7 +322,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         updateUserDefTags();
     }
 
-    private ViewGroup getCurrenTagRow(int parentViewID) {
+    private ViewGroup getCurrentTagRow(int parentViewID) {
         ViewGroup parentLayout = findViewById(parentViewID);
         int noOfRows = parentLayout.getChildCount();
         for (int i = 0; i < noOfRows; i++) {
@@ -497,13 +361,161 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             tr.removeAllViews();
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent); //TODO check here to see what fragment was the previous one, maybe
+    //Listeners-----------------------------------------------------
+    private void setDeleteBtnListener() {
+        deleteAdButton = findViewById(R.id.removeAdBtn);
+        deleteAdButton.setOnClickListener(view -> {
+            presenter.removeAdBtnPressed();
+            Intent intent = new Intent(CreateAdActivity.this, MainActivity.class);
+            intent.putExtra("advertID", presenter.getID());
+            startActivity(intent);
+            finish();
+        });
     }
 
+    private void setSaveBtnListener() {
+        saveAdButton = findViewById(R.id.saveAdBtn);
+        saveAdButton.setOnClickListener(view -> {
+            presenter.saveAdBtnPressed();
+            Intent intent = new Intent(CreateAdActivity.this, MainActivity.class);
+            intent.putExtra("advertID", presenter.getID());
+            startActivity(intent);
+            finish();
+        });
+    }
+
+    private void setPublishAdListener() {
+        publishAdButton = findViewById(R.id.publishAdButton);
+        publishAdButton.setOnClickListener(view -> {
+            presenter.publishAdvert();
+            finish();
+        });
+    }
+
+    private void setConditionGroupListener() {
+        Button conditionGoodButton = findViewById(R.id.conditionGoodButton);
+        Button conditionNewButton = findViewById(R.id.conditionNewButton);
+        Button conditionOKButton = findViewById(R.id.conditionOkButton);
+
+        conditionGoodButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.conditionChanged(R.string.conditionGood);
+            }
+        });
+        conditionNewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.conditionChanged(R.string.conditionNew);
+            }
+        });
+        conditionOKButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.conditionChanged(R.string.conditionOk);
+            }
+        });
+    }
+
+    private void setImageViewListener() {
+        imageViewDisplay = findViewById(R.id.addImageView);
+        imageViewDisplay.setOnClickListener(view -> dispatchTakePictureIntent());
+
+    }
+
+    private void setTitleListener() {
+        title = findViewById(R.id.titleEditText);
+        title.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                presenter.titleChanged(title.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+    }
+
+    private void setPriceListener() {
+        price = findViewById(R.id.priceEditText);
+        price.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                presenter.priceChanged(price.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+    }
+
+    private void setDescriptionListener() {
+        description = findViewById(R.id.descriptionEditText);
+        description.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                presenter.descriptionChanged(description.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+    }
+
+    private void setPreDefTagsListeners() {
+        for (Button btn : preDefTagButtons) {
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Prevent scrollview from auto scrolling to textfields in focus
+                    btn.requestFocus();
+                    presenter.preDefTagsChanged(btn.getText().toString());
+                }
+            });
+        }
+    }
+
+    private void setUserDefTagsListener(Button btn) {
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.userDefTagsChanged(btn.getText().toString());
+            }
+        });
+    }
+
+    private void setUserTagTextFieldListener() {
+        EditText userDefTag = findViewById(R.id.tagsEditText);
+        userDefTag.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SPACE)) {
+                    presenter.userDefTagsChanged(userDefTag.getText().toString());
+                    //clear text field for new user input
+                    userDefTag.setText("");
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+    //setters -------------------------------------------------------
     @Override
     public void setTitle(String name) {
         TextView title = findViewById(R.id.titleEditText);
@@ -519,9 +531,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     @Override
     public void setImageUrl(String url) {
         ImageView imageView = (ImageView) findViewById(R.id.addImageView);
-        if (imageView != null ){
+        if (imageView != null) {
             imageView.setImageDrawable(getDrawable(R.drawable.add_pic));
-        }else {
+        } else {
             Glide.with(this).load(url).into(imageView);
         }
     }
@@ -530,6 +542,27 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     public void setDescription(String description) {
         TextView currentDescription = findViewById(R.id.descriptionEditText);
         currentDescription.setText(description);
+    }
+    @Override
+    public void setTags(List<String> tags) {
+        LinearLayout parentLayout = findViewById(R.id.tagsLinearLayout);
+        TableRow tableRow = new TableRow(this);
+        Button btn;
+        for (String str : tags) {
+            btn = createTagButton(str, true);
+            tableRow = getTableRow(tableRow, parentLayout);
+            tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
+            tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
+        }
+        parentLayout.addView(tableRow);
+    }
+
+    private TableRow getTableRow(TableRow tableRow, LinearLayout parentLayout) {
+        if (tableRow.getChildCount() % 3 == 0) {
+            parentLayout.addView(tableRow);
+            return new TableRow(this);
+        }
+        return tableRow;
     }
 
 }

@@ -1,7 +1,5 @@
 package com.masthuggis.boki.presenter;
 
-import android.widget.Button;
-
 import com.masthuggis.boki.backend.AdFactory;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
@@ -9,6 +7,7 @@ import com.masthuggis.boki.utils.CurrentTimeHelper;
 import com.masthuggis.boki.utils.FormHelper;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Presenter class handling the createAdActivity. Validates input from
@@ -19,9 +18,6 @@ public class CreateAdPresenter {
 
     private static Advertisement advertisement;
     private String adID;
-    private Button saveBtn;
-
-
     private View view;
     private static boolean validPrice;
 
@@ -31,11 +27,11 @@ public class CreateAdPresenter {
         advertisement = AdFactory.createAd();
         this.view = view;
 
-        setUpView();
     }
 
     public void getAdbyID(String adID){
         advertisement = DataModel.getInstance().getAdFromAdID(adID);
+        setUpView();
     }
 
     public void removeAdBtnPressed(){
@@ -51,6 +47,7 @@ public class CreateAdPresenter {
             view.setPrice(advertisement.getPrice());
             view.setDescription(advertisement.getDescription());
             view.setImageUrl(advertisement.getImageUrl());
+            view.setTags(advertisement.getTags());
     }
 
     public String getID(){
@@ -59,35 +56,6 @@ public class CreateAdPresenter {
 
     public boolean getIsValidPrice() {
         return this.validPrice;
-    }
-
-    public interface View {
-
-        void setTitle(String name);
-
-        void setPrice(long price);
-
-        void setImageUrl(String url);
-
-        void setDescription(String description);
-
-        void enablePublishButton(boolean isEnabled);
-
-        void styleConditionButtonPressed(int condition);
-
-        void setTagStyling(String tag, boolean isPressed);
-
-        void displayUserTagButton(String tag);
-
-        void removeUserTagButton(String tag);
-
-        File getCurrentImageFile();
-
-
-
-
-        //TODO: create methods for future same page error messages in view
-
     }
 
     public void titleChanged(String title) {
@@ -224,6 +192,40 @@ public class CreateAdPresenter {
 
     public String getImageUrl() {
         return advertisement.getImageUrl();
+    }
+
+    public List<String> getTags(){
+        return advertisement.getTags();
+    }
+
+    public interface View {
+
+        void setTitle(String name);
+
+        void setPrice(long price);
+
+        void setImageUrl(String url);
+
+        void setDescription(String description);
+
+        void enablePublishButton(boolean isEnabled);
+
+        void styleConditionButtonPressed(int condition);
+
+        void setTagStyling(String tag, boolean isPressed);
+
+        void displayUserTagButton(String tag);
+
+        void removeUserTagButton(String tag);
+
+        File getCurrentImageFile();
+
+        void setTags(List<String> tags);
+
+
+
+        //TODO: create methods for future same page error messages in view
+
     }
 
 }

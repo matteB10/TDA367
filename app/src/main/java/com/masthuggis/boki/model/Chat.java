@@ -14,19 +14,19 @@ public class Chat implements iChat {
     private String receiverID;
     private String chatID;
     private String receiverUsername;
-    private Advertisement advertisement;
+    private String uniqueAdID;
     private String senderUsername;
     private DataModel dataModel;
 
 
-    public Chat(String uniqueChatID, Advertisement advert, String receiverUsername, String senderUsername,DataModel dataModel) {
+    public Chat(String uniqueChatID,String senderID,String receiverID, String uniqueAdID, String receiverUsername, String senderUsername, DataModel dataModel) {
         this.dataModel = dataModel;
-        this.senderID = dataModel.getUserID();
-        this.receiverID = advert.getUniqueOwnerID();
+        this.senderID = senderID;
+        this.receiverID = receiverID;
         this.chatID = uniqueChatID;
         this.receiverUsername = receiverUsername;
         this.senderUsername = senderUsername;
-        this.advertisement = advert;
+        this.uniqueAdID = uniqueAdID;
         dataModel.getMessages(uniqueChatID, this, messagesList -> messages = messagesList);
     }
 
@@ -34,6 +34,7 @@ public class Chat implements iChat {
     /**
      * timeLastMessageSent is used to determine when the last message in a chat was sent. This is to be able to display
      * it for the user to show the relevancy of a message/chat.
+     *
      * @return
      */
     @Override
@@ -80,20 +81,22 @@ public class Chat implements iChat {
         return this.senderUsername;
     }
 
-    @Override
-    public Advertisement getAdvert() {
-        return this.advertisement;
-    }
 
     @Override
     public String getDisplayName() {
-        String currentUsername = dataModel.getUserDisplayName();
+        String currentUserID = dataModel.getUserID();
 
-        if (!(senderUsername.equals(currentUsername))) {
+        if (!(senderID.equals(currentUserID))) {
             return senderUsername;
         } else {
             return receiverUsername;
         }
+
+    }
+
+    @Override
+    public String getUniqueIDAdID() {
+        return this.uniqueAdID;
 
     }
 }

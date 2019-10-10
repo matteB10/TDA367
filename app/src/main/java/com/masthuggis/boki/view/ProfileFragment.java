@@ -38,9 +38,6 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
 
 
     private void setupHeader() {
-        Button settingsButton = view.findViewById(R.id.profileSettingsButton);
-        settingsButton.setOnClickListener(view -> presenter.onSettingsButtonPressed());
-
         signOutBtn = view.findViewById(R.id.signInButton);
         signOutBtn.setOnClickListener(view -> presenter.onSignOutPressed());
     }
@@ -64,7 +61,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
     private void setupListLayout() {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 56, true));
     }
 
     @Override
@@ -75,13 +72,6 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
             adapter.notifyDataSetChanged();
         }
     }
-
-    @Override
-    public void showSettingsScreen() {
-        Intent intent = new Intent(getContext(), SettingsActivity.class);
-        startActivity(intent);
-    }
-
 
     @Override
     public void showLoginScreen() {
@@ -101,6 +91,8 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
 
     @Override
     public void showDetailsScreen(String id) {
-
+        Intent intent = new Intent(getContext(), DetailsActivity.class);
+        intent.putExtra("advertID", id);
+        startActivity(intent);
     }
 }

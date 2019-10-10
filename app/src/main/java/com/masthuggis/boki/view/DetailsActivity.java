@@ -52,13 +52,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
         Button changeAd = findViewById(R.id.changeAdButton);
         changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
-
-        favouritesIcon = findViewById(R.id.favouritesIcon);
-        favouritesIcon.setOnClickListener(view -> {
-                    presenter.onFavouritesIconPressed(); //gör den bara sättbar till en början :)
-                }
-        );
-
+        setUpFavouriteIcon();
         setBtnForOwner();
     }
 
@@ -166,6 +160,19 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         toast.show();
     }
 
+
+    private void setBtnForOwner() {
+        if (presenter.isUserOwner()) {
+            findViewById(R.id.changeAdButton).setVisibility(View.VISIBLE);
+            findViewById(R.id.contactOwnerButton).setVisibility(View.GONE);
+
+        } else {
+            findViewById(R.id.changeAdButton).setVisibility(View.GONE);
+            findViewById(R.id.contactOwnerButton).setVisibility(View.VISIBLE);
+        }
+    }
+
+
     @Override
     public void showEditView(String uniqueID) {
         Intent intent = new Intent(DetailsActivity.this, CreateAdActivity.class);
@@ -176,19 +183,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     @Override
     public void setOwnerButtonText(String content) {
         contactOwnerButton.setText(content);
-    }
 
-    /**Setting up buttons depending of if the user is the owner of the specific ad.
-       If the user is the owner, this will show the edit button instead of the contact button
-     */
-    private void setBtnForOwner() {
-        if (presenter.isUserOwner()) {
-            findViewById(R.id.changeAdButton).setVisibility(View.VISIBLE);
-            findViewById(R.id.contactOwnerButton).setVisibility(View.GONE);
-        } else {
-            findViewById(R.id.changeAdButton).setVisibility(View.GONE);
-            findViewById(R.id.contactOwnerButton).setVisibility(View.VISIBLE);
-        }
     }
 
     public boolean canProceedWithTapAction() {
@@ -200,6 +195,19 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     private boolean tapActionWasNotTooFast() {
         long elapsedTimeSinceLastClick = System.currentTimeMillis() - lastTimeThumbnailWasClicked;
         return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
+    }
+
+    private void setUpFavouriteIcon() {
+        favouritesIcon = findViewById(R.id.favouritesIcon);
+        if (presenter.isUserOwner()) {
+            favouritesIcon.setVisibility(View.INVISIBLE);
+        } else {
+            favouritesIcon.setOnClickListener(view -> {
+                        presenter.onFavouritesIconPressed(); //gör den bara sättbar till en början :)
+                    }
+            );
+        }
+
     }
 
 }

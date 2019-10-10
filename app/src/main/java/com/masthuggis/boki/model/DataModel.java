@@ -40,8 +40,8 @@ public class DataModel implements BackendObserver {
     }
 
     private void initBackend() {
-        repository = RepositoryFactory.createRepository(BackendFactory.createBackend(),this);
-        userRepository = RepositoryFactory.createUserRepository(BackendFactory.createBackend(),this);
+        repository = RepositoryFactory.createRepository(BackendFactory.createBackend(), this);
+        userRepository = RepositoryFactory.createUserRepository(BackendFactory.createBackend(), this);
         repository.addObserverToBackend(this);
     }
 
@@ -161,18 +161,14 @@ public class DataModel implements BackendObserver {
         });
     }
 
-    public List<Advertisement> getAllAds() {
-        return new ArrayList<>(allAds);
-    }
-
     public void loggedIn(iUser user) {
         this.user = user;
     }
 
     public void loggedOut() {
+
         this.user = null;
-        notifyChatObservers();
-        notifyMessagesObserver();
+
     }
 
     public String getUserID() {
@@ -197,12 +193,8 @@ public class DataModel implements BackendObserver {
     }
 
 
-    public void createNewChat(Advertisement advertisement, stringCallback stringCallback) {
-
-        HashMap<String, Object> newChatMap = new HashMap<>();
-        newChatMap.put("senderID", this.getUserID());
-
-        userRepository.createNewChat(newChatMap, advertisement, stringCallback);
+    public void createNewChat(String uniqueOwnerID,String advertID, stringCallback stringCallback,String receiverUsername) {
+        userRepository.createNewChat(uniqueOwnerID, advertID, stringCallback, receiverUsername);
     }
 
     public void sendMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
@@ -234,6 +226,11 @@ public class DataModel implements BackendObserver {
         String condition = ad.getCondition().toString();
         repository.updateAd(adID,title, price, description,tagList, condition);
     }
+
+
+   /* public void setUsername(String username) {
+        userRepository.setUsername(username);
+    }*/
 
     public void signInAfterRegistration(String email, String password, String username) {
         userRepository.signInAfterRegistration(email, password, username);
@@ -294,6 +291,6 @@ public class DataModel implements BackendObserver {
             public void onCallback(List<iChat> chatsList) {
                 chatCallback.onCallback(chatsList);
             }
-        },this);
+        }, this);
     }
 }
