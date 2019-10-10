@@ -16,6 +16,7 @@ public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePres
         super(view);
         this.profileView = view;
         super.updateData();
+        DataModel.getInstance().addMarketAdvertisementObserver(this);
     }
 
     @Override

@@ -77,7 +77,6 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
             }
         }
 
-
         @Override
         public void setTitle(String name) {
             titleTextView.setText(name);
