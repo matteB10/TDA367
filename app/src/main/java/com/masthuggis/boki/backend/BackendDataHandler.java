@@ -283,6 +283,8 @@ public class BackendDataHandler implements iBackend {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 try {
                     List<String> favourites = (List<String>) task.getResult().getData().get("favourites");
+                    if (isAlreadyFavourite(favourites, adID)) //Prevents users from adding the same advert to favourites more than once
+                        return;
                     favourites.add(adID);
                     db.collection("users").document(userID).update("favourites", favourites); //Should write updated favourites to firebase
                 } catch (NullPointerException e) { //Is thrown if users favourite-array is currently empty
@@ -292,6 +294,14 @@ public class BackendDataHandler implements iBackend {
                 }
             }
         });
+    }
+
+    private boolean isAlreadyFavourite(List<String> favourites, String adID) {
+        for (String id : favourites) {
+            if (id.equals(adID))
+                return true;
+        }
+        return false;
     }
 
 

@@ -74,7 +74,7 @@ public class Repository {
 
 
     private Advertisement retrieveAdvert(Map<String, Object> dataMap) {
-        String title = "" + (String) dataMap.get("title");
+        String title = "" + dataMap.get("title");
         String description = (String) dataMap.get("description");
         long price = (long) dataMap.get("price");
         List<String> tags = (List<String>) dataMap.get("tags");

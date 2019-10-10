@@ -161,10 +161,6 @@ public class DataModel implements BackendObserver {
         });
     }
 
-    public List<Advertisement> getAllAds() {
-        return new ArrayList<>(allAds);
-    }
-
     public void loggedIn(iUser user) {
         this.user = user;
     }
