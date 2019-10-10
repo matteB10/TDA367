@@ -72,9 +72,7 @@ public class BackendDataHandler implements iBackend {
 
     BackendDataHandler() {
         if (getUserID() != null) //Otherwise throws NullPointer on app launch
-            advertPath = db.collection("users")
-                    .document(getUserID()).collection("adverts");
-
+            advertPath = db.collection("market");
     }
 
     public void addBackendObserver(BackendObserver backendObserver) {
@@ -114,7 +112,7 @@ public class BackendDataHandler implements iBackend {
     private void writeToDatabase(HashMap<String, Object> data) {
         isWritingAdvertToDatabase = true;
         String uniqueOwnerID = (String) data.get("uniqueOwnerID");
-        db.collection("users").document(uniqueOwnerID).collection("adverts").document()
+        db.collection("market").document()
                 .set(data).addOnSuccessListener(aVoid -> {
             Log.d(TAG, "DocumentSnapshot successfully written!");
             isWritingAdvertToDatabase = false;
