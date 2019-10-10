@@ -102,7 +102,7 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
 
     @Override
     public boolean canProceedWithTapAction() {
-      return ClickDelayHelper.canProceedWithTapAction();
+        return ClickDelayHelper.canProceedWithTapAction();
     }
 
     private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
@@ -132,7 +132,6 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
         if (adverts == null || adverts.size() == 0) {
             return;
         }
-
         adverts = sortManager.sort(pos, adverts);
     }
 
@@ -146,7 +145,6 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
             SearchHelper.search(query, searchRes -> updateData(searchRes));
         }
     }
-
 
     @Override
     public void onAdvertisementsUpdated() {
