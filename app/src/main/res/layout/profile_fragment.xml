@@ -24,22 +24,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <Button
-                    android:id="@+id/profileSettingsButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_weight="1"
-                    android:text="Inställningar"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
                 <TextView
                     android:id="@+id/profileHeaderTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
                     android:text="Mina böcker"
                     android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -48,15 +39,16 @@
 
                 <Button
                     android:id="@+id/signInButton"
-                    android:layout_width="50dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="50dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
                     android:text="@string/logOut"
-                    android:textSize="8sp"
+                    android:textSize="12sp"
                     android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/profileSettingsButton"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toEndOf="@+id/profileHeaderTextView"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="1.0" />
 

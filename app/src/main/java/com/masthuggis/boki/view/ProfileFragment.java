@@ -38,9 +38,6 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
 
 
     private void setupHeader() {
-        Button settingsButton = view.findViewById(R.id.profileSettingsButton);
-        settingsButton.setOnClickListener(view -> presenter.onSettingsButtonPressed());
-
         signOutBtn = view.findViewById(R.id.signInButton);
         signOutBtn.setOnClickListener(view -> presenter.onSignOutPressed());
     }
@@ -75,13 +72,6 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
             adapter.notifyDataSetChanged();
         }
     }
-
-    @Override
-    public void showSettingsScreen() {
-        Intent intent = new Intent(getContext(), SettingsActivity.class);
-        startActivity(intent);
-    }
-
 
     @Override
     public void showLoginScreen() {
