@@ -65,17 +65,6 @@ public class HomePresenter implements IProductsPresenter, AdvertisementObserver 
         this.view.updateThumbnails();
     }
 
-    //TODO: fix better solution for this, may be needed when filtering later
-    private void updateDataWithoutSorting(List<Advertisement> adverts) {
-        if (adverts == null) {
-            return;
-        }
-
-        this.adverts = new ArrayList<>(adverts);
-        this.view.hideLoadingScreen();
-        this.view.updateThumbnails();
-    }
-
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
         if (adverts.size() < position || adverts == null)
             return;

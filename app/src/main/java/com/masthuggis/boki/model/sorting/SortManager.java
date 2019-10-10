@@ -47,4 +47,8 @@ public class SortManager {
     public List<Advertisement> sort(int pos, List<Advertisement> advertsToSort) throws NullPointerException {
         return sortStrategies.get(pos).sort(advertsToSort);
     }
+
+    public List<Advertisement> sortWithDefaultSorting(List<Advertisement> advertsToSort) {
+        return sortStrategies.get(0).sort(advertsToSort);
+    }
 }
