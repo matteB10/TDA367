@@ -22,15 +22,16 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
 
     public void updateData() {
         view.showLoadingScreen();
-        getData(advertisements -> {
-            if (advertisements == null || advertisements.size() == 0) {
-                return;
-            }
+        getData(advertisements -> updateData(advertisements));
+    }
 
-            adverts = sort(advertisements);
-            view.hideLoadingScreen();
-            view.updateThumbnails();
-        });
+    public void updateData(List<Advertisement> adverts) {
+        if (adverts == null || adverts.size() == 0) {
+            return;
+        }
+        this.adverts = sort(adverts);
+        view.hideLoadingScreen();
+        view.updateThumbnails();
     }
 
     public abstract void getData(advertisementCallback advertisementCallback);
@@ -43,7 +44,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
             return;
         }
 
-        Advertisement a = adverts.get(position);
+        Advertisement a = sort(adverts).get(position);
         thumbnailView.setId(a.getUniqueID());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
