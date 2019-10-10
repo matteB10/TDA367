@@ -40,8 +40,8 @@ public class DataModel implements BackendObserver {
     }
 
     private void initBackend() {
-        repository = RepositoryFactory.createRepository(BackendFactory.createBackend(),this);
-        userRepository = RepositoryFactory.createUserRepository(BackendFactory.createBackend(),this);
+        repository = RepositoryFactory.createRepository(BackendFactory.createBackend(), this);
+        userRepository = RepositoryFactory.createUserRepository(BackendFactory.createBackend(), this);
         repository.addObserverToBackend(this);
     }
 
@@ -166,9 +166,9 @@ public class DataModel implements BackendObserver {
     }
 
     public void loggedOut() {
+
         this.user = null;
-        notifyChatObservers();
-        notifyMessagesObserver();
+
     }
 
     public String getUserID() {
@@ -193,12 +193,8 @@ public class DataModel implements BackendObserver {
     }
 
 
-    public void createNewChat(Advertisement advertisement, stringCallback stringCallback) {
-
-        HashMap<String, Object> newChatMap = new HashMap<>();
-        newChatMap.put("senderID", this.getUserID());
-
-        userRepository.createNewChat(newChatMap, advertisement, stringCallback);
+    public void createNewChat(String uniqueOwnerID,String advertID, stringCallback stringCallback,String receiverUsername) {
+        userRepository.createNewChat(uniqueOwnerID, advertID, stringCallback, receiverUsername);
     }
 
     public void sendMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
@@ -233,7 +229,7 @@ public class DataModel implements BackendObserver {
         repository.editDescription(adID, newDescription);
     }
 
-    public void updateImage(File imageFile, String adID){
+    public void updateImage(File imageFile, String adID) {
         repository.uploadImageToFirebase(imageFile, adID);
     }
 
@@ -300,6 +296,6 @@ public class DataModel implements BackendObserver {
             public void onCallback(List<iChat> chatsList) {
                 chatCallback.onCallback(chatsList);
             }
-        },this);
+        }, this);
     }
 }

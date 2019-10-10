@@ -7,9 +7,8 @@ import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.chatDBCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
-import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.model.observers.BackendObserver;
 import com.masthuggis.boki.model.Chat;
+import com.masthuggis.boki.model.observers.BackendObserver;
 
 import java.io.File;
 import java.util.HashMap;
@@ -41,7 +40,7 @@ public interface iBackend {
 
     void getMessages(String uniqueChatID, Chat chat, DBCallback messageCallback);
 
-    void createNewChat(HashMap<String, Object> newChatMap, Advertisement advertisement, stringCallback stringCallback);
+     void createNewChat(String uniqueOwnerID,String advertID, stringCallback stringCallback,String receiverUsername);
 
     void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap);
 

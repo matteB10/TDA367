@@ -1,6 +1,5 @@
 package com.masthuggis.boki.backend;
 
-import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.Chat;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;
@@ -11,7 +10,9 @@ import com.masthuggis.boki.model.iChat;
 
 class ChatFactory {
 
-    static iChat createChat(String uniqueChatID, Advertisement advertisement, String receiverUsername, String senderUsername, DataModel dataModel){
-        return new Chat( uniqueChatID,advertisement,receiverUsername,senderUsername,dataModel);
-    }
+    static iChat createChat(String uniqueChatID,String senderID,String receiverID, String uniqueAdID, String receiverUsername, String senderUsername, DataModel dataModel){
+        return new Chat( uniqueChatID,senderID,receiverID,uniqueAdID,receiverUsername,senderUsername,dataModel);
+
+
+        }
 }
