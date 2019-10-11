@@ -109,8 +109,8 @@ public class Repository {
 
 
     public void updateAd(String adID, String newTitle, Long newPrice, String newDescription,
-                         List<String> newTagList, String newCondition) {
-        backend.updateAd(adID,newTitle,newPrice,newDescription, newTagList, newCondition);
+                         List<String> newTagList, String newCondition, File imageFile) {
+        backend.updateAd(adID,newTitle,newPrice,newDescription, newTagList, newCondition, imageFile);
     }
 
     public void addObserverToBackend(DataModel dataModel) {
