@@ -6,8 +6,9 @@ import com.masthuggis.boki.utils.FormHelper;
 
 public class SignUpPresenter {
     private View view;
-
-    public SignUpPresenter(View view) {
+    private DataModel dataModel;
+    public SignUpPresenter(View view, DataModel dataModel) {
+        this.dataModel = dataModel;
         this.view = view;
     }
 
@@ -20,7 +21,7 @@ public class SignUpPresenter {
             view.showSignUpFailedMessage("Felaktig inmatning. Skrev du verkligen rätt?");
             return;
         }
-        DataModel.getInstance().signUp(email, password, username, this::onSignUpSuccess, (this::onSignUpFailed));
+        dataModel.signUp(email, password, username, this::onSignUpSuccess, (this::onSignUpFailed));
     }
 
     private boolean anyFieldIsBadlyFormatted(String email, String password, String username) {

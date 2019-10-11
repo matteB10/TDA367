@@ -1,4 +1,4 @@
-package com.masthuggis.boki.backend;
+package com.masthuggis.boki.backend.callbacks;
 
 import com.masthuggis.boki.model.Advertisement;
 

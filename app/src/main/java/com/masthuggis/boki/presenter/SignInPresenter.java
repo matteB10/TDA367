@@ -5,8 +5,9 @@ import com.masthuggis.boki.utils.FormHelper;
 
 public class SignInPresenter {
     private View view;
-
-    public SignInPresenter(View view) {
+    private DataModel dataModel;
+    public SignInPresenter(View view, DataModel dataModel) {
+        this.dataModel=dataModel;
         this.view = view;
 
     }
@@ -16,7 +17,7 @@ public class SignInPresenter {
             view.showSignInFailedMessage("Felaktig inmatning. Skrev du verkligen rätt?");
             return;
         }
-        DataModel.getInstance().SignIn(email, password, this::onSignInSuccess, errorMessage -> onSignInFailed(errorMessage));
+        dataModel.SignIn(email, password, this::onSignInSuccess, errorMessage -> onSignInFailed(errorMessage));
     }
 
     private boolean anyFieldIsBadlyFormatted(String email, String password) {

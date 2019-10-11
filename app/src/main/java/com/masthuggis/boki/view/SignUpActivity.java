@@ -9,11 +9,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.SignUpPresenter;
 
 
 public class SignUpActivity extends AppCompatActivity implements SignUpPresenter.View {
-    private SignUpPresenter presenter = new SignUpPresenter(this);
+    private SignUpPresenter presenter = new SignUpPresenter(this, DependencyInjector.injectDataModel());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

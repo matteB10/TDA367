@@ -16,12 +16,14 @@ public class MessagesPresenter implements MessagesObserver {
     private iChat chat;
     private List<iMessage> messages;
     private String chatID;
+    private DataModel dataModel;
 
-    public MessagesPresenter(View view, String chatID) {
+    public MessagesPresenter(View view, String chatID, DataModel dataModel) {
+        this.dataModel = dataModel;
         this.view = view;
         this.chatID = chatID;
-        DataModel.getInstance().addMessagesObserver(this);
-        chat = DataModel.getInstance().findChatByID(chatID);
+        this.dataModel.addMessagesObserver(this);
+        chat = this.dataModel.findChatByID(chatID);
         if (chat != null) {
             messages = chat.getMessages();
             if (messages != null || messages.size() > 0) {
@@ -37,7 +39,7 @@ public class MessagesPresenter implements MessagesObserver {
                 .sorted((adOne, adTwo) -> ((int) (adOne.getTimeSent() - adTwo.getTimeSent())))
                 .collect(Collectors.toList());
         for (iMessage message : sorted) {
-            setMessageBox(message.getMessage(), message.getSenderID().equals(DataModel.getInstance().getUserID()));
+            setMessageBox(message.getMessage(), message.getSenderID().equals(dataModel.getUserID()));
         }
 
     }
@@ -47,9 +49,9 @@ public class MessagesPresenter implements MessagesObserver {
         HashMap<String, Object> map = new HashMap<>();
         if (!messageText.equals("")) {
             map.put("message", messageText);
-            map.put("sender", DataModel.getInstance().getUserID());
+            map.put("sender", dataModel.getUserID());
             map.put("timeSent", CurrentTimeHelper.getCurrentTimeNumerical());
-            DataModel.getInstance().sendMessage(chat.getChatID(), map);
+            dataModel.sendMessage(chat.getChatID(), map);
 
             setMessageBox(messageText, true);
 
@@ -62,9 +64,9 @@ public class MessagesPresenter implements MessagesObserver {
     }
 
     private void onChatUpdated() {
-        if (DataModel.getInstance().findChatByID(chatID) != null) {
+        if (dataModel.findChatByID(chatID) != null) {
 
-            chat = DataModel.getInstance().findChatByID(chatID);
+            chat = dataModel.findChatByID(chatID);
             view.update();
             messages = chat.getMessages();
             populateView(messages);
@@ -72,7 +74,7 @@ public class MessagesPresenter implements MessagesObserver {
     }
 
     public void onDestroy() {
-        DataModel.getInstance().removeMessagesObserver(this);
+        dataModel.removeMessagesObserver(this);
     }
 
     @Override

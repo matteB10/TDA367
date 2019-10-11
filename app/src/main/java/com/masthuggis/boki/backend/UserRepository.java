@@ -4,7 +4,6 @@ import com.masthuggis.boki.backend.callbacks.DBCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.chatCallback;
-import com.masthuggis.boki.backend.callbacks.chatDBCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Chat;
@@ -90,30 +89,22 @@ public class UserRepository {
     }
 
 
-    public void getUserChats(String userID, chatCallback chatCallback, DataModel dataModel) {
+    public void getUserChats(String userID, chatCallback chatCallback) {
 
 
-        backend.getUserChats(userID, new chatDBCallback() {
+        backend.getUserChats(userID, new DBCallback() {
             @Override
-            public void onCallback(List<Map<String, Object>> chatMap) {
+            public void onCallBack(List<Map<String, Object>> chatMap) {
                 List<iChat> chatList = new ArrayList<>();
                 for (Map<String, Object> map : chatMap) {
-                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString(),map.get("userOneID").toString()
-                            ,map.get("userTwoID").toString(),map.get("advertID").toString(),map.get("userTwoName").toString(),map.get("userOneName").toString(),dataModel));
+                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString(), map.get("userOneID").toString()
+                            , map.get("userTwoID").toString(), map.get("advertID").toString(), map.get("userTwoName").toString(), map.get("userOneName").toString(), dataModel));
                 }
                 chatCallback.onCallback(chatList);
 
             }
         });
     }
-
-
-
-
-    public String userID() {
-        return backend.getUserID();
-    }
-
 
 
     public void getMessages(String uniqueChatID, Chat chat, messagesCallback messagesCallback) {
@@ -138,8 +129,8 @@ public class UserRepository {
     }
 
 
-    public void createNewChat(String uniqueOwnerID,String advertID, stringCallback stringCallback,String receiverUsername) {
-        backend.createNewChat(uniqueOwnerID, advertID, stringCallback,receiverUsername);
+    public void createNewChat(String uniqueOwnerID, String advertID, stringCallback stringCallback, String receiverUsername) {
+        backend.createNewChat(uniqueOwnerID, advertID, stringCallback, receiverUsername);
     }
 
     public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {

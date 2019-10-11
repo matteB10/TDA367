@@ -2,7 +2,6 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.model.Advert;
-import com.masthuggis.boki.presenter.CreateAdPresenter;
 
 import org.junit.Test;
 
@@ -25,7 +24,7 @@ public class CreateAdPresenterTest {
         boolean buttonEnabled = false;
 
         MockView(){
-            presenter = new CreateAdPresenter(this);
+            presenter = new CreateAdPresenter(this, DependencyInjector.injectDataModel());
         }
 
         private CreateAdPresenter getPresenter(){
@@ -64,7 +63,7 @@ public class CreateAdPresenterTest {
 
     @Test
     public void testChangedTitle() {
-        CreateAdPresenter presenter = new CreateAdPresenter(new MockView());
+        CreateAdPresenter presenter = new CreateAdPresenter(new MockView(), DependencyInjector.injectDataModel());
 
         presenter.titleChanged("new title");
         assertTrue(presenter.getAdvertisement().getTitle() == "new title");
@@ -73,14 +72,14 @@ public class CreateAdPresenterTest {
 
     @Test
     public void testChangedDescription() {
-        CreateAdPresenter presenter = new CreateAdPresenter(new MockView());
+        CreateAdPresenter presenter = new CreateAdPresenter(new MockView(), DependencyInjector.injectDataModel());
         presenter.descriptionChanged("new description");
         assertTrue(presenter.getAdvertisement().getDescription().equals("new description"));
     }
 
     @Test
     public void testChangedPrice() {
-        CreateAdPresenter presenter = new CreateAdPresenter(new MockView());
+        CreateAdPresenter presenter = new CreateAdPresenter(new MockView(), DependencyInjector.injectDataModel());
         presenter.priceChanged("800000");
         assertEquals(0,presenter.getAdvertisement().getPrice());
 
@@ -89,7 +88,7 @@ public class CreateAdPresenterTest {
     }
     @Test
     public void testChangedTags(){
-        CreateAdPresenter presenter = new CreateAdPresenter(new MockView());
+        CreateAdPresenter presenter = new CreateAdPresenter(new MockView(), DependencyInjector.injectDataModel());
         assertEquals(0,presenter.getAdvertisement().getTags().size());
 
         String subjectTag = "Matematik";
@@ -102,7 +101,7 @@ public class CreateAdPresenterTest {
     }
     @Test
     public void testConditionChanged(){
-        CreateAdPresenter presenter = new CreateAdPresenter(new MockView());
+        CreateAdPresenter presenter = new CreateAdPresenter(new MockView(), DependencyInjector.injectDataModel());
         assertEquals(Advert.Condition.UNDEFINED, presenter.getAdvertisement().getCondition());
         presenter.conditionChanged(R.string.conditionGood);
         assertEquals(Advert.Condition.GOOD, presenter.getAdvertisement().getCondition());

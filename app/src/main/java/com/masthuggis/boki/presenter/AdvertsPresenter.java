@@ -2,6 +2,8 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.model.observers.AdvertisementObserver;
 import com.masthuggis.boki.utils.ClickDelayHelper;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
@@ -9,41 +11,95 @@ import com.masthuggis.boki.view.ThumbnailView;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AdvertsPresenter implements IProductsPresenter {
+/**
+ * Abstract presenter containing the common logic of presenters showing a list of adverts. Template
+ * method pattern is used to make the concrete implementations able to implement their unique
+ * way to get data and sort.
+ */
+public abstract class AdvertsPresenter implements IProductsPresenter, AdvertisementObserver {
 
-    public final AdvertsPresenterView view;
+    protected final AdvertsPresenterView view;
+    protected final DataModel dataModel;
     private List<Advertisement> adverts;
 
-    public AdvertsPresenter(AdvertsPresenterView view) {
+    public AdvertsPresenter(AdvertsPresenterView view, DataModel dataModel) {
         this.view = view;
         this.adverts = new ArrayList<>();
+        this.dataModel = dataModel;
     }
 
-    public void updateData() {
-        view.showLoadingScreen();
-        getData(advertisements -> updateData(advertisements));
+    /**
+     * Initializes the presenter taking necessary actions. This should always be called after
+     * instantiating.
+     */
+    public void initPresenter() {
+        dataModel.addMarketAdvertisementObserver(this);
+        updateAdverts();
     }
 
-    public void updateData(List<Advertisement> adverts) {
-        if (adverts == null || adverts.size() == 0) {
+    /**
+     * Sorts adverts and tells the view to update UI.
+     * @param adverts the updated adverts lists that will be displayed.
+     */
+    public void updateAdverts(List<Advertisement> adverts) {
+        if (stateOfAdvertsIsInvalid(adverts)) {
             return;
         }
+
         this.adverts = sort(adverts);
         view.hideLoadingScreen();
         view.updateThumbnails();
     }
 
+    /**
+     * Asks the concrete implementations to get data and then updates the UI.
+     */
+    public void updateAdverts() {
+        view.showLoadingScreen();
+        getData(advertisements -> updateAdverts(advertisements));
+    }
+
+    /**
+     * Concrete implementations implements this to call their respective data source.
+     * @param advertisementCallback
+     */
     public abstract void getData(advertisementCallback advertisementCallback);
 
+    /**
+     * Concrete implementations provides their desired way of sorting. If no sorting is desired,
+     * the same list of adverts can be returned.
+     * @param adverts
+     * @return
+     */
     public abstract List<Advertisement> sort(List<Advertisement> adverts);
 
+    /**
+     * Whenever the market is updated the view is updated using the latest data.
+     */
+    @Override
+    public void onAdvertisementsUpdated() {
+        updateAdverts();
+    }
+
+    /**
+     * Binds each recyclerview item by setting the fields of ThumbnailView. It asks for the desired
+     * sorting option to render the items in the desired order. It only sorts when the first item
+     * is requested, and thereafter uses the sorted list, instead of sorting for each item. It is
+     * highly unlikely for the sorting to change will the list is to be rendered.
+     * @param position
+     * @param thumbnailView
+     */
     @Override
     public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
-        if (adverts.size() <= position) {
+        if (requestedPositionIsTooLarge(position)) {
             return;
         }
 
-        Advertisement a = sort(adverts).get(position);
+        if (isFirstThumbnailToBeDisplayed(position)) {
+            adverts = sort(adverts);
+        }
+
+        Advertisement a = adverts.get(position);
         thumbnailView.setId(a.getUniqueID());
         thumbnailView.setTitle(a.getTitle());
         thumbnailView.setPrice(a.getPrice());
@@ -53,22 +109,37 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
         }
     }
 
+
+    /**
+     * Returns of the number of adverts to be rendered in the list. If the list is empty or not defined
+     * the list shall not be rendered, and therefor the length is zero.
+     * @return
+     */
     @Override
     public int getItemCount() {
-        if (adverts.isEmpty() || adverts == null) {
+        if (stateOfAdvertsIsInvalid(adverts)) {
             return 0;
         }
 
         return adverts.size();
     }
 
+    /**
+     * Asks the view to display the details view of the view that was pressed if the tap is valid.
+     * @param uniqueIDoFAdvert
+     */
     @Override
     public void onRowPressed(String uniqueIDoFAdvert) {
-        view.showDetailsScreen(uniqueIDoFAdvert);
+        if (canProceedWithTapAction()) {
+            view.showDetailsScreen(uniqueIDoFAdvert);
+        }
     }
 
-    @Override
-    public boolean canProceedWithTapAction() {
+    /**
+     * Asks helper class to make sure there was no taps in fast succession.
+     * @return
+     */
+    private boolean canProceedWithTapAction() {
         return ClickDelayHelper.canProceedWithTapAction();
     }
 
@@ -76,5 +147,17 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
         int drawable = StylingHelper.getConditionDrawable(a.getCondition());
         int text = StylingHelper.getConditionText(a.getCondition());
         thumbnailView.setCondition(text, drawable);
+    }
+
+    private boolean requestedPositionIsTooLarge(int position) {
+        return adverts.size() <= position;
+    }
+
+    private boolean stateOfAdvertsIsInvalid(List<Advertisement> adverts) {
+        return adverts.isEmpty() || adverts == null;
+    }
+
+    private boolean isFirstThumbnailToBeDisplayed(int position) {
+        return position == 0;
     }
 }

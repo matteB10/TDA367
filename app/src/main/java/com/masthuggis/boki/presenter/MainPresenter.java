@@ -6,9 +6,9 @@ public class MainPresenter {
     private View view;
     private DataModel dataModel;
 
-    public MainPresenter(View view) {
+    public MainPresenter(View view, DataModel dataModel) {
         this.view = view;
-        this.dataModel = DataModel.getInstance();
+        this.dataModel = dataModel;
 
         // Initilize the data by fetching the newest version from database.
         if (dataModel.isLoggedIn()) {
@@ -23,6 +23,7 @@ public class MainPresenter {
 
     public interface View {
         void showSignInScreen();
+
         void showMainScreen();
     }
 }

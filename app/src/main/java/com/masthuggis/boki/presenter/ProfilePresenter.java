@@ -8,22 +8,25 @@ import com.masthuggis.boki.model.sorting.SortManager;
 
 import java.util.List;
 
-public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePresenter.View> extends AdvertsPresenter implements AdvertisementObserver {
+/**
+ * Presenter handling the profile view. It handles a view that implements both AdvertsPresterView
+ * and ProfilePresenter.View interfaces. It displays the logged in users advertisments.
+ * It is an observer of the market so it can update its data
+ * accordingly.
+ * @param <T>
+ */
+public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePresenter.View> extends AdvertsPresenter {
 
     private final T profileView;
 
-    public ProfilePresenter(T view) {
-        super(view);
+    public ProfilePresenter(T view, DataModel dataModel) {
+        super(view, dataModel);
         this.profileView = view;
-    }
-
-    public void initPresenter() {
-        DataModel.getInstance().addMarketAdvertisementObserver(this);
     }
 
     @Override
     public void getData(advertisementCallback advertisementCallback) {
-        DataModel.getInstance().getAdsFromLoggedInUser(adverts -> advertisementCallback.onCallback(adverts));
+        super.dataModel.getAdsFromLoggedInUser(adverts -> advertisementCallback.onCallback(adverts));
     }
 
     @Override
@@ -31,13 +34,8 @@ public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePres
         return SortManager.getInstance().sortWithDefaultSorting(adverts);
     }
 
-    @Override
-    public void onAdvertisementsUpdated() {
-        super.updateData();
-    }
-
     public void onSignOutPressed() {
-        DataModel.getInstance().signOut();
+        super.dataModel.signOut();
         profileView.showLoginScreen();
     }
 

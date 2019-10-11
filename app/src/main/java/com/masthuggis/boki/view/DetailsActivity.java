@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.DetailsPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 
@@ -40,7 +41,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         Intent intent = getIntent();
         String advertID = intent.getExtras().getString("advertID");
         if (advertID != null) {
-            presenter = new DetailsPresenter(this, advertID);
+            presenter = new DetailsPresenter(this, advertID, DependencyInjector.injectDataModel());
         }
 
         contactOwnerButton = findViewById(R.id.contactOwnerButton);

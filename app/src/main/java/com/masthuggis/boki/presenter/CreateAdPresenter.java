@@ -20,9 +20,11 @@ public class CreateAdPresenter {
     private String adID;
     private View view;
     private static boolean validPrice;
+    private DataModel dataModel;
 
 
-    public CreateAdPresenter(View view) {
+    public CreateAdPresenter(View view, DataModel dataModel) {
+        this.dataModel = dataModel;
         this.adID = adID;
         advertisement = AdFactory.createAd();
         this.view = view;
@@ -152,7 +154,7 @@ public class CreateAdPresenter {
     //Need to change imageFile in advert to inputStream from View
     public void publishAdvert() {
         setAdvertDate();
-        DataModel.getInstance().saveAdvert(view.getCurrentImageFile(), advertisement);
+        dataModel.saveAdvert(view.getCurrentImageFile(), advertisement);
         advertisement = null;
     }
 
