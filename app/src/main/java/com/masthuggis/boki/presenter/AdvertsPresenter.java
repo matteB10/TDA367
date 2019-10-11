@@ -21,7 +21,12 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
 
     public void updateData() {
         view.showLoadingScreen();
-        getData(advertisements -> updateData(advertisements));
+        getData(new advertisementCallback() {
+            @Override
+            public void onCallback(List<Advertisement> advertisements) {
+                AdvertsPresenter.this.updateData(advertisements);
+            }
+        });
     }
 
     public void updateData(List<Advertisement> adverts) {

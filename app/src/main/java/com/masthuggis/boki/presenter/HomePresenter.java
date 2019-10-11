@@ -28,7 +28,7 @@ public final class HomePresenter extends AdvertsPresenter implements Advertiseme
 
     @Override
     public void getData(advertisementCallback advertisementCallback) {
-        DataModel.getInstance().fetchAllAdverts(adverts -> advertisementCallback.onCallback(adverts));
+        advertisementCallback.onCallback(DataModel.getInstance().getAllAdverts());
     }
 
     //Search the advertisements shown to the user by if their title or tags matches/contains the given query

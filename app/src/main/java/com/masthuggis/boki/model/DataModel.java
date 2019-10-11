@@ -50,6 +50,7 @@ public class DataModel implements BackendObserver {
         repository = RepositoryFactory.createRepository(BackendFactory.createBackend(), this);
         userRepository = RepositoryFactory.createUserRepository(BackendFactory.createBackend(), this);
         repository.addObserverToBackend(this);
+        fetchAllAdverts(advertisements -> allAds = advertisements);
     }
 
     public void initUser() {
@@ -64,7 +65,9 @@ public class DataModel implements BackendObserver {
         }
     }
 
+    public void init() {
 
+    }
 
     public void addChatObserver(ChatObserver chatObserver) {
         this.chatObservers.add(chatObserver);
@@ -169,6 +172,10 @@ public class DataModel implements BackendObserver {
         });
     }
 
+    public List<Advertisement> getAllAdverts() {
+        return allAds;
+    }
+
 
     public void loggedOut() {
 
@@ -193,11 +200,11 @@ public class DataModel implements BackendObserver {
     }
 
     public List<iChat> getUserChats() {
-            return user.getChats();
+        return user.getChats();
     }
 
 
-    public void createNewChat(String uniqueOwnerID,String advertID, stringCallback stringCallback,String receiverUsername) {
+    public void createNewChat(String uniqueOwnerID, String advertID, stringCallback stringCallback, String receiverUsername) {
         userRepository.createNewChat(uniqueOwnerID, advertID, stringCallback, receiverUsername);
     }
 
@@ -221,14 +228,14 @@ public class DataModel implements BackendObserver {
         repository.deleteAd(uniqueID);
     }
 
-    public void updateAd(Advertisement ad, File imageFile){
+    public void updateAd(Advertisement ad, File imageFile) {
         String adID = ad.getUniqueID();
         String title = ad.getTitle();
         Long price = ad.getPrice();
         String description = ad.getDescription();
         List<String> tagList = ad.getTags();
         String condition = ad.getCondition().toString();
-        repository.updateAd(adID,title, price, description,tagList, condition, imageFile);
+        repository.updateAd(adID, title, price, description, tagList, condition, imageFile);
     }
 
 
