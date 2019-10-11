@@ -72,9 +72,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         }
 
         private void onItemClicked(View v) {
-            if (presenter.canProceedWithTapAction()) {
-                presenter.onRowPressed(id);
-            }
+            presenter.onRowPressed(id);
         }
 
         @Override
@@ -90,8 +88,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
 
         @Override
         public void setImageURL(String url) {
-            Glide.with(mContext).load(url).into(imageView); //Does run when app is first started
-            //Needs to be somehow delayed until files are returned from firebase?
+            Glide.with(mContext).load(url).into(imageView);
         }
 
         @Override

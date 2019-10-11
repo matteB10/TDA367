@@ -21,7 +21,7 @@ public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePres
 
     public void initPresenter() {
         dataModel.addMarketAdvertisementObserver(this);
-        updateData();
+        updateAdverts();
     }
 
 
@@ -37,7 +37,7 @@ public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePres
 
     @Override
     public void onAdvertisementsUpdated() {
-        super.updateData();
+        super.updateAdverts();
     }
 
     public void onSignOutPressed() {

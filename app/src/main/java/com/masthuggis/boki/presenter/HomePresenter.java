@@ -26,7 +26,7 @@ public final class HomePresenter extends AdvertsPresenter implements Advertiseme
 
     public void initPresenter() {
         dataModel.addMarketAdvertisementObserver(this);
-        updateData();
+        updateAdverts();
     }
 
     @Override
@@ -38,15 +38,15 @@ public final class HomePresenter extends AdvertsPresenter implements Advertiseme
     public void searchPerformed(String query) {
         view.showLoadingScreen();
         if (query.equals("")) {
-            super.updateData(); //if query is empty string, update view use standard sorting
+            super.updateAdverts(); //if query is empty string, update view use standard sorting
         } else {
-            SearchHelper.search(query, searchResult -> super.updateData(searchResult));
+            SearchHelper.search(query, searchResult -> super.updateAdverts(searchResult));
         }
     }
 
     @Override
     public void onAdvertisementsUpdated() {
-        super.updateData();
+        super.updateAdverts();
     }
 
     @Override
@@ -60,7 +60,7 @@ public final class HomePresenter extends AdvertsPresenter implements Advertiseme
 
     public void sortOptionSelected(int pos) {
         selectedSortOption = pos;
-        super.updateData();
+        super.updateAdverts();
     }
 
     private String[] convertListToArray(List<String> list) {
