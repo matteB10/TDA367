@@ -240,8 +240,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
         return Bitmap.createScaledBitmap(bitmap, 800, 800, false); //TODO is this even necessary?
     }
-    //Tags----------------------------------------------------------
 
+    //Tags----------------------------------------------------------
     /**
      * Reads predefined subject strings from resources,
      *
@@ -512,8 +512,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void setUserDefTagsListener(Button btn) {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 presenter.userDefTagsChanged(btn.getText().toString());
+
             }
         });
     }
@@ -534,6 +535,17 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             }
         });
     }
+
+    private void elinsListener(Button btn, List<String> tags){
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               removeUserTagButton(btn.getText().toString());
+               tags.remove(btn.toString());
+            }
+        });
+    }
+
 
     //setters -------------------------------------------------------
     @Override
@@ -565,7 +577,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         LinearLayout parentLayout = findViewById(R.id.tagsLinearLayout);
         TableRow tableRow = new TableRow(this);
         Button btn;
-        if(getIntent().getExtras() == null){
+        if(getIntent().getExtras() == null){ //if creating a new ad
           for (String str : tags) {
               btn = createTagButton(str, true);
               tableRow = getTableRow(tableRow, parentLayout);
@@ -573,8 +585,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
               tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
           }
           parentLayout.addView(tableRow);
-      }else{
-          List<String> userTags = separateTagsforEdit();
+      }else{                                // if editing an existing ad
+          List<String> userTags = getUserTagsAsString();
           for (String str : userTags) {
               btn = createTagButton(str, true);
               tableRow = getTableRow(tableRow, parentLayout);
@@ -594,17 +606,16 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
 
-    private List<String> separateTagsforEdit() {
+    private List<String> getUserTagsAsString() {
         List<String> tags = presenter.getTags();
         List<String> preDefTags = getPreDefTagStrings();
-        preDefTags.toArray();
-
         List<String> userTags = new ArrayList<String>();
+
+        preDefTags.toArray();
 
         for (int i = 0; i< tags.size(); i++) {
             String tag = tags.get(i);
             if (!(preDefTags.contains(tag))) {
-                createTagButton(tag, true);
                 userTags.add(tag);
             }
             else setTagStyling(tag, true);

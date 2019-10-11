@@ -54,7 +54,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         Button changeAd = findViewById(R.id.changeAdButton);
         changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
         setUpFavouriteIcon();
-        setBtnForOwner();
+        setVisibilityOnButtons();
     }
 
 
@@ -81,7 +81,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         // TODO: fetch img, cache it and set it
         ImageView imageView = (ImageView) findViewById(R.id.detailsImage);
         Glide.with(this).load(url).override(220, 300).into(imageView);
-        //imageView.setImageURI(Uri.parse(url));
     }
 
     @Override
@@ -162,7 +161,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
 
-    private void setBtnForOwner() {
+    private void setVisibilityOnButtons() {
         if (presenter.isUserOwner()) {
             findViewById(R.id.changeAdButton).setVisibility(View.VISIBLE);
             findViewById(R.id.contactOwnerButton).setVisibility(View.GONE);
