@@ -10,4 +10,6 @@ public interface iUser {
 
     List<iChat> getChats();
     void setChats(List<iChat> chats);
+
+    void setAdverts(List<Advertisement> adverts);
 }

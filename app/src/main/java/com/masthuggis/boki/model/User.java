@@ -10,7 +10,7 @@ public class User implements iUser {
     private List<Advertisement> advertisements;
     private iFavoriteCollection favoriteCollection;
 
-    public User(String email, String displayname, String userID) {
+     User(String email, String displayname, String userID) {
         this.email = email;
         this.displayname = displayname;
         this.userID = userID;
@@ -39,5 +39,10 @@ public class User implements iUser {
     @Override
     public void setChats(List<iChat> chats) {
         this.chats = chats;
+    }
+
+    @Override
+    public void setAdverts(List<Advertisement> adverts) {
+        this.advertisements = advertisements;
     }
 }

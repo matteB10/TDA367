@@ -10,6 +10,7 @@ import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.backend.callbacks.chatCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
+import com.masthuggis.boki.backend.callbacks.userCallback;
 import com.masthuggis.boki.model.observers.AdvertisementObserver;
 import com.masthuggis.boki.model.observers.BackendObserver;
 import com.masthuggis.boki.model.observers.ChatObserver;
@@ -36,7 +37,7 @@ public class DataModel implements BackendObserver {
 
     private DataModel() {
         initBackend();
-        initUser();
+       // initUser();
     }
 
     public static DataModel getInstance() {
@@ -52,13 +53,20 @@ public class DataModel implements BackendObserver {
         repository.addBackendObserver(this);
     }
 
-    public void initUser() {
+    public void initUser(SuccessCallback successCallback) {
         if (isLoggedIn()) {
-            this.user = userRepository.logUserIn();
-            fetchUserChats(user.getId(), new chatCallback() {
+            userRepository.getUser(new userCallback() {
                 @Override
-                public void onCallback(List<iChat> chatsList) {
-                    user.setChats(chatsList);
+                public void onCallback(iUser newUser) {
+                    user = newUser;
+                    fetchUserChats(user.getId(), new chatCallback() {
+                        @Override
+                        public void onCallback(List<iChat> chatsList) {
+                            user.setChats(chatsList);
+                            user.setAdverts(getAdsFromCurrentUser());
+                            successCallback.onSuccess();
+                        }
+                    });
                 }
             });
         }
@@ -118,7 +126,17 @@ public class DataModel implements BackendObserver {
     }
 
     public void SignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
-        userRepository.signIn(email, password, successCallback, failureCallback);
+        userRepository.signIn(email, password, new SuccessCallback() {
+            @Override
+            public void onSuccess() {
+                initUser(new SuccessCallback() {
+                    @Override
+                    public void onSuccess() {
+                        successCallback.onSuccess();
+                    }
+                });
+            }
+        }, failureCallback);
     }
 
     public void addAdvertisement(Advertisement ad) {
@@ -132,6 +150,16 @@ public class DataModel implements BackendObserver {
                 return ad;
         }
         return null; //TODO Fix a better solution to handle NPExc....
+    }
+
+    private List<Advertisement> getAdsFromCurrentUser(){
+        List<Advertisement> userAds = new ArrayList<>();
+        for(Advertisement ad: allAds){
+            if(ad.getUniqueOwnerID().equals(user.getId())){
+                userAds.add(ad);
+            }
+        }
+        return  userAds;
     }
 
     public void getAdsFromLoggedInUser(advertisementCallback advertisementCallback) {
@@ -191,11 +219,12 @@ public class DataModel implements BackendObserver {
     }
 
     public List<iChat> getUserChats() {
-            return user.getChats();
+
+        return user.getChats();
     }
 
 
-    public void createNewChat(String uniqueOwnerID,String advertID, stringCallback stringCallback,String receiverUsername) {
+    public void createNewChat(String uniqueOwnerID, String advertID, stringCallback stringCallback, String receiverUsername) {
         userRepository.createNewChat(uniqueOwnerID, advertID, stringCallback, receiverUsername);
     }
 
@@ -219,14 +248,14 @@ public class DataModel implements BackendObserver {
         repository.deleteAd(uniqueID);
     }
 
-    public void updateAd(Advertisement ad, File imageFile){
+    public void updateAd(Advertisement ad, File imageFile) {
         String adID = ad.getUniqueID();
         String title = ad.getTitle();
         Long price = ad.getPrice();
         String description = ad.getDescription();
         List<String> tagList = ad.getTags();
         String condition = ad.getCondition().toString();
-        repository.updateAd(adID,title, price, description,tagList, condition, imageFile);
+        repository.updateAd(adID, title, price, description, tagList, condition, imageFile);
     }
 
 
@@ -234,21 +263,22 @@ public class DataModel implements BackendObserver {
         userRepository.setUsername(username);
     }*/
 
-    public void signInAfterRegistration(String email, String password, String username) {
-        userRepository.signInAfterRegistration(email, password, username);
-    }
 
     public void signOut() {
         userRepository.signOut();
     }
 
     public void signUp(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback) {
-        userRepository.signUp(email, password, new SuccessCallback() {
+        userRepository.signUp(email, password, username, new SuccessCallback() {
             @Override
             public void onSuccess() {
-                signInAfterRegistration(email, password, username);
-                successCallback.onSuccess();
+                initUser(new SuccessCallback() {
+                    @Override
+                    public void onSuccess() {
+                        successCallback.onSuccess();
 
+                    }
+                });
             }
         }, failureCallback);
     }
