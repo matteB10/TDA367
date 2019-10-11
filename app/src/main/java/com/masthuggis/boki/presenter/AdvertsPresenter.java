@@ -2,6 +2,8 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.model.observers.AdvertisementObserver;
 import com.masthuggis.boki.utils.ClickDelayHelper;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
@@ -14,14 +16,25 @@ import java.util.List;
  * method pattern is used to make the concrete implementations able to implement their unique
  * way to get data and sort.
  */
-public abstract class AdvertsPresenter implements IProductsPresenter {
+public abstract class AdvertsPresenter implements IProductsPresenter, AdvertisementObserver {
 
-    public final AdvertsPresenterView view;
+    protected final AdvertsPresenterView view;
+    protected final DataModel dataModel;
     private List<Advertisement> adverts;
 
-    public AdvertsPresenter(AdvertsPresenterView view) {
+    public AdvertsPresenter(AdvertsPresenterView view, DataModel dataModel) {
         this.view = view;
         this.adverts = new ArrayList<>();
+        this.dataModel = dataModel;
+    }
+
+    /**
+     * Initializes the presenter taking necessary actions. This should always be called after
+     * instantiating.
+     */
+    public void initPresenter() {
+        dataModel.addMarketAdvertisementObserver(this);
+        updateAdverts();
     }
 
     public void updateData() {
@@ -72,6 +85,14 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
      * @return
      */
     public abstract List<Advertisement> sort(List<Advertisement> adverts);
+
+    /**
+     * Whenever the market is updated the view is updated using the latest data.
+     */
+    @Override
+    public void onAdvertisementsUpdated() {
+        updateAdverts();
+    }
 
     /**
      * Binds each recyclerview item by setting the fields of ThumbnailView. It asks for the desired

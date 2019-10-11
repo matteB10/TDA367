@@ -36,12 +36,12 @@ public class SortManager {
         return instance;
     }
 
-    public List<String> getSortOptions() {
-        List<String> sortOptionNames = new ArrayList<>();
-        for (SortStrategy strategy: sortStrategies) {
-            sortOptionNames.add(strategy.getName());
+    public String[] getSortOptions() {
+        String arr[] = new String[sortStrategies.size()];
+        for (int i = 0; i < sortStrategies.size(); i++) {
+            arr[i] = sortStrategies.get(i).getName();
         }
-        return sortOptionNames;
+        return arr;
     }
 
     public List<Advertisement> sort(int pos, List<Advertisement> advertsToSort) throws NullPointerException {
