@@ -64,10 +64,11 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         initFragments();
 
         // Adds all fragments to MainActivity container but hides all but homeFragment.
-        fm.beginTransaction().add(R.id.fragment_container, favoritesFragment).hide(favoritesFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, profileFragment).hide(profileFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, chatFragment).hide(chatFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, homeFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, favoritesFragment).hide(favoritesFragment).commitAllowingStateLoss();
+        fm.beginTransaction().add(R.id.fragment_container, profileFragment).hide(profileFragment).commitAllowingStateLoss();
+        fm.beginTransaction().add(R.id.fragment_container, chatFragment).hide(chatFragment).commitAllowingStateLoss();
+        fm.beginTransaction().add(R.id.fragment_container, homeFragment).commitAllowingStateLoss();
+
     }
 
     private void initFragments() {
