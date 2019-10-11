@@ -217,14 +217,14 @@ public class DataModel implements BackendObserver {
         repository.deleteAd(uniqueID);
     }
 
-    public void updateAd(Advertisement ad){
+    public void updateAd(Advertisement ad, File imageFile){
         String adID = ad.getUniqueID();
         String title = ad.getTitle();
         Long price = ad.getPrice();
         String description = ad.getDescription();
         List<String> tagList = ad.getTags();
         String condition = ad.getCondition().toString();
-        repository.updateAd(adID,title, price, description,tagList, condition);
+        repository.updateAd(adID,title, price, description,tagList, condition, imageFile);
     }
 
 

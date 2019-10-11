@@ -439,7 +439,7 @@ public class BackendDataHandler implements iBackend {
     }
 
     public void updateAd(String adID, String newTitle, Long newPrice, String newDescription,
-                         List<String> tags, String newCondition) {
+                         List<String> tags, String newCondition, File imageFile) {
         advertPath.whereEqualTo("uniqueAdID", adID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -459,6 +459,7 @@ public class BackendDataHandler implements iBackend {
                                         .update("tags", tags);
 
                             }
+                            uploadImageToFirebase(imageFile, adID);
                         }
                     }
                 });

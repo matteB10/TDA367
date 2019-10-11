@@ -174,6 +174,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
                 currentImageFile = createImageFile();
             } catch (Exception i) {
                 System.out.println("error creating file");
+                i.printStackTrace();
             }
             if (currentImageFile != null) {
                 Uri imageURI = FileProvider.getUriForFile(this, "com.masthuggis.boki.fileprovider",
@@ -376,7 +377,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void setSaveBtnListener() {
         saveAdButton = findViewById(R.id.saveAdBtn);
         saveAdButton.setOnClickListener(view -> {
-            presenter.saveAdBtnPressed();
+            presenter.saveAdBtnPressed(currentImageFile);
             Intent intent = new Intent(CreateAdActivity.this, MainActivity.class);
             intent.putExtra("advertID", presenter.getID());
             startActivity(intent);

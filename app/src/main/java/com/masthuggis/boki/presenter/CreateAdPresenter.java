@@ -38,8 +38,8 @@ public class CreateAdPresenter {
         String adID = advertisement.getUniqueID();
         DataModel.getInstance().removeExistingAdvert(adID);
     }
-    public void saveAdBtnPressed(){
-        DataModel.getInstance().updateAd(advertisement);
+    public void saveAdBtnPressed(File imageFile){
+        DataModel.getInstance().updateAd(advertisement, imageFile);
     }
 
     private void setUpView(){
