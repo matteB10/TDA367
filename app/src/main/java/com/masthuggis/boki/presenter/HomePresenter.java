@@ -31,7 +31,7 @@ public final class HomePresenter extends AdvertsPresenter implements Advertiseme
 
     @Override
     public void getData(advertisementCallback advertisementCallback) {
-        DataModel.getInstance().fetchAllAdverts(adverts -> advertisementCallback.onCallback(adverts));
+        advertisementCallback.onCallback(DataModel.getInstance().getAllAdverts());
     }
 
     //Search the advertisements shown to the user by if their title or tags matches/contains the given query
@@ -40,7 +40,7 @@ public final class HomePresenter extends AdvertsPresenter implements Advertiseme
         if (query.equals("")) {
             super.updateAdverts(); //if query is empty string, update view use standard sorting
         } else {
-            SearchHelper.search(query, searchResult -> super.updateAdverts(searchResult));
+            SearchHelper.search(query, searchResult -> super.updateAdverts());
         }
     }
 

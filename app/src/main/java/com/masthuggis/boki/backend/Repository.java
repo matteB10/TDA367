@@ -1,5 +1,6 @@
 package com.masthuggis.boki.backend;
 
+import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advert;
@@ -45,7 +46,7 @@ public class Repository {
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
         dataMap.put("advertOwner", advertisement.getOwner());
-        backend.writeAdvertToFirebase(imageFile, dataMap);
+        backend.writeAdvertToFirebase(imageFile, dataMap, null);
 
     }
 
@@ -81,9 +82,9 @@ public class Repository {
     }
 
 
-    public void updateAd(String adID, String newTitle, long newPrice, String newDescription,
-                         List<String> newTagList, String newCondition, File imageFile) {
-        backend.updateAd(adID, newTitle, newPrice, newDescription, newTagList, newCondition, imageFile);
+    public void updateAd(String adID, String newTitle, Long newPrice, String newDescription,
+                         List<String> newTagList, String newCondition, File imageFile, SuccessCallback successCallback) {
+        backend.updateAd(adID,newTitle,newPrice,newDescription, newTagList, newCondition, imageFile, successCallback);
     }
 
     public void addBackendObserver(BackendObserver backendObserver) {

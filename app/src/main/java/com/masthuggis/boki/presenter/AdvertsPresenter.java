@@ -24,12 +24,18 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
         this.adverts = new ArrayList<>();
     }
 
-    /**
-     * Sorts adverts and tells the view to update UI.
-     * @param adverts the updated adverts lists that will be displayed.
-     */
-    public void updateAdverts(List<Advertisement> adverts) {
-        if (stateOfAdvertsIsInvalid(adverts)) {
+    public void updateData() {
+        view.showLoadingScreen();
+        getData(new advertisementCallback() {
+            @Override
+            public void onCallback(List<Advertisement> advertisements) {
+                AdvertsPresenter.this.updateData(advertisements);
+            }
+        });
+    }
+
+    public void updateData(List<Advertisement> adverts) {
+        if (adverts == null || adverts.size() == 0) {
             return;
         }
 
@@ -41,10 +47,17 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
     /**
      * Asks the concrete implementations to get data and then updates the UI.
      */
-    public void updateAdverts() {
+    public void updateAdverts() { //TODO Add another method with same name, should take a List of Advertisements as parameter, call that method in onCallback :)
         view.showLoadingScreen();
-        getData(advertisements -> updateAdverts(advertisements));
+        getData(new advertisementCallback() {
+            @Override
+            public void onCallback(List<Advertisement> advertisements) {
+                AdvertsPresenter.this.updateAdverts(advertisements);
+            }
+        });
     }
+
+
 
     /**
      * Concrete implementations implements this to call their respective data source.

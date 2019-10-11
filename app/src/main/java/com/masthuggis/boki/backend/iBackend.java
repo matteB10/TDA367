@@ -15,9 +15,9 @@ import java.util.Map;
 public interface iBackend {
     void deleteAd(String uniqueID);
 
-    void updateAd(String adID, String newTitle, long newPrice, String newDescription, List<String> newTagList, String newCondition, File imageFile);
+    void updateAd(String adID, String newTitle, Long newPrice, String newDescription, List<String> newTagList, String newCondition, File imageFile, SuccessCallback successCallback);
 
-    void writeAdvertToFirebase(File imageFile, HashMap<String, Object> dataMap);
+    void writeAdvertToFirebase(File imageFile, HashMap<String, Object> dataMap, SuccessCallback successCallback);
 
     void readUserIDAdverts(DBCallback DBCallback, String userID);
 
@@ -47,6 +47,8 @@ public interface iBackend {
     void removeBackendObserver(BackendObserver backendObserver);
 
     boolean isUserSignedIn();
+
+    void uploadImageToFirebase(File imageFile, String uniqueAdID, SuccessCallback successCallback);
 
     void userSignUp(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
 

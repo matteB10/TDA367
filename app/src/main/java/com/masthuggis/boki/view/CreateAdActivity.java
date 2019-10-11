@@ -25,6 +25,7 @@ import androidx.core.content.FileProvider;
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
+import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
@@ -394,11 +395,16 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void setSaveBtnListener() {
         saveAdButton = findViewById(R.id.saveAdBtn);
         saveAdButton.setOnClickListener(view -> {
-            presenter.saveAdBtnPressed(currentImageFile);
-            Intent intent = new Intent(CreateAdActivity.this, MainActivity.class);
-            intent.putExtra("advertID", presenter.getID());
-            startActivity(intent);
-            finish();
+            presenter.saveAdBtnPressed(currentImageFile, new SuccessCallback() {
+                @Override
+                public void onSuccess() {
+                    Intent intent = new Intent(CreateAdActivity.this, MainActivity.class);
+                    intent.putExtra("advertID", presenter.getID());
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
         });
     }
 
