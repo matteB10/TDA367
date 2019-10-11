@@ -547,11 +547,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     @Override
     public void setImageUrl(String url) {
         ImageView imageView = (ImageView) findViewById(R.id.addImageView);
-        /*if (imageView != null) {
-            imageView.setImageDrawable(getDrawable(R.drawable.add_pic));
-        } else {*/
-            Glide.with(this).load(url).into(imageView);
-
+        Glide.with(this).load(url).into(imageView);
     }
 
     @Override
