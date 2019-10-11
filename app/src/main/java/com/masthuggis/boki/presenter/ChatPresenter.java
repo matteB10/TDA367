@@ -16,15 +16,17 @@ public class ChatPresenter implements ChatObserver {
 
     private List<iChat> chats;
     private View view;
+    private DataModel dataModel;
 
 
-    public ChatPresenter(View view) {
+    public ChatPresenter(View view, DataModel dataModel) {
         this.view = view;
+        this.dataModel = dataModel;
         this.view.showLoadingScreen();
-        chats = DataModel.getInstance().getUserChats();
+        chats = this.dataModel.getUserChats();
         view.showUserChats(this);
         this.view.hideLoadingScreen();
-        DataModel.getInstance().addChatObserver(this);
+        this.dataModel.addChatObserver(this);
 
     }
 
@@ -49,7 +51,7 @@ public class ChatPresenter implements ChatObserver {
         holder.setUserTextView(c.getDisplayName());
         holder.setChatID(c.getChatID());
         holder.setDateTextView("" + c.timeLastMessageSent());
-        holder.setMessageImageView(DataModel.getInstance().getAdFromAdID(c.getUniqueIDAdID()).getImageUrl());
+        holder.setMessageImageView(dataModel.getAdFromAdID(c.getUniqueIDAdID()).getImageUrl());
 
     }
 
@@ -69,12 +71,12 @@ public class ChatPresenter implements ChatObserver {
      */
     @Override
     public void onChatUpdated() {
-        this.chats = DataModel.getInstance().getUserChats();
+        this.chats = dataModel.getUserChats();
 
     }
 
     public void onDestroy() {
-        DataModel.getInstance().removeChatObserver(this);
+        dataModel.removeChatObserver(this);
     }
 
     /**

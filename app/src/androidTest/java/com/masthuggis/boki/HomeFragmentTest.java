@@ -20,7 +20,7 @@ public class HomeFragmentTest {
     @Test
     public void numAdvertsShow_IsSameAsRepository() {
         HomePresenter.View view = createHomeView();
-        HomePresenter presenter = new HomePresenter(view);
+        HomePresenter presenter = new HomePresenter(view, DependencyInjector.injectDataModel());
 
         int numItems = MockRepository.getInstance().getLocalJSONAds().size();
 

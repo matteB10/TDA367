@@ -1,7 +1,5 @@
 package com.masthuggis.boki.presenter;
 
-import android.provider.ContactsContract;
-
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 
@@ -12,11 +10,13 @@ public class EditAdPresenter {
     private Advertisement advertisement;
     private View view;
     private static boolean validPrice;
+    private DataModel dataModel;
 
 
-    public EditAdPresenter(View view, String advertID){
+    public EditAdPresenter(View view, String advertID, DataModel dataModel){
+        this.dataModel =dataModel;
         this.view = view;
-        this.advertisement = DataModel.getInstance().getAdFromAdID(advertID);
+        this.advertisement = this.dataModel.getAdFromAdID(advertID);
         setUpView();
     }
 
@@ -39,7 +39,7 @@ public class EditAdPresenter {
         String adID = advertisement.getUniqueID();
         if(title != null) {
             advertisement.setTitle(title);
-            DataModel.getInstance().updateTitle(adID, title);
+            dataModel.updateTitle(adID, title);
         }
     }
 
@@ -47,24 +47,24 @@ public class EditAdPresenter {
         String adID = advertisement.getUniqueID();
         if(isPriceValid()) {
             advertisement.setPrice(Integer.parseInt(price));
-            DataModel.getInstance().updatePrice(adID, price);
+            dataModel.updatePrice(adID, price);
         }
     }
 
     public void descriptionChanged(String description){
         String adID = advertisement.getUniqueID();
         advertisement.setDescription(description);
-        DataModel.getInstance().updateDescription(adID, description);
+        dataModel.updateDescription(adID, description);
     }
 
 
     public void removeAdBtnPressed(){
         String adID = advertisement.getUniqueID();
-        DataModel.getInstance().removeExistingAdvert(adID);
+        dataModel.removeExistingAdvert(adID);
     }
 
     public void saveAdBtnPressed() {
-        DataModel.getInstance().saveAdvert(new File(advertisement.getImageUrl()),advertisement); //This is never run????
+        dataModel.saveAdvert(new File(advertisement.getImageUrl()),advertisement); //This is never run????
     }
 
     public void conditionChanged(int condition) {

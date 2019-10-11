@@ -4,7 +4,6 @@ import com.masthuggis.boki.backend.callbacks.DBCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.chatCallback;
-import com.masthuggis.boki.backend.callbacks.chatDBCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Chat;
@@ -95,9 +94,9 @@ public class UserRepository {
     public void getUserChats(String userID, chatCallback chatCallback, DataModel dataModel) {
 
 
-        backend.getUserChats(userID, new chatDBCallback() {
+        backend.getUserChats(userID, new DBCallback() {
             @Override
-            public void onCallback(List<Map<String, Object>> chatMap) {
+            public void onCallBack(List<Map<String, Object>> chatMap) {
                 List<iChat> chatList = new ArrayList<>();
                 for (Map<String, Object> map : chatMap) {
                     chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString(),map.get("userOneID").toString()

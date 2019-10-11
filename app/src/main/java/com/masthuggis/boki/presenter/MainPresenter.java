@@ -5,14 +5,13 @@ import com.masthuggis.boki.model.DataModel;
 public class MainPresenter {
     private View view;
     private DataModel dataModel;
-
-    public MainPresenter(View view) {
+    public MainPresenter(View view, DataModel dataModel) {
         this.view = view;
         this.dataModel = DataModel.getInstance();
 
-        if (dataModel.isLoggedIn()) {
+        if (this.dataModel.isLoggedIn()) {
             // Initilize the data by fetching the newest version from database.
-            dataModel.fetchAllAdverts(advertisements -> {});
+            this.dataModel.fetchAllAdverts(advertisements -> {});
             view.showMainScreen();
         } else {
             view.showSignUpScreen();

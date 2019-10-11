@@ -1,18 +1,13 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
-import android.os.Handler;
 
-import com.masthuggis.boki.backend.MockRepository;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.observers.AdvertisementObserver;
 import com.masthuggis.boki.model.sorting.SortManager;
 import com.masthuggis.boki.utils.SearchHelper;
-import com.masthuggis.boki.utils.StylingHelper;
-import com.masthuggis.boki.view.ThumbnailView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,17 +17,19 @@ public final class HomePresenter extends AdvertsPresenter implements Advertiseme
 
     private final AdvertsPresenterView view;
     private int selectedSortOption = 0;
+    private DataModel dataModel;
 
-    public HomePresenter(AdvertsPresenterView view) {
+    public HomePresenter(AdvertsPresenterView view, DataModel dataModel) {
         super(view);
+        this.dataModel = dataModel;
         this.view = view;
         super.updateData();
-        DataModel.getInstance().addMarketAdvertisementObserver(this);
+        this.dataModel.addMarketAdvertisementObserver(this);
     }
 
     @Override
     public void getData(advertisementCallback advertisementCallback) {
-        DataModel.getInstance().fetchAllAdverts(adverts -> advertisementCallback.onCallback(adverts));
+        dataModel.fetchAllAdverts(advertisementCallback::onCallback);
     }
 
     //Search the advertisements shown to the user by if their title or tags matches/contains the given query

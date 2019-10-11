@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.AdvertsPresenterView;
 import com.masthuggis.boki.presenter.HomePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
@@ -40,7 +41,7 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.home_fragment, container, false);
-        this.presenter = new HomePresenter(this);
+        this.presenter = new HomePresenter(this, DependencyInjector.injectDataModel());
         setupSortSpinner();
         setupSearchField();
         hideLoadingScreen();

@@ -1,11 +1,8 @@
 package com.masthuggis.boki.backend;
 
-import androidx.annotation.Nullable;
-
 import com.masthuggis.boki.backend.callbacks.DBCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
-import com.masthuggis.boki.backend.callbacks.chatDBCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Chat;
 import com.masthuggis.boki.model.observers.BackendObserver;
@@ -22,7 +19,7 @@ public interface iBackend {
     void editPrice(String adID, String newPrice);
 
 
-    void writeAdvertToFirebase(File imageFile, HashMap<String, Object> dataMap, @Nullable SuccessCallback callback);
+    void writeAdvertToFirebase(File imageFile, HashMap<String, Object> dataMap);
 
     void readUserIDAdverts(DBCallback DBCallback, String userID);
 
@@ -32,7 +29,7 @@ public interface iBackend {
 
     void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
 
-    void getUserChats(String userID, chatDBCallback chatDBCallback);
+    void getUserChats(String userID, DBCallback DBCallback);
 
     Map<String, String> getUser();
 

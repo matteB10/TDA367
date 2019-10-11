@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.MainPresenter;
 
 /**
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.presenter = new MainPresenter(this);
+        this.presenter = new MainPresenter(this, DependencyInjector.injectDataModel());
     }
 
     @Override

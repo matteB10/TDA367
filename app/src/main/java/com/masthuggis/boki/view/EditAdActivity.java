@@ -18,6 +18,7 @@ import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.EditAdPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
@@ -52,7 +53,7 @@ public class EditAdActivity extends AppCompatActivity implements EditAdPresenter
         Intent intent = getIntent();
         String advertID = intent.getExtras().getString("advertID");
 
-        presenter = new EditAdPresenter(this, advertID);
+        presenter = new EditAdPresenter(this, advertID, DependencyInjector.injectDataModel());
         setUpBtns();
         setListeners();
     }

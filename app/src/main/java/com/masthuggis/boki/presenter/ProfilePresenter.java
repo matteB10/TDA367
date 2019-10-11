@@ -11,17 +11,19 @@ import java.util.List;
 public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePresenter.View> extends AdvertsPresenter implements AdvertisementObserver {
 
     private final T profileView;
+    private DataModel dataModel;
 
-    public ProfilePresenter(T view) {
+    public ProfilePresenter(T view, DataModel dataModel) {
         super(view);
+        this.dataModel = dataModel;
         this.profileView = view;
         super.updateData();
-        DataModel.getInstance().addMarketAdvertisementObserver(this);
+        this.dataModel.addMarketAdvertisementObserver(this);
     }
 
     @Override
     public void getData(advertisementCallback advertisementCallback) {
-        DataModel.getInstance().getAdsFromLoggedInUser(adverts -> advertisementCallback.onCallback(adverts));
+        dataModel.getAdsFromLoggedInUser(adverts -> advertisementCallback.onCallback(adverts));
     }
 
     @Override
@@ -35,7 +37,7 @@ public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePres
     }
 
     public void onSignOutPressed() {
-        DataModel.getInstance().signOut();
+        dataModel.signOut();
         profileView.showLoginScreen();
     }
 

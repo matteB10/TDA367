@@ -9,10 +9,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.SignInPresenter;
 
 public class SignInActivity extends AppCompatActivity implements SignInPresenter.View {
-    private SignInPresenter presenter = new SignInPresenter(this);
+    private SignInPresenter presenter = new SignInPresenter(this, DependencyInjector.injectDataModel());
 
 
     @Override

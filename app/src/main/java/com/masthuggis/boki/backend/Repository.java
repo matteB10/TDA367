@@ -43,7 +43,7 @@ public class Repository {
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
         dataMap.put("advertOwner", advertisement.getOwner());
-        backend.writeAdvertToFirebase(imageFile, dataMap, null);
+        backend.writeAdvertToFirebase(imageFile, dataMap);
 
     }
 
