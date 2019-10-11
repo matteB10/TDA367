@@ -1,6 +1,6 @@
 package com.masthuggis.boki.view;
 
 @FunctionalInterface
-public interface SearchCallback {
+interface SearchCallback {
     void onCallback();
 }
