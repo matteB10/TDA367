@@ -3,6 +3,7 @@ package com.masthuggis.boki.backend;
 import android.content.Context;
 
 import com.masthuggis.boki.Boki;
+import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 

@@ -13,7 +13,9 @@ public class MainPresenter {
         // Initilize the data by fetching the newest version from database.
         if (dataModel.isLoggedIn()) {
             // Initilize the data by fetching the newest version from database.
-            dataModel.fetchAllAdverts(advertisements -> view.showMainScreen());
+            ///dataModel.fetchAllAdverts(advertisements -> view.showMainScreen());
+            dataModel.initUser();
+            view.showMainScreen();
         } else {
             view.showSignInScreen();
         }

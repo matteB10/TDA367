@@ -52,7 +52,7 @@ public class DataModel implements BackendObserver {
         return instance;
     }
 
-    private void initUser() {
+    public void initUser() {
         if (isLoggedIn()) {
             userRepository.logUserIn();
         }
@@ -188,7 +188,7 @@ public class DataModel implements BackendObserver {
     }
 
     public List<iChat> getUserChats() {
-        return user.getChats();
+            return user.getChats();
     }
 
 
