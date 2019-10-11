@@ -3,7 +3,6 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.model.observers.AdvertisementObserver;
 import com.masthuggis.boki.model.sorting.SortManager;
 import com.masthuggis.boki.utils.SearchHelper;
 
@@ -16,26 +15,19 @@ import java.util.List;
  * interface. It displays all the market adverts with the option to sort and search.
  * It is an observer of the market so it can update its data accordingly.
  */
-public final class HomePresenter extends AdvertsPresenter implements AdvertisementObserver {
+public final class HomePresenter extends AdvertsPresenter {
 
     private final AdvertsPresenterView view;
     private int selectedSortOption = 0;
-    private DataModel dataModel;
 
     public HomePresenter(AdvertsPresenterView view, DataModel dataModel) {
-        super(view);
-        this.dataModel = dataModel;
+        super(view, dataModel);
         this.view = view;
-    }
-
-    public void initPresenter() {
-        dataModel.addMarketAdvertisementObserver(this);
-        updateAdverts();
     }
 
     @Override
     public void getData(advertisementCallback advertisementCallback) {
-        DataModel.getInstance().fetchAllAdverts(adverts -> advertisementCallback.onCallback(adverts));
+        super.dataModel.fetchAllAdverts(adverts -> advertisementCallback.onCallback(adverts));
     }
 
     /**
@@ -54,14 +46,6 @@ public final class HomePresenter extends AdvertsPresenter implements Advertiseme
     }
 
     /**
-     * Whenever the market is updated the view is updated using the latest data.
-     */
-    @Override
-    public void onAdvertisementsUpdated() {
-        super.updateAdverts();
-    }
-
-    /**
      * Sorts using the selected sort option.
      * @param adverts
      * @return
@@ -72,7 +56,7 @@ public final class HomePresenter extends AdvertsPresenter implements Advertiseme
     }
 
     public String[] getSortOptions() {
-        return convertListToArray(SortManager.getInstance().getSortOptions());
+        return SortManager.getInstance().getSortOptions();
     }
 
     /**
@@ -82,14 +66,6 @@ public final class HomePresenter extends AdvertsPresenter implements Advertiseme
     public void sortOptionSelected(int pos) {
         selectedSortOption = pos;
         super.updateAdverts();
-    }
-
-    private String[] convertListToArray(List<String> list) {
-        String arr[] = new String[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            arr[i] = list.get(i);
-        }
-        return arr;
     }
 
     private boolean searchFieldIsEmpty(String query) {

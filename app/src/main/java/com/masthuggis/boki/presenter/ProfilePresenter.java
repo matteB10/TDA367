@@ -15,25 +15,18 @@ import java.util.List;
  * accordingly.
  * @param <T>
  */
-public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePresenter.View> extends AdvertsPresenter implements AdvertisementObserver {
+public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePresenter.View> extends AdvertsPresenter {
 
     private final T profileView;
-    private DataModel dataModel;
 
     public ProfilePresenter(T view, DataModel dataModel) {
-        super(view);
-        this.dataModel = dataModel;
+        super(view, dataModel);
         this.profileView = view;
-    }
-
-    public void initPresenter() {
-        dataModel.addMarketAdvertisementObserver(this);
-        updateAdverts();
     }
 
     @Override
     public void getData(advertisementCallback advertisementCallback) {
-        dataModel.getAdsFromLoggedInUser(adverts -> advertisementCallback.onCallback(adverts));
+        super.dataModel.getAdsFromLoggedInUser(adverts -> advertisementCallback.onCallback(adverts));
     }
 
     @Override
@@ -41,16 +34,8 @@ public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePres
         return SortManager.getInstance().sortWithDefaultSorting(adverts);
     }
 
-    /**
-     * Whenever the market is updated the view is updated using the latest data.
-     */
-    @Override
-    public void onAdvertisementsUpdated() {
-        super.updateAdverts();
-    }
-
     public void onSignOutPressed() {
-        dataModel.signOut();
+        super.dataModel.signOut();
         profileView.showLoginScreen();
     }
 
