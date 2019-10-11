@@ -454,12 +454,12 @@ public class BackendDataHandler implements iBackend {
                                         .update("description", newDescription);
                                 advertPath.document(documentSnapshot.getId())
                                         .update("condition", newCondition);
-
                                 advertPath.document(documentSnapshot.getId())
                                         .update("tags", tags);
-
                             }
-                            uploadImageToFirebase(imageFile, adID);
+                            if(imageFile != null) {
+                                uploadImageToFirebase(imageFile, adID);
+                            }
                         }
                     }
                 });

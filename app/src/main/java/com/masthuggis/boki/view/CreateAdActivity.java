@@ -76,6 +76,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
     }
 
+    /** Setting up view depending on if the user are creating an ad or editing an existing one
+     */
     private void setUpView() {
         TextView headerTextView = findViewById(R.id.headerTextView);
         if (getIntent().getExtras() != null) {
@@ -577,5 +579,4 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
         return tableRow;
     }
-
 }
