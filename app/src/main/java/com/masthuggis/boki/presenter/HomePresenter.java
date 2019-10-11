@@ -16,14 +16,17 @@ public final class HomePresenter extends AdvertsPresenter implements Advertiseme
 
     private final AdvertsPresenterView view;
     private int selectedSortOption = 0;
+    private DataModel dataModel;
 
-    public HomePresenter(AdvertsPresenterView view) {
+    public HomePresenter(AdvertsPresenterView view, DataModel dataModel) {
         super(view);
+        this.dataModel = dataModel;
         this.view = view;
     }
 
     public void initPresenter() {
-        DataModel.getInstance().addMarketAdvertisementObserver(this);
+        dataModel.addMarketAdvertisementObserver(this);
+        updateData();
     }
 
     @Override

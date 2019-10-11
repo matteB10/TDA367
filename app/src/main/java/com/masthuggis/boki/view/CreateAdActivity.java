@@ -24,6 +24,7 @@ import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
@@ -62,8 +63,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_advert);
-        presenter = new CreateAdPresenter(this);
-
+        presenter = new CreateAdPresenter(this, DependencyInjector.injectDataModel());
+        enablePublishButton(false);
         Intent intent = getIntent();
         displayPreDefTagButtons();
         setListeners();

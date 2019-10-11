@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.ChatPresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
@@ -29,7 +30,7 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.messages_fragment, container, false);
-        this.presenter = new ChatPresenter(this);
+        this.presenter = new ChatPresenter(this, DependencyInjector.injectDataModel());
 
         return view;
 

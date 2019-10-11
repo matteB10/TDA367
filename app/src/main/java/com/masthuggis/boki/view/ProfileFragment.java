@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.AdvertsPresenterView;
 import com.masthuggis.boki.presenter.ProfilePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
@@ -36,9 +37,9 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
     }
 
     private void setupPresenter() {
-        this.presenter = new ProfilePresenter(this);
+        this.presenter = new ProfilePresenter(this, DependencyInjector.injectDataModel());
         this.presenter.initPresenter();
-        this.presenter.updateData();
+
     }
 
     private void setupHeader() {
