@@ -121,7 +121,7 @@ public class BackendDataHandler implements iBackend {
                 });
     }
 
-    public void uploadImageToFirebase(File imageFile, String uniqueAdID) {
+    private void uploadImageToFirebase(File imageFile, String uniqueAdID) {
         isWritingImageToDatabase = true;
         try {
             InputStream uploadStream = new FileInputStream(imageFile);
@@ -228,10 +228,10 @@ public class BackendDataHandler implements iBackend {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     Map<String, Object> data = documentSnapshot.getData();
-                    if(data==null){
+                    if (data == null) {
                         return;
                     }
-                    data.put("uniqueChatID",uniqueChatID);
+                    data.put("uniqueChatID", uniqueChatID);
                     chatDataList.add(data);
                     if (chatDataList.size() == queryDocumentSnapshots.size()) {
                         successCallback.onSuccess();
@@ -274,13 +274,6 @@ public class BackendDataHandler implements iBackend {
                 });
             });
         });
-    }
-
-    @Override
-    public String getFireBaseID(String userID, String advertID) {
-        if (advertID != null)
-            return db.collection("users").document(userID).collection("adverts").document(advertID).getId();
-        return db.collection("users").document(userID).getId();
     }
 
     @Override
@@ -344,11 +337,9 @@ public class BackendDataHandler implements iBackend {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
-    public String getUserID() {
-        return auth.getUid();
-    }
 
     public Map<String, String> getUser() {
         Map<String, String> userMap = new HashMap<>();
@@ -415,13 +406,16 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    /**Deleting an ad with the specific adID from the database
-     * @param adID */
+    /**
+     * Deleting an ad with the specific adID from the database
+     *
+     * @param adID
+     */
     public void deleteAd(String adID) {
         advertPath.document(adID).delete();
     }
 
-    public void updateAd(String adID, String newTitle, Long newPrice, String newDescription,
+    public void updateAd(String adID, String newTitle, long newPrice, String newDescription,
                          List<String> tags, String newCondition, File imageFile) {
         advertPath.whereEqualTo("uniqueAdID", adID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

@@ -4,6 +4,7 @@ import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.model.observers.BackendObserver;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,11 +20,11 @@ import java.util.Map;
 public class Repository {
 
     private final iBackend backend;
-    private DataModel dataModel;
+    private final DataModel dataModel;
 
     Repository(iBackend backend, DataModel dataModel) {
         this.backend = backend;
-        this.dataModel =dataModel;
+        this.dataModel = dataModel;
     }
 
 
@@ -45,20 +46,6 @@ public class Repository {
         dataMap.put("advertOwner", advertisement.getOwner());
         backend.writeAdvertToFirebase(imageFile, dataMap);
 
-    }
-
-    /**
-     * Gets all adverts in firebase that belong to a specific userID
-     * userID can be any string that isn't null nor an empty string
-     */
-    public void fetchAdvertsFromUserIDFirebase(String userID, advertisementCallback advertisementCallback) {
-        List<Advertisement> userIDAdverts = new ArrayList<>();
-        backend.readUserIDAdverts(advertDataList -> {
-            for (Map<String, Object> dataMap : advertDataList) {
-                userIDAdverts.add(retrieveAdvertWithUserID(dataMap, userID));
-            }
-            advertisementCallback.onCallback(userIDAdverts);
-        }, userID);
     }
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
@@ -87,38 +74,22 @@ public class Repository {
         return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageUrl, tags, owner);
     }
 
-    /**
-     * Creates an Advertisement-object with AdFactory given a Key-Value map of the data required and a specific uniqueUserID
-     * Called from fetchAdvertsFromUserID
-     */
-    private Advertisement retrieveAdvertWithUserID(Map<String, Object> dataMap, String uniqueOwnerID) {
-        String title = (String) dataMap.get("title");
-        String description = (String) dataMap.get("description");
-        long price = (long) dataMap.get("price");
-        List<String> tags = (List<String>) dataMap.get("tags");
-        Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
-        String uniqueAdID = (String) dataMap.get("uniqueAdID");
-        String datePublished = (String) dataMap.get("date");
-        String owner = (String) dataMap.get("advertOwner");
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, null, tags, owner);
-    }
 
     public void deleteAd(String uniqueID) {
         backend.deleteAd(uniqueID);
     }
 
 
-    public void updateAd(String adID, String newTitle, Long newPrice, String newDescription,
+    public void updateAd(String adID, String newTitle, long newPrice, String newDescription,
                          List<String> newTagList, String newCondition, File imageFile) {
-        backend.updateAd(adID,newTitle,newPrice,newDescription, newTagList, newCondition, imageFile);
+        backend.updateAd(adID, newTitle, newPrice, newDescription, newTagList, newCondition, imageFile);
     }
 
-    public void addObserverToBackend(DataModel dataModel) {
-        backend.addBackendObserver(dataModel);
+    public void addBackendObserver(BackendObserver backendObserver) {
+        backend.addBackendObserver(backendObserver);
     }
-
-    public void uploadImageToFirebase(File imageFile, String adID) {
-        backend.uploadImageToFirebase(imageFile,adID);
+    public void removeBackendObserver(BackendObserver backendObserver) {
+        backend.removeBackendObserver(backendObserver);
     }
 
     public void addToFavourites(String adID, String userID) {

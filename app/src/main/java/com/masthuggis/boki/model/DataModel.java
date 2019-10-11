@@ -42,7 +42,7 @@ public class DataModel implements BackendObserver {
     private void initBackend() {
         repository = RepositoryFactory.createRepository(BackendFactory.createBackend(), this);
         userRepository = RepositoryFactory.createUserRepository(BackendFactory.createBackend(), this);
-        repository.addObserverToBackend(this);
+        repository.addBackendObserver(this);
     }
 
     public static DataModel getInstance() {
@@ -290,6 +290,6 @@ public class DataModel implements BackendObserver {
             public void onCallback(List<iChat> chatsList) {
                 chatCallback.onCallback(chatsList);
             }
-        }, this);
+        });
     }
 }

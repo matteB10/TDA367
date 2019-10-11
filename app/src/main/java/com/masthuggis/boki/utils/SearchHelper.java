@@ -1,7 +1,7 @@
 package com.masthuggis.boki.utils;
 
 import com.masthuggis.boki.backend.MockRepository;
-import com.masthuggis.boki.backend.PerformedSearchCallback;
+import com.masthuggis.boki.backend.callbacks.PerformedSearchCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 

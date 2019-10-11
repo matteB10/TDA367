@@ -15,13 +15,12 @@ import java.util.Map;
 public interface iBackend {
     void deleteAd(String uniqueID);
 
-    void updateAd(String adID, String newTitle, Long newPrice, String newDescription, List<String> newTagList, String newCondition, File imageFile);
+    void updateAd(String adID, String newTitle, long newPrice, String newDescription, List<String> newTagList, String newCondition, File imageFile);
 
     void writeAdvertToFirebase(File imageFile, HashMap<String, Object> dataMap);
 
     void readUserIDAdverts(DBCallback DBCallback, String userID);
 
-    String getFireBaseID(String userID, String advertID);
 
     void addAdToFavourites(String adID, String userID);
 
@@ -31,11 +30,9 @@ public interface iBackend {
 
     Map<String, String> getUser();
 
-    String getUserID();
-
     void getMessages(String uniqueChatID, Chat chat, DBCallback messageCallback);
 
-     void createNewChat(String uniqueOwnerID,String advertID, stringCallback stringCallback,String receiverUsername);
+    void createNewChat(String uniqueOwnerID, String advertID, stringCallback stringCallback, String receiverUsername);
 
     void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap);
 
@@ -47,10 +44,9 @@ public interface iBackend {
 
     void readAllAdvertData(DBCallback DBCallback);
 
+    void removeBackendObserver(BackendObserver backendObserver);
 
     boolean isUserSignedIn();
-
-    void uploadImageToFirebase(File imageFile, String uniqueAdID);
 
     void userSignUp(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
 
