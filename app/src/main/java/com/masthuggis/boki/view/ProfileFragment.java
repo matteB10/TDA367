@@ -53,7 +53,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
         recyclerView.setAdapter(recyclerViewAdapter);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 56, true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
     }
 
     @Override
