@@ -39,12 +39,6 @@ public class DataModel implements BackendObserver {
         initUser();
     }
 
-    private void initBackend() {
-        repository = RepositoryFactory.createRepository(BackendFactory.createBackend(), this);
-        userRepository = RepositoryFactory.createUserRepository(BackendFactory.createBackend(), this);
-        repository.addObserverToBackend(this);
-    }
-
     public static DataModel getInstance() {
         if (instance == null) {
             instance = new DataModel();
@@ -52,11 +46,25 @@ public class DataModel implements BackendObserver {
         return instance;
     }
 
+    private void initBackend() {
+        repository = RepositoryFactory.createRepository(BackendFactory.createBackend(), this);
+        userRepository = RepositoryFactory.createUserRepository(BackendFactory.createBackend(), this);
+        repository.addObserverToBackend(this);
+    }
+
     public void initUser() {
         if (isLoggedIn()) {
-            userRepository.logUserIn();
+            this.user = userRepository.logUserIn();
+            fetchUserChats(user.getId(), new chatCallback() {
+                @Override
+                public void onCallback(List<iChat> chatsList) {
+                    user.setChats(chatsList);
+                }
+            });
         }
     }
+
+
 
     public void addChatObserver(ChatObserver chatObserver) {
         this.chatObservers.add(chatObserver);
@@ -161,9 +169,6 @@ public class DataModel implements BackendObserver {
         });
     }
 
-    public void loggedIn(iUser user) {
-        this.user = user;
-    }
 
     public void loggedOut() {
 

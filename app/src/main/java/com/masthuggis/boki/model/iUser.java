@@ -7,5 +7,7 @@ public interface iUser {
     String getDisplayName();
     String getEmail();
 
+
     List<iChat> getChats();
+    void setChats(List<iChat> chats);
 }

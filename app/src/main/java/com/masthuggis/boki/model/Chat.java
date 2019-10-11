@@ -31,6 +31,7 @@ public class Chat implements iChat {
     }
 
 
+
     /**
      * timeLastMessageSent is used to determine when the last message in a chat was sent. This is to be able to display
      * it for the user to show the relevancy of a message/chat.

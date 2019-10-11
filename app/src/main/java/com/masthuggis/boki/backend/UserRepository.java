@@ -78,22 +78,17 @@ public class UserRepository {
         });
     }
 
-    public void logUserIn() {
+    public iUser logUserIn() {
         iUser user;
         Map<String, String> map = backend.getUser();
-        user = UserFactory.createUser(map.get("email"), map.get("username"), map.get("userID"),dataModel);
-        dataModel.loggedIn(user);
+        user = UserFactory.createUser(map.get("email"), map.get("username"), map.get("userID"));
+        return user;
     }
 
     public boolean isUserLoggedIn() {
         return backend.isUserSignedIn();
     }
 
-
-    private void loggedOut() {
-        dataModel.loggedOut();
-
-    }
 
     public void getUserChats(String userID, chatCallback chatCallback, DataModel dataModel) {
 
