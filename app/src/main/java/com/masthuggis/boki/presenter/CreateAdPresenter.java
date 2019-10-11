@@ -5,7 +5,7 @@ import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.CurrentTimeHelper;
 import com.masthuggis.boki.utils.FormHelper;
-
+import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import java.io.File;
 import java.util.List;
 
@@ -38,8 +38,8 @@ public class CreateAdPresenter {
         String adID = advertisement.getUniqueID();
         DataModel.getInstance().removeExistingAdvert(adID);
     }
-    public void saveAdBtnPressed(File imageFile){
-        DataModel.getInstance().updateAd(advertisement, imageFile);
+    public void saveAdBtnPressed(File imageFile, SuccessCallback successCallback){
+        DataModel.getInstance().updateAd(advertisement, imageFile, successCallback);
     }
 
     private void setUpView(){
@@ -149,7 +149,6 @@ public class CreateAdPresenter {
      * Called on click on button in createAdActivity
      * saves advert in temp list and resets current ad in presenter
      */
-    //Need to change imageFile in advert to inputStream from View
     public void publishAdvert() {
         setAdvertDate();
         DataModel.getInstance().saveAdvert(view.getCurrentImageFile(), advertisement);
