@@ -1,6 +1,5 @@
 package com.masthuggis.boki.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class User implements iUser {
@@ -8,18 +7,13 @@ public class User implements iUser {
     private String displayname;
     private String userID;
     private List<iChat> chats;
-    private DataModel dataModel;
+    private List<Advertisement> advertisements;
     private iFavoriteCollection favoriteCollection;
 
-    public User(String email, String displayname, String userID,DataModel dataModel) {
+    public User(String email, String displayname, String userID) {
         this.email = email;
         this.displayname = displayname;
         this.userID = userID;
-        this.dataModel = dataModel;
-        dataModel.fetchUserChats(userID, chatsList -> {
-            chats = null;
-            chats = new ArrayList<>(chatsList);
-        });
     }
 
 
@@ -40,5 +34,10 @@ public class User implements iUser {
     @Override
     public List<iChat> getChats() {
         return this.chats;
+    }
+
+    @Override
+    public void setChats(List<iChat> chats) {
+        this.chats = chats;
     }
 }
