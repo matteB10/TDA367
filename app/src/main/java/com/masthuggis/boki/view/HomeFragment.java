@@ -40,11 +40,16 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.home_fragment, container, false);
-        this.presenter = new HomePresenter(this);
+        setupPresenter();
         setupSortSpinner();
         setupSearchField();
-        hideLoadingScreen();
         return view;
+    }
+
+    private void setupPresenter() {
+        this.presenter = new HomePresenter(this);
+        this.presenter.initPresenter();
+        this.presenter.updateData();
     }
 
     private void setupSortSpinner() {
@@ -61,7 +66,7 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
         recyclerView.setAdapter(recyclerViewAdapter);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 56, true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
     }
 
     //Adds a listener for when the user performs a searchPerformed, reacts to when enter key is pressed

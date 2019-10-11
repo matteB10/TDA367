@@ -24,18 +24,22 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 public class ProfileFragment extends Fragment implements ProfilePresenter.View, AdvertsPresenterView {
     private ProfilePresenter presenter;
     private View view;
-    private RecyclerView recyclerView;
-    private ProductsRecyclerViewAdapter adapter;
+    private ProductsRecyclerViewAdapter recyclerViewAdapter;
     private Button signOutBtn;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.profile_fragment,container,false);
-        this.presenter = new ProfilePresenter(this);
+        setupPresenter();
         setupHeader();
         return view;
     }
 
+    private void setupPresenter() {
+        this.presenter = new ProfilePresenter(this);
+        this.presenter.initPresenter();
+        this.presenter.updateData();
+    }
 
     private void setupHeader() {
         signOutBtn = view.findViewById(R.id.signInButton);
@@ -43,33 +47,21 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
     }
 
     private void setupList() {
-        setupRecycler();
-        setupAdapter();
-        setupListLayout();
-    }
-
-    private void setupRecycler() {
-        recyclerView = view.findViewById(R.id.profileRecyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.profileRecyclerView);
         recyclerView.setNestedScrollingEnabled(false);
-    }
-
-    private void setupAdapter() {
-        adapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
-        recyclerView.setAdapter(adapter);
-    }
-
-    private void setupListLayout() {
+        recyclerViewAdapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
+        recyclerView.setAdapter(recyclerViewAdapter);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 56, true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
     }
 
     @Override
     public void updateThumbnails() {
-        if (adapter == null) {
+        if (recyclerViewAdapter == null) {
             setupList();
         } else {
-            adapter.notifyDataSetChanged();
+            recyclerViewAdapter.notifyDataSetChanged();
         }
     }
 

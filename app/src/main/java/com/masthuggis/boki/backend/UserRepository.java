@@ -8,7 +8,10 @@ import com.masthuggis.boki.backend.callbacks.chatDBCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Chat;
+import com.masthuggis.boki.model.ChatFactory;
 import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.model.MessageFactory;
+import com.masthuggis.boki.model.UserFactory;
 import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.model.iMessage;
 import com.masthuggis.boki.model.iUser;
@@ -75,22 +78,17 @@ public class UserRepository {
         });
     }
 
-    public void logUserIn() {
+    public iUser logUserIn() {
         iUser user;
         Map<String, String> map = backend.getUser();
-        user = UserFactory.createUser(map.get("email"), map.get("username"), map.get("userID"),dataModel);
-        dataModel.loggedIn(user);
+        user = UserFactory.createUser(map.get("email"), map.get("username"), map.get("userID"));
+        return user;
     }
 
     public boolean isUserLoggedIn() {
         return backend.isUserSignedIn();
     }
 
-
-    private void loggedOut() {
-        dataModel.loggedOut();
-
-    }
 
     public void getUserChats(String userID, chatCallback chatCallback, DataModel dataModel) {
 
