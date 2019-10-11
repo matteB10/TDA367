@@ -15,7 +15,9 @@ public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePres
     public ProfilePresenter(T view) {
         super(view);
         this.profileView = view;
-        super.updateData();
+    }
+
+    public void initPresenter() {
         DataModel.getInstance().addMarketAdvertisementObserver(this);
     }
 

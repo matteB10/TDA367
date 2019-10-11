@@ -40,11 +40,16 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.home_fragment, container, false);
-        this.presenter = new HomePresenter(this);
+        setupPresenter();
         setupSortSpinner();
         setupSearchField();
-        hideLoadingScreen();
         return view;
+    }
+
+    private void setupPresenter() {
+        this.presenter = new HomePresenter(this);
+        this.presenter.initPresenter();
+        this.presenter.updateData();
     }
 
     private void setupSortSpinner() {

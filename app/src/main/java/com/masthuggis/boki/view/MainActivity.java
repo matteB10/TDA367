@@ -9,7 +9,11 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.presenter.MainPresenter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * MainActivity is the primary view of the application. This is where the application will take you on launch.
