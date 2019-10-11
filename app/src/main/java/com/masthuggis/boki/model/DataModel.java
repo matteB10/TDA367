@@ -188,7 +188,6 @@ public class DataModel implements BackendObserver {
     }
 
     public List<iChat> getUserChats() {
-
         return user.getChats();
     }
 
