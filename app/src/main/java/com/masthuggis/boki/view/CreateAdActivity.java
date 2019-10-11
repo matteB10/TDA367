@@ -76,7 +76,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
     }
 
-    /** Setting up view depending on if the user are creating an ad or editing an existing one
+    /**
+     * Setting up view depending on if the user are creating an ad or editing an existing one
      */
     private void setUpView() {
         TextView headerTextView = findViewById(R.id.headerTextView);
@@ -563,12 +564,23 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         LinearLayout parentLayout = findViewById(R.id.tagsLinearLayout);
         TableRow tableRow = new TableRow(this);
         Button btn;
-        for (String str : tags) {
-            btn = createTagButton(str, true);
-            tableRow = getTableRow(tableRow, parentLayout);
-            tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
-            tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
-        }
+        if(getIntent().getExtras() == null){
+          for (String str : tags) {
+              btn = createTagButton(str, true);
+              tableRow = getTableRow(tableRow, parentLayout);
+              tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
+              tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
+          }
+          parentLayout.addView(tableRow);
+      }else{
+          List<String> userTags = separateTagsforEdit();
+          for (String str : userTags) {
+              btn = createTagButton(str, true);
+              tableRow = getTableRow(tableRow, parentLayout);
+              tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
+              tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
+          }
+      }
         parentLayout.addView(tableRow);
     }
 
@@ -578,5 +590,24 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             return new TableRow(this);
         }
         return tableRow;
+    }
+
+
+    private List<String> separateTagsforEdit() {
+        List<String> tags = presenter.getTags();
+        List<String> preDefTags = getPreDefTagStrings();
+        preDefTags.toArray();
+
+        List<String> userTags = new ArrayList<String>();
+
+        for (int i = 0; i< tags.size(); i++) {
+            String tag = tags.get(i);
+            if (!(preDefTags.contains(tag))) {
+                createTagButton(tag, true);
+                userTags.add(tag);
+            }
+            else setTagStyling(tag, true);
+        }
+        return userTags;
     }
 }
