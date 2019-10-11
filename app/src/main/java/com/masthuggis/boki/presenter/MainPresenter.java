@@ -1,5 +1,6 @@
 package com.masthuggis.boki.presenter;
 
+import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.model.DataModel;
 
 public class MainPresenter {
@@ -14,8 +15,13 @@ public class MainPresenter {
         if (dataModel.isLoggedIn()) {
             // Initilize the data by fetching the newest version from database.
             ///dataModel.fetchAllAdverts(advertisements -> view.showMainScreen());
-            dataModel.initUser();
-            view.showMainScreen();
+            dataModel.initUser(new SuccessCallback() {
+                @Override
+                public void onSuccess() {
+                    view.showMainScreen();
+
+                }
+            });
         } else {
             view.showSignInScreen();
         }

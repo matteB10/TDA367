@@ -1,6 +1,7 @@
 package com.masthuggis.boki.backend;
 
 import com.masthuggis.boki.backend.callbacks.DBCallback;
+import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
@@ -10,7 +11,6 @@ import com.masthuggis.boki.model.observers.BackendObserver;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public interface iBackend {
     void deleteAd(String uniqueID);
@@ -19,16 +19,13 @@ public interface iBackend {
 
     void writeAdvertToFirebase(File imageFile, HashMap<String, Object> dataMap);
 
-    void readUserIDAdverts(DBCallback DBCallback, String userID);
-
-
     void addAdToFavourites(String adID, String userID);
 
-    void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
+     void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
 
-    void getUserChats(String userID, DBCallback DBCallback);
+    void getUserChats(String userID, DBCallback DBCallback,FailureCallback failureCallback);
 
-    Map<String, String> getUser();
+    void getUser(DBMapCallback dbMapCallback);
 
     void getMessages(String uniqueChatID, Chat chat, DBCallback messageCallback);
 
@@ -48,6 +45,6 @@ public interface iBackend {
 
     boolean isUserSignedIn();
 
-    void userSignUp(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
+    void userSignUpAndSignIn(String email, String password,String username,SuccessCallback successCallback, FailureCallback failureCallback);
 
 }
