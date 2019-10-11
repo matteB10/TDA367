@@ -70,15 +70,15 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         updateDataFromModel();
         setUpView();
 
-        if (intent.getExtras() != null) {
+        if (intent.getExtras() != null) { //If there is an ad (user is editing existing ad)
             String advertID = intent.getExtras().getString("advertID");
             presenter.getAdbyID(advertID);
         }
     }
 
-    private void setUpView(){
+    private void setUpView() {
         TextView headerTextView = findViewById(R.id.headerTextView);
-        if(getIntent().getExtras()!= null){
+        if (getIntent().getExtras() != null) {
             headerTextView.setText("Ändra din annons"); //TODO lägga till i strings
         }
         setButtonVisibility();
@@ -115,7 +115,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         price.setText("");
     }
 
-    private void setTextViews(){
+    private void setTextViews() {
         if (getIntent().getExtras() != null) {
             TextView currentTags = findViewById(R.id.textView3);
             currentTags.setText("Dina nuvarande taggar"); //TODO lägga till i strings
@@ -152,7 +152,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * Enables publish ad button when all mandatory fields contains
-     * valid input.*/
+     * valid input.
+     */
     @Override
     public void enablePublishButton(boolean b) {
         publishAdButton = findViewById(R.id.publishAdButton);
@@ -239,7 +240,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * Reads predefined subject strings from resources,
-     * @return all strings in a list.*/
+     *
+     * @return all strings in a list.
+     */
     private List<String> getPreDefTagStrings() {
         String[] strArr = getResources().getStringArray(R.array.preDefSubjectTags);
         return Arrays.asList(strArr);
@@ -247,8 +250,10 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * Creates a list with buttons from a list of strings.
+     *
      * @param strTags, list of button text strings
-     * @return a list of buttons*/
+     * @return a list of buttons
+     */
     private List<Button> createPreDefTagButtons(List<String> strTags) {
         List<Button> btnList = new ArrayList<>();
         for (String str : strTags) {
@@ -260,8 +265,10 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * Create a tag button with correct styling
+     *
      * @param text
-     * @return a button */
+     * @return a button
+     */
     private Button createTagButton(String text, boolean isSelected) {
         Button b = new Button(this);
         b.setText(text);
@@ -271,7 +278,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * @param tags         a list of buttons
-     * @param parentLayout the layout in which buttons will be placed */
+     * @param parentLayout the layout in which buttons will be placed
+     */
     private void populateTagsLayout(List<Button> tags, ViewGroup parentLayout) {
         for (Button btn : tags) {
             ViewGroup tableRow = getCurrentTagRow(parentLayout.getId());
@@ -281,14 +289,17 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * Method to check if row is full
+     *
      * @param tableRow the row to be checked
-     * @return true if row is full */
+     * @return true if row is full
+     */
     private boolean rowFull(TableRow tableRow) {
         return (tableRow.getChildCount() % 3 == 0 && tableRow.getChildCount() != 0);
     }
 
     /**
-     * Called in onCreate, create tag buttons and add them to the view */
+     * Called in onCreate, create tag buttons and add them to the view
+     */
     private void displayPreDefTagButtons() {
         LinearLayout preDefTagsLayout = findViewById(R.id.preDefTagsLinearLayout);
         List<Button> tagButtons = createPreDefTagButtons(getPreDefTagStrings());
@@ -307,7 +318,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * Called in presenter when a user defined a new tag
-     * @param tag */
+     *
+     * @param tag
+     */
     @Override
     public void displayUserTagButton(String tag) {
         Button btn = createTagButton(tag, true);
@@ -362,6 +375,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             tr.removeAllViews();
         }
     }
+
     //Listeners-----------------------------------------------------
     private void setDeleteBtnListener() {
         deleteAdButton = findViewById(R.id.removeAdBtn);
@@ -516,6 +530,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             }
         });
     }
+
     //setters -------------------------------------------------------
     @Override
     public void setTitle(String name) {
@@ -532,11 +547,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     @Override
     public void setImageUrl(String url) {
         ImageView imageView = (ImageView) findViewById(R.id.addImageView);
-        if (imageView != null) {
+        /*if (imageView != null) {
             imageView.setImageDrawable(getDrawable(R.drawable.add_pic));
-        } else {
+        } else {*/
             Glide.with(this).load(url).into(imageView);
-        }
+
     }
 
     @Override
@@ -544,6 +559,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         TextView currentDescription = findViewById(R.id.descriptionEditText);
         currentDescription.setText(description);
     }
+
     @Override
     public void setTags(List<String> tags) {
         LinearLayout parentLayout = findViewById(R.id.tagsLinearLayout);
