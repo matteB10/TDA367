@@ -62,7 +62,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
     private void setupListLayout() {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 56, true));
     }
 
     @Override

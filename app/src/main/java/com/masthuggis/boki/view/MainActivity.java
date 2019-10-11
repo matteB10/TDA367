@@ -32,8 +32,8 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
     }
 
     @Override
-    public void showSignUpScreen() {
-        Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+    public void showSignInScreen() {
+        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
         startActivity(intent);
     }
 

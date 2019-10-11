@@ -35,7 +35,6 @@ public class DetailsPresenter {
      * @setupView Provides a way for the view to show the values of the model. Is called from the single
      * constructor of the class.
      */
-
     private void setupView() {
         view.setName(advertisement.getTitle());
         view.setPrice(advertisement.getPrice());

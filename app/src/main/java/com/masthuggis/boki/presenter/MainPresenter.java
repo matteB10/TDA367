@@ -9,17 +9,17 @@ public class MainPresenter {
         this.view = view;
         this.dataModel = DataModel.getInstance();
 
-        if (this.dataModel.isLoggedIn()) {
+        // Initilize the data by fetching the newest version from database.
+        if (dataModel.isLoggedIn()) {
             // Initilize the data by fetching the newest version from database.
-            this.dataModel.fetchAllAdverts(advertisements -> {});
-            view.showMainScreen();
+            dataModel.fetchAllAdverts(advertisements -> view.showMainScreen());
         } else {
-            view.showSignUpScreen();
+            view.showSignInScreen();
         }
     }
 
     public interface View {
-        void showSignUpScreen();
+        void showSignInScreen();
         void showMainScreen();
     }
 }

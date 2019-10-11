@@ -107,15 +107,10 @@ public class Repository {
         backend.deleteAd(uniqueID);
     }
 
-    public void editTitle(String adID, String newTitle) {
-    }
 
-    public void editPrice(String adID, String newPrice) {
-        backend.editPrice(adID, newPrice);
-    }
-
-    public void editDescription(String adID, String newDescription) {
-
+    public void updateAd(String adID, String newTitle, Long newPrice, String newDescription,
+                         List<String> newTagList, String newCondition, File imageFile) {
+        backend.updateAd(adID,newTitle,newPrice,newDescription, newTagList, newCondition, imageFile);
     }
 
     public void addObserverToBackend(DataModel dataModel) {

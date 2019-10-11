@@ -188,7 +188,6 @@ public class DataModel implements BackendObserver {
     }
 
     public List<iChat> getUserChats() {
-
         return user.getChats();
     }
 
@@ -217,21 +216,16 @@ public class DataModel implements BackendObserver {
         repository.deleteAd(uniqueID);
     }
 
-    public void updateTitle(String adID, String newTitle) {
-        repository.editTitle(adID, newTitle);
+    public void updateAd(Advertisement ad, File imageFile){
+        String adID = ad.getUniqueID();
+        String title = ad.getTitle();
+        Long price = ad.getPrice();
+        String description = ad.getDescription();
+        List<String> tagList = ad.getTags();
+        String condition = ad.getCondition().toString();
+        repository.updateAd(adID,title, price, description,tagList, condition, imageFile);
     }
 
-    public void updatePrice(String adID, String newPrice) {
-        repository.editPrice(adID, newPrice);
-    }
-
-    public void updateDescription(String adID, String newDescription) {
-        repository.editDescription(adID, newDescription);
-    }
-
-    public void updateImage(File imageFile, String adID) {
-        repository.uploadImageToFirebase(imageFile, adID);
-    }
 
    /* public void setUsername(String username) {
         userRepository.setUsername(username);

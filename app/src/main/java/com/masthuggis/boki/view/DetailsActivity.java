@@ -44,7 +44,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
             presenter = new DetailsPresenter(this, advertID, DependencyInjector.injectDataModel());
         }
 
-
         contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
             if (canProceedWithTapAction()) {
@@ -177,7 +176,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
     @Override
     public void showEditView(String uniqueID) {
-        Intent intent = new Intent(DetailsActivity.this, EditAdActivity.class);
+        Intent intent = new Intent(DetailsActivity.this, CreateAdActivity.class);
         intent.putExtra("advertID", uniqueID);
         startActivity(intent);
     }

@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -55,6 +56,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private EditText price;
     private EditText description;
     private Button publishAdButton;
+    private Button saveAdButton;
+    private Button deleteAdButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +65,38 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setContentView(R.layout.activity_create_advert);
         presenter = new CreateAdPresenter(this, DependencyInjector.injectDataModel());
         enablePublishButton(false);
+        Intent intent = getIntent();
         displayPreDefTagButtons();
         setListeners();
         updateDataFromModel();
+        setUpView();
+
+        if (intent.getExtras() != null) { //If there is an ad (user is editing existing ad)
+            String advertID = intent.getExtras().getString("advertID");
+            presenter.getAdbyID(advertID);
+        }
+    }
+
+    private void setUpView() {
+        TextView headerTextView = findViewById(R.id.headerTextView);
+        if (getIntent().getExtras() != null) {
+            headerTextView.setText("Ändra din annons"); //TODO lägga till i strings
+        }
+        setButtonVisibility();
+        setTextViews();
+    }
+
+    private void setListeners() {
+        setImageViewListener();
+        setTitleListener();
+        setPriceListener();
+        setDescriptionListener();
+        setPublishAdListener();
+        setConditionGroupListener();
+        setPreDefTagsListeners();
+        setUserTagTextFieldListener();
+        setDeleteBtnListener();
+        setSaveBtnListener();
     }
 
     private void updateDataFromModel() {
@@ -84,114 +116,22 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         price.setText("");
     }
 
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            try {
-                currentImageFile = createImageFile();
-            } catch (Exception i) {
-                System.out.println("error creating file");
-            }
-            if (currentImageFile != null) {
-                Uri imageURI = FileProvider.getUriForFile(this, "com.masthuggis.boki.fileprovider",
-                        currentImageFile);
-                System.out.println(imageURI);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
-        }
-    }
-
-    /**
-     * Creates an empty file and specifies unique file name.
-     *
-     * @throws IOException if image creation fails
-     */
-    private File createImageFile() throws IOException {
-        String photoFileName = "IMG_" + UniqueIdCreator.getUniqueID();
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(photoFileName, ".jpg", storageDir);
-        return image;
-    }
-
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        imageViewDisplay = findViewById(R.id.addImageView);
-
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { //When image has been taken
-            compressOnEmulator();
+    private void setTextViews() {
+        if (getIntent().getExtras() != null) {
+            TextView currentTags = findViewById(R.id.textView3);
+            currentTags.setText("Dina nuvarande taggar"); //TODO lägga till i strings
         }
     }
 
 
-    //Compresses images without trying to crop image with android OS
-    private void compressOnEmulator() {
-        Bitmap bitmap = compressBitmap();
-        try {
-            OutputStream out = new FileOutputStream(currentImageFile.getPath());
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
-            Bitmap image = BitmapFactory.decodeFile(currentImageFile.getPath());
-            setImageView(image); //Set compressed and scaled image so user sees actual result
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+    private void setButtonVisibility() {
+        if (getIntent().getExtras() == null) {
+            enablePublishButton(false);
+            deleteAdButton.setVisibility(View.GONE);
+            saveAdButton.setVisibility(View.GONE);
+        } else {
+            publishAdButton.setVisibility(View.GONE);
         }
-    }
-
-    public File getCurrentImageFile() {
-        return this.currentImageFile;
-    }
-
-    private void setImageView(Bitmap bitmap) {
-        imageViewDisplay.setImageBitmap(bitmap);
-    }
-
-
-    //Compresses image, sets resolution, should probably only be used when running app on emulator
-    private Bitmap compressBitmap() {
-        BitmapFactory.Options imageOptions = new BitmapFactory.Options();
-        imageOptions.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
-        return Bitmap.createScaledBitmap(bitmap, 800, 800, false); //TODO is this even necessary?
-    }
-
-    private void setListeners() {
-        setImageViewListener();
-        setTitleListener();
-        setPriceListener();
-        setDescriptionListener();
-        setPublishAdListener();
-        setConditionGroupListener();
-        setPreDefTagsListeners();
-        setUserTagTextFieldListener();
-
-    }
-
-    private void setConditionGroupListener() {
-        Button conditionGoodButton = findViewById(R.id.conditionGoodButton);
-        Button conditionNewButton = findViewById(R.id.conditionNewButton);
-        Button conditionOKButton = findViewById(R.id.conditionOkButton);
-
-
-        conditionGoodButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.conditionChanged(R.string.conditionGood);
-
-            }
-        });
-        conditionNewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.conditionChanged(R.string.conditionNew);
-            }
-        });
-        conditionOKButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.conditionChanged(R.string.conditionOk);
-            }
-        });
     }
 
     @Override
@@ -220,123 +160,87 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setEnabled(b);
         publishAdButton.setBackground(getDrawable(StylingHelper.getPrimaryButtonDrawable(b)));
-
     }
 
-    private void setImageViewListener() {
-        imageViewDisplay = findViewById(R.id.addImageView);
-        imageViewDisplay.setOnClickListener(view -> dispatchTakePictureIntent());
-
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent); //TODO check here to see what fragment was the previous one, maybe
     }
 
-    private void setTitleListener() {
-        title = findViewById(R.id.titleEditText);
-        title.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+    //images--------------------------------------------------------
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            try {
+                currentImageFile = createImageFile();
+            } catch (Exception i) {
+                System.out.println("error creating file");
+                i.printStackTrace();
             }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                presenter.titleChanged(title.getText().toString());
+            if (currentImageFile != null) {
+                Uri imageURI = FileProvider.getUriForFile(this, "com.masthuggis.boki.fileprovider",
+                        currentImageFile);
+                System.out.println(imageURI);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-    }
-
-    private void setPriceListener() {
-        price = findViewById(R.id.priceEditText);
-        price.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                presenter.priceChanged(price.getText().toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-    }
-
-    private void setDescriptionListener() {
-        description = findViewById(R.id.descriptionEditText);
-        description.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                presenter.descriptionChanged(description.getText().toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-    }
-
-    private void setPublishAdListener() {
-        publishAdButton = findViewById(R.id.publishAdButton);
-        publishAdButton.setOnClickListener(view -> {
-            presenter.publishAdvert();
-            finish();
-        });
-    }
-
-    private void setPreDefTagsListeners() {
-        for (Button btn : preDefTagButtons) {
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //Prevent scrollview from auto scrolling to textfields in focus
-                    btn.requestFocus();
-                    presenter.preDefTagsChanged(btn.getText().toString());
-                }
-            });
         }
     }
 
-    private void setUserDefTagsListener(Button btn) {
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.userDefTagsChanged(btn.getText().toString());
-
-            }
-        });
+    /**
+     * Creates an empty file and specifies unique file name.
+     *
+     * @throws IOException if image creation fails
+     */
+    private File createImageFile() throws IOException {
+        String photoFileName = "IMG_" + UniqueIdCreator.getUniqueID();
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(photoFileName, ".jpg", storageDir);
+        return image;
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        imageViewDisplay = findViewById(R.id.addImageView);
 
-    private void setUserTagTextFieldListener() {
-        EditText userDefTag = findViewById(R.id.tagsEditText);
-        userDefTag.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SPACE)) {
-                    presenter.userDefTagsChanged(userDefTag.getText().toString());
-                    //clear text field for new user input
-                    userDefTag.setText("");
-                    return true;
-                }
-                return false;
-            }
-        });
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { //When image has been taken
+            compressOnEmulator();
+        }
     }
+
+    //Compresses images without trying to crop image with android OS
+    private void compressOnEmulator() {
+        Bitmap bitmap = compressBitmap();
+        try {
+            OutputStream out = new FileOutputStream(currentImageFile.getPath());
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
+            Bitmap image = BitmapFactory.decodeFile(currentImageFile.getPath());
+            setImageView(image); //Set compressed and scaled image so user sees actual result
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public File getCurrentImageFile() {
+        return this.currentImageFile;
+    }
+
+    private void setImageView(Bitmap bitmap) {
+        imageViewDisplay.setImageBitmap(bitmap);
+    }
+
+    //Compresses image, sets resolution, should probably only be used when running app on emulator
+    private Bitmap compressBitmap() {
+        BitmapFactory.Options imageOptions = new BitmapFactory.Options();
+        imageOptions.inJustDecodeBounds = true;
+        Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
+        return Bitmap.createScaledBitmap(bitmap, 800, 800, false); //TODO is this even necessary?
+    }
+    //Tags----------------------------------------------------------
 
     /**
-     * Reads pre defined subject strings from resources,
+     * Reads predefined subject strings from resources,
      *
      * @return all strings in a list.
      */
@@ -379,7 +283,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      */
     private void populateTagsLayout(List<Button> tags, ViewGroup parentLayout) {
         for (Button btn : tags) {
-            ViewGroup tableRow = getCurrenTagRow(parentLayout.getId());
+            ViewGroup tableRow = getCurrentTagRow(parentLayout.getId());
             tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
         }
     }
@@ -404,7 +308,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         populateTagsLayout(tagButtons, preDefTagsLayout);
     }
 
-
     @Override
     public void setTagStyling(String tag, boolean isSelected) {
         for (Button btn : preDefTagButtons) {
@@ -421,9 +324,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      */
     @Override
     public void displayUserTagButton(String tag) {
-        Button btn = createTagButton(tag,true);
+        Button btn = createTagButton(tag, true);
         userDefTagButtons.add(btn);
-        ViewGroup currentUserTagTableRow = getCurrenTagRow(R.id.tagsLinearLayout);
+        ViewGroup currentUserTagTableRow = getCurrentTagRow(R.id.tagsLinearLayout);
         setUserDefTagsListener(btn);
         currentUserTagTableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
     }
@@ -434,7 +337,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         updateUserDefTags();
     }
 
-    private ViewGroup getCurrenTagRow(int parentViewID) {
+    private ViewGroup getCurrentTagRow(int parentViewID) {
         ViewGroup parentLayout = findViewById(parentViewID);
         int noOfRows = parentLayout.getChildCount();
         for (int i = 0; i < noOfRows; i++) {
@@ -474,11 +377,206 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent); //TODO check here to see what fragment was the previous one, maybe
+    //Listeners-----------------------------------------------------
+    private void setDeleteBtnListener() {
+        deleteAdButton = findViewById(R.id.removeAdBtn);
+        deleteAdButton.setOnClickListener(view -> {
+            presenter.removeAdBtnPressed();
+            Intent intent = new Intent(CreateAdActivity.this, MainActivity.class);
+            intent.putExtra("advertID", presenter.getID());
+            startActivity(intent);
+            finish();
+        });
     }
 
+    private void setSaveBtnListener() {
+        saveAdButton = findViewById(R.id.saveAdBtn);
+        saveAdButton.setOnClickListener(view -> {
+            presenter.saveAdBtnPressed(currentImageFile);
+            Intent intent = new Intent(CreateAdActivity.this, MainActivity.class);
+            intent.putExtra("advertID", presenter.getID());
+            startActivity(intent);
+            finish();
+        });
+    }
+
+    private void setPublishAdListener() {
+        publishAdButton = findViewById(R.id.publishAdButton);
+        publishAdButton.setOnClickListener(view -> {
+            presenter.publishAdvert();
+            finish();
+        });
+    }
+
+    private void setConditionGroupListener() {
+        Button conditionGoodButton = findViewById(R.id.conditionGoodButton);
+        Button conditionNewButton = findViewById(R.id.conditionNewButton);
+        Button conditionOKButton = findViewById(R.id.conditionOkButton);
+
+        conditionGoodButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.conditionChanged(R.string.conditionGood);
+            }
+        });
+        conditionNewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.conditionChanged(R.string.conditionNew);
+            }
+        });
+        conditionOKButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.conditionChanged(R.string.conditionOk);
+            }
+        });
+    }
+
+    private void setImageViewListener() {
+        imageViewDisplay = findViewById(R.id.addImageView);
+        imageViewDisplay.setOnClickListener(view -> dispatchTakePictureIntent());
+
+    }
+
+    private void setTitleListener() {
+        title = findViewById(R.id.titleEditText);
+        title.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                presenter.titleChanged(title.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+    }
+
+    private void setPriceListener() {
+        price = findViewById(R.id.priceEditText);
+        price.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                presenter.priceChanged(price.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+    }
+
+    private void setDescriptionListener() {
+        description = findViewById(R.id.descriptionEditText);
+        description.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                presenter.descriptionChanged(description.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+    }
+
+    private void setPreDefTagsListeners() {
+        for (Button btn : preDefTagButtons) {
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Prevent scrollview from auto scrolling to textfields in focus
+                    btn.requestFocus();
+                    presenter.preDefTagsChanged(btn.getText().toString());
+                }
+            });
+        }
+    }
+
+    private void setUserDefTagsListener(Button btn) {
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.userDefTagsChanged(btn.getText().toString());
+            }
+        });
+    }
+
+    private void setUserTagTextFieldListener() {
+        EditText userDefTag = findViewById(R.id.tagsEditText);
+        userDefTag.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_SPACE)) {
+                    presenter.userDefTagsChanged(userDefTag.getText().toString());
+                    //clear text field for new user input
+                    userDefTag.setText("");
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    //setters -------------------------------------------------------
+    @Override
+    public void setTitle(String name) {
+        TextView title = findViewById(R.id.titleEditText);
+        title.setText("" + name);
+    }
+
+    @Override
+    public void setPrice(long price) {
+        TextView currentPrice = findViewById(R.id.priceEditText);
+        currentPrice.setText(String.valueOf(price) + " kr");
+    }
+
+    @Override
+    public void setImageUrl(String url) {
+        ImageView imageView = (ImageView) findViewById(R.id.addImageView);
+        Glide.with(this).load(url).into(imageView);
+    }
+
+    @Override
+    public void setDescription(String description) {
+        TextView currentDescription = findViewById(R.id.descriptionEditText);
+        currentDescription.setText(description);
+    }
+
+    @Override
+    public void setTags(List<String> tags) {
+        LinearLayout parentLayout = findViewById(R.id.tagsLinearLayout);
+        TableRow tableRow = new TableRow(this);
+        Button btn;
+        for (String str : tags) {
+            btn = createTagButton(str, true);
+            tableRow = getTableRow(tableRow, parentLayout);
+            tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
+            tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
+        }
+        parentLayout.addView(tableRow);
+    }
+
+    private TableRow getTableRow(TableRow tableRow, LinearLayout parentLayout) {
+        if (tableRow.getChildCount() % 3 == 0) {
+            parentLayout.addView(tableRow);
+            return new TableRow(this);
+        }
+        return tableRow;
+    }
 
 }

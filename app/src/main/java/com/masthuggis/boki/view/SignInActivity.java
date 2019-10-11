@@ -38,9 +38,11 @@ public class SignInActivity extends AppCompatActivity implements SignInPresenter
     }
 
     private void setUpBtns() {
+        //Button for signing in
         Button btnSignIn = findViewById(R.id.signInButton);
         btnSignIn.setOnClickListener(view -> presenter.onSignInButtonPressed(getEmail(), getPassword()));
 
+        //Button to create new user
         Button btnSignUp = findViewById(R.id.signUpButton);
         btnSignUp.setOnClickListener(view -> presenter.onSignUpButtonPressed());
     }

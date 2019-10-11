@@ -125,7 +125,7 @@ public class BackendDataHandler implements iBackend {
         isWritingImageToDatabase = true;
         try {
             InputStream uploadStream = new FileInputStream(imageFile);
-            UploadTask uploadTask = imagesRef.child(uniqueAdID).putStream(uploadStream); //Starts upload to firebase
+            UploadTask uploadTask = imagesRef.child(uniqueAdID).putStream(uploadStream);
             uploadTask.addOnSuccessListener(taskSnapshot -> {
                 isWritingImageToDatabase = false;
 
@@ -415,35 +415,38 @@ public class BackendDataHandler implements iBackend {
     }
 
 
+    /**Deleting an ad with the specific adID from the database
+     * @param adID */
     public void deleteAd(String adID) {
         advertPath.document(adID).delete();
     }
 
+    public void updateAd(String adID, String newTitle, Long newPrice, String newDescription,
+                         List<String> tags, String newCondition, File imageFile) {
+        advertPath.whereEqualTo("uniqueAdID", adID).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                advertPath.document(documentSnapshot.getId())
+                                        .update("title", newTitle);
+                                advertPath.document(documentSnapshot.getId())
+                                        .update("price", newPrice);
+                                advertPath.document(documentSnapshot.getId())
+                                        .update("description", newDescription);
+                                advertPath.document(documentSnapshot.getId())
+                                        .update("condition", newCondition);
 
-    public void editTitle(String adID, String newTitle) {
-        advertPath.document(adID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    task.getResult().getData().put("title", newTitle);
-                }
-            }
-        });
+                                advertPath.document(documentSnapshot.getId())
+                                        .update("tags", tags);
+
+                            }
+                            uploadImageToFirebase(imageFile, adID);
+                        }
+                    }
+                });
     }
 
-    public void editPrice(String adID, String newPrice) {
-        DocumentReference advert = advertPath.document(adID);
-        advert.update("price", newPrice);
-    }
 
-    public void editDescription(String adID, String newDescription) {
-        advertPath.document(adID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    task.getResult().getData().put("description", newDescription);
-                }
-            }
-        });
-    }
 }

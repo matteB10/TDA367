@@ -7,6 +7,7 @@ import com.masthuggis.boki.utils.CurrentTimeHelper;
 import com.masthuggis.boki.utils.FormHelper;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Presenter class handling the createAdActivity. Validates input from
@@ -16,8 +17,7 @@ import java.io.File;
 public class CreateAdPresenter {
 
     private static Advertisement advertisement;
-
-
+    private String adID;
     private View view;
     private static boolean validPrice;
     private DataModel dataModel;
@@ -25,38 +25,45 @@ public class CreateAdPresenter {
 
     public CreateAdPresenter(View view, DataModel dataModel) {
         this.dataModel = dataModel;
+        this.adID = adID;
         advertisement = AdFactory.createAd();
         this.view = view;
+
+    }
+
+    public void getAdbyID(String adID){
+        advertisement = DataModel.getInstance().getAdFromAdID(adID);
+        setUpView();
+    }
+
+    public void removeAdBtnPressed(){
+        String adID = advertisement.getUniqueID();
+        DataModel.getInstance().removeExistingAdvert(adID);
+    }
+    public void saveAdBtnPressed(File imageFile){
+        DataModel.getInstance().updateAd(advertisement, imageFile);
+    }
+
+    private void setUpView(){
+            view.setTitle(advertisement.getTitle());
+            view.setPrice(advertisement.getPrice());
+            view.setDescription(advertisement.getDescription());
+            view.setImageUrl(advertisement.getImageUrl());
+            view.setTags(advertisement.getTags());
+    }
+
+    public String getID(){
+        return advertisement.getUniqueID();
     }
 
     public boolean getIsValidPrice() {
         return this.validPrice;
     }
 
-    public interface View {
-
-        void enablePublishButton(boolean isEnabled);
-
-        void styleConditionButtonPressed(int condition);
-
-        void setTagStyling(String tag, boolean isPressed);
-
-        void displayUserTagButton(String tag);
-
-        void removeUserTagButton(String tag);
-
-        File getCurrentImageFile();
-
-
-
-
-        //TODO: create methods for future same page error messages in view
-
-    }
-
     public void titleChanged(String title) {
         advertisement.setTitle(title);
         view.enablePublishButton(allFieldsValid());
+
     }
 
     /**
@@ -64,7 +71,6 @@ public class CreateAdPresenter {
      *
      * @param price
      */
-
     public void priceChanged(String price) {
         if (FormHelper.getInstance().isValidPrice(price)) {
             advertisement.setPrice(Integer.parseInt(price));
@@ -153,7 +159,7 @@ public class CreateAdPresenter {
     }
 
     private void setAdvertDate() {
-        advertisement.setDatePublished(CurrentTimeHelper.getCurrentTime());      //Saves current time as a string
+        advertisement.setDatePublished(CurrentTimeHelper.getCurrentTime());
     }
 
     public String getId() {
@@ -188,6 +194,40 @@ public class CreateAdPresenter {
 
     public String getImageUrl() {
         return advertisement.getImageUrl();
+    }
+
+    public List<String> getTags(){
+        return advertisement.getTags();
+    }
+
+    public interface View {
+
+        void setTitle(String name);
+
+        void setPrice(long price);
+
+        void setImageUrl(String url);
+
+        void setDescription(String description);
+
+        void enablePublishButton(boolean isEnabled);
+
+        void styleConditionButtonPressed(int condition);
+
+        void setTagStyling(String tag, boolean isPressed);
+
+        void displayUserTagButton(String tag);
+
+        void removeUserTagButton(String tag);
+
+        File getCurrentImageFile();
+
+        void setTags(List<String> tags);
+
+
+
+        //TODO: create methods for future same page error messages in view
+
     }
 
 }

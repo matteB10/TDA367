@@ -9,15 +9,13 @@ import com.masthuggis.boki.model.observers.BackendObserver;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public interface iBackend {
     void deleteAd(String uniqueID);
 
-    void editTitle(String adID, String newTitle);
-
-    void editPrice(String adID, String newPrice);
-
+    void updateAd(String adID, String newTitle, Long newPrice, String newDescription, List<String> newTagList, String newCondition, File imageFile);
 
     void writeAdvertToFirebase(File imageFile, HashMap<String, Object> dataMap);
 
@@ -55,4 +53,5 @@ public interface iBackend {
     void uploadImageToFirebase(File imageFile, String uniqueAdID);
 
     void userSignUp(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
+
 }
