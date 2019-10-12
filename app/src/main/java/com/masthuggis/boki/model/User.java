@@ -43,6 +43,11 @@ public class User implements iUser {
 
     @Override
     public void setAdverts(List<Advertisement> adverts) {
-        this.advertisements = advertisements;
+        this.advertisements = adverts;
+    }
+
+    @Override
+    public List<Advertisement> getAdverts() {
+        return advertisements;
     }
 }

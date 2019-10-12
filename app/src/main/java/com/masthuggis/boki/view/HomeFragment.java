@@ -35,7 +35,7 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
 
     private HomePresenter presenter;
     private View view;
-    private ProductsRecyclerViewAdapter recyclerViewAdapter;
+    private AdvertRecyclerViewAdapter recyclerViewAdapter;
     private EditText searchField;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
 
     private void setupList() {
         RecyclerView recyclerView = view.findViewById(R.id.advertsRecyclerView);
-        recyclerViewAdapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
+        recyclerViewAdapter = new AdvertRecyclerViewAdapter(getContext(), presenter);
         recyclerView.setAdapter(recyclerViewAdapter);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);

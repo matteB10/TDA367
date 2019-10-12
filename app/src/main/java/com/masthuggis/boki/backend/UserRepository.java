@@ -10,9 +10,7 @@ import com.masthuggis.boki.backend.callbacks.chatCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.backend.callbacks.userCallback;
-import com.masthuggis.boki.model.Chat;
 import com.masthuggis.boki.model.ChatFactory;
-import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.MessageFactory;
 import com.masthuggis.boki.model.UserFactory;
 import com.masthuggis.boki.model.iChat;
@@ -31,10 +29,8 @@ import java.util.Map;
 public class UserRepository {
 
     private iBackend backend;
-    private DataModel dataModel;
 
-    UserRepository(iBackend backend, DataModel dataModel) {
-        this.dataModel = dataModel;
+    UserRepository(iBackend backend) {
         this.backend = backend;
     }
 
@@ -49,7 +45,7 @@ public class UserRepository {
      */
 
     public void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
-        backend.userSignIn(email, password, successCallback,failureCallback);
+        backend.userSignIn(email, password, successCallback, failureCallback);
     }
 
     /**
@@ -59,7 +55,7 @@ public class UserRepository {
      */
 
     public void signUp(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback) {
-        backend.userSignUpAndSignIn(email, password,username,successCallback, failureCallback);
+        backend.userSignUpAndSignIn(email, password, username, successCallback, failureCallback);
     }
 
 
@@ -75,12 +71,12 @@ public class UserRepository {
 
     }
 
-    public boolean isUserLoggedIn() {
+    boolean isUserLoggedIn() {
         return backend.isUserSignedIn();
     }
 
 
-    public void getUserChats(String userID, chatCallback chatCallback) {
+    void getUserChats(String userID, chatCallback chatCallback) {
 
 
         backend.getUserChats(userID, new DBCallback() {
@@ -88,10 +84,25 @@ public class UserRepository {
             public void onCallBack(List<Map<String, Object>> chatMap) {
                 List<iChat> chatList = new ArrayList<>();
                 for (Map<String, Object> map : chatMap) {
-                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString(), map.get("userOneID").toString()
-                            , map.get("userTwoID").toString(), map.get("advertID").toString(), map.get("userTwoName").toString(), map.get("userOneName").toString(), dataModel));
+                    List<iUser> userList = new ArrayList<>();
+                    createUser(map.get("userOneID").toString(), new userCallback() {
+                        @Override
+                        public void onCallback(iUser newUser) {
+                            userList.add(newUser);
+                            createUser(map.get("userTwoID").toString(), new userCallback() {
+                                @Override
+                                public void onCallback(iUser newUser) {
+                                    userList.add(newUser);
+                                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString(), userList.get(0), userList.get(1), map.get("advertID").toString()));
+                                    if (chatList.size() == chatMap.size()) {
+                                        chatCallback.onCallback(chatList);
+                                    }
+                                }
+                            });
+                        }
+                    });
                 }
-                chatCallback.onCallback(chatList);
+
 
             }
         }, new FailureCallback() {
@@ -102,11 +113,20 @@ public class UserRepository {
         });
     }
 
+    private void createUser(String userID, userCallback userCallback) {
+        backend.getUserFromID(userID, new DBMapCallback() {
 
-    public void getMessages(String uniqueChatID, Chat chat, messagesCallback messagesCallback) {
+            @Override
+            public void onCallBack(Map<String, Object> dataMap) {
+                userCallback.onCallback(UserFactory.createUser(dataMap.get("email").toString(), dataMap.get("username").toString(), dataMap.get("userID").toString()));
+            }
+        });
+    }
+
+    public void getMessages(String uniqueChatID, messagesCallback messagesCallback) {
         List<iMessage> messages = new ArrayList<>();
 
-        backend.getMessages(uniqueChatID, chat, new DBCallback() {
+        backend.getMessages(uniqueChatID, new DBCallback() {
             @Override
             public void onCallBack(List<Map<String, Object>> advertDataList) {
                 if (advertDataList.size() == 0) {
@@ -125,11 +145,11 @@ public class UserRepository {
     }
 
 
-    public void createNewChat(String uniqueOwnerID, String advertID, stringCallback stringCallback, String receiverUsername) {
-        backend.createNewChat(uniqueOwnerID, advertID, stringCallback, receiverUsername);
+    void createNewChat(String adOwnerID, String adBuyerID, String advertID, stringCallback stringCallback) {
+        backend.createNewChat(adOwnerID, adBuyerID, advertID, stringCallback);
     }
 
-    public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
+    void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
         backend.writeMessage(uniqueChatID, messageMap);
     }
 
@@ -137,7 +157,7 @@ public class UserRepository {
         backend.setUsername(username, successCallback);
     }
 
-    public void signOut() {
+    void signOut() {
         backend.signOut();
     }
 }

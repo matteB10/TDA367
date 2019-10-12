@@ -1,103 +1,94 @@
 package com.masthuggis.boki.backend;
 
+import com.masthuggis.boki.backend.callbacks.FailureCallback;
+import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
-import com.masthuggis.boki.model.AdFactory;
-import com.masthuggis.boki.model.Advert;
+import com.masthuggis.boki.backend.callbacks.chatCallback;
+import com.masthuggis.boki.backend.callbacks.messagesCallback;
+import com.masthuggis.boki.backend.callbacks.stringCallback;
+import com.masthuggis.boki.backend.callbacks.userCallback;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.observers.BackendObserver;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-/**
- * Class providing the functionality to convert data from backend into objects to be used
- * by the domain-layer of the application.
- * Data is fetched through the iBackend interface.
- */
-public class Repository {
+public class Repository implements iRepository {
 
-    private final iBackend backend;
-    private final DataModel dataModel;
+    private AdvertRepository advertRepository;
+    private UserRepository userRepository;
 
-    Repository(iBackend backend, DataModel dataModel) {
-        this.backend = backend;
-        this.dataModel = dataModel;
+    public Repository(iBackend backend) {
+        this.advertRepository = new AdvertRepository(backend);
+        this.userRepository = new UserRepository(backend);
     }
 
-
-    /**
-     * @param advertisement gets saved into temporary list as well as in firebase
-     */
-
-    public void saveAdvert(File imageFile, Advertisement advertisement) {
-        dataModel.addAdvertisement(advertisement);
-        HashMap<String, Object> dataMap = new HashMap<>();
-        dataMap.put("title", advertisement.getTitle());
-        dataMap.put("description", advertisement.getDescription());
-        dataMap.put("uniqueOwnerID", advertisement.getUniqueOwnerID());
-        dataMap.put("condition", advertisement.getCondition());
-        dataMap.put("price", advertisement.getPrice());
-        dataMap.put("tags", advertisement.getTags());
-        dataMap.put("uniqueAdID", advertisement.getUniqueID());
-        dataMap.put("date", advertisement.getDatePublished());
-        dataMap.put("advertOwner", advertisement.getOwner());
-        backend.writeAdvertToFirebase(imageFile, dataMap);
-
+    public void saveAdvert(File imageFile, Advertisement ad) {
+        advertRepository.saveAdvert(imageFile, ad);
     }
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
-        Thread thread = new Thread(() -> backend.readAllAdvertData(advertDataList -> {
-            List<Advertisement> allAds = new ArrayList<>();
-            for (Map<String, Object> dataMap : advertDataList) {
-                allAds.add(retrieveAdvert(dataMap));
-            }
-            advertisementCallback.onCallback(allAds);
-        }));
-        thread.start();
+        advertRepository.fetchAllAdverts(advertisementCallback);
     }
 
-
-    private Advertisement retrieveAdvert(Map<String, Object> dataMap) {
-        String title = "" + dataMap.get("title");
-        String description = (String) dataMap.get("description");
-        long price = (long) dataMap.get("price");
-        List<String> tags = (List<String>) dataMap.get("tags");
-        String uniqueOwnerID = (String) dataMap.get("uniqueOwnerID");
-        Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
-        String uniqueAdID = (String) dataMap.get("uniqueAdID");
-        String datePublished = (String) dataMap.get("date");
-        String owner = (String) dataMap.get("advertOwner");
-        String imageUrl = (String) dataMap.get("imgUrl");
-        return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageUrl, tags, owner);
+    public void deleteAd(String adID) {
+        advertRepository.deleteAd(adID);
     }
-
-
-    public void deleteAd(String uniqueID) {
-        backend.deleteAd(uniqueID);
-    }
-
 
     public void updateAd(String adID, String newTitle, long newPrice, String newDescription,
                          List<String> newTagList, String newCondition, File imageFile) {
-        backend.updateAd(adID, newTitle, newPrice, newDescription, newTagList, newCondition, imageFile);
+        advertRepository.updateAd(adID, newTitle, newPrice, newDescription, newTagList, newCondition, imageFile);
     }
 
     public void addBackendObserver(BackendObserver backendObserver) {
-        backend.addBackendObserver(backendObserver);
-    }
-    public void removeBackendObserver(BackendObserver backendObserver) {
-        backend.removeBackendObserver(backendObserver);
+        advertRepository.addBackendObserver(backendObserver);
     }
 
+    public void removeBackendObserver(BackendObserver backendObserver) {
+        advertRepository.removeBackendObserver(backendObserver);
+    }
 
     public void addToFavourites(String adID, String userID) {
-        backend.addAdToFavourites(adID, userID);
+        advertRepository.addToFavourites(adID, userID);
     }
+
+    public void signIn(String email, String password, SuccessCallback successCallback,
+                       FailureCallback failureCallback) {
+        userRepository.signIn(email, password, successCallback, failureCallback);
+    }
+
+    public void signUp(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback) {
+        userRepository.signUp(email, password, username, successCallback, failureCallback);
+    }
+
+    public boolean isUserLoggedIn() {
+        return userRepository.isUserLoggedIn();
+    }
+
+    public void getUserChats(String userID, chatCallback chatCallback) {
+        userRepository.getUserChats(userID, chatCallback);
+    }
+
+    public void getMessages(String uniqueChatID, messagesCallback messagesCallback) {
+        userRepository.getMessages(uniqueChatID, messagesCallback);
+    }
+
+    public void createNewChat(String adOwnerID, String adBuyerID, String advertID, stringCallback stringCallback) {
+        userRepository.createNewChat(adOwnerID, adBuyerID, advertID, stringCallback);
+    }
+
+    public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
+        userRepository.writeMessage(uniqueChatID, messageMap);
+    }
+
+    public void signOut() {
+        userRepository.signOut();
+    }
+
+    @Override
+    public void getUser(userCallback userCallback) {
+        userRepository.getUser(userCallback);
+    }
+
 }
-
-
-

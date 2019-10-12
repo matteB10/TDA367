@@ -2,8 +2,6 @@ package com.masthuggis.boki.model;
 
 import com.masthuggis.boki.backend.BackendFactory;
 import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.backend.RepositoryFactory;
-import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
@@ -11,6 +9,7 @@ import com.masthuggis.boki.backend.callbacks.chatCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.backend.callbacks.userCallback;
+import com.masthuggis.boki.backend.iRepository;
 import com.masthuggis.boki.model.observers.AdvertisementObserver;
 import com.masthuggis.boki.model.observers.BackendObserver;
 import com.masthuggis.boki.model.observers.ChatObserver;
@@ -31,8 +30,7 @@ public class DataModel implements BackendObserver {
     private final List<AdvertisementObserver> marketAdvertisementObservers = new ArrayList<>();
     private final List<AdvertisementObserver> userAdvertisementObservers = new ArrayList<>();
     private final List<MessagesObserver> messagesObservers = new ArrayList<>();
-    private Repository repository;
-    private UserRepository userRepository;
+    private iRepository repository;
 
 
     private DataModel() {
@@ -48,14 +46,13 @@ public class DataModel implements BackendObserver {
     }
 
     private void initBackend() {
-        repository = RepositoryFactory.createRepository(BackendFactory.createBackend(), this);
-        userRepository = RepositoryFactory.createUserRepository(BackendFactory.createBackend(), this);
+        repository = new Repository(BackendFactory.createBackend());
         repository.addBackendObserver(this);
     }
 
     public void initUser(SuccessCallback successCallback) {
         if (isLoggedIn()) {
-            userRepository.getUser(new userCallback() {
+            repository.getUser(new userCallback() {
                 @Override
                 public void onCallback(iUser newUser) {
                     user = newUser;
@@ -64,6 +61,7 @@ public class DataModel implements BackendObserver {
                         public void onCallback(List<iChat> chatsList) {
                             user.setChats(chatsList);
                             user.setAdverts(getAdsFromCurrentUser());
+                            initMessages();
                             successCallback.onSuccess();
                         }
                     });
@@ -71,6 +69,17 @@ public class DataModel implements BackendObserver {
             });
         }
     }
+    private void initMessages(){
+        for(iChat chat : user.getChats()){
+            getMessages(chat.getChatID(), new messagesCallback(){
+                @Override
+                public void onCallback(List<iMessage> messagesList){
+                    chat.setMessages(messagesList);
+                }
+            });
+        }
+    }
+
 
     public void addChatObserver(ChatObserver chatObserver) {
         this.chatObservers.add(chatObserver);
@@ -125,8 +134,8 @@ public class DataModel implements BackendObserver {
         }
     }
 
-    public void SignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
-        userRepository.signIn(email, password, new SuccessCallback() {
+    public void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
+        repository.signIn(email, password, new SuccessCallback() {
             @Override
             public void onSuccess() {
                 initUser(new SuccessCallback() {
@@ -180,6 +189,7 @@ public class DataModel implements BackendObserver {
             if (ad.getUniqueOwnerID().equals(user.getId()))
                 userAds.add(ad);
         }
+        user.setAdverts(userAds);
         return userAds;
     }
 
@@ -215,7 +225,7 @@ public class DataModel implements BackendObserver {
     }
 
     public boolean isLoggedIn() {
-        return userRepository.isUserLoggedIn();
+        return repository.isUserLoggedIn();
     }
 
     public List<iChat> getUserChats() {
@@ -224,12 +234,12 @@ public class DataModel implements BackendObserver {
     }
 
 
-    public void createNewChat(String uniqueOwnerID, String advertID, stringCallback stringCallback, String receiverUsername) {
-        userRepository.createNewChat(uniqueOwnerID, advertID, stringCallback, receiverUsername);
+    public void createNewChat(String adOwnerID, String adBuyerID,String advertID, stringCallback stringCallback) {
+        repository.createNewChat(adOwnerID, adBuyerID, advertID, stringCallback);
     }
 
     public void sendMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
-        userRepository.writeMessage(uniqueChatID, messageMap);
+        repository.writeMessage(uniqueChatID, messageMap);
     }
 
     public iChat findChatByID(String ID) {
@@ -265,11 +275,11 @@ public class DataModel implements BackendObserver {
 
 
     public void signOut() {
-        userRepository.signOut();
+        repository.signOut();
     }
 
     public void signUp(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback) {
-        userRepository.signUp(email, password, username, new SuccessCallback() {
+        repository.signUp(email, password, username, new SuccessCallback() {
             @Override
             public void onSuccess() {
                 initUser(new SuccessCallback() {
@@ -298,13 +308,13 @@ public class DataModel implements BackendObserver {
         notifyChatObservers();
     }
 
-    void getMessages(String uniqueChatID, Chat chat, messagesCallback messagesCallback) {
-        userRepository.getMessages(uniqueChatID, chat, new messagesCallback() {
+    private void getMessages(String uniqueChatID, messagesCallback messagesCallback) {
+        repository.getMessages(uniqueChatID, new messagesCallback() {
             @Override
             public void onCallback(List<iMessage> messagesList) {
                 messagesCallback.onCallback(messagesList);
                 notifyMessagesObserver();
-            }
+           }
         });
     }
 
@@ -318,7 +328,7 @@ public class DataModel implements BackendObserver {
     }
 
     void fetchUserChats(String userID, chatCallback chatCallback) {
-        userRepository.getUserChats(userID, new chatCallback() {
+        repository.getUserChats(userID, new chatCallback() {
             @Override
             public void onCallback(List<iChat> chatsList) {
                 chatCallback.onCallback(chatsList);

@@ -25,7 +25,7 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 public class ProfileFragment extends Fragment implements ProfilePresenter.View, AdvertsPresenterView {
     private ProfilePresenter presenter;
     private View view;
-    private ProductsRecyclerViewAdapter recyclerViewAdapter;
+    private AdvertRecyclerViewAdapter recyclerViewAdapter;
     private Button signOutBtn;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -50,7 +50,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
     private void setupList() {
         RecyclerView recyclerView = view.findViewById(R.id.profileRecyclerView);
         recyclerView.setNestedScrollingEnabled(false);
-        recyclerViewAdapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
+        recyclerViewAdapter = new AdvertRecyclerViewAdapter(getContext(), presenter);
         recyclerView.setAdapter(recyclerViewAdapter);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);

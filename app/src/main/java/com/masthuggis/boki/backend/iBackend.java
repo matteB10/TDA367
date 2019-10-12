@@ -5,7 +5,6 @@ import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
-import com.masthuggis.boki.model.Chat;
 import com.masthuggis.boki.model.observers.BackendObserver;
 
 import java.io.File;
@@ -27,9 +26,9 @@ public interface iBackend {
 
     void getUser(DBMapCallback dbMapCallback);
 
-    void getMessages(String uniqueChatID, Chat chat, DBCallback messageCallback);
+    void getMessages(String uniqueChatID, DBCallback messageCallback);
 
-    void createNewChat(String uniqueOwnerID, String advertID, stringCallback stringCallback, String receiverUsername);
+    void createNewChat(String adOwnerID, String adBuyerID, String advertID, stringCallback stringCallback);
 
     void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap);
 
@@ -47,4 +46,5 @@ public interface iBackend {
 
     void userSignUpAndSignIn(String email, String password,String username,SuccessCallback successCallback, FailureCallback failureCallback);
 
+    void getUserFromID(String userID,DBMapCallback dbMapCallback);
 }

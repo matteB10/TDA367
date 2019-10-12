@@ -9,12 +9,8 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.MainPresenter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * MainActivity is the primary view of the application. This is where the application will take you on launch.
@@ -64,11 +60,12 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         FragmentManager fm = getSupportFragmentManager();
         initFragments();
 
+
         // Adds all fragments to MainActivity container but hides all but homeFragment.
-        fm.beginTransaction().add(R.id.fragment_container, favoritesFragment).hide(favoritesFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, profileFragment).hide(profileFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, chatFragment).hide(chatFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, homeFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, profileFragment).hide(profileFragment).commitAllowingStateLoss();
+        fm.beginTransaction().add(R.id.fragment_container, favoritesFragment).hide(favoritesFragment).commitAllowingStateLoss();
+        fm.beginTransaction().add(R.id.fragment_container, chatFragment).hide(chatFragment).commitAllowingStateLoss();
+        fm.beginTransaction().add(R.id.fragment_container, homeFragment).commitAllowingStateLoss();
     }
 
     private void initFragments() {
@@ -108,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
     };
 
     private void showFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().hide(activeFragment).show(fragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(activeFragment).show(fragment).commitAllowingStateLoss();
         activeFragment = fragment;
     }
 

@@ -10,26 +10,18 @@ import java.util.List;
 
 public class Chat implements iChat {
     private List<iMessage> messages;
-    private String senderID;
-    private String receiverID;
     private String chatID;
-    private String receiverUsername;
     private String uniqueAdID;
-    private String senderUsername;
-    private DataModel dataModel;
+    private iUser sender;
+    private iUser receiver;
 
 
-    public Chat(String uniqueChatID,String senderID,String receiverID, String uniqueAdID, String receiverUsername, String senderUsername, DataModel dataModel) {
-        this.dataModel = dataModel;
-        this.senderID = senderID;
-        this.receiverID = receiverID;
+    Chat(String uniqueChatID,iUser sender, iUser receiver, String uniqueAdID) {
+        this.sender = sender;
+        this.receiver = receiver;
         this.chatID = uniqueChatID;
-        this.receiverUsername = receiverUsername;
-        this.senderUsername = senderUsername;
         this.uniqueAdID = uniqueAdID;
-        dataModel.getMessages(uniqueChatID, this, messagesList -> messages = messagesList);
     }
-
 
 
     /**
@@ -56,11 +48,11 @@ public class Chat implements iChat {
     }
 
     public String getSenderID() {
-        return this.senderID;
+        return this.sender.getId();
     }
 
     public String getReceiverID() {
-        return this.receiverID;
+        return this.receiver.getId();
     }
 
     @Override
@@ -73,26 +65,14 @@ public class Chat implements iChat {
     }
 
 
-    public String getReceiverUsername() {
-        return receiverUsername;
-    }
-
     @Override
-    public String getSenderUsername() {
-        return this.senderUsername;
-    }
+    public String getDisplayName(String currentUserID) {
 
-
-    @Override
-    public String getDisplayName() {
-        String currentUserID = dataModel.getUserID();
-
-        if (!(senderID.equals(currentUserID))) {
-            return senderUsername;
+        if (!(sender.getId().equals(currentUserID))) {
+            return sender.getDisplayName();
         } else {
-            return receiverUsername;
+            return receiver.getDisplayName();
         }
-
     }
 
     @Override

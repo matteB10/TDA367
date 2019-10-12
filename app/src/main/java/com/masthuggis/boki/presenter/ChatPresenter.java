@@ -48,7 +48,7 @@ public class ChatPresenter implements ChatObserver {
         //TODO FIXA SÅ ATT TIDEN SYNS HÄR MED ETT VETTIGT DATUMSYSTEM
         //  String timeLastMessageSent = c.timeLastMessageSent();
 
-        holder.setUserTextView(c.getDisplayName());
+        holder.setUserTextView(c.getDisplayName(dataModel.getUserID()));
         holder.setChatID(c.getChatID());
         holder.setDateTextView("" + c.timeLastMessageSent());
         holder.setMessageImageView(dataModel.getAdFromAdID(c.getUniqueIDAdID()).getImageUrl());

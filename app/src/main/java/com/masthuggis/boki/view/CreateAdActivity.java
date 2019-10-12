@@ -406,7 +406,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setOnClickListener(view -> {
             presenter.publishAdvert();
-            finish();
+            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(intent);
         });
     }
 

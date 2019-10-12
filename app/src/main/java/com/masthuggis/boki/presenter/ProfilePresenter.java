@@ -3,7 +3,6 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.model.observers.AdvertisementObserver;
 import com.masthuggis.boki.model.sorting.SortManager;
 
 import java.util.List;
@@ -26,7 +25,12 @@ public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePres
 
     @Override
     public void getData(advertisementCallback advertisementCallback) {
-        super.dataModel.getAdsFromLoggedInUser(adverts -> advertisementCallback.onCallback(adverts));
+        super.dataModel.getAdsFromLoggedInUser(new advertisementCallback() {
+            @Override
+            public void onCallback(List<Advertisement> advertisements) {
+                updateAdverts(advertisements);
+            }
+        });
     }
 
     @Override

@@ -30,7 +30,6 @@ import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
-import com.masthuggis.boki.model.Chat;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.observers.BackendObserver;
 import com.masthuggis.boki.utils.UniqueIdCreator;
@@ -207,8 +206,8 @@ public class BackendDataHandler implements iBackend {
                 BackendDataHandler.this.createChats(queryDocumentSnapshots, chatDataList, new SuccessCallback() {
                     @Override
                     public void onSuccess() {
-                        DBCallback.onCallBack(chatDataList);
                         notifyChatObservers();
+                        DBCallback.onCallBack(chatDataList);
                     }
                 });
             }
@@ -237,7 +236,7 @@ public class BackendDataHandler implements iBackend {
         }
     }
 
-    public void createNewChat(String uniqueOwnerID, String advertID, stringCallback stringCallback, String receiverUsername) {
+    public void createNewChat(String adOwnerID, String otherUserID, String advertID, stringCallback stringCallback) {
 
         //Här stoppar vi in uniquechatID i en map för att kunna sätta i båda användarnas firebase så de båda hittar sin chatt.
 
@@ -245,14 +244,14 @@ public class BackendDataHandler implements iBackend {
         HashMap<String, Object> chatMap = new HashMap<>();
         chatMap.put("uniqueChatID", uniqueChatID);
 
-        String senderID = DataModel.getInstance().getUserID();
-        String receiverID = uniqueOwnerID;
+        String senderID = otherUserID;
+        String receiverID = adOwnerID;
 
 
         HashMap<String, Object> messagesMap = new HashMap<>();
 
-        messagesMap.put("userOneName", DataModel.getInstance().getUserDisplayName());
-        messagesMap.put("userTwoName", receiverUsername);
+        //messagesMap.put("userOneName", DataModel.getInstance().getUserDisplayName());
+        //messagesMap.put("userTwoName", receiverUsername);
         messagesMap.put("userOneID", senderID);
         messagesMap.put("userTwoID", receiverID);
         messagesMap.put("advertID", advertID);
@@ -346,6 +345,15 @@ public class BackendDataHandler implements iBackend {
 
     }
 
+    @Override
+    public void getUserFromID(String userID,DBMapCallback dbMapCallback) {
+        db.collection("users").document(userID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                dbMapCallback.onCallBack(documentSnapshot.getData());
+            }
+        });
+    }
 
     public void getUser(DBMapCallback dbMapCallback) {
         Map<String, String> userMap = new HashMap<>();
@@ -375,7 +383,7 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    public void getMessages(String uniqueChatID, Chat chat, DBCallback messageCallback) {
+    public void getMessages(String uniqueChatID, DBCallback messageCallback) {
         db.collection("chats").document(uniqueChatID).collection("messages").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
