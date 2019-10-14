@@ -2,6 +2,7 @@ package com.masthuggis.boki.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -22,7 +23,24 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         this.presenter = new MainPresenter(this, DependencyInjector.injectDataModel());
+
+        displayToastMessageIfItWasReceived();
+    }
+
+    private void displayToastMessageIfItWasReceived() {
+        String toastKey = getString(R.string.putExtraToastKey);
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            Bundle bundle = getIntent().getExtras();
+            if(!bundle.getString(toastKey).equals(null)) {
+                displayToastMessage(bundle.getString(toastKey));
+            }
+        }
+    }
+
+    private void displayToastMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

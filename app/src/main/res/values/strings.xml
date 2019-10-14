@@ -76,6 +76,8 @@
     <string name="loading">Laddar...</string>
     <string name="search">Search</string>
 
+    <string name="putExtraToastKey">toast</string>
+
     <string name="searchHint">Sök efter titlar...</string>
     <string name="sign_out">Logga ut</string>
     <string name="newPrice">ange nytt pris</string>
