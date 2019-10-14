@@ -2,6 +2,7 @@ package com.masthuggis.boki.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -185,6 +186,18 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     public void setOwnerButtonText(String content) {
         contactOwnerButton.setText(content);
 
+    }
+
+    @Override
+    public void setFavouriteStar() {
+        Drawable favouriteStar = getResources().getDrawable(android.R.drawable.star_big_on);
+        favouritesIcon.setImageDrawable(favouriteStar);
+    }
+
+    @Override
+    public void setNotFavouriteStar() {
+        Drawable notFavouriteStar = getResources().getDrawable(android.R.drawable.star_big_off);
+        favouritesIcon.setImageDrawable(notFavouriteStar);
     }
 
     public boolean canProceedWithTapAction() {

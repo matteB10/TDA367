@@ -181,7 +181,7 @@ public class DataModel implements BackendObserver {
     private List<Advertisement> getFavouritesFromList(List<Advertisement> advertisements) {
         List<Advertisement> favourites = new ArrayList<>();
         for (Advertisement ad : advertisements) {
-            isMarkedAsFavourite(ad.getUniqueID(), new MarkedAsFavouriteCallback() {
+            isAdMarkedAsFavourite(ad.getUniqueID(), new MarkedAsFavouriteCallback() {
                 @Override
                 public void onCallback(boolean markedAsFavourite) {
                     favourites.add(ad);
@@ -192,7 +192,7 @@ public class DataModel implements BackendObserver {
     }
 
     //Yikes
-    private void isMarkedAsFavourite(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
+    public void isAdMarkedAsFavourite(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
         repository.getUserFavourites(new FavouriteIDsCallback() {
             @Override
             public void onCallback(List<String> favouriteIDs) {
