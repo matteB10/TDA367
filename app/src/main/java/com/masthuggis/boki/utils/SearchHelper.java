@@ -38,7 +38,6 @@ public class SearchHelper {
     }
 
     public static void mockSearch(String query, PerformedSearchCallback callback) {
-
         List<Advertisement> tempList = MockRepository.getInstance().getLocalJSONAds();
         List<Advertisement> searchRes = new ArrayList<>(); //new list with searchresults
         String queryStr = query.toLowerCase().trim();

@@ -25,7 +25,7 @@ public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePres
 
     @Override
     public List<Advertisement> getData() {
-        return dataModel.getAdsFromLoggedInUser();
+        return dataModel.getAdsFromCurrentUser();
     }
 
     @Override
