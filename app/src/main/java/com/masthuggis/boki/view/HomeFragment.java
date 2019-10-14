@@ -38,6 +38,7 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
     private ProductsRecyclerViewAdapter recyclerViewAdapter;
     private EditText searchField;
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.home_fragment, container, false);
@@ -45,6 +46,12 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
         setupSortSpinner();
         setupSearchField();
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.viewIsBeingDestroyed();
     }
 
     private void setupPresenter() {

@@ -28,6 +28,7 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
     private ProductsRecyclerViewAdapter recyclerViewAdapter;
     private Button signOutBtn;
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.profile_fragment,container,false);
@@ -36,10 +37,15 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.viewIsBeingDestroyed();
+    }
+
     private void setupPresenter() {
         this.presenter = new ProfilePresenter(this, DependencyInjector.injectDataModel());
         this.presenter.initPresenter();
-
     }
 
     private void setupHeader() {
