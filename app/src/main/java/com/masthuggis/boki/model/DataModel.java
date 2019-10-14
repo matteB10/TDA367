@@ -64,6 +64,7 @@ public class DataModel implements BackendObserver {
                         public void onCallback(List<iChat> chatsList) {
                             user.setChats(chatsList);
                             user.setAdverts(getAdsFromCurrentUser());
+                            user.setFavourites(null);
                             successCallback.onSuccess();
                         }
                     });
@@ -161,6 +162,7 @@ public class DataModel implements BackendObserver {
         }
         return  userAds;
     }
+
 
     public void getAdsFromLoggedInUser(advertisementCallback advertisementCallback) {
         if (user == null) {

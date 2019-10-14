@@ -28,6 +28,7 @@ import com.google.firebase.storage.UploadTask;
 import com.masthuggis.boki.backend.callbacks.DBCallback;
 import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
+import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Chat;
@@ -108,6 +109,19 @@ public class BackendDataHandler implements iBackend {
             }
         });
 
+    }
+
+    private void getFavouriteIDs(String userID, FavouriteIDsCallback favouriteIDsCallback) {
+        db.collection("users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot user = task.getResult();
+                    List<String> favourites = (List<String>) user.get("favourites"); //Necessary cast
+                    favouriteIDsCallback.onCallback(favourites);
+                }
+            }
+        });
     }
 
 
@@ -191,7 +205,7 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    public void getUserChats(String userID, DBCallback DBCallback,FailureCallback failureCallback) {
+    public void getUserChats(String userID, DBCallback DBCallback, FailureCallback failureCallback) {
         db.collection("users").document(userID).collection("myConversations").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -314,7 +328,7 @@ public class BackendDataHandler implements iBackend {
         return user != null;
     }
 
-    public void userSignUpAndSignIn(String email, String password, String username,SuccessCallback successCallback, FailureCallback failureCallback) {
+    public void userSignUpAndSignIn(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback) {
         HashMap<String, Object> userMap = new HashMap<>();
         userMap.put("email", email);
         userMap.put("username", username);
