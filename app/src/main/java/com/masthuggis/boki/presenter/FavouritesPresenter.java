@@ -14,7 +14,9 @@ public class FavouritesPresenter implements IProductsPresenter {
 
     public FavouritesPresenter(AdvertsPresenterView view) {
         this.view = view;
+        view.showLoadingScreen();
         this.favourites = DataModel.getInstance().getUserFavourites();
+        view.hideLoadingScreen();
     }
 
 

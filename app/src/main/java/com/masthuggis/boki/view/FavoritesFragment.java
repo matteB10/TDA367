@@ -1,9 +1,11 @@
 package com.masthuggis.boki.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,10 +23,13 @@ public class FavoritesFragment extends Fragment implements AdvertsPresenterView 
     private FavouritesPresenter presenter;
     private ProductsRecyclerViewAdapter recyclerViewAdapter;
     private View view;
+    ProgressBar progressBar;
+    RecyclerView recyclerView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.favorites_fragment, container, false);
+        initAssets();
         initPresenter();
         setupList();
         return view;
@@ -34,8 +39,12 @@ public class FavoritesFragment extends Fragment implements AdvertsPresenterView 
         this.presenter = new FavouritesPresenter(this);
     }
 
+    private void initAssets() {
+        this.progressBar = view.findViewById(R.id.loadingProgressBar);
+        this.recyclerView = view.findViewById(R.id.favouritesRecyclerView);
+    }
+
     private void setupList() {
-        RecyclerView recyclerView = view.findViewById(R.id.favouritesRecyclerView);
         recyclerViewAdapter = new ProductsRecyclerViewAdapter(getContext(), presenter); //TODO change this
         recyclerView.setAdapter(recyclerViewAdapter);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
@@ -45,21 +54,29 @@ public class FavoritesFragment extends Fragment implements AdvertsPresenterView 
 
     @Override
     public void showLoadingScreen() {
-
-    }
-
-    @Override
-    public void updateThumbnails() {
-
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
     }
 
     @Override
     public void hideLoadingScreen() {
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
 
+    @Override
+    public void updateThumbnails() {
+        if (recyclerViewAdapter == null) {
+            setupList();
+        } else {
+            recyclerViewAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
     public void showDetailsScreen(String id) {
-
+        Intent intent = new Intent(getContext(), DetailsActivity.class);
+        intent.putExtra("advertID", id);
+        startActivity(intent);
     }
 }
