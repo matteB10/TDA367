@@ -362,7 +362,6 @@ public class BackendDataHandler implements iBackend {
 
     }
 
-
     public void getUser(DBMapCallback dbMapCallback) {
         Map<String, String> userMap = new HashMap<>();
         String userID = auth.getCurrentUser().getUid();

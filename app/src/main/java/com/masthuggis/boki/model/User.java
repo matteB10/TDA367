@@ -21,9 +21,12 @@ public class User implements iUser {
     }
 
     public void setFavourites(List<Advertisement> advertisements) {
-        this.advertisements = advertisements;
+        this.favourites = advertisements;
     }
 
+    public List<Advertisement> getFavourites() {
+        return this.favourites;
+    }
 
     public String getId() {
         return this.userID;

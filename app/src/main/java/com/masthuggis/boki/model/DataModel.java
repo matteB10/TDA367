@@ -12,6 +12,7 @@ import com.masthuggis.boki.backend.callbacks.chatCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.backend.callbacks.userCallback;
+import com.masthuggis.boki.backend.callbacks.MarkedAsFavouriteCallback;
 import com.masthuggis.boki.model.observers.AdvertisementObserver;
 import com.masthuggis.boki.model.observers.BackendObserver;
 import com.masthuggis.boki.model.observers.ChatObserver;
@@ -65,8 +66,10 @@ public class DataModel implements BackendObserver {
                         public void onCallback(List<iChat> chatsList) {
                             user.setChats(chatsList);
                             user.setAdverts(getAdsFromCurrentUser());
-                            user.setFavourites(null);
-                            successCallback.onSuccess();
+                            getFavouritesFromLoggedInUser(advertisements -> {
+                                user.setFavourites(advertisements);
+                                successCallback.onSuccess();
+                            }); //TODO fix this maybe
                         }
                     });
                 }
@@ -177,28 +180,41 @@ public class DataModel implements BackendObserver {
         }
     }
 
-    private List<Advertisement> getFavouritesFromCurrentUser() {
+    private void getFavouritesFromLoggedInUser(advertisementCallback advertisementCallback) {
+        if (user == null) {
+            return;
+        }
+        if (allAds == null || allAds.isEmpty()) {
+            fetchAllAdverts(advertisements -> advertisementCallback.onCallback(getFavouritesFromList(advertisements)));
+        } else {
+            advertisementCallback.onCallback(getFavouritesFromList(allAds)); //TODO change this
+        }
+    }
+
+    private List<Advertisement> getFavouritesFromList(List<Advertisement> advertisements) {
         List<Advertisement> favourites = new ArrayList<>();
-        for (Advertisement ad : allAds) {
-            if (isMarkedAsFavourite(ad.getUniqueID())) {
-                favourites.add(ad);
-            }
+        for (Advertisement ad : advertisements) {
+            isMarkedAsFavourite(ad.getUniqueID(), new MarkedAsFavouriteCallback() {
+                @Override
+                public void onCallback(boolean markedAsFavourite) {
+                    favourites.add(ad);
+                }
+            });
         }
         return favourites;
     }
 
-    private boolean isMarkedAsFavourite(String uniqueAdID) {
+    //Yikes
+    private void isMarkedAsFavourite(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
         repository.getUserFavourites(new FavouriteIDsCallback() {
             @Override
             public void onCallback(List<String> favouriteIDs) {
                 for (String adID : favouriteIDs) {
                     if (adID.equals(uniqueAdID))
-                        return;
+                        markedAsFavouriteCallback.onCallback(true);
                 }
             }
         });
-
-        return true;
     }
 
     private List<Advertisement> retrieveAdsFromUserID(List<Advertisement> adverts) {
@@ -212,7 +228,6 @@ public class DataModel implements BackendObserver {
 
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
-
         repository.fetchAllAdverts(new advertisementCallback() {
             @Override
             public void onCallback(List<Advertisement> advertisements) {
@@ -246,8 +261,11 @@ public class DataModel implements BackendObserver {
     }
 
     public List<iChat> getUserChats() {
-
         return user.getChats();
+    }
+
+    public List<Advertisement> getUserFavourites() {
+        return user.getFavourites();
     }
 
 
