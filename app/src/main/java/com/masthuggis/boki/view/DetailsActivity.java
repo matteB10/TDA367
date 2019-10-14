@@ -125,7 +125,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         Intent intent = new Intent(DetailsActivity.this, MessagesActivity.class);
         intent.putExtra("chatID", chatID);
         startActivity(intent);
-
     }
 
 
@@ -157,7 +156,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         Context context = getApplicationContext();
         CharSequence text = "Du kan inte skicka meddelanden till dig själv.";
         int duration = Toast.LENGTH_LONG;
-
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
     }
@@ -167,7 +165,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         if (presenter.isUserOwner()) {
             findViewById(R.id.changeAdButton).setVisibility(View.VISIBLE);
             findViewById(R.id.contactOwnerButton).setVisibility(View.GONE);
-
         } else {
             findViewById(R.id.changeAdButton).setVisibility(View.GONE);
             findViewById(R.id.contactOwnerButton).setVisibility(View.VISIBLE);
@@ -182,11 +179,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         startActivity(intent);
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-    }
 
     @Override
     public void setOwnerButtonText(String content) {
