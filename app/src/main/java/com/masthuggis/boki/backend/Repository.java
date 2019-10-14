@@ -34,8 +34,17 @@ public class Repository {
      */
 
     public void saveAdvert(File imageFile, Advertisement advertisement) {
-        dataModel.addAdvertisement(advertisement);
         HashMap<String, Object> dataMap = new HashMap<>();
+        dataMap = mapAdData(dataMap,advertisement);
+        backend.writeAdvertToFirebase(imageFile, dataMap);
+    }
+    public void updateAdvert(File imageFile, Advertisement advertisement){
+        HashMap<String, Object> dataMap = new HashMap<>();
+        dataMap = mapAdData(dataMap,advertisement);
+        backend.updateAdToFirebase(imageFile, dataMap);
+    }
+
+    private HashMap<String, Object> mapAdData(HashMap dataMap, Advertisement advertisement){
         dataMap.put("title", advertisement.getTitle());
         dataMap.put("description", advertisement.getDescription());
         dataMap.put("uniqueOwnerID", advertisement.getUniqueOwnerID());
@@ -45,8 +54,7 @@ public class Repository {
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
         dataMap.put("advertOwner", advertisement.getOwner());
-        backend.writeAdvertToFirebase(imageFile, dataMap);
-
+        return dataMap;
     }
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
@@ -76,15 +84,10 @@ public class Repository {
     }
 
 
-    public void deleteAd(String uniqueID) {
-        backend.deleteAd(uniqueID);
+    public void deleteAd(Advertisement advertisement) {
+        backend.deleteAd(advertisement.getUniqueID());
     }
 
-
-    public void updateAd(String adID, String newTitle, long newPrice, String newDescription,
-                         List<String> newTagList, String newCondition, File imageFile) {
-        backend.updateAd(adID, newTitle, newPrice, newDescription, newTagList, newCondition, imageFile);
-    }
 
     public void addBackendObserver(BackendObserver backendObserver) {
         backend.addBackendObserver(backendObserver);

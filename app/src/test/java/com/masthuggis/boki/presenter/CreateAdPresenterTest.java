@@ -23,7 +23,7 @@ public class CreateAdPresenterTest {
 
     class MockView implements CreateAdPresenter.View {
         CreateAdPresenter presenter;
-        boolean buttonEnabled = false;
+        boolean publishButtonEnabled = false;
 
         MockView(){
             presenter = new CreateAdPresenter(this, DependencyInjector.injectDataModel());
@@ -32,8 +32,8 @@ public class CreateAdPresenterTest {
         private CreateAdPresenter getPresenter(){
             return presenter;
         }
-        private boolean getButtonEnabled(){
-            return buttonEnabled;
+        private boolean getPublishButtonEnabled(){
+            return publishButtonEnabled;
         }
 
         @Override
@@ -58,13 +58,19 @@ public class CreateAdPresenterTest {
 
         @Override
         public void enablePublishButton(boolean isEnabled) {
-            buttonEnabled = isEnabled;
+            publishButtonEnabled = isEnabled;
         }
+
+        @Override
+        public void enableSaveButton(boolean b) {
+
+        }
+
         @Override
         public void styleConditionButtonPressed(int condition) {
         }
         @Override
-        public void setTagStyling(String tag, boolean isPressed) {
+        public void setPreDefTagSelected(String tag, boolean isPressed) {
         }
         @Override
         public void displayUserTagButton(String tag){
@@ -142,11 +148,11 @@ public class CreateAdPresenterTest {
         presenter.priceChanged("10");
         presenter.titleChanged("hej");
         presenter.conditionChanged(R.string.conditionGood);
-        assertTrue(view.getButtonEnabled());
+        assertTrue(view.getPublishButtonEnabled());
 
         //if no title is given, button should be disabled
         presenter.titleChanged("");
-        assertFalse(view.getButtonEnabled());
+        assertFalse(view.getPublishButtonEnabled());
     }
 
 

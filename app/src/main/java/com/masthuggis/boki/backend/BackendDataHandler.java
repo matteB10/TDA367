@@ -423,8 +423,9 @@ public class BackendDataHandler implements iBackend {
 
     }
 
-    public void updateAd(String adID, String newTitle, long newPrice, String newDescription,
-                         List<String> tags, String newCondition, File imageFile) {
+
+    public void  updateAdToFirebase(File imageFile, HashMap<String, Object> dataMap) {
+        String adID = (String)dataMap.get("uniqueAdID");
         advertPath.whereEqualTo("uniqueAdID", adID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -432,18 +433,18 @@ public class BackendDataHandler implements iBackend {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 advertPath.document(documentSnapshot.getId())
-                                        .update("title", newTitle);
+                                        .update("title", dataMap.get("title"));
                                 advertPath.document(documentSnapshot.getId())
-                                        .update("price", newPrice);
+                                        .update("price", dataMap.get("price"));
                                 advertPath.document(documentSnapshot.getId())
-                                        .update("description", newDescription);
+                                        .update("description", dataMap.get("description"));
                                 advertPath.document(documentSnapshot.getId())
-                                        .update("condition", newCondition);
+                                        .update("condition", dataMap.get("condition"));
                                 advertPath.document(documentSnapshot.getId())
-                                        .update("tags", tags);
+                                        .update("tags", dataMap.get("tags"));
                             }
                             if (imageFile != null) {
-                                uploadImageToFirebase(imageFile, adID, new SuccessCallback() {
+                                uploadImageToFirebase(imageFile, dataMap.get("uniqueAdID").toString(), new SuccessCallback() {
                                     @Override
                                     public void onSuccess() {
 

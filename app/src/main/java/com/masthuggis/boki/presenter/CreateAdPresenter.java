@@ -17,34 +17,46 @@ import java.util.List;
 public class CreateAdPresenter {
 
     private static Advertisement advertisement;
-    private String adID;
     private View view;
-    private static boolean validPrice;
+    private boolean validPrice;
     private DataModel dataModel;
 
 
     public CreateAdPresenter(View view, DataModel dataModel) {
         this.dataModel = dataModel;
-        this.adID = adID;
         advertisement = AdFactory.createAd();
         this.view = view;
 
     }
 
-    public void getAdbyID(String adID){
-        advertisement = DataModel.getInstance().getAdFromAdID(adID);
-        setUpView();
+    public void setAd(String adID){
+        advertisement = dataModel.getAdFromAdID(adID);
+        validPrice = true;
     }
 
-    public void removeAdBtnPressed(){
-        String adID = advertisement.getUniqueID();
-        DataModel.getInstance().removeExistingAdvert(adID);
+    public void deleteAdvert(){
+       dataModel.removeExistingAdvert(advertisement);
     }
-    public void saveAdBtnPressed(File imageFile){
-        DataModel.getInstance().updateAd(advertisement, imageFile);
+    public void updateAdvert(){
+       dataModel.updateAd(view.getCurrentImageFile(),advertisement);
+       advertisement = null;
     }
 
-    private void setUpView(){
+    /**
+     * Called on click on button in createAdActivity
+     * saves advert and resets current ad in presenter
+     */
+    //Need to change imageFile in advert to inputStream from View
+    public void saveAdvert() {
+        if((advertisement.getDatePublished().equals(""))) {
+            setAdvertDate();
+        }
+        dataModel.saveAdvert(view.getCurrentImageFile(), advertisement);
+        advertisement = null;
+    }
+
+
+    public void setUpView(){
             view.setTitle(advertisement.getTitle());
             view.setPrice(advertisement.getPrice());
             view.setDescription(advertisement.getDescription());
@@ -52,34 +64,28 @@ public class CreateAdPresenter {
             view.setTags(advertisement.getTags());
     }
 
-    public String getID(){
-        return advertisement.getUniqueID();
-    }
-
-    public boolean getIsValidPrice() {
-        return this.validPrice;
-    }
 
     public void titleChanged(String title) {
         advertisement.setTitle(title);
         view.enablePublishButton(allFieldsValid());
+        view.enableSaveButton(allFieldsValid());
 
     }
 
     /**
      * If price is parsable to an int, price is updated in advert.
-     *
+     * boolean variable also set due to default value zero is valid
      * @param price
      */
     public void priceChanged(String price) {
         if (FormHelper.getInstance().isValidPrice(price)) {
             advertisement.setPrice(Integer.parseInt(price));
             validPrice = true;
-        } else {
+        }else{
             validPrice = false;
         }
         view.enablePublishButton(allFieldsValid());
-
+        view.enableSaveButton(allFieldsValid());
     }
 
     //cannot check for valid input, all input is valid
@@ -94,7 +100,7 @@ public class CreateAdPresenter {
      * @param tag
      */
     public void preDefTagsChanged(String tag) {
-        view.setTagStyling(tag, isTagSelected(tag));
+        view.setPreDefTagSelected(tag, isTagSelected(tag));
         advertisement.tagsChanged(tag);
     }
 
@@ -132,7 +138,16 @@ public class CreateAdPresenter {
         advertisement.setCondition(condition);
         view.styleConditionButtonPressed(condition);
         view.enablePublishButton(allFieldsValid());
+        view.enableSaveButton(allFieldsValid());
 
+    }
+
+    /**
+     * Checks if publishbutton should be enabled when image has changed
+     */
+    public void imageChanged(){
+        view.enablePublishButton(allFieldsValid());
+        view.enableSaveButton(allFieldsValid());
     }
 
     /**
@@ -142,20 +157,9 @@ public class CreateAdPresenter {
      * @return
      */
     private boolean allFieldsValid() {
-        return (advertisement.getTitle().length() > 2 && validPrice && advertisement.isValidCondition());
-        //TODO: expand validation to image
-    }
-
-
-    /**
-     * Called on click on button in createAdActivity
-     * saves advert in temp list and resets current ad in presenter
-     */
-    //Need to change imageFile in advert to inputStream from View
-    public void publishAdvert() {
-        setAdvertDate();
-        dataModel.saveAdvert(view.getCurrentImageFile(), advertisement);
-        advertisement = null;
+        boolean valid = advertisement.getTitle().length() > 2 && validPrice && advertisement.isValidCondition() &&
+                (view.getCurrentImageFile()!= null || advertisement.getImageUrl() != null);
+        return (valid);
     }
 
     private void setAdvertDate() {
@@ -166,7 +170,9 @@ public class CreateAdPresenter {
         return advertisement.getUniqueID();
     }
 
-    //Getter for testing purpose
+    //Getter mainly for testing purpose---------------------------------------------------
+
+
     public Advertisement getAdvertisement() {
         return advertisement;
     }
@@ -192,10 +198,6 @@ public class CreateAdPresenter {
         return (int) advertisement.getPrice();
     }
 
-    public String getImageUrl() {
-        return advertisement.getImageUrl();
-    }
-
     public List<String> getTags(){
         return advertisement.getTags();
     }
@@ -212,9 +214,11 @@ public class CreateAdPresenter {
 
         void enablePublishButton(boolean isEnabled);
 
+        void enableSaveButton(boolean b);
+
         void styleConditionButtonPressed(int condition);
 
-        void setTagStyling(String tag, boolean isPressed);
+        void setPreDefTagSelected(String tag, boolean isPressed);
 
         void displayUserTagButton(String tag);
 
@@ -223,6 +227,7 @@ public class CreateAdPresenter {
         File getCurrentImageFile();
 
         void setTags(List<String> tags);
+
 
 
 

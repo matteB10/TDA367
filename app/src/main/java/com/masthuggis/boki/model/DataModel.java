@@ -244,24 +244,28 @@ public class DataModel implements BackendObserver {
         return null;
     }
 
-    public void removeExistingAdvert(String uniqueID) {
-        repository.deleteAd(uniqueID);
+    /*
+     * Delete existing advert
+     */
+    public void removeExistingAdvert(Advertisement ad) {
+        repository.deleteAd(ad);
     }
 
-    public void updateAd(Advertisement ad, File imageFile) {
-        String adID = ad.getUniqueID();
-        String title = ad.getTitle();
-        Long price = ad.getPrice();
-        String description = ad.getDescription();
-        List<String> tagList = ad.getTags();
-        String condition = ad.getCondition().toString();
-        repository.updateAd(adID, title, price, description, tagList, condition, imageFile);
+    /*
+     * Updates existing advert
+     */
+    public void updateAd(File imageFile, Advertisement ad) {
+        repository.updateAdvert(imageFile, ad);
     }
 
+    /*
+     * Saves new advert
+     */
 
-   /* public void setUsername(String username) {
-        userRepository.setUsername(username);
-    }*/
+    public void saveAdvert(File currentImageFile, Advertisement advertisement) {
+        repository.saveAdvert(currentImageFile, advertisement);
+    }
+
 
 
     public void signOut() {
@@ -313,9 +317,6 @@ public class DataModel implements BackendObserver {
         repository.addToFavourites(adID, userID);
     }
 
-    public void saveAdvert(File currentImageFile, Advertisement advertisement) {
-        repository.saveAdvert(currentImageFile, advertisement);
-    }
 
     void fetchUserChats(String userID, chatCallback chatCallback) {
         userRepository.getUserChats(userID, new chatCallback() {
