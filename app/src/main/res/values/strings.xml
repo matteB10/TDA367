@@ -84,4 +84,7 @@
     <string name="hintNewTitle">ange ny titel</string>
     <string name="hintnewPrice">ange nytt pris</string>
 
+    <string name="filter">Filtrera</string>
+    <string name="maxPrice">Ange maxpris:</string>
+
 </resources>
