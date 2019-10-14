@@ -157,7 +157,7 @@ public class DataModel implements BackendObserver {
         return null; //TODO Fix a better solution to handle NPExc....
     }
 
-    private List<Advertisement> getAdsFromCurrentUser() {
+    public List<Advertisement> getAdsFromCurrentUser() {
         List<Advertisement> userAds = new ArrayList<>();
         for (Advertisement ad : allAds) {
             if (ad.getUniqueOwnerID().equals(user.getId())) {
@@ -165,19 +165,6 @@ public class DataModel implements BackendObserver {
             }
         }
         return userAds;
-    }
-
-
-    public void getAdsFromLoggedInUser(advertisementCallback advertisementCallback) {
-        if (user == null) {
-            return;
-        }
-
-        if (allAds == null || allAds.isEmpty()) {
-            fetchAllAdverts(advertisements -> advertisementCallback.onCallback(retrieveAdsFromUserID(advertisements)));
-        } else {
-            advertisementCallback.onCallback(retrieveAdsFromUserID(allAds));
-        }
     }
 
     private void getFavouritesFromLoggedInUser(advertisementCallback advertisementCallback) {
@@ -237,6 +224,9 @@ public class DataModel implements BackendObserver {
         });
     }
 
+    public List<Advertisement> getAllAdverts() {
+        return allAds;
+    }
 
     public void loggedOut() {
 

@@ -3,7 +3,6 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.model.observers.AdvertisementObserver;
 import com.masthuggis.boki.utils.ClickDelayHelper;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
@@ -16,9 +15,9 @@ import java.util.List;
  * method pattern is used to make the concrete implementations able to implement their unique
  * way to get data and sort.
  */
-public abstract class AdvertsPresenter implements IProductsPresenter, AdvertisementObserver {
+public abstract class AdvertsPresenter implements IProductsPresenter {
 
-    protected final AdvertsPresenterView view;
+    protected AdvertsPresenterView view;
     protected final DataModel dataModel;
     private List<Advertisement> adverts;
 
@@ -33,7 +32,6 @@ public abstract class AdvertsPresenter implements IProductsPresenter, Advertisem
      * instantiating.
      */
     public void initPresenter() {
-        dataModel.addMarketAdvertisementObserver(this);
         updateAdverts();
     }
 
@@ -42,7 +40,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter, Advertisem
      * @param adverts the updated adverts lists that will be displayed.
      */
     public void updateAdverts(List<Advertisement> adverts) {
-        if (stateOfAdvertsIsInvalid(adverts)) {
+        if (stateOfAdvertsIsInvalid(adverts) || view == null) {
             return;
         }
 
@@ -55,15 +53,18 @@ public abstract class AdvertsPresenter implements IProductsPresenter, Advertisem
      * Asks the concrete implementations to get data and then updates the UI.
      */
     public void updateAdverts() {
+        if (view == null) {
+            return;
+        }
+
         view.showLoadingScreen();
-        getData(advertisements -> updateAdverts(advertisements));
+        updateAdverts(getData());
     }
 
     /**
      * Concrete implementations implements this to call their respective data source.
-     * @param advertisementCallback
      */
-    public abstract void getData(advertisementCallback advertisementCallback);
+    public abstract List<Advertisement> getData();
 
     /**
      * Concrete implementations provides their desired way of sorting. If no sorting is desired,
@@ -72,14 +73,6 @@ public abstract class AdvertsPresenter implements IProductsPresenter, Advertisem
      * @return
      */
     public abstract List<Advertisement> sort(List<Advertisement> adverts);
-
-    /**
-     * Whenever the market is updated the view is updated using the latest data.
-     */
-    @Override
-    public void onAdvertisementsUpdated() {
-        updateAdverts();
-    }
 
     /**
      * Binds each recyclerview item by setting the fields of ThumbnailView. It asks for the desired
@@ -130,9 +123,20 @@ public abstract class AdvertsPresenter implements IProductsPresenter, Advertisem
      */
     @Override
     public void onRowPressed(String uniqueIDoFAdvert) {
+        if (view == null) {
+            return;
+        }
+
         if (canProceedWithTapAction()) {
             view.showDetailsScreen(uniqueIDoFAdvert);
         }
+    }
+
+    /**
+     * When view is destroyed, the reference is deleted.
+     */
+    public void viewIsBeingDestroyed() {
+        view = null;
     }
 
     /**

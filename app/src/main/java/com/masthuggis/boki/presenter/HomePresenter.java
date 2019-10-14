@@ -26,8 +26,8 @@ public final class HomePresenter extends AdvertsPresenter {
     }
 
     @Override
-    public void getData(advertisementCallback advertisementCallback) {
-        super.dataModel.fetchAllAdverts(adverts -> advertisementCallback.onCallback(adverts));
+    public List<Advertisement> getData() {
+        return dataModel.getAllAdverts();
     }
 
     /**

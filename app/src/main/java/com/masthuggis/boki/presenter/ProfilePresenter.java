@@ -24,8 +24,8 @@ public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePres
     }
 
     @Override
-    public void getData(advertisementCallback advertisementCallback) {
-        super.dataModel.getAdsFromLoggedInUser(adverts -> advertisementCallback.onCallback(adverts));
+    public List<Advertisement> getData() {
+        return dataModel.getAdsFromCurrentUser();
     }
 
     @Override
