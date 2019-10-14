@@ -11,7 +11,7 @@ public interface iChat {
 
     String getDisplayName(String currentUserID);
 
-    String getUniqueIDAdID();
+    String getAdID();
 
     void setMessages(List<iMessage> messagesList);
 

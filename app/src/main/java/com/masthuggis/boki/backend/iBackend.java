@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface iBackend {
-     void deleteAd(String adID, String userID,String chatID);
+    void deleteAd(String adID, String userID, List<String>  chatIDs);
 
     void updateAd(String adID, String newTitle, long newPrice, String newDescription, List<String> newTagList, String newCondition, File imageFile);
 
@@ -20,9 +20,11 @@ public interface iBackend {
 
     void addAdToFavourites(String adID, String userID);
 
-     void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
+    void getFavouriteIDs(DBMapCallback dbMapCallback);
 
-    void getUserChats(String userID, DBCallback DBCallback,FailureCallback failureCallback);
+    void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
+
+    void getUserChats(String userID, DBCallback DBCallback, FailureCallback failureCallback);
 
     void getUser(DBMapCallback dbMapCallback);
 
@@ -44,9 +46,8 @@ public interface iBackend {
 
     boolean isUserSignedIn();
 
-    void userSignUpAndSignIn(String email, String password,String username,SuccessCallback successCallback, FailureCallback failureCallback);
+    void userSignUpAndSignIn(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback);
 
-    void getUserFromID(String userID,DBMapCallback dbMapCallback);
+    void getUserFromID(String userID, DBMapCallback dbMapCallback);
 
-    void removeChat(String userID,String chatID);
 }

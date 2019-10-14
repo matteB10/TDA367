@@ -1,6 +1,7 @@
 package com.masthuggis.boki.backend;
 
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
+import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.backend.callbacks.chatCallback;
@@ -20,7 +21,7 @@ public interface iRepository {
 
     void fetchAllAdverts(advertisementCallback advertisementCallback);
 
-    void deleteAd(String adID,String userID,String chatID);
+    void deleteAd(String adID, String userID, List<String> chatIDs);
 
     void updateAd(String adID, String newTitle, long newPrice, String newDescription,
                   List<String> newTagList, String newCondition, File imageFile);
@@ -42,7 +43,7 @@ public interface iRepository {
 
     void getMessages(String uniqueChatID, messagesCallback messagesCallback);
 
-    void createNewChat(String uniqueOwnerID,  String receiverUsername, String advertID, stringCallback stringCallback);
+    void createNewChat(String uniqueOwnerID, String receiverUsername, String advertID, stringCallback stringCallback);
 
     void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap);
 
@@ -51,4 +52,7 @@ public interface iRepository {
     void getUser(userCallback userCallback);
 
     void removeChat(String userID, String chatID);
+
+    void getUserFavourites(FavouriteIDsCallback favouriteIDsCallback);
+
 }

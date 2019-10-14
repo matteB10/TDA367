@@ -8,14 +8,25 @@ public class User implements iUser {
     private String userID;
     private List<iChat> chats;
     private List<Advertisement> advertisements;
-    private iFavoriteCollection favoriteCollection;
+    private List<Advertisement> favourites;
 
-     User(String email, String displayname, String userID) {
+    User(String email, String displayname, String userID) {
         this.email = email;
         this.displayname = displayname;
         this.userID = userID;
     }
 
+    public void addFavourite(Advertisement advertisement) {
+        favourites.add(advertisement);
+    }
+
+    public void setFavourites(List<Advertisement> advertisements) {
+        this.favourites = advertisements;
+    }
+
+    public List<Advertisement> getFavourites() {
+        return this.favourites;
+    }
 
     public String getId() {
         return this.userID;
@@ -54,7 +65,7 @@ public class User implements iUser {
     @Override
     public String getChatIDFromAdID(String adID) {
          for(iChat chat:chats){
-             if(chat.getUniqueIDAdID().equals(adID)){
+             if(chat.getAdID().equals(adID)){
                  return chat.getChatID();
              }
          }

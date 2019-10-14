@@ -1,5 +1,7 @@
 package com.masthuggis.boki.backend;
 
+import com.masthuggis.boki.backend.callbacks.DBMapCallback;
+import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advert;
@@ -30,7 +32,7 @@ public class AdvertRepository {
      * @param advertisement gets saved into firebase
      */
 
-    public void saveAdvert(File imageFile, Advertisement advertisement) {
+    void saveAdvert(File imageFile, Advertisement advertisement) {
         HashMap<String, Object> dataMap = new HashMap<>();
         dataMap.put("title", advertisement.getTitle());
         dataMap.put("description", advertisement.getDescription());
@@ -45,7 +47,8 @@ public class AdvertRepository {
 
     }
 
-    public void fetchAllAdverts(advertisementCallback advertisementCallback) {
+
+    void fetchAllAdverts(advertisementCallback advertisementCallback) {
         Thread thread = new Thread(() -> backend.readAllAdvertData(advertDataList -> {
             List<Advertisement> allAds = new ArrayList<>();
             for (Map<String, Object> dataMap : advertDataList) {
@@ -71,9 +74,17 @@ public class AdvertRepository {
         return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageUrl, tags, owner);
     }
 
+    public void getUserFavourites(FavouriteIDsCallback favouriteIDsCallback) {
+        backend.getFavouriteIDs(new DBMapCallback() {
+            @Override
+            public void onCallBack(Map<String, Object> dataMap) {
+                favouriteIDsCallback.onCallback((List<String>) dataMap.get("favourites"));
+            }
+        });
+    }
 
-    public void deleteAd(String adID,String uniqueID,String chatID) {
-        backend.deleteAd(adID,uniqueID,chatID);
+    public void deleteAd(String adID, String uniqueID, List<String> chatIDs) {
+        backend.deleteAd(adID, uniqueID, chatIDs);
     }
 
 
@@ -85,6 +96,7 @@ public class AdvertRepository {
     public void addBackendObserver(BackendObserver backendObserver) {
         backend.addBackendObserver(backendObserver);
     }
+
     public void removeBackendObserver(BackendObserver backendObserver) {
         backend.removeBackendObserver(backendObserver);
     }
@@ -92,6 +104,8 @@ public class AdvertRepository {
     public void addToFavourites(String adID, String userID) {
         backend.addAdToFavourites(adID, userID);
     }
+
+
 }
 
 

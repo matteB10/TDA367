@@ -2,10 +2,10 @@ package com.masthuggis.boki.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.masthuggis.boki.R;
@@ -14,21 +14,33 @@ import com.masthuggis.boki.presenter.MainPresenter;
 
 /**
  * MainActivity is the primary view of the application. This is where the application will take you on launch.
+ * Its main purpose is to handle the different tabs.
  */
-
 public class MainActivity extends AppCompatActivity implements MainPresenter.View {
     private MainPresenter presenter;
-    private Fragment homeFragment;
-    private Fragment favoritesFragment;
-    private Fragment profileFragment;
-    private Fragment chatFragment;
-    private Fragment activeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         this.presenter = new MainPresenter(this, DependencyInjector.injectDataModel());
+
+        displayToastMessageIfItWasReceived();
+    }
+
+    private void displayToastMessageIfItWasReceived() {
+        String toastKey = getString(R.string.putExtraToastKey);
+        if (getIntent() != null && getIntent().getExtras() != null) {
+            Bundle bundle = getIntent().getExtras();
+            if(bundle.getString(toastKey) != null) {
+                displayToastMessage(bundle.getString(toastKey));
+            }
+        }
+    }
+
+    private void displayToastMessage(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -39,8 +51,8 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
 
     @Override
     public void showMainScreen() {
+        loadFragment(new HomeFragment());
         setupBottomTabNavigator();
-        addFragmentsToViewHierachy();
     }
 
     /**
@@ -56,57 +68,45 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         bottomNav.setOnNavigationItemSelectedListener(navListener);
     }
 
-    private void addFragmentsToViewHierachy() {
-        FragmentManager fm = getSupportFragmentManager();
-        initFragments();
-
-
-        // Adds all fragments to MainActivity container but hides all but homeFragment.
-        fm.beginTransaction().add(R.id.fragment_container, profileFragment).hide(profileFragment).commitAllowingStateLoss();
-        fm.beginTransaction().add(R.id.fragment_container, favoritesFragment).hide(favoritesFragment).commitAllowingStateLoss();
-        fm.beginTransaction().add(R.id.fragment_container, chatFragment).hide(chatFragment).commitAllowingStateLoss();
-        fm.beginTransaction().add(R.id.fragment_container, homeFragment).commitAllowingStateLoss();
-    }
-
-    private void initFragments() {
-        homeFragment = new HomeFragment();
-        favoritesFragment = new FavoritesFragment();
-        profileFragment = new ProfileFragment();
-        chatFragment = new ChatFragment();
-        activeFragment = homeFragment;
-    }
-
     /**
      * This is a method handling the navigation between fractals which are parts of the view of the mainActivity class.
      * It does this through the defined ID:s of the different fragments.
      */
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = menuItem -> {
+        Fragment fragment = null;
         switch (menuItem.getItemId()) {
             case R.id.navigation_home:
-                showFragment(homeFragment);
+                fragment = new HomeFragment();
                 break;
             case R.id.navigation_favorites:
-                showFragment(favoritesFragment);
+                fragment = new FavoritesFragment();
                 break;
             case R.id.navigation_profile:
-                showFragment(profileFragment);
+                fragment = new ProfileFragment();
                 break;
             case R.id.navigation_new_ad:
-                Intent intent = new Intent(this, CreateAdActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CreateAdActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.navigation_messages:
-                showFragment(chatFragment);
+                fragment = new ChatFragment();
                 break;
             default:
-                return false;
+                break;
         }
-        return true;
+
+        return loadFragment(fragment);
     };
 
-    private void showFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().hide(activeFragment).show(fragment).commitAllowingStateLoss();
-        activeFragment = fragment;
+    private boolean loadFragment(Fragment fragment) {
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commitAllowingStateLoss();
+            return true;
+        }
+        return false;
     }
 
 }

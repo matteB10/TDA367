@@ -38,6 +38,7 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
     private AdvertRecyclerViewAdapter recyclerViewAdapter;
     private EditText searchField;
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.home_fragment, container, false);
@@ -45,6 +46,12 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
         setupSortSpinner();
         setupSearchField();
         return view;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.viewIsBeingDestroyed();
     }
 
     private void setupPresenter() {
@@ -75,7 +82,7 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
         searchField = view.findViewById(R.id.searchFieldEditText);
         searchField.setOnKeyListener((view, keyCode, keyEvent) -> {
             if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
-                    (keyCode == KeyEvent.KEYCODE_ENTER)) { //Make sure stuff happens when enter is pressed
+                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
                 hideKeyboard();
                 performSearch();
             }
@@ -90,8 +97,7 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.length() == 0)
-                    performSearch();
+                performSearch();
             }
 
             @Override

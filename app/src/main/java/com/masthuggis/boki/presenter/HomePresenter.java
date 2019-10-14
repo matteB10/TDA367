@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * HomePresenter is the presenter class for the view called HomeFragment.
  *
- * Presenter handling the home/start view. It handles a view that implements both AdvertsPresterView
+ * Presenter handling the home/start view. It handles a view that implements both AdvertsPresenterView
  * interface. It displays all the market adverts with the option to sort and search.
  * It is an observer of the market so it can update its data accordingly.
  */
@@ -26,8 +26,8 @@ public final class HomePresenter extends AdvertsPresenter {
     }
 
     @Override
-    public void getData(advertisementCallback advertisementCallback) {
-        super.dataModel.fetchAllAdverts(adverts -> advertisementCallback.onCallback(adverts));
+    public List<Advertisement> getData() {
+        return dataModel.getAllAdverts();
     }
 
     /**

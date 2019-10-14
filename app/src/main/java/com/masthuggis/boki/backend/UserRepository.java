@@ -92,7 +92,7 @@ public class UserRepository {
                                 public void onCallback(iUser newUser) {
                                     userList.add(newUser);
                                     chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString()
-                                            , userList.get(0), userList.get(1), map.get("advertID").toString(),(boolean)map.get("isActive")));
+                                            , userList.get(0), userList.get(1), map.get("advertID").toString(), (boolean) map.get("isActive")));
                                     if (chatList.size() == chatMap.size()) {
                                         chatCallback.onCallback(chatList);
                                     }
@@ -154,8 +154,7 @@ public class UserRepository {
         backend.signOut();
     }
 
-    void removeChat(String userID, String chatID) {
-        backend.removeChat(userID,chatID);
+    void removeChat(String userID, List<String> chatIDs) {
     }
 }
 

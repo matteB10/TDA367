@@ -83,7 +83,7 @@ public class Chat implements iChat {
     }
 
     @Override
-    public String getUniqueIDAdID() {
+    public String getAdID() {
         return this.uniqueAdID;
 
     }

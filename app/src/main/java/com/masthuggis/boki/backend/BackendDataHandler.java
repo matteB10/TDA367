@@ -114,6 +114,20 @@ public class BackendDataHandler implements iBackend {
 
     }
 
+    //Gets a list of the ids of the adverts the current user has marked as favourites
+    public void getFavouriteIDs(DBMapCallback dbMapCallback) {
+        String userID = DataModel.getInstance().getUserID();
+        db.collection("users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot user = task.getResult();
+                    dbMapCallback.onCallBack(user.getData());
+                }
+            }
+        });
+    }
+
 
     private void writeToDatabase(HashMap<String, Object> data) {
         isWritingAdvertToDatabase = true;
@@ -363,6 +377,7 @@ public class BackendDataHandler implements iBackend {
 
 
 
+
     public void getUser(DBMapCallback dbMapCallback) {
         Map<String, String> userMap = new HashMap<>();
         String userID = auth.getCurrentUser().getUid();
@@ -433,30 +448,22 @@ public class BackendDataHandler implements iBackend {
      *
      * @param adID
      */
-    public void deleteAd(String adID, String userID,String chatID) {
+    public void deleteAd(String adID, String userID, List<String> chatIDs) {
         advertPath.document(adID).delete();
-        deleteChat(chatID, userID);
+        deleteChat(chatIDs, userID);
         notifyAdvertObservers();
 
     }
-    @Override
-    public void removeChat(String userID,String chatID) {
-        DocumentReference userChatRef = userPath.document(userID).collection("myConversations").document(chatID);
-        userChatRef.delete();
-        notifyChatObservers();
 
 
-    }
-
-    private void deleteChat(String chatID, String userID) {
-
-        DocumentReference userChatRef = userPath.document(userID).collection("myConversations").document(chatID);
-        userChatRef.delete();
-
+    private void deleteChat(List<String> chatIDs, String userID) {
         Map<String, Object> updates = new HashMap<>();
-        updates.put("isActive",false);
-        DocumentReference chatRef = chatPath.document(chatID);
-        chatRef.update(updates);
+        updates.put("isActive", false);
+        for (String id : chatIDs) {
+            userPath.document(userID).collection("myConversations").document(id).delete();
+            DocumentReference chatRef = chatPath.document(id);
+            chatRef.update(updates);
+        }
         notifyChatObservers();
     }
 

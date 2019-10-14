@@ -97,7 +97,7 @@ public class DetailsPresenter {
         if (contactOwnerButtonText.equals("Starta chatt")) {
             if (dataModel.getUserChats() != null) {
                 for (iChat chats : dataModel.getUserChats()) {
-                    if (chats.getUniqueIDAdID().equals(advertisement.getUniqueID())) {
+                    if (chats.getAdID().equals(advertisement.getUniqueID())) {
                         openChat(chats.getChatID());
                         return;
                     }

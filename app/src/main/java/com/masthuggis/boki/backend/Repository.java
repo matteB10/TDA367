@@ -1,6 +1,7 @@
 package com.masthuggis.boki.backend;
 
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
+import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.backend.callbacks.chatCallback;
@@ -14,10 +15,16 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Class providing the functionality to convert data from backend into objects to be used
+ * by the domain-layer of the application.
+ * Data is fetched through the iBackend interface.
+ */
 public class Repository implements iRepository {
 
     private AdvertRepository advertRepository;
     private UserRepository userRepository;
+
 
     public Repository(iBackend backend) {
         this.advertRepository = new AdvertRepository(backend);
@@ -32,8 +39,8 @@ public class Repository implements iRepository {
         advertRepository.fetchAllAdverts(advertisementCallback);
     }
 
-    public void deleteAd(String adID,String userID,String chatID) {
-        advertRepository.deleteAd(adID,userID,chatID);
+    public void deleteAd(String adID, String userID, List<String> chatIDs) {
+        advertRepository.deleteAd(adID, userID, chatIDs);
     }
 
     public void updateAd(String adID, String newTitle, long newPrice, String newDescription,
@@ -92,8 +99,15 @@ public class Repository implements iRepository {
     }
 
     @Override
-    public void removeChat(String userID,String chatID) {
-        userRepository.removeChat(userID,chatID);
+    public void removeChat(String userID, String chatID) {
+
+    }
+
+
+    @Override
+    public void getUserFavourites(FavouriteIDsCallback favouriteIDsCallback) {
+        advertRepository.getUserFavourites(favouriteIDsCallback);
+
     }
 
 }
