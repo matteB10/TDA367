@@ -5,6 +5,7 @@ import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryFactory;
 import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
+import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.backend.callbacks.chatCallback;
@@ -37,7 +38,7 @@ public class DataModel implements BackendObserver {
 
     private DataModel() {
         initBackend();
-       // initUser();
+        // initUser();
     }
 
     public static DataModel getInstance() {
@@ -153,14 +154,14 @@ public class DataModel implements BackendObserver {
         return null; //TODO Fix a better solution to handle NPExc....
     }
 
-    private List<Advertisement> getAdsFromCurrentUser(){
+    private List<Advertisement> getAdsFromCurrentUser() {
         List<Advertisement> userAds = new ArrayList<>();
-        for(Advertisement ad: allAds){
-            if(ad.getUniqueOwnerID().equals(user.getId())){
+        for (Advertisement ad : allAds) {
+            if (ad.getUniqueOwnerID().equals(user.getId())) {
                 userAds.add(ad);
             }
         }
-        return  userAds;
+        return userAds;
     }
 
 
@@ -174,6 +175,30 @@ public class DataModel implements BackendObserver {
         } else {
             advertisementCallback.onCallback(retrieveAdsFromUserID(allAds));
         }
+    }
+
+    private List<Advertisement> getFavouritesFromCurrentUser() {
+        List<Advertisement> favourites = new ArrayList<>();
+        for (Advertisement ad : allAds) {
+            if (isMarkedAsFavourite(ad.getUniqueID())) {
+                favourites.add(ad);
+            }
+        }
+        return favourites;
+    }
+
+    private boolean isMarkedAsFavourite(String uniqueAdID) {
+        repository.getUserFavourites(new FavouriteIDsCallback() {
+            @Override
+            public void onCallback(List<String> favouriteIDs) {
+                for (String adID : favouriteIDs) {
+                    if (adID.equals(uniqueAdID))
+                        return;
+                }
+            }
+        });
+
+        return true;
     }
 
     private List<Advertisement> retrieveAdsFromUserID(List<Advertisement> adverts) {
