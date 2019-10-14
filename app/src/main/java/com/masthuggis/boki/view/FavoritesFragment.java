@@ -17,11 +17,11 @@ public class FavoritesFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.favorites_fragment,container,false);
-
+        initPresenter();
+        return inflater.inflate(R.layout.favorites_fragment, container, false);
     }
 
     private void initPresenter() {
-        this.presenter = new FavouritesPresenter()
+        this.presenter = new FavouritesPresenter();
     }
 }
