@@ -62,6 +62,9 @@ public class BackendDataHandler implements iBackend {
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private final List<BackendObserver> backendObservers = new ArrayList<>();
     private CollectionReference advertPath;
+    private CollectionReference chatPath;
+    private CollectionReference userPath;
+
 
     private boolean isWritingImageToDatabase = false;
     private boolean isWritingAdvertToDatabase = false;
@@ -69,6 +72,8 @@ public class BackendDataHandler implements iBackend {
 
     BackendDataHandler() {
         advertPath = db.collection("market");
+        chatPath = db.collection("chats");
+        userPath = db.collection("users");
     }
 
     public void addBackendObserver(BackendObserver backendObserver) {
@@ -190,7 +195,7 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    public void getUserChats(String userID, DBCallback DBCallback,FailureCallback failureCallback) {
+    public void getUserChats(String userID, DBCallback DBCallback, FailureCallback failureCallback) {
         db.collection("users").document(userID).collection("myConversations").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -255,10 +260,11 @@ public class BackendDataHandler implements iBackend {
         messagesMap.put("userOneID", senderID);
         messagesMap.put("userTwoID", receiverID);
         messagesMap.put("advertID", advertID);
+        messagesMap.put("isActive", true);
 
 
-        DocumentReference dfSender = db.collection("users").document(senderID).collection("myConversations").document();
-        DocumentReference dfReceiver = db.collection("users").document(receiverID).collection("myConversations").document();
+        DocumentReference dfSender = db.collection("users").document(senderID).collection("myConversations").document(uniqueChatID);
+        DocumentReference dfReceiver = db.collection("users").document(receiverID).collection("myConversations").document(uniqueChatID);
         DocumentReference dfUniqueChat = db.collection("chats").document(uniqueChatID);
         dfUniqueChat.set(messagesMap).addOnSuccessListener(aVoid -> {
             dfSender.set(chatMap).addOnSuccessListener(bVoid -> {
@@ -313,7 +319,7 @@ public class BackendDataHandler implements iBackend {
         return user != null;
     }
 
-    public void userSignUpAndSignIn(String email, String password, String username,SuccessCallback successCallback, FailureCallback failureCallback) {
+    public void userSignUpAndSignIn(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback) {
         HashMap<String, Object> userMap = new HashMap<>();
         userMap.put("email", email);
         userMap.put("username", username);
@@ -346,7 +352,7 @@ public class BackendDataHandler implements iBackend {
     }
 
     @Override
-    public void getUserFromID(String userID,DBMapCallback dbMapCallback) {
+    public void getUserFromID(String userID, DBMapCallback dbMapCallback) {
         db.collection("users").document(userID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -354,6 +360,8 @@ public class BackendDataHandler implements iBackend {
             }
         });
     }
+
+
 
     public void getUser(DBMapCallback dbMapCallback) {
         Map<String, String> userMap = new HashMap<>();
@@ -425,10 +433,31 @@ public class BackendDataHandler implements iBackend {
      *
      * @param adID
      */
-    public void deleteAd(String adID) {
+    public void deleteAd(String adID, String userID,String chatID) {
         advertPath.document(adID).delete();
+        deleteChat(chatID, userID);
         notifyAdvertObservers();
 
+    }
+    @Override
+    public void removeChat(String userID,String chatID) {
+        DocumentReference userChatRef = userPath.document(userID).collection("myConversations").document(chatID);
+        userChatRef.delete();
+        notifyChatObservers();
+
+
+    }
+
+    private void deleteChat(String chatID, String userID) {
+
+        DocumentReference userChatRef = userPath.document(userID).collection("myConversations").document(chatID);
+        userChatRef.delete();
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("isActive",false);
+        DocumentReference chatRef = chatPath.document(chatID);
+        chatRef.update(updates);
+        notifyChatObservers();
     }
 
     public void updateAd(String adID, String newTitle, long newPrice, String newDescription,

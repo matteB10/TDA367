@@ -26,8 +26,15 @@ public class ChatPresenter implements ChatObserver {
         chats = this.dataModel.getUserChats();
         view.showUserChats(this);
         this.view.hideLoadingScreen();
-        this.dataModel.addChatObserver(this);
+        for (iChat chat : chats) {
+            if (!(chat.isActive())) {
+                view.displayToast(chat.getDisplayName(dataModel.getUserID()));
+                dataModel.removeChat(dataModel.getUserID(), chat.getChatID());
 
+            }
+        }
+        this.chats = this.dataModel.getUserChats();
+        this.dataModel.addChatObserver(this);
     }
 
     /**
@@ -51,7 +58,10 @@ public class ChatPresenter implements ChatObserver {
         holder.setUserTextView(c.getDisplayName(dataModel.getUserID()));
         holder.setChatID(c.getChatID());
         holder.setDateTextView("" + c.timeLastMessageSent());
-        holder.setMessageImageView(dataModel.getAdFromAdID(c.getUniqueIDAdID()).getImageUrl());
+        if (c.isActive()) {
+            holder.setMessageImageView(dataModel.getAdFromAdID(c.getUniqueIDAdID()).getImageUrl());
+
+        }
 
     }
 
@@ -81,7 +91,6 @@ public class ChatPresenter implements ChatObserver {
 
     /**
      * Makes sure the user cant open multiple chats at the same time by tapping a chat multiple times in a row.
-     *
      */
     public boolean canProceedWithTapAction() {
         return ClickDelayHelper.canProceedWithTapAction();
@@ -98,5 +107,7 @@ public class ChatPresenter implements ChatObserver {
         void showMessagesScreen(String chatID);
 
         void showUserChats(ChatPresenter chatPresenter);
+
+        void displayToast(String displayName);
     }
 }

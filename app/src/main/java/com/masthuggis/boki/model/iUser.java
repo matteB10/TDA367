@@ -17,4 +17,5 @@ public interface iUser {
 
     List<Advertisement> getAdverts();
 
+    String getChatIDFromAdID(String adID);
 }

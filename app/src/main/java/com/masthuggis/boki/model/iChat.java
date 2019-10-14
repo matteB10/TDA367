@@ -14,4 +14,6 @@ public interface iChat {
     String getUniqueIDAdID();
 
     void setMessages(List<iMessage> messagesList);
+
+    boolean isActive();
 }

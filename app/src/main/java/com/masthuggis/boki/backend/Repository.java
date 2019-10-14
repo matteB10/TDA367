@@ -32,8 +32,8 @@ public class Repository implements iRepository {
         advertRepository.fetchAllAdverts(advertisementCallback);
     }
 
-    public void deleteAd(String adID) {
-        advertRepository.deleteAd(adID);
+    public void deleteAd(String adID,String userID,String chatID) {
+        advertRepository.deleteAd(adID,userID,chatID);
     }
 
     public void updateAd(String adID, String newTitle, long newPrice, String newDescription,
@@ -89,6 +89,11 @@ public class Repository implements iRepository {
     @Override
     public void getUser(userCallback userCallback) {
         userRepository.getUser(userCallback);
+    }
+
+    @Override
+    public void removeChat(String userID,String chatID) {
+        userRepository.removeChat(userID,chatID);
     }
 
 }

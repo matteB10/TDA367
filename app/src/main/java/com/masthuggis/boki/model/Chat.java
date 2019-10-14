@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * Chat is a java class implementing the iChat interface for the sake of abstraction. Chat is the container of messages which
- * are being sent between two users. The chat contains an advertisement to make sure that two users can only have one chat considering
+ * are being sent between two users. The chat contains an advertisementID to make sure that two users can only have one chat considering
  * one specific advertisement.
  */
 
@@ -14,13 +14,15 @@ public class Chat implements iChat {
     private String uniqueAdID;
     private iUser sender;
     private iUser receiver;
+    private boolean isActive;
 
 
-    Chat(String uniqueChatID,iUser sender, iUser receiver, String uniqueAdID) {
+    Chat(String uniqueChatID, iUser sender, iUser receiver, String uniqueAdID, boolean isActive) {
         this.sender = sender;
         this.receiver = receiver;
         this.chatID = uniqueChatID;
         this.uniqueAdID = uniqueAdID;
+        this.isActive = isActive;
     }
 
 
@@ -62,6 +64,11 @@ public class Chat implements iChat {
 
     public void setMessages(List<iMessage> messages) {
         this.messages = messages;
+    }
+
+    @Override
+    public boolean isActive() {
+        return isActive;
     }
 
 

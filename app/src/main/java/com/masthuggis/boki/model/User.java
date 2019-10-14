@@ -50,4 +50,15 @@ public class User implements iUser {
     public List<Advertisement> getAdverts() {
         return advertisements;
     }
+
+    @Override
+    public String getChatIDFromAdID(String adID) {
+         for(iChat chat:chats){
+             if(chat.getUniqueIDAdID().equals(adID)){
+                 return chat.getChatID();
+             }
+         }
+         return "";
+
+    }
 }

@@ -254,8 +254,16 @@ public class DataModel implements BackendObserver {
         return null;
     }
 
-    public void removeExistingAdvert(String uniqueID) {
-        repository.deleteAd(uniqueID);
+    public void removeExistingAdvert(String adID,String userID) {
+        removeChatConnectedToAd();
+        String chatID= user.getChatIDFromAdID(adID);
+        repository.deleteAd(adID,userID,chatID);
+    }
+
+    private void removeChatConnectedToAd() {
+        for(iChat chat :user.getChats()){
+
+        }
     }
 
     public void updateAd(Advertisement ad, File imageFile) {
@@ -336,4 +344,7 @@ public class DataModel implements BackendObserver {
         });
     }
 
+    public void removeChat(String userID,String chatID) {
+        repository.removeChat(userID,chatID);
+    }
 }

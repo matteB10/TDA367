@@ -72,8 +72,8 @@ public class AdvertRepository {
     }
 
 
-    public void deleteAd(String uniqueID) {
-        backend.deleteAd(uniqueID);
+    public void deleteAd(String adID,String uniqueID,String chatID) {
+        backend.deleteAd(adID,uniqueID,chatID);
     }
 
 

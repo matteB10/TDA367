@@ -1,7 +1,5 @@
 package com.masthuggis.boki.backend;
 
-import androidx.annotation.Nullable;
-
 import com.masthuggis.boki.backend.callbacks.DBCallback;
 import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
@@ -93,7 +91,8 @@ public class UserRepository {
                                 @Override
                                 public void onCallback(iUser newUser) {
                                     userList.add(newUser);
-                                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString(), userList.get(0), userList.get(1), map.get("advertID").toString()));
+                                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString()
+                                            , userList.get(0), userList.get(1), map.get("advertID").toString(),(boolean)map.get("isActive")));
                                     if (chatList.size() == chatMap.size()) {
                                         chatCallback.onCallback(chatList);
                                     }
@@ -101,16 +100,10 @@ public class UserRepository {
                             });
                         }
                     });
+
                 }
-
-
             }
-        }, new FailureCallback() {
-            @Override
-            public void onFailure(@Nullable String errorMessage) {
-                chatCallback.onCallback(new ArrayList<>());
-            }
-        });
+        }, errorMessage -> chatCallback.onCallback(new ArrayList<>()));
     }
 
     private void createUser(String userID, userCallback userCallback) {
@@ -159,6 +152,10 @@ public class UserRepository {
 
     void signOut() {
         backend.signOut();
+    }
+
+    void removeChat(String userID, String chatID) {
+        backend.removeChat(userID,chatID);
     }
 }
 

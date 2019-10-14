@@ -6,8 +6,8 @@ package com.masthuggis.boki.model;
 
 public class ChatFactory {
 
-    public static iChat createChat(String uniqueChatID, iUser sender, iUser receiver, String uniqueAdID) {
-        return new Chat(uniqueChatID, sender, receiver, uniqueAdID);
+    public static iChat createChat(String uniqueChatID, iUser sender, iUser receiver, String uniqueAdID, boolean isActive) {
+        return new Chat(uniqueChatID, sender, receiver, uniqueAdID,isActive);
 
 
     }

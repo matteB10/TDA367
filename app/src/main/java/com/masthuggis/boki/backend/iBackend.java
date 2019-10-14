@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface iBackend {
-    void deleteAd(String uniqueID);
+     void deleteAd(String adID, String userID,String chatID);
 
     void updateAd(String adID, String newTitle, long newPrice, String newDescription, List<String> newTagList, String newCondition, File imageFile);
 
@@ -47,4 +47,6 @@ public interface iBackend {
     void userSignUpAndSignIn(String email, String password,String username,SuccessCallback successCallback, FailureCallback failureCallback);
 
     void getUserFromID(String userID,DBMapCallback dbMapCallback);
+
+    void removeChat(String userID,String chatID);
 }

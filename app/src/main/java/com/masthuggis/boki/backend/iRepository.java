@@ -20,7 +20,7 @@ public interface iRepository {
 
     void fetchAllAdverts(advertisementCallback advertisementCallback);
 
-    void deleteAd(String adID);
+    void deleteAd(String adID,String userID,String chatID);
 
     void updateAd(String adID, String newTitle, long newPrice, String newDescription,
                   List<String> newTagList, String newCondition, File imageFile);
@@ -49,4 +49,6 @@ public interface iRepository {
     void signOut();
 
     void getUser(userCallback userCallback);
+
+    void removeChat(String userID, String chatID);
 }
