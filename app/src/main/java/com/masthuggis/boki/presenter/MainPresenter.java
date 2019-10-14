@@ -12,7 +12,7 @@ public class MainPresenter {
         this.dataModel = dataModel;
 
         if (dataModel.isLoggedIn()) {
-            dataModel.initUser(() -> view.showMainScreen());
+            dataModel.initUser(() -> dataModel.fetchAllAdverts((a) -> view.showMainScreen()));
         } else {
             view.showSignInScreen();
         }

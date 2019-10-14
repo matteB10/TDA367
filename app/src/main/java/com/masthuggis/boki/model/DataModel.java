@@ -162,16 +162,8 @@ public class DataModel implements BackendObserver {
         return  userAds;
     }
 
-    public void getAdsFromLoggedInUser(advertisementCallback advertisementCallback) {
-        if (user == null) {
-            return;
-        }
-
-        if (allAds == null || allAds.isEmpty()) {
-            fetchAllAdverts(advertisements -> advertisementCallback.onCallback(retrieveAdsFromUserID(advertisements)));
-        } else {
-            advertisementCallback.onCallback(retrieveAdsFromUserID(allAds));
-        }
+    public List<Advertisement> getAdsFromLoggedInUser() {
+        return retrieveAdsFromUserID(allAds);
     }
 
     private List<Advertisement> retrieveAdsFromUserID(List<Advertisement> adverts) {
@@ -195,6 +187,9 @@ public class DataModel implements BackendObserver {
         });
     }
 
+    public List<Advertisement> getAllAdverts() {
+        return allAds;
+    }
 
     public void loggedOut() {
 

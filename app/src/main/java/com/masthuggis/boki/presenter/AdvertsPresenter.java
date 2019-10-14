@@ -58,14 +58,13 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
         }
 
         view.showLoadingScreen();
-        getData(advertisements -> updateAdverts(advertisements));
+        updateAdverts(getData());
     }
 
     /**
      * Concrete implementations implements this to call their respective data source.
-     * @param advertisementCallback
      */
-    public abstract void getData(advertisementCallback advertisementCallback);
+    public abstract List<Advertisement> getData();
 
     /**
      * Concrete implementations provides their desired way of sorting. If no sorting is desired,

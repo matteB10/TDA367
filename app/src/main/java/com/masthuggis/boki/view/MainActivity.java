@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container, fragment)
-                    .commit();
+                    .commitAllowingStateLoss();
             return true;
         }
         return false;
