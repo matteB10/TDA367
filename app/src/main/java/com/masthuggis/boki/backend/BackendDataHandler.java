@@ -1,6 +1,7 @@
 package com.masthuggis.boki.backend;
 
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -111,13 +112,15 @@ public class BackendDataHandler implements iBackend {
 
     }
 
-    private void getFavouriteIDs(String userID, FavouriteIDsCallback favouriteIDsCallback) {
+    //Gets a list of the ids of the adverts the current user has marked as favourites
+    private void getFavouriteIDs(FavouriteIDsCallback favouriteIDsCallback) {
+        String userID = DataModel.getInstance().getUserID();
         db.collection("users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot user = task.getResult();
-                    List<String> favourites = (List<String>) user.get("favourites"); //Necessary cast
+                    List<String> favourites = (List<String>) user.get("favourites"); //Necessary cast, gets the favourites
                     favouriteIDsCallback.onCallback(favourites);
                 }
             }
