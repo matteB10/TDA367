@@ -293,8 +293,6 @@ public class BackendDataHandler implements iBackend {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 try {
                     List<String> favourites = (List<String>) task.getResult().getData().get("favourites");
-                    if (isAlreadyFavourite(favourites, adID)) //Prevents users from adding the same advert to favourites more than once
-                        return;
                     favourites.add(adID);
                     db.collection("users").document(userID).update("favourites", favourites); //Should write updated favourites to firebase
                 } catch (NullPointerException e) { //Is thrown if users favourite-array is currently empty
@@ -304,6 +302,28 @@ public class BackendDataHandler implements iBackend {
                 }
             }
         });
+    }
+
+    @Override
+    public void removeAdFromFavourites(String adID, String userID) {
+        db.collection("users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                List<String> favourites = (List<String>) task.getResult().getData().get("favourites");
+                favourites.remove(adID);
+                db.collection("users").document(userID).update("favourites", favourites);
+            }
+        });
+    }
+
+
+    //TODO check if looping through list is actually necessary
+    private void removeFromFavourites(List<String> favourites, String adID) {
+        for (String favouriteID : favourites) {
+            if (favouriteID.equals(adID)) {
+                favourites.remove(adID);
+            }
+        }
     }
 
     private boolean isAlreadyFavourite(List<String> favourites, String adID) {

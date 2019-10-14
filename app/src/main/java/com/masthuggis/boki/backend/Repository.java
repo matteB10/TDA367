@@ -107,6 +107,10 @@ public class Repository {
     public void addToFavourites(String adID, String userID) {
         backend.addAdToFavourites(adID, userID);
     }
+
+    public void removeFromFavourites(String adID, String userID) {
+        backend.removeAdFromFavourites(adID, userID);
+    }
 }
 
 

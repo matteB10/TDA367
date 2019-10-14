@@ -214,7 +214,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     private void setUpFavouriteIcon() {
         favouritesIcon = findViewById(R.id.favouritesIcon);
         if (presenter.isUserOwner()) {
-            favouritesIcon.setVisibility(View.INVISIBLE);
+            favouritesIcon.setVisibility(View.GONE);
         } else {
             favouritesIcon.setOnClickListener(view -> {
                         presenter.onFavouritesIconPressed(); //gör den bara sättbar till en början :)

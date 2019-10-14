@@ -23,6 +23,7 @@ public class DetailsPresenter {
     private View view;
     private Advertisement advertisement;
     private DataModel dataModel;
+    boolean isMarkedAsFavourite;
 
 
     public DetailsPresenter(View view, String advertID, DataModel dataModel) {
@@ -31,6 +32,13 @@ public class DetailsPresenter {
         this.advertisement = this.dataModel.getAdFromAdID(advertID);
         setupView();
         initFavouriteStar();
+
+        dataModel.isAdMarkedAsFavourite(advertID, new MarkedAsFavouriteCallback() {
+            @Override
+            public void onCallback(boolean markedAsFavourite) {
+                isMarkedAsFavourite = markedAsFavourite;
+            }
+        });
     }
 
     /**
@@ -93,7 +101,6 @@ public class DetailsPresenter {
         try {
             String loggedinUser = dataModel.getUserID();
             String ownerofAd = advertisement.getUniqueOwnerID();
-
             return loggedinUser.equals(ownerofAd);
         } catch (Exception e) {
             return false;
@@ -122,8 +129,15 @@ public class DetailsPresenter {
     }
 
     public void onFavouritesIconPressed() {
-        dataModel.addToFavourites(advertisement.getUniqueID());
-        view.setFavouriteStar();
+        if (isMarkedAsFavourite) {
+            dataModel.removeFromFavourites(advertisement.getUniqueID());
+            view.setNotFavouriteStar();
+            isMarkedAsFavourite = false;
+        } else {
+            dataModel.addToFavourites(advertisement.getUniqueID());
+            view.setFavouriteStar();
+            isMarkedAsFavourite = true;
+        }
     }
 
     public interface View extends iConditionable {

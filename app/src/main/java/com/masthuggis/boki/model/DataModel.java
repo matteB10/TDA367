@@ -196,9 +196,11 @@ public class DataModel implements BackendObserver {
         repository.getUserFavourites(new FavouriteIDsCallback() {
             @Override
             public void onCallback(List<String> favouriteIDs) {
-                for (String adID : favouriteIDs) {
-                    if (adID.equals(uniqueAdID))
-                        markedAsFavouriteCallback.onCallback(true);
+                if (favouriteIDs != null) { //Only check if user actually has favourites, otherwise NullPointerException
+                    for (String adID : favouriteIDs) {
+                        if (adID.equals(uniqueAdID))
+                            markedAsFavouriteCallback.onCallback(true);
+                    }
                 }
             }
         });
@@ -346,6 +348,11 @@ public class DataModel implements BackendObserver {
     public void addToFavourites(String adID) {
         String userID = getUserID();
         repository.addToFavourites(adID, userID);
+    }
+
+    public void removeFromFavourites(String adID) {
+        String userID = getUserID();
+        repository.removeFromFavourites(adID, userID);
     }
 
     public void saveAdvert(File currentImageFile, Advertisement advertisement) {
