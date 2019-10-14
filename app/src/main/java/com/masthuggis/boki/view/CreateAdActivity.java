@@ -90,7 +90,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             headerTextView.setText(getResources().getString(R.string.addAdvertHeaderEdit));
         }
         setButtonVisibility(editMode);
-        setTextViews();
     }
 
     private void setListeners() {
@@ -104,14 +103,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setUserTagTextFieldListener();
         setDeleteBtnListener();
         setSaveBtnListener();
-    }
-
-
-    private void setTextViews() {
-        if (getIntent().getExtras() != null) {
-            TextView currentTags = findViewById(R.id.textView3);
-            currentTags.setText("Dina nuvarande taggar"); //TODO lägga till i strings
-        }
     }
 
 
