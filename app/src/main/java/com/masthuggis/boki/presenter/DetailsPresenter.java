@@ -128,6 +128,7 @@ public class DetailsPresenter {
         }
     }
 
+    //Necessary to change local variable (isMarkedAsFavourite) inside method, otherwise it has to update from firebase while in Detail View
     public void onFavouritesIconPressed() {
         if (isMarkedAsFavourite) {
             dataModel.removeFromFavourites(advertisement.getUniqueID());

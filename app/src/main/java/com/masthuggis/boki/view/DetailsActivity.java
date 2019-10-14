@@ -183,6 +183,12 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
     public void setOwnerButtonText(String content) {
         contactOwnerButton.setText(content);
 
