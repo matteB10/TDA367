@@ -11,17 +11,8 @@ public class MainPresenter {
         this.view = view;
         this.dataModel = dataModel;
 
-        // Initilize the data by fetching the newest version from database.
         if (dataModel.isLoggedIn()) {
-            // Initilize the data by fetching the newest version from database.
-            ///dataModel.fetchAllAdverts(advertisements -> view.showMainScreen());
-            dataModel.initUser(new SuccessCallback() {
-                @Override
-                public void onSuccess() {
-                    view.showMainScreen();
-
-                }
-            });
+            dataModel.initUser(() -> view.showMainScreen());
         } else {
             view.showSignInScreen();
         }
