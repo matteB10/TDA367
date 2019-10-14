@@ -9,11 +9,15 @@ public interface iChat {
 
     long timeLastMessageSent();
 
-    String getDisplayName(String currentUserID);
+    String getReceiverName(String currentUserID);
 
     String getAdID();
 
     void setMessages(List<iMessage> messagesList);
 
     boolean isActive();
+
+    String getImageURL();
+
+    String getReceiverID(String currentUserID);
 }

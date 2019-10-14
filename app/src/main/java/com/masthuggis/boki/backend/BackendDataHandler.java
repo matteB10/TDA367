@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -236,6 +237,7 @@ public class BackendDataHandler implements iBackend {
     private void createChats(QuerySnapshot queryDocumentSnapshots, List<Map<String, Object>> chatDataList, SuccessCallback successCallback) {
         for (QueryDocumentSnapshot q : queryDocumentSnapshots) {
             String uniqueChatID = (q.getData().get("uniqueChatID").toString());
+            boolean isActive = ((boolean)q.getData().get("isActive"));
             db.collection("chats").document(uniqueChatID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -244,6 +246,7 @@ public class BackendDataHandler implements iBackend {
                         return;
                     }
                     data.put("uniqueChatID", uniqueChatID);
+                    data.put("isActive",isActive);
                     chatDataList.add(data);
                     if (chatDataList.size() == queryDocumentSnapshots.size()) {
                         successCallback.onSuccess();
@@ -255,30 +258,29 @@ public class BackendDataHandler implements iBackend {
         }
     }
 
-    public void createNewChat(String adOwnerID, String otherUserID, String advertID, stringCallback stringCallback) {
+    public void createNewChat(String adOwnerID, String otherUserID, String advertID, String imageURL, stringCallback stringCallback) {
 
         //Här stoppar vi in uniquechatID i en map för att kunna sätta i båda användarnas firebase så de båda hittar sin chatt.
 
         String uniqueChatID = UniqueIdCreator.getUniqueID();
         HashMap<String, Object> chatMap = new HashMap<>();
         chatMap.put("uniqueChatID", uniqueChatID);
-
-        String senderID = otherUserID;
-        String receiverID = adOwnerID;
+        chatMap.put("isActive",true);
 
 
         HashMap<String, Object> messagesMap = new HashMap<>();
 
         //messagesMap.put("userOneName", DataModel.getInstance().getUserDisplayName());
         //messagesMap.put("userTwoName", receiverUsername);
-        messagesMap.put("userOneID", senderID);
-        messagesMap.put("userTwoID", receiverID);
+        messagesMap.put("userOneID", otherUserID);
+        messagesMap.put("userTwoID", adOwnerID);
         messagesMap.put("advertID", advertID);
-        messagesMap.put("isActive", true);
+        messagesMap.put("imageURL",imageURL);
+       // messagesMap.put("isActive", true);
 
 
-        DocumentReference dfSender = db.collection("users").document(senderID).collection("myConversations").document(uniqueChatID);
-        DocumentReference dfReceiver = db.collection("users").document(receiverID).collection("myConversations").document(uniqueChatID);
+        DocumentReference dfSender = db.collection("users").document(otherUserID).collection("myConversations").document(uniqueChatID);
+        DocumentReference dfReceiver = db.collection("users").document(adOwnerID).collection("myConversations").document(uniqueChatID);
         DocumentReference dfUniqueChat = db.collection("chats").document(uniqueChatID);
         dfUniqueChat.set(messagesMap).addOnSuccessListener(aVoid -> {
             dfSender.set(chatMap).addOnSuccessListener(bVoid -> {
@@ -376,8 +378,6 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-
-
     public void getUser(DBMapCallback dbMapCallback) {
         Map<String, String> userMap = new HashMap<>();
         String userID = auth.getCurrentUser().getUid();
@@ -445,24 +445,24 @@ public class BackendDataHandler implements iBackend {
 
     /**
      * Deleting an ad with the specific adID from the database
-     *
-     * @param adID
      */
-    public void deleteAd(String adID, String userID, List<String> chatIDs) {
-        advertPath.document(adID).delete();
-        deleteChat(chatIDs, userID);
+    public void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID) {
+        String adID = adIDAndUserID.get("adID");
+        String userID = adIDAndUserID.get("userID");
+        advertPath.document((adID)).delete();
+        deleteChat(chatReceiverAndUserIDMap,adID,userID);
         notifyAdvertObservers();
 
     }
 
 
-    private void deleteChat(List<String> chatIDs, String userID) {
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("isActive", false);
-        for (String id : chatIDs) {
-            userPath.document(userID).collection("myConversations").document(id).delete();
-            DocumentReference chatRef = chatPath.document(id);
-            chatRef.update(updates);
+    private void deleteChat(List<Map<String, String>> mapList, String adID, String userID) {
+        Map<String,Object> updates = new HashMap<>();
+        updates.put("isActive",false);
+        for(Map<String, String> map :mapList){
+            userPath.document(Objects.requireNonNull(map.get("receiverID"))).collection("myConversations").document(Objects.requireNonNull(map.get("chatID"))).update(updates);
+            userPath.document(userID).collection("myConversations").document(Objects.requireNonNull(map.get("chatID"))).delete();
+
         }
         notifyChatObservers();
     }

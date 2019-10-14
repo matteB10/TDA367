@@ -10,9 +10,10 @@ import com.masthuggis.boki.model.observers.BackendObserver;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface iBackend {
-    void deleteAd(String adID, String userID, List<String>  chatIDs);
+    void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID);
 
     void updateAd(String adID, String newTitle, long newPrice, String newDescription, List<String> newTagList, String newCondition, File imageFile);
 
@@ -30,7 +31,7 @@ public interface iBackend {
 
     void getMessages(String uniqueChatID, DBCallback messageCallback);
 
-    void createNewChat(String adOwnerID, String adBuyerID, String advertID, stringCallback stringCallback);
+    void createNewChat(String adOwnerID, String adBuyerID, String advertID, String imageURL, stringCallback stringCallback);
 
     void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap);
 

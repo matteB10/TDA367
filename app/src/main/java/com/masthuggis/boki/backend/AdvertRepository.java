@@ -83,8 +83,8 @@ public class AdvertRepository {
         });
     }
 
-    public void deleteAd(String adID, String uniqueID, List<String> chatIDs) {
-        backend.deleteAd(adID, uniqueID, chatIDs);
+    public void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID) {
+        backend.deleteAd(chatReceiverAndUserIDMap,adIDAndUserID);
     }
 
 

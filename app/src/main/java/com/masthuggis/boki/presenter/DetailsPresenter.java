@@ -61,16 +61,16 @@ public class DetailsPresenter {
         }
         //public void createNewChat(String uniqueOwnerID,String advertID, stringCallback stringCallback,String receiverUsername) {
 
-            dataModel.createNewChat(advertisement.getUniqueOwnerID(), dataModel.getUserID(), advertisement.getUniqueID(), new stringCallback() {
-                @Override
-                public void onCallback(String chatID) {
-                    view.openChat(chatID);
+        dataModel.createNewChat(advertisement.getUniqueOwnerID(), dataModel.getUserID(), advertisement.getUniqueID(), advertisement.getImageUrl(), new stringCallback() {
+            @Override
+            public void onCallback(String chatID) {
+                view.openChat(chatID);
 
-                }
-            });
+            }
+        });
 
 
-        }
+    }
 
 
     private void openChat(String chatID) {

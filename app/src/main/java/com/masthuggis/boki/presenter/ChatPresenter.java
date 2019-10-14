@@ -28,7 +28,7 @@ public class ChatPresenter implements ChatObserver {
         this.view.hideLoadingScreen();
         for (iChat chat : chats) {
             if (!(chat.isActive())) {
-                view.displayToast(chat.getDisplayName(dataModel.getUserID()));
+                view.displayToast(chat.getReceiverName(dataModel.getUserID()));
                 dataModel.removeChat(dataModel.getUserID(), chat.getChatID());
 
             }
@@ -42,6 +42,14 @@ public class ChatPresenter implements ChatObserver {
      */
 
     public void onRowPressed(String chatID) {
+
+        for (iChat chat : chats) {
+            if (chat.getChatID().equals(chatID)) {
+                if (chat.isActive()) {
+                    return;
+                }
+            }
+        }
         view.showMessagesScreen(chatID);
     }
 
@@ -54,14 +62,11 @@ public class ChatPresenter implements ChatObserver {
 
         //TODO FIXA SÅ ATT TIDEN SYNS HÄR MED ETT VETTIGT DATUMSYSTEM
         //  String timeLastMessageSent = c.timeLastMessageSent();
-
-        holder.setUserTextView(c.getDisplayName(dataModel.getUserID()));
+        holder.setUserTextView(c.getReceiverName(dataModel.getUserID()));
         holder.setChatID(c.getChatID());
         holder.setDateTextView("" + c.timeLastMessageSent());
-        if (c.isActive()) {
-            holder.setMessageImageView(dataModel.getAdFromAdID(c.getAdID()).getImageUrl());
-
-        }
+        holder.setMessageImageView(c.getImageURL());
+        view.disableClickOnChat();
 
     }
 
@@ -109,5 +114,7 @@ public class ChatPresenter implements ChatObserver {
         void showUserChats(ChatPresenter chatPresenter);
 
         void displayToast(String displayName);
+
+        void disableClickOnChat();
     }
 }

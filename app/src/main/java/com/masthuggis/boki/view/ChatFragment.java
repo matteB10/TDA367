@@ -135,4 +135,9 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         toast.show();
 
     }
+
+    @Override
+    public void disableClickOnChat() {
+
+    }
 }

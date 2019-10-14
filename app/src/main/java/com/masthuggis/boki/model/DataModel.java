@@ -4,6 +4,7 @@ import com.masthuggis.boki.backend.BackendFactory;
 import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
+import com.masthuggis.boki.backend.callbacks.MarkedAsFavouriteCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.backend.callbacks.chatCallback;
@@ -11,7 +12,6 @@ import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.backend.callbacks.userCallback;
 import com.masthuggis.boki.backend.iRepository;
-import com.masthuggis.boki.backend.callbacks.MarkedAsFavouriteCallback;
 import com.masthuggis.boki.model.observers.AdvertisementObserver;
 import com.masthuggis.boki.model.observers.BackendObserver;
 import com.masthuggis.boki.model.observers.ChatObserver;
@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DataModel implements BackendObserver {
 
@@ -274,8 +275,8 @@ public class DataModel implements BackendObserver {
 
 
     public void createNewChat(String adOwnerID, String adBuyerID, String
-            advertID, stringCallback stringCallback) {
-        repository.createNewChat(adOwnerID, adBuyerID, advertID, stringCallback);
+            advertID, String imageURL, stringCallback stringCallback) {
+        repository.createNewChat(adOwnerID, adBuyerID, advertID, imageURL, stringCallback);
     }
 
     public void sendMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
@@ -295,14 +296,22 @@ public class DataModel implements BackendObserver {
     }
 
     public void removeExistingAdvert(String adID, String userID) {
+        List<Map<String, String>> chatReceiverAndUserIDMap = new ArrayList<>();
+        Map<String,String> adIDAndUserID = new HashMap<>();
+        adIDAndUserID.put("adID",adID);
+        adIDAndUserID.put("userID",userID);
         List<String> chatIDs = new ArrayList<>();
         for (iChat chat : user.getChats()) {
+            Map<String, String> map = new HashMap<>();
             if (chat.getAdID().equals(adID)) {
-                chatIDs.add(chat.getChatID());
+
+                map.put("receiverID", chat.getReceiverID(user.getId()));
+                map.put("chatID",chat.getChatID());
+                chatReceiverAndUserIDMap.add(map);
             }
         }
         user.getChatIDFromAdID(adID);
-        repository.deleteAd(adID, userID, chatIDs);
+        repository.deleteAd(chatReceiverAndUserIDMap,adIDAndUserID);
     }
 
 

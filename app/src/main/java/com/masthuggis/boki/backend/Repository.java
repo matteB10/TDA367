@@ -14,6 +14,7 @@ import com.masthuggis.boki.model.observers.BackendObserver;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class providing the functionality to convert data from backend into objects to be used
@@ -39,8 +40,8 @@ public class Repository implements iRepository {
         advertRepository.fetchAllAdverts(advertisementCallback);
     }
 
-    public void deleteAd(String adID, String userID, List<String> chatIDs) {
-        advertRepository.deleteAd(adID, userID, chatIDs);
+    public void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID){
+        advertRepository.deleteAd(chatReceiverAndUserIDMap,adIDAndUserID);
     }
 
     public void updateAd(String adID, String newTitle, long newPrice, String newDescription,
@@ -81,8 +82,8 @@ public class Repository implements iRepository {
         userRepository.getMessages(uniqueChatID, messagesCallback);
     }
 
-    public void createNewChat(String adOwnerID, String adBuyerID, String advertID, stringCallback stringCallback) {
-        userRepository.createNewChat(adOwnerID, adBuyerID, advertID, stringCallback);
+    public void createNewChat(String adOwnerID, String adBuyerID, String advertID,String imageURL, stringCallback stringCallback) {
+        userRepository.createNewChat(adOwnerID, adBuyerID, advertID,imageURL, stringCallback);
     }
 
     public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {

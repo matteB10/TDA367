@@ -92,7 +92,7 @@ public class UserRepository {
                                 public void onCallback(iUser newUser) {
                                     userList.add(newUser);
                                     chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString()
-                                            , userList.get(0), userList.get(1), map.get("advertID").toString(), (boolean) map.get("isActive")));
+                                            , userList.get(0), userList.get(1), map.get("advertID").toString(), map.get("imageURL").toString(), (boolean) map.get("isActive")));
                                     if (chatList.size() == chatMap.size()) {
                                         chatCallback.onCallback(chatList);
                                     }
@@ -138,8 +138,8 @@ public class UserRepository {
     }
 
 
-    void createNewChat(String adOwnerID, String adBuyerID, String advertID, stringCallback stringCallback) {
-        backend.createNewChat(adOwnerID, adBuyerID, advertID, stringCallback);
+    void createNewChat(String adOwnerID, String adBuyerID, String advertID, String imageURL, stringCallback stringCallback) {
+        backend.createNewChat(adOwnerID, adBuyerID, advertID, imageURL, stringCallback);
     }
 
     void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {

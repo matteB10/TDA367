@@ -14,6 +14,7 @@ import com.masthuggis.boki.model.observers.BackendObserver;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface iRepository {
 
@@ -21,7 +22,7 @@ public interface iRepository {
 
     void fetchAllAdverts(advertisementCallback advertisementCallback);
 
-    void deleteAd(String adID, String userID, List<String> chatIDs);
+    void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID);
 
     void updateAd(String adID, String newTitle, long newPrice, String newDescription,
                   List<String> newTagList, String newCondition, File imageFile);
@@ -43,7 +44,7 @@ public interface iRepository {
 
     void getMessages(String uniqueChatID, messagesCallback messagesCallback);
 
-    void createNewChat(String uniqueOwnerID, String receiverUsername, String advertID, stringCallback stringCallback);
+    void createNewChat(String uniqueOwnerID, String receiverUsername, String advertID,String imageURL, stringCallback stringCallback);
 
     void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap);
 

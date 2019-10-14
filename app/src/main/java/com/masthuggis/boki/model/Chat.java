@@ -12,17 +12,19 @@ public class Chat implements iChat {
     private List<iMessage> messages;
     private String chatID;
     private String uniqueAdID;
-    private iUser sender;
-    private iUser receiver;
+    private iUser userOne;
+    private iUser userTwo;
     private boolean isActive;
+    private String imageURL;
 
 
-    Chat(String uniqueChatID, iUser sender, iUser receiver, String uniqueAdID, boolean isActive) {
-        this.sender = sender;
-        this.receiver = receiver;
+    Chat(String uniqueChatID, iUser userOne, iUser userTwo, String uniqueAdID,String imageURL, boolean isActive) {
+        this.userOne = userOne;
+        this.userTwo = userTwo;
         this.chatID = uniqueChatID;
         this.uniqueAdID = uniqueAdID;
         this.isActive = isActive;
+        this.imageURL = imageURL;
     }
 
 
@@ -49,14 +51,6 @@ public class Chat implements iChat {
         return this.messages;
     }
 
-    public String getSenderID() {
-        return this.sender.getId();
-    }
-
-    public String getReceiverID() {
-        return this.receiver.getId();
-    }
-
     @Override
     public String getChatID() {
         return this.chatID;
@@ -73,12 +67,12 @@ public class Chat implements iChat {
 
 
     @Override
-    public String getDisplayName(String currentUserID) {
+    public String getReceiverName(String currentUserID) {
 
-        if (!(sender.getId().equals(currentUserID))) {
-            return sender.getDisplayName();
+        if (!(userOne.getId().equals(currentUserID))) {
+            return userOne.getDisplayName();
         } else {
-            return receiver.getDisplayName();
+            return userTwo.getDisplayName();
         }
     }
 
@@ -86,5 +80,18 @@ public class Chat implements iChat {
     public String getAdID() {
         return this.uniqueAdID;
 
+    }
+    @Override
+    public String getImageURL(){
+        return this.imageURL;
+    }
+
+    @Override
+    public String getReceiverID(String currentUserID) {
+        if (!(userOne.getId().equals(currentUserID))) {
+            return userOne.getId();
+        } else {
+            return userTwo.getId();
+        }
     }
 }
