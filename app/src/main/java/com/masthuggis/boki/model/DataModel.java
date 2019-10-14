@@ -5,12 +5,14 @@ import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryFactory;
 import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
+import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.backend.callbacks.chatCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.backend.callbacks.userCallback;
+import com.masthuggis.boki.backend.callbacks.MarkedAsFavouriteCallback;
 import com.masthuggis.boki.model.observers.AdvertisementObserver;
 import com.masthuggis.boki.model.observers.BackendObserver;
 import com.masthuggis.boki.model.observers.ChatObserver;
@@ -37,7 +39,7 @@ public class DataModel implements BackendObserver {
 
     private DataModel() {
         initBackend();
-       // initUser();
+        // initUser();
     }
 
     public static DataModel getInstance() {
@@ -64,7 +66,10 @@ public class DataModel implements BackendObserver {
                         public void onCallback(List<iChat> chatsList) {
                             user.setChats(chatsList);
                             user.setAdverts(getAdsFromCurrentUser());
-                            successCallback.onSuccess();
+                            getFavouritesFromLoggedInUser(advertisements -> {
+                                user.setFavourites(advertisements);
+                                successCallback.onSuccess();
+                            }); //TODO fix this maybe
                         }
                     });
                 }
@@ -152,26 +157,53 @@ public class DataModel implements BackendObserver {
         return null; //TODO Fix a better solution to handle NPExc....
     }
 
-    private List<Advertisement> getAdsFromCurrentUser(){
+    public List<Advertisement> getAdsFromCurrentUser() {
         List<Advertisement> userAds = new ArrayList<>();
-        for(Advertisement ad: allAds){
-            if(ad.getUniqueOwnerID().equals(user.getId())){
+        for (Advertisement ad : allAds) {
+            if (ad.getUniqueOwnerID().equals(user.getId())) {
                 userAds.add(ad);
             }
         }
-        return  userAds;
+        return userAds;
     }
 
-    public void getAdsFromLoggedInUser(advertisementCallback advertisementCallback) {
+    private void getFavouritesFromLoggedInUser(advertisementCallback advertisementCallback) {
         if (user == null) {
             return;
         }
-
         if (allAds == null || allAds.isEmpty()) {
-            fetchAllAdverts(advertisements -> advertisementCallback.onCallback(retrieveAdsFromUserID(advertisements)));
+            fetchAllAdverts(advertisements -> advertisementCallback.onCallback(getFavouritesFromList(advertisements)));
         } else {
-            advertisementCallback.onCallback(retrieveAdsFromUserID(allAds));
+            advertisementCallback.onCallback(getFavouritesFromList(allAds)); //TODO change this
         }
+    }
+
+    private List<Advertisement> getFavouritesFromList(List<Advertisement> advertisements) {
+        List<Advertisement> favourites = new ArrayList<>();
+        for (Advertisement ad : advertisements) {
+            isAdMarkedAsFavourite(ad.getUniqueID(), new MarkedAsFavouriteCallback() {
+                @Override
+                public void onCallback(boolean markedAsFavourite) {
+                    favourites.add(ad);
+                }
+            });
+        }
+        return favourites;
+    }
+
+    //Yikes
+    public void isAdMarkedAsFavourite(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
+        repository.getUserFavourites(new FavouriteIDsCallback() {
+            @Override
+            public void onCallback(List<String> favouriteIDs) {
+                if (favouriteIDs != null) { //Only check if user actually has favourites, otherwise NullPointerException
+                    for (String adID : favouriteIDs) {
+                        if (adID.equals(uniqueAdID))
+                            markedAsFavouriteCallback.onCallback(true);
+                    }
+                }
+            }
+        });
     }
 
     private List<Advertisement> retrieveAdsFromUserID(List<Advertisement> adverts) {
@@ -185,7 +217,6 @@ public class DataModel implements BackendObserver {
 
 
     public void fetchAllAdverts(advertisementCallback advertisementCallback) {
-
         repository.fetchAllAdverts(new advertisementCallback() {
             @Override
             public void onCallback(List<Advertisement> advertisements) {
@@ -195,6 +226,9 @@ public class DataModel implements BackendObserver {
         });
     }
 
+    public List<Advertisement> getAllAdverts() {
+        return allAds;
+    }
 
     public void loggedOut() {
 
@@ -219,8 +253,11 @@ public class DataModel implements BackendObserver {
     }
 
     public List<iChat> getUserChats() {
-
         return user.getChats();
+    }
+
+    public List<Advertisement> getUserFavourites() {
+        return user.getFavourites();
     }
 
 
@@ -244,28 +281,20 @@ public class DataModel implements BackendObserver {
         return null;
     }
 
-    /*
-     * Delete existing advert
-     */
+    // Delete existing advert
     public void removeExistingAdvert(Advertisement ad) {
         repository.deleteAd(ad);
     }
 
-    /*
-     * Updates existing advert
-     */
+    // Updates existing advert
     public void updateAd(File imageFile, Advertisement ad) {
         repository.updateAdvert(imageFile, ad);
     }
 
-    /*
-     * Saves new advert
-     */
-
+    // Saves new advert
     public void saveAdvert(File currentImageFile, Advertisement advertisement) {
         repository.saveAdvert(currentImageFile, advertisement);
     }
-
 
 
     public void signOut() {
@@ -317,6 +346,10 @@ public class DataModel implements BackendObserver {
         repository.addToFavourites(adID, userID);
     }
 
+    public void removeFromFavourites(String adID) {
+        String userID = getUserID();
+        repository.removeFromFavourites(adID, userID);
+    }
 
     void fetchUserChats(String userID, chatCallback chatCallback) {
         userRepository.getUserChats(userID, new chatCallback() {

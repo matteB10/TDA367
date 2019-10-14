@@ -80,10 +80,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
     }
 
-    /**
-     * Setting up view depending on if the user are creating an ad or editing an existing one
+    /**Setting up view depending on if the user are creating an ad or editing an existing one
      */
-    public void setUpView() {
+    private void setUpView() {
         TextView headerTextView = findViewById(R.id.headerTextView);
         boolean editMode = getIntent().getExtras() != null;
         if (editMode) {
@@ -335,7 +334,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         userDefTagButtons.remove(getButtonFromText(tag, userDefTagButtons));
         updateUserDefTags();
     }
-
     /**
      * Returns first not filled row in a layout given as parameter,
      * or a new row if all rows are filled or layout has no rows.
@@ -355,8 +353,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         parentLayout.addView(tr, StylingHelper.getTableRowLayoutParams(this));
         return tr;
     }
-
-
     /**
      * Used to update tags layout correctly if a tag
      * has been deleted.
@@ -367,7 +363,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         clearLayout(parentLayout);
         populateTagsLayout(userDefTagButtons, parentLayout);
     }
-
     /**
      * Takes in a string and returns matching button if possible
      *
@@ -382,7 +377,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
         return null;
     }
-
     /**
      * Checks if tag is preDef or userDef
      * @param tag
@@ -431,7 +425,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
     private void getBackToMain(String toastMessage){
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.putExtra("toastMessage",toastMessage);
+        intent.putExtra(getString(R.string.putExtraToastKey),toastMessage);
         startActivity(intent);
         finish();
     }
@@ -553,7 +547,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
                     presenter.userDefTagsChanged(userDefTag.getText().toString());
                     //clear text field for new user input
                     userDefTag.setText("");
-                    userDefTag.requestFocus();
                     return true;
                 }
                 return false;
@@ -597,5 +590,4 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             }
         }
     }
-
 }

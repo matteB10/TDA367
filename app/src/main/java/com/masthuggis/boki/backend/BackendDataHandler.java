@@ -1,6 +1,7 @@
 package com.masthuggis.boki.backend;
 
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ import com.google.firebase.storage.UploadTask;
 import com.masthuggis.boki.backend.callbacks.DBCallback;
 import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
+import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Chat;
@@ -108,6 +110,20 @@ public class BackendDataHandler implements iBackend {
             }
         });
 
+    }
+
+    //Gets a list of the ids of the adverts the current user has marked as favourites
+    public void getFavouriteIDs(DBMapCallback dbMapCallback) {
+        String userID = DataModel.getInstance().getUserID();
+        db.collection("users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot user = task.getResult();
+                    dbMapCallback.onCallBack(user.getData());
+                }
+            }
+        });
     }
 
 
@@ -191,7 +207,7 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    public void getUserChats(String userID, DBCallback DBCallback,FailureCallback failureCallback) {
+    public void getUserChats(String userID, DBCallback DBCallback, FailureCallback failureCallback) {
         db.collection("users").document(userID).collection("myConversations").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -277,8 +293,6 @@ public class BackendDataHandler implements iBackend {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 try {
                     List<String> favourites = (List<String>) task.getResult().getData().get("favourites");
-                    if (isAlreadyFavourite(favourites, adID)) //Prevents users from adding the same advert to favourites more than once
-                        return;
                     favourites.add(adID);
                     db.collection("users").document(userID).update("favourites", favourites); //Should write updated favourites to firebase
                 } catch (NullPointerException e) { //Is thrown if users favourite-array is currently empty
@@ -288,6 +302,28 @@ public class BackendDataHandler implements iBackend {
                 }
             }
         });
+    }
+
+    @Override
+    public void removeAdFromFavourites(String adID, String userID) {
+        db.collection("users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                List<String> favourites = (List<String>) task.getResult().getData().get("favourites");
+                favourites.remove(adID);
+                db.collection("users").document(userID).update("favourites", favourites);
+            }
+        });
+    }
+
+
+    //TODO check if looping through list is actually necessary
+    private void removeFromFavourites(List<String> favourites, String adID) {
+        for (String favouriteID : favourites) {
+            if (favouriteID.equals(adID)) {
+                favourites.remove(adID);
+            }
+        }
     }
 
     private boolean isAlreadyFavourite(List<String> favourites, String adID) {
@@ -314,7 +350,7 @@ public class BackendDataHandler implements iBackend {
         return user != null;
     }
 
-    public void userSignUpAndSignIn(String email, String password, String username,SuccessCallback successCallback, FailureCallback failureCallback) {
+    public void userSignUpAndSignIn(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback) {
         HashMap<String, Object> userMap = new HashMap<>();
         userMap.put("email", email);
         userMap.put("username", username);
@@ -345,7 +381,6 @@ public class BackendDataHandler implements iBackend {
         }
 
     }
-
 
     public void getUser(DBMapCallback dbMapCallback) {
         Map<String, String> userMap = new HashMap<>();

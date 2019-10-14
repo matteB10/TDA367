@@ -3,6 +3,7 @@ package com.masthuggis.boki.backend;
 import com.masthuggis.boki.backend.callbacks.DBCallback;
 import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
+import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Chat;
@@ -19,6 +20,10 @@ public interface iBackend {
     void writeAdvertToFirebase(File imageFile, HashMap<String, Object> dataMap);
 
     void addAdToFavourites(String adID, String userID);
+
+    void removeAdFromFavourites(String adID, String userID);
+
+    void getFavouriteIDs(DBMapCallback dbMapCallback);
 
      void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
 
