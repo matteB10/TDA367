@@ -1,5 +1,7 @@
 package com.masthuggis.boki.backend;
 
+import com.masthuggis.boki.backend.callbacks.DBMapCallback;
+import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advert;
@@ -60,6 +62,14 @@ public class Repository {
         thread.start();
     }
 
+    public void getUserFavourites(FavouriteIDsCallback favouriteIDsCallback) {
+        backend.getFavouriteIDs(new DBMapCallback() {
+            @Override
+            public void onCallBack(Map<String, Object> dataMap) {
+                favouriteIDsCallback.onCallback((List<String>) dataMap.get("favourites"));
+            }
+        });
+    }
 
     private Advertisement retrieveAdvert(Map<String, Object> dataMap) {
         String title = "" + dataMap.get("title");

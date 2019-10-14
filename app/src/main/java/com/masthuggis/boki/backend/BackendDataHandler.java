@@ -113,15 +113,14 @@ public class BackendDataHandler implements iBackend {
     }
 
     //Gets a list of the ids of the adverts the current user has marked as favourites
-    private void getFavouriteIDs(FavouriteIDsCallback favouriteIDsCallback) {
+    public void getFavouriteIDs(DBMapCallback dbMapCallback) {
         String userID = DataModel.getInstance().getUserID();
         db.collection("users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot user = task.getResult();
-                    List<String> favourites = (List<String>) user.get("favourites"); //Necessary cast, gets the favourites
-                    favouriteIDsCallback.onCallback(favourites);
+                    dbMapCallback.onCallBack(user.getData());
                 }
             }
         });
