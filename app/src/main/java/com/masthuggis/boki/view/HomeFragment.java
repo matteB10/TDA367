@@ -12,9 +12,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -23,64 +26,54 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
+import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.AdvertsPresenterView;
 import com.masthuggis.boki.presenter.HomePresenter;
+import com.masthuggis.boki.presenter.ProfilePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
 /**
  * Home page displaying all the adverts that have been published to the market.
  * Will also include searchPerformed and sort buttons in the future.
  */
-public class HomeFragment extends Fragment implements AdvertsPresenterView, AdapterView.OnItemSelectedListener {
+public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelectedListener {
 
     private HomePresenter presenter;
-    private View view;
-    private ProductsRecyclerViewAdapter recyclerViewAdapter;
     private EditText searchField;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        this.view = inflater.inflate(R.layout.home_fragment, container, false);
-        setupPresenter();
-        setupSortSpinner();
-        setupSearchField();
-        return view;
+    protected AdvertsPresenter getPresenter() {
+        if (presenter == null) {
+            this.presenter = new HomePresenter(this, DependencyInjector.injectDataModel());
+        }
+        return presenter;
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.viewIsBeingDestroyed();
+    protected View onCreateHeaderLayout() {
+        View header = getLayoutInflater().inflate(R.layout.home_header, null);
+        setupSortSpinner(header);
+        setupSearchField(header);
+        return header;
     }
 
-    private void setupPresenter() {
-        this.presenter = new HomePresenter(this, DependencyInjector.injectDataModel());
-        this.presenter.initPresenter();
-    }
-
-    private void setupSortSpinner() {
+    private Spinner setupSortSpinner(View view) {
         Spinner spinner = view.findViewById(R.id.sortPickerSpinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, presenter.getSortOptions());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+        return spinner;
     }
 
-    private void setupList() {
-        RecyclerView recyclerView = view.findViewById(R.id.advertsRecyclerView);
-        recyclerViewAdapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
-        recyclerView.setAdapter(recyclerViewAdapter);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
-    }
-
-    //Adds a listener for when the user performs a searchPerformed, reacts to when enter key is pressed
-    //makes the keyboard disappear then calls on the presenter to perform the searchPerformed with given input
-    private void setupSearchField() {
+    /**
+     * Adds a listener for when the user performs a searchPerformed, reacts to when enter key is pressed
+     * makes the keyboard disappear then calls on the presenter to perform the searchPerformed with given input
+     * @param view
+     */
+    private void setupSearchField(View view) {
         searchField = view.findViewById(R.id.searchFieldEditText);
-        searchField.setOnKeyListener((view, keyCode, keyEvent) -> {
+        searchField.setOnKeyListener((v, keyCode, keyEvent) -> {
             if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
                     (keyCode == KeyEvent.KEYCODE_ENTER)) {
                 hideKeyboard();
@@ -107,6 +100,13 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
         });
     }
 
+    @Override
+    protected View onCreateNoResultsFoundLayout() {
+        // TODO: implement
+        return null;
+    }
+
+
     private void hideKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
@@ -116,39 +116,6 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
     private void performSearch() {
         String query = searchField.getText().toString();
         presenter.searchPerformed(query);
-    }
-
-    @Override
-    public void hideLoadingScreen() {
-        ProgressBar progressBar = view.findViewById(R.id.loadingProgressBar);
-        progressBar.setVisibility(View.GONE);
-        RecyclerView recyclerView = view.findViewById(R.id.advertsRecyclerView);
-        recyclerView.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void showLoadingScreen() {
-        ProgressBar progressBar = view.findViewById(R.id.loadingProgressBar);
-        progressBar.setVisibility(View.VISIBLE);
-        RecyclerView recyclerView = view.findViewById(R.id.advertsRecyclerView);
-        recyclerView.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showDetailsScreen(String id) {
-        Intent intent = new Intent(getContext(), DetailsActivity.class);
-        intent.putExtra("advertID", id);
-        startActivity(intent);
-    }
-
-
-    @Override
-    public void updateThumbnails() {
-        if (recyclerViewAdapter == null) {
-            setupList();
-        } else {
-            recyclerViewAdapter.notifyDataSetChanged();
-        }
     }
 
     @Override
