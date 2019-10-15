@@ -29,7 +29,6 @@ import com.google.firebase.storage.UploadTask;
 import com.masthuggis.boki.backend.callbacks.DBCallback;
 import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
-import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Chat;
@@ -162,9 +161,7 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    //might want to run this on separate thread created by caller
     public void readAllAdvertData(DBCallback DBCallback) {
-        List<Map<String, Object>> advertDataList = new ArrayList<>();
         db.collection("market").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) { //Runs every time change happens i market

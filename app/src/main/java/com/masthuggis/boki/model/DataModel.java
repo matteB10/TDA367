@@ -56,7 +56,9 @@ public class DataModel implements BackendObserver {
     }
 
 
-    //Initializes all fields in the User-object of the application with data gotten from firebase with the corresponding userID
+    /**
+     * Initializes all fields in the User-object of the application with data gotten from firebase with the corresponding userID
+     */
     public void initUser(SuccessCallback successCallback) {
         if (isLoggedIn()) {
             userRepository.getUser(new userCallback() {
@@ -68,7 +70,7 @@ public class DataModel implements BackendObserver {
                         public void onCallback(List<iChat> chatsList) {
                             user.setChats(chatsList);
                             user.setAdverts(getAdsFromCurrentUser());
-                            getFavouritesFromLoggedInUser(advertisements -> {
+                            getFavouritesFromUser(advertisements -> {
                                 user.setFavourites(advertisements);
                                 successCallback.onSuccess();
                             });
@@ -150,7 +152,6 @@ public class DataModel implements BackendObserver {
         this.allAds.add(ad);
     }
 
-    //Same functionality as above method but based off of firebase
     public Advertisement getAdFromAdID(String ID) {
         for (Advertisement ad : allAds) {
             if (ad.getUniqueID().equals(ID))
@@ -169,7 +170,12 @@ public class DataModel implements BackendObserver {
         return userAds;
     }
 
-    private void getFavouritesFromLoggedInUser(advertisementCallback advertisementCallback) {
+    /**
+     * Gets a user's favourites, with logical checks for if the user is logged in and
+     * if the local list of advertisements has been set
+     * @param advertisementCallback
+     */
+    private void getFavouritesFromUser(advertisementCallback advertisementCallback) {
         if (user == null) {
             return;
         }
@@ -180,7 +186,11 @@ public class DataModel implements BackendObserver {
         }
     }
 
-    //Returns a list with all adverts the user has marked as favourites
+    /**
+     *
+     * @param advertisements
+     * @return
+     */
     private List<Advertisement> getFavouritesFromList(List<Advertisement> advertisements) {
         List<Advertisement> favourites = new ArrayList<>();
         for (Advertisement ad : advertisements) {
@@ -188,10 +198,8 @@ public class DataModel implements BackendObserver {
                 @Override
                 public void onCallback(boolean markedAsFavourite) {
                     if (markedAsFavourite) {
-                        favourites.add(ad);
                         ad.markAsFavourite();
-                    } else {
-                        ad.markAsNotFavourite();
+                        favourites.add(ad);
                     }
                 }
             });
@@ -199,14 +207,18 @@ public class DataModel implements BackendObserver {
         return favourites;
     }
 
-    //Returns a boolean of whether or not the ad is not marked as a favourite, returned via the callback
-    public void isAdMarkedAsFavourite(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
+    /**
+     * Returns a boolean of whether or not the ad is not marked as a favourite, returned via the callback
+     */
+    private void isAdMarkedAsFavourite(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
         repository.getUserFavourites(new FavouriteIDsCallback() {
             @Override
             public void onCallback(List<String> favouriteIDs) {
                 if (favouriteIDs != null) { //Only check if user actually has favourites, otherwise NullPointerException
                     for (String adID : favouriteIDs) {
-                        markedAsFavouriteCallback.onCallback(adID.equals(uniqueAdID));
+                        if (adID.equals(uniqueAdID)) {
+                            markedAsFavouriteCallback.onCallback(true); //Only call method if true, would otherwise call when not needed
+                        }
                     }
                 }
             }
@@ -352,14 +364,30 @@ public class DataModel implements BackendObserver {
         });
     }
 
-    public void addToFavourites(String adID) {
+    /**
+     * Adds an advertisement to the user's favourites
+     * Adds the advert in firebase via user and advert ID
+     * Removes it from the local list via the actual advertisement-object
+     *
+     * @param advertisement
+     */
+    public void addToFavourites(Advertisement advertisement) {
         String userID = getUserID();
-        repository.addToFavourites(adID, userID);
+        repository.addToFavourites(advertisement.getUniqueID(), userID);
+        user.addFavourite(advertisement);
     }
 
-    public void removeFromFavourites(String adID) {
+    /**
+     * Removes a given advertisement from user's favourites
+     * Removes in firebase via user and advert ID
+     * Removes in local list via the actual advertisement-object
+     *
+     * @param advertisement the advertisement to be removed
+     */
+    public void removeFromFavourites(Advertisement advertisement) {
         String userID = getUserID();
-        repository.removeFromFavourites(adID, userID);
+        repository.removeFromFavourites(advertisement.getUniqueID(), userID);
+        user.removeFavourite(advertisement);
     }
 
     public void saveAdvert(File currentImageFile, Advertisement advertisement) {

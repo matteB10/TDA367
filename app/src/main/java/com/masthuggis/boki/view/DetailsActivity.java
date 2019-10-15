@@ -210,11 +210,13 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
     }
 
+    //TODO comment this
     private void setUpFavouriteIcon() {
         favouritesIcon = findViewById(R.id.favouritesIcon);
         if (presenter.isUserOwner()) {
             favouritesIcon.setVisibility(View.GONE);
         } else {
+            presenter.setFavouriteIconStatus();
             favouritesIcon.setOnClickListener(view -> {
                         presenter.onFavouritesIconPressed(); //gör den bara sättbar till en början :)
                     }
