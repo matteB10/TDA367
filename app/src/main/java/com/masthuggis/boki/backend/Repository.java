@@ -80,6 +80,10 @@ public class Repository {
         });
     }
 
+    public void deleteIDFromFavourites(String favouriteID) {
+        backend.deleteIDFromFavourites(favouriteID);
+    }
+
     private Advertisement retrieveAdvert(Map<String, Object> dataMap) {
         String title = "" + dataMap.get("title");
         String description = (String) dataMap.get("description");
