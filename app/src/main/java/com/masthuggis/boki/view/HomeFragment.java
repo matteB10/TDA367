@@ -103,7 +103,7 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
     @Override
     protected View onCreateNoResultsFoundLayout() {
         // TODO: implement
-        return null;
+        return new TextView(getActivity());
     }
 
 
