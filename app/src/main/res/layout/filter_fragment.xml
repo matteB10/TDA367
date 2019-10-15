@@ -59,7 +59,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/line" />
     <LinearLayout
-        android:id="@+id/tagsLinearLayout"
+        android:id="@+id/filterTagsLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -80,7 +80,7 @@
         android:background="@color/colorGreyLight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tagsLinearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/filterTagsLinearLayout" />
 
     <TextView
         android:id="@+id/priceTextView"
@@ -111,7 +111,7 @@
         app:layout_constraintTop_toBottomOf="@+id/priceTextView"/>
 
     <Button
-        android:id="@+id/applyButton"
+        android:id="@+id/applyFilterButton"
         android:text="@string/filter"
         android:background="@drawable/primary_button"
         android:layout_marginStart="30dp"

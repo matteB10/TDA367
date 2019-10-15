@@ -1,6 +1,5 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.model.DataModel;
 
 public class MainPresenter {

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -45,6 +46,7 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
         setupPresenter();
         setupSortSpinner();
         setupSearchField();
+        setFilterButtonListener();
         return view;
     }
 
@@ -103,6 +105,17 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
             @Override
             public void afterTextChanged(Editable editable) {
 
+            }
+        });
+    }
+
+    private void setFilterButtonListener(){
+        Button filterButton = view.findViewById(R.id.homeFilterButton);
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(),FilterActivity.class);
+                startActivity(intent);
             }
         });
     }

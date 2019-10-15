@@ -8,4 +8,5 @@ public interface AdvertsPresenterView {
     void hideLoadingScreen();
 
     void showDetailsScreen(String id);
+
 }

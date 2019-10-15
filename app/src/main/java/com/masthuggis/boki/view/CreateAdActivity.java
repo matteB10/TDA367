@@ -335,7 +335,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     @Override
     public void removeUserTagButton(String tag) {
-        userDefTagButtons.remove(getButtonFromText(tag));
+        userDefTagButtons.remove(getButtonFromText(tag, userDefTagButtons));
         updateUserDefTags();
     }
 
@@ -358,8 +358,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         populateTagsLayout(userDefTagButtons, parentLayout);
     }
 
-    private Button getButtonFromText(String text) {
-        for (Button btn : userDefTagButtons) {
+    private Button getButtonFromText(String text, List<Button> buttons) {
+        for (Button btn : buttons) {
             if (btn.getText().toString().equals(text)) {
                 return btn;
             }

@@ -6,7 +6,6 @@ import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.utils.StylingHelper;
-import com.masthuggis.boki.utils.iConditionable;
 
 import java.util.List;
 
@@ -140,7 +139,7 @@ public class DetailsPresenter {
         }
     }
 
-    public interface View extends iConditionable {
+    public interface View {
         void setName(String name);
 
         void setPrice(long price);
@@ -164,6 +163,8 @@ public class DetailsPresenter {
         void setFavouriteStar();
 
         void setNotFavouriteStar();
+
+        void setCondition(int condition, int color);
     }
 
 
