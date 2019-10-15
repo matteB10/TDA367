@@ -101,7 +101,7 @@ abstract class AdvertsView extends Fragment implements AdvertsPresenterView {
      * @return
      */
     protected abstract AdvertsPresenter getPresenter();
-    
+
     @Override
     public void updateThumbnails() {
         if (recyclerViewAdapter == null) {
