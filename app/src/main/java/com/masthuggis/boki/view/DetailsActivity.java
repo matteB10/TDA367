@@ -48,7 +48,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
             if (canProceedWithTapAction()) {
-                presenter.contactOwnerButtonClicked(contactOwnerButton.getText().toString());
+                presenter.contactOwnerBtnClicked(contactOwnerButton.getText().toString()); //Should the logic be based off this string?
             }
         });
 
@@ -126,7 +126,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         startActivity(intent);
     }
 
-
     /**
      * Private method trying to resolve if a tableRow with tags is filled and
      * if a new one should be created.
@@ -194,6 +193,10 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     public void setNotFavouriteIcon() {
         Drawable notFavouriteStar = getResources().getDrawable(R.drawable.heart_outline_vector);
         favouritesIcon.setImageDrawable(notFavouriteStar);
+    }
+
+    public void hideFavouriteIcon() {
+        favouritesIcon.setVisibility(View.GONE);
     }
 
     public boolean canProceedWithTapAction() {

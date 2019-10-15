@@ -76,17 +76,32 @@ public class DetailsPresenter {
         view.openChat(chatID);
     }
 
+    //Moved logic for this to model
     public boolean isUserOwner() {
         return dataModel.isUserOwner(advertisement);
     }
-
 
     public void onChangedAdBtnPressed() {
         String uniqueID = advertisement.getUniqueID();
         view.showEditView(uniqueID);
     }
 
-    public void contactOwnerButtonClicked(String contactOwnerButtonText) {
+    public void contactOwnerBtnClicked(String btnText) {
+        if (btnText.equals("Starta chatt")) {
+            String chatID = dataModel.findChatID(advertisement.getUniqueID());
+            if (chatID != null) {
+                openChat(chatID);
+            } else {
+                createNewChat();
+            }
+        } else {
+            view.setOwnerButtonText("Starta chatt");
+        }
+    }
+
+
+    //TODO move logic to dataModel
+    /*public void contactOwnerButtonClicked(String contactOwnerButtonText) {
         if (contactOwnerButtonText.equals("Starta chatt")) {
             if (dataModel.getUserChats() != null) {
                 for (iChat chats : dataModel.getUserChats()) {
@@ -100,7 +115,7 @@ public class DetailsPresenter {
         } else {
             view.setOwnerButtonText("Starta chatt");
         }
-    }
+    }*/
 
     //Necessary to change local variable (isMarkedAsFavourite) inside method, otherwise it has to update from firebase while in Detail View
     public void onFavouritesIconPressed() {
@@ -114,27 +129,18 @@ public class DetailsPresenter {
         }
     }
 
-
     public void setUpFavouriteIcon() {
-        if (isUserOwner())
-        if (currentAdvertIsFavourite()) {
+        if (isUserOwner()) {
+            view.hideFavouriteIcon();
+        } else if (currentAdvertIsFavourite()) {
             view.setFavouriteIcon();
         } else {
             view.setNotFavouriteIcon();
         }
     }
 
-    /**
-     * Checks if advertisement held by DetailsPresenter is marked as a favourite
-     * Has to check via the ID:s of the adverts, holds references to different Java-Objects
-     */
-    private boolean currentAdvertIsFavourite() { //Can't do the check like this, referencing different objects! Maybe like hashcode or check on their id's?
-        List<Advertisement> userFavourites = dataModel.getUserFavourites();
-        for (Advertisement favourite : userFavourites) {
-            if (favourite.getUniqueID().equals(advertisement.getUniqueID())) {
-                return true;
-            }
-        } return false;
+    private boolean currentAdvertIsFavourite() {
+        return dataModel.isAFavourite(advertisement);
     }
 
     public interface View extends iConditionable {
@@ -161,6 +167,8 @@ public class DetailsPresenter {
         void setFavouriteIcon();
 
         void setNotFavouriteIcon();
+
+        void hideFavouriteIcon();
     }
 
 
