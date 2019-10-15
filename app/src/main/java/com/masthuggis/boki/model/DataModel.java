@@ -191,7 +191,7 @@ public class DataModel implements BackendObserver {
     private List<Advertisement> getFavouritesFromList(List<Advertisement> advertisements) {
         List<Advertisement> favourites = new ArrayList<>();
         for (Advertisement ad : advertisements) {
-            isAFavourite(ad.getUniqueID(), new MarkedAsFavouriteCallback() {
+            isAFavouriteInDatabase(ad.getUniqueID(), new MarkedAsFavouriteCallback() {
                 @Override
                 public void onCallback(boolean markedAsFavourite) {
                     if (markedAsFavourite) {
@@ -204,23 +204,33 @@ public class DataModel implements BackendObserver {
         return favourites;
     }
 
+
     /**
      * Returns a boolean of whether or not the given adID exists under the User's list of ID:s in the database
      */
-    private void isAFavourite(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
+    private void isAFavouriteInDatabase(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
         repository.getUserFavourites(new FavouriteIDsCallback() {
             @Override
             public void onCallback(List<String> favouriteIDs) {
                 if (favouriteIDs != null) { //Only check if user actually has favourites, otherwise NullPointerException
                     for (String favouriteID : favouriteIDs) {
-                        if(adStillExists(favouriteID) && favouriteID.equals(uniqueAdID)) {
+                        if (adStillExists(favouriteID) && favouriteID.equals(uniqueAdID)) {
                             markedAsFavouriteCallback.onCallback(true); //Only call method if true, would otherwise call when not needed
                         }
                     }
-                    //If reached, no favourite ID matched THAT particular ad ID
                 }
             }
         });
+    }
+
+    public boolean isAFavourite(Advertisement advertisement) {
+        List<Advertisement> userFavourites = user.getFavourites();
+        for (Advertisement favourite : userFavourites) {
+            if (favourite.getUniqueID().equals(advertisement.getUniqueID())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -264,10 +274,12 @@ public class DataModel implements BackendObserver {
         return allAds;
     }
 
+    public boolean isUserOwner(Advertisement advertisement) {
+        return user.getId().equals(advertisement.getUniqueOwnerID());
+    }
+
     public void loggedOut() {
-
         this.user = null;
-
     }
 
     public String getUserID() {
@@ -408,6 +420,17 @@ public class DataModel implements BackendObserver {
                 chatCallback.onCallback(chatsList);
             }
         });
+    }
+
+    public String findChatID(String adID) {
+        if (getUserChats() != null) {
+            for (iChat chat : getUserChats()) {
+                if (chat.getUniqueIDAdID().equals(adID)) {
+                    return chat.getChatID();
+                }
+            }
+        }
+        return null;
     }
 
 }

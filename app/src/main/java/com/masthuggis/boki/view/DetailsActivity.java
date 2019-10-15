@@ -3,9 +3,7 @@ package com.masthuggis.boki.view;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.Icon;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -50,7 +48,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
             if (canProceedWithTapAction()) {
-                presenter.contactOwnerButtonClicked(contactOwnerButton.getText().toString());
+                presenter.contactOwnerBtnClicked(contactOwnerButton.getText().toString()); //Should the logic be based off this string?
             }
         });
 
@@ -128,7 +126,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         startActivity(intent);
     }
 
-
     /**
      * Private method trying to resolve if a tableRow with tags is filled and
      * if a new one should be created.
@@ -198,6 +195,10 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         favouritesIcon.setImageDrawable(notFavouriteStar);
     }
 
+    public void hideFavouriteIcon() {
+        favouritesIcon.setVisibility(View.GONE);
+    }
+
     public boolean canProceedWithTapAction() {
         boolean canProceed = tapActionWasNotTooFast();
         lastTimeThumbnailWasClicked = System.currentTimeMillis();
@@ -210,14 +211,15 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
     //TODO comment this
+    //TODO move this logic away from Activity into Model
     private void setUpFavouriteIcon() {
         favouritesIcon = findViewById(R.id.favouritesIcon);
         if (presenter.isUserOwner()) {
             favouritesIcon.setVisibility(View.GONE);
         } else {
-            presenter.setFavouriteIconStatus();
+            presenter.setUpFavouriteIcon();
             favouritesIcon.setOnClickListener(view -> {
-                        presenter.onFavouritesIconPressed(); //gör den bara sättbar till en början :)
+                        presenter.onFavouritesIconPressed();
                     }
             );
         }
