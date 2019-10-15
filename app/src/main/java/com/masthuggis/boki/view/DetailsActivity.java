@@ -219,7 +219,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         } else {
             presenter.setUpFavouriteIcon();
             favouritesIcon.setOnClickListener(view -> {
-                        presenter.onFavouritesIconPressed(); //gör den bara sättbar till en början :)
+                        presenter.onFavouritesIconPressed();
                     }
             );
         }

@@ -76,7 +76,6 @@ public class DetailsPresenter {
         view.openChat(chatID);
     }
 
-    //Moved logic for this to model
     public boolean isUserOwner() {
         return dataModel.isUserOwner(advertisement);
     }
@@ -99,25 +98,6 @@ public class DetailsPresenter {
         }
     }
 
-
-    //TODO move logic to dataModel
-    /*public void contactOwnerButtonClicked(String contactOwnerButtonText) {
-        if (contactOwnerButtonText.equals("Starta chatt")) {
-            if (dataModel.getUserChats() != null) {
-                for (iChat chats : dataModel.getUserChats()) {
-                    if (chats.getUniqueIDAdID().equals(advertisement.getUniqueID())) {
-                        openChat(chats.getChatID());
-                        return;
-                    }
-                }
-            }
-            createNewChat();
-        } else {
-            view.setOwnerButtonText("Starta chatt");
-        }
-    }*/
-
-    //Necessary to change local variable (isMarkedAsFavourite) inside method, otherwise it has to update from firebase while in Detail View
     public void onFavouritesIconPressed() {
         if (currentAdvertIsFavourite()) {
             dataModel.removeFromFavourites(advertisement);
@@ -125,7 +105,6 @@ public class DetailsPresenter {
         } else {
             advertisement.markAsFavourite();
             dataModel.addToFavourites(advertisement);
-            setUpFavouriteIcon();
         }
     }
 
