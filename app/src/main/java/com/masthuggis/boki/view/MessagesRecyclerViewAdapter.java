@@ -59,7 +59,7 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements ChatThumbnailView {
         private TextView userTextView;
         private TextView dateTextView;
         private ImageView messageImageView;
@@ -90,25 +90,31 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
             }
         }
 
+        @Override
         public void setUserTextView(String userTextView) {
             this.userTextView.setText(userTextView);
         }
 
+        @Override
         public void setDateTextView(String dateTextView) {
             this.dateTextView.setText(dateTextView);
         }
 
+        @Override
         public void setMessageImageView(String messageImageView) {
             if (messageImageView == null) {
                 return;
             }
             Glide.with(mContext).load(messageImageView).into(this.messageImageView);
-         //   this.messageImageView.setImageURI(Uri.parse(messageImageView));
         }
-
+        @Override
         public void setChatID(String chatID) {
             this.chatID = chatID;
         }
+       /* public void setDisabled(){
+            backgroundLayout.setBackgroundResource(R.drawable.card_background_grey);
+
+        }*/
     }
 
 

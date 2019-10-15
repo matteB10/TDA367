@@ -55,5 +55,6 @@ public interface iRepository {
     void removeChat(String userID, String chatID);
 
     void getUserFavourites(FavouriteIDsCallback favouriteIDsCallback);
+     void removeFromFavourites(String adID, String userID);
 
-}
+    }

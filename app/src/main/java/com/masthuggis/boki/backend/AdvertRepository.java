@@ -19,7 +19,7 @@ import java.util.Map;
  * by the domain-layer of the application.
  * Data is fetched through the iBackend interface.
  */
-public class AdvertRepository {
+class AdvertRepository {
 
     private final iBackend backend;
 
@@ -74,7 +74,7 @@ public class AdvertRepository {
         return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageUrl, tags, owner);
     }
 
-    public void getUserFavourites(FavouriteIDsCallback favouriteIDsCallback) {
+    void getUserFavourites(FavouriteIDsCallback favouriteIDsCallback) {
         backend.getFavouriteIDs(new DBMapCallback() {
             @Override
             public void onCallBack(Map<String, Object> dataMap) {
@@ -83,29 +83,32 @@ public class AdvertRepository {
         });
     }
 
-    public void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID) {
+    void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID) {
         backend.deleteAd(chatReceiverAndUserIDMap,adIDAndUserID);
     }
 
 
-    public void updateAd(String adID, String newTitle, long newPrice, String newDescription,
-                         List<String> newTagList, String newCondition, File imageFile) {
+    void updateAd(String adID, String newTitle, long newPrice, String newDescription,
+                  List<String> newTagList, String newCondition, File imageFile) {
         backend.updateAd(adID, newTitle, newPrice, newDescription, newTagList, newCondition, imageFile);
     }
 
-    public void addBackendObserver(BackendObserver backendObserver) {
+    void addBackendObserver(BackendObserver backendObserver) {
         backend.addBackendObserver(backendObserver);
     }
 
-    public void removeBackendObserver(BackendObserver backendObserver) {
+    void removeBackendObserver(BackendObserver backendObserver) {
         backend.removeBackendObserver(backendObserver);
     }
 
-    public void addToFavourites(String adID, String userID) {
+    void addToFavourites(String adID, String userID) {
         backend.addAdToFavourites(adID, userID);
     }
 
 
+    void removeAdFromFavourites(String adID, String userID) {
+        backend.removeAdFromFavourites(adID,userID);
+    }
 }
 
 

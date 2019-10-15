@@ -78,6 +78,11 @@ public class Repository implements iRepository {
         userRepository.getUserChats(userID, chatCallback);
     }
 
+    public void removeFromFavourites(String adID, String userID) {
+        advertRepository.removeAdFromFavourites(adID, userID);
+    }
+
+
     public void getMessages(String uniqueChatID, messagesCallback messagesCallback) {
         userRepository.getMessages(uniqueChatID, messagesCallback);
     }
@@ -101,6 +106,7 @@ public class Repository implements iRepository {
 
     @Override
     public void removeChat(String userID, String chatID) {
+        userRepository.removeChat(userID,chatID);
 
     }
 

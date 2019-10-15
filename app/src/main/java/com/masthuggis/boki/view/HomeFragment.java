@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
@@ -37,14 +38,23 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
     private View view;
     private AdvertRecyclerViewAdapter recyclerViewAdapter;
     private EditText searchField;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.home_fragment, container, false);
+        swipeRefreshLayout = view.findViewById(R.id.pullToRefresh);
         setupPresenter();
         setupSortSpinner();
         setupSearchField();
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.updateFromUserInteraction();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         return view;
     }
 

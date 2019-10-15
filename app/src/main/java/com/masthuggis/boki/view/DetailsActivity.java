@@ -2,6 +2,7 @@ package com.masthuggis.boki.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -187,6 +188,18 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
     }
 
+    @Override
+    public void setFavouriteStar() {
+        Drawable favouriteStar = getResources().getDrawable(android.R.drawable.star_big_on);
+        favouritesIcon.setImageDrawable(favouriteStar);
+    }
+
+    @Override
+    public void setNotFavouriteStar() {
+        Drawable notFavouriteStar = getResources().getDrawable(android.R.drawable.star_big_off);
+        favouritesIcon.setImageDrawable(notFavouriteStar);
+    }
+
     public boolean canProceedWithTapAction() {
         boolean canProceed = tapActionWasNotTooFast();
         lastTimeThumbnailWasClicked = System.currentTimeMillis();
@@ -201,7 +214,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     private void setUpFavouriteIcon() {
         favouritesIcon = findViewById(R.id.favouritesIcon);
         if (presenter.isUserOwner()) {
-            favouritesIcon.setVisibility(View.INVISIBLE);
+            favouritesIcon.setVisibility(View.GONE);
         } else {
             favouritesIcon.setOnClickListener(view -> {
                         presenter.onFavouritesIconPressed(); //gör den bara sättbar till en början :)

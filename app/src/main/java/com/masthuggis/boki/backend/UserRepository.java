@@ -154,7 +154,8 @@ public class UserRepository {
         backend.signOut();
     }
 
-    void removeChat(String userID, List<String> chatIDs) {
+    void removeChat(String userID, String chatID) {
+        backend.removeChat(userID,chatID);
     }
 }
 

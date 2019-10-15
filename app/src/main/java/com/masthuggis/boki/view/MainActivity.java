@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         setupBottomTabNavigator();
     }
 
+
+
     /**
      * If back button is pressed the app exits. Is it better to show the previously active tab?
      */

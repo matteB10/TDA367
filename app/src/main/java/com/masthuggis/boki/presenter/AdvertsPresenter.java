@@ -20,7 +20,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
     protected final DataModel dataModel;
     private List<Advertisement> adverts;
 
-    public AdvertsPresenter(AdvertsPresenterView view, DataModel dataModel) {
+    AdvertsPresenter(AdvertsPresenterView view, DataModel dataModel) {
         this.view = view;
         this.adverts = new ArrayList<>();
         this.dataModel = dataModel;
@@ -38,7 +38,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
      * Sorts adverts and tells the view to update UI.
      * @param adverts the updated adverts lists that will be displayed.
      */
-    public void updateAdverts(List<Advertisement> adverts) {
+    void updateAdverts(List<Advertisement> adverts) {
         if (stateOfAdvertsIsInvalid(adverts) || view == null) {
             return;
         }
@@ -51,7 +51,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
     /**
      * Asks the concrete implementations to get data and then updates the UI.
      */
-    public void updateAdverts() {
+    void updateAdverts() {
         if (view == null) {
             return;
         }

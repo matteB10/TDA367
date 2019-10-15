@@ -8,18 +8,21 @@ import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.observers.BackendObserver;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public interface iBackend {
     void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID);
 
+    void removeChat(String userID, String chatID);
+
     void updateAd(String adID, String newTitle, long newPrice, String newDescription, List<String> newTagList, String newCondition, File imageFile);
 
-    void writeAdvertToFirebase(File imageFile, HashMap<String, Object> dataMap);
+    void writeAdvertToFirebase(File imageFile, Map<String, Object> dataMap);
 
     void addAdToFavourites(String adID, String userID);
+
+    void removeAdFromFavourites(String adID, String userID);
 
     void getFavouriteIDs(DBMapCallback dbMapCallback);
 
@@ -33,7 +36,7 @@ public interface iBackend {
 
     void createNewChat(String adOwnerID, String adBuyerID, String advertID, String imageURL, stringCallback stringCallback);
 
-    void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap);
+    void writeMessage(String uniqueChatID, Map<String, Object> messageMap);
 
     void setUsername(String username, SuccessCallback successCallback);
 

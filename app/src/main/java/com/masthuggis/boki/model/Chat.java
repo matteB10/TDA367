@@ -41,7 +41,6 @@ public class Chat implements iChat {
         for (int i = 0; i < messages.size(); i++) {
             if ((messages.get(i).getTimeSent()) >= (timeLastMessageSent)) {
                 timeLastMessageSent = messages.get(i).getTimeSent();
-
             }
         }
         return timeLastMessageSent;
