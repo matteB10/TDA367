@@ -16,7 +16,6 @@ import com.masthuggis.boki.presenter.ProfilePresenter;
  */
 public class ProfileFragment extends AdvertsView implements ProfilePresenter.View, AdvertsPresenterView {
     private ProfilePresenter presenter;
-    private Button signOutBtn;
 
     @Override
     protected AdvertsPresenter getPresenter() {
@@ -27,16 +26,29 @@ public class ProfileFragment extends AdvertsView implements ProfilePresenter.Vie
     }
 
     @Override
-    protected View onCreateHeader() {
+    protected View onCreateHeaderLayout() {
         View header = getLayoutInflater().inflate(R.layout.profile_header, null);
-        signOutBtn = header.findViewById(R.id.signOutButton);
-        signOutBtn.setOnClickListener(view -> presenter.onSignOutPressed());
+        Button signOutBtn = header.findViewById(R.id.signOutButton);
+        signOutBtn.setOnClickListener(v -> presenter.onSignOutPressed());
         return header;
+    }
+
+    @Override
+    protected View onCreateNoResultsFoundLayout() {
+        View noResults = getLayoutInflater().inflate(R.layout.profile_no_adverts, null);
+        Button goToPublishPageButton = noResults.findViewById(R.id.profileNoAdvertsSellYourBookButton);
+        goToPublishPageButton.setOnClickListener(v -> showCreateAdPage());
+        return noResults;
     }
 
     @Override
     public void showLoginScreen() {
         Intent intent = new Intent(getContext(), SignInActivity.class);
+        startActivity(intent);
+    }
+
+    private void showCreateAdPage() {
+        Intent intent = new Intent(getActivity(), CreateAdActivity.class);
         startActivity(intent);
     }
 }

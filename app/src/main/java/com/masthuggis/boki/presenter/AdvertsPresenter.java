@@ -44,14 +44,15 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
             return;
         }
 
-        view.hideLoadingScreen();
-
         if (adverts.isEmpty()) {
             view.showNoThumbnailsAvailableScreen();
         } else {
+            view.hideNoThumbnailsAvailableScreen();
             this.adverts = sort(adverts);
-            view.updateThumbnails();
         }
+
+        view.hideLoadingScreen();
+        view.updateThumbnails();
     }
 
     /**

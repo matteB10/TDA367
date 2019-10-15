@@ -79,6 +79,11 @@ public class FavoritesFragment extends Fragment implements AdvertsPresenterView 
     }
 
     @Override
+    public void hideNoThumbnailsAvailableScreen() {
+        // TODO: implement
+    }
+
+    @Override
     public void showDetailsScreen(String id) {
         Intent intent = new Intent(getContext(), DetailsActivity.class);
         intent.putExtra("advertID", id);

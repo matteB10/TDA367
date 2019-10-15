@@ -22,38 +22,31 @@ abstract class AdvertsView extends Fragment implements AdvertsPresenterView {
     protected AdvertsPresenter presenter;
     private View view;
     private ProductsRecyclerViewAdapter recyclerViewAdapter;
+    private LinearLayout noAdvertsFoundContainer;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.adverts_view, container, false);
         this.presenter = getPresenter();
-        this.presenter.initPresenter();
-
         setupHeader();
-        onCreateHeader();
+        setupNoResultsFoundView();
+        this.presenter.initPresenter();
         return view;
     }
 
-    public View getView() {
-        return view;
+    private void setupNoResultsFoundView() {
+        View noResultsFound = onCreateNoResultsFoundLayout();
+        noAdvertsFoundContainer = view.findViewById(R.id.advertsViewNoAdvertsFound);
+        noAdvertsFoundContainer.addView(noResultsFound);
+        noAdvertsFoundContainer.setVisibility(View.GONE);
     }
 
     private void setupHeader() {
-        View header = onCreateHeader();
+        View header = onCreateHeaderLayout();
         LinearLayout headerContainer = view.findViewById(R.id.advertsViewHeader);
         headerContainer.addView(header);
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.viewIsBeingDestroyed();
-    }
-
-    protected abstract View onCreateHeader();
-
-    protected abstract AdvertsPresenter getPresenter();
 
     private void setupList() {
         RecyclerView recyclerView = view.findViewById(R.id.advertsViewRecycler);
@@ -66,21 +59,38 @@ abstract class AdvertsView extends Fragment implements AdvertsPresenterView {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.viewIsBeingDestroyed();
+    }
+
+    protected abstract View onCreateHeaderLayout();
+
+    protected abstract View onCreateNoResultsFoundLayout();
+
+    protected abstract AdvertsPresenter getPresenter();
+
+    public View getView() {
+        return view;
+    }
+
+    @Override
     public void updateThumbnails() {
         if (recyclerViewAdapter == null) {
             setupList();
         } else {
             recyclerViewAdapter.notifyDataSetChanged();
         }
-
-        //LinearLayout noResultsContainer = view.findViewById(R.id.noResultsFound);
-        //noResultsContainer.setVisibility(View.GONE);
     }
 
     @Override
     public void showNoThumbnailsAvailableScreen() {
-        //LinearLayout noResultsContainer = view.findViewById(R.id.noResultsFound);
-        //noResultsContainer.setVisibility(View.VISIBLE);
+        noAdvertsFoundContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNoThumbnailsAvailableScreen() {
+        noAdvertsFoundContainer.setVisibility(View.GONE);
     }
 
     @Override
