@@ -77,6 +77,7 @@
     <string name="search">Search</string>
 
     <string name="putExtraToastKey">toast</string>
+    <string name="noFavoritesFound">Du har inga favoriter sparade ännu. För att spara en favorit gå in på en annons och tryck på hjärtat.</string>
 
     <string name="searchHint">Sök efter titlar...</string>
     <string name="sign_out">Logga ut</string>

@@ -7,7 +7,6 @@ import com.masthuggis.boki.model.sorting.SortManager;
 import java.util.List;
 
 public class FavouritesPresenter extends AdvertsPresenter {
-
     public FavouritesPresenter(AdvertsPresenterView view, DataModel dataModel) {
         super(view, dataModel);
         this.view = view;
