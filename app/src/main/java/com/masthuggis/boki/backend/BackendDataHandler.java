@@ -124,6 +124,26 @@ public class BackendDataHandler implements iBackend {
         });
     }
 
+    public void deleteIDFromFavourites(String favouriteID) {
+        String userID = DataModel.getInstance().getUserID();
+        db.collection("users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    deleteID(favouriteID, task);
+                }
+            }
+        });
+    }
+
+    private void deleteID(String favouriteID, Task<DocumentSnapshot> task) {
+        DocumentSnapshot userData = task.getResult();
+        String userID = (String) userData.get("userID");
+        List<String> favourites = (List<String>) userData.get("favourites");
+        favourites.remove(favouriteID);
+        db.collection("users").document(userID).update("favourites",favourites);
+    }
+
 
     private void writeToDatabase(HashMap<String, Object> data) {
         isWritingAdvertToDatabase = true;

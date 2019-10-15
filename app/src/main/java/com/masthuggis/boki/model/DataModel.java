@@ -194,7 +194,7 @@ public class DataModel implements BackendObserver {
     private List<Advertisement> getFavouritesFromList(List<Advertisement> advertisements) {
         List<Advertisement> favourites = new ArrayList<>();
         for (Advertisement ad : advertisements) {
-            isAdMarkedAsFavourite(ad.getUniqueID(), new MarkedAsFavouriteCallback() {
+            isAFavourite(ad.getUniqueID(), new MarkedAsFavouriteCallback() {
                 @Override
                 public void onCallback(boolean markedAsFavourite) {
                     if (markedAsFavourite) {
@@ -210,20 +210,38 @@ public class DataModel implements BackendObserver {
     /**
      * Returns a boolean of whether or not the given adID exists under the User's list of ID:s in the database
      */
-    private void isAdMarkedAsFavourite(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
+    private void isAFavourite(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
         repository.getUserFavourites(new FavouriteIDsCallback() {
             @Override
             public void onCallback(List<String> favouriteIDs) {
                 if (favouriteIDs != null) { //Only check if user actually has favourites, otherwise NullPointerException
-                    for (String adID : favouriteIDs) {
-                        if (adID.equals(uniqueAdID)) {
+                    for (String favouriteID : favouriteIDs) {
+                        if(adStillExists(favouriteID) && favouriteID.equals(uniqueAdID)) {
                             markedAsFavouriteCallback.onCallback(true); //Only call method if true, would otherwise call when not needed
                         }
                     }
+                    //If reached, no favourite ID matched THAT particular ad ID
                 }
             }
         });
     }
+
+
+    private boolean adStillExists(String favouriteID) {
+        for (Advertisement advertisement : allAds) {
+            if (advertisement.getUniqueID().equals(favouriteID)) {
+                return true;
+            }
+        }
+        //If this is reached, no existing advertisement has the ID that is stored under user favourites in database
+        deleteIDFromFavourites(favouriteID);
+        return false;
+    }
+
+    private void deleteIDFromFavourites(String favouriteID) {
+        repository.deleteIDFromFavourites(favouriteID);
+    }
+
 
     private List<Advertisement> retrieveAdsFromUserID(List<Advertisement> adverts) {
         List<Advertisement> userAds = new ArrayList<>();

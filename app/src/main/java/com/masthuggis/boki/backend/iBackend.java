@@ -25,7 +25,9 @@ public interface iBackend {
 
     void getFavouriteIDs(DBMapCallback dbMapCallback);
 
-     void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
+    void deleteIDFromFavourites(String favouriteID);
+
+    void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
 
     void getUserChats(String userID, DBCallback DBCallback,FailureCallback failureCallback);
 
