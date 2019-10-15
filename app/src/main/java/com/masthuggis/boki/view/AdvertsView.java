@@ -1,12 +1,14 @@
 package com.masthuggis.boki.view;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,12 +23,16 @@ abstract class AdvertsView extends Fragment implements AdvertsPresenterView {
     private View view;
     private ProductsRecyclerViewAdapter recyclerViewAdapter;
 
-    public void initView(LayoutInflater inflater, ViewGroup container, AdvertsPresenter presenter) {
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.adverts_view, container, false);
-        this.presenter = presenter;
+        this.presenter = getPresenter();
         this.presenter.initPresenter();
+
         setupHeader();
         onCreateHeader();
+        return view;
     }
 
     public View getView() {
@@ -46,6 +52,8 @@ abstract class AdvertsView extends Fragment implements AdvertsPresenterView {
     }
 
     protected abstract View onCreateHeader();
+
+    protected abstract AdvertsPresenter getPresenter();
 
     private void setupList() {
         RecyclerView recyclerView = view.findViewById(R.id.advertsViewRecycler);

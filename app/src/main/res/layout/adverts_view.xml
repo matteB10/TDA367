@@ -28,6 +28,14 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
 
+            <LinearLayout
+                android:id="@+id/advertsViewNoAdvertsFound"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:orientation="vertical"
+                android:visibility="gone"></LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/advertsViewRecycler"
                 android:layout_width="match_parent"
