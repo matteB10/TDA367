@@ -4,32 +4,28 @@ import java.util.List;
 
 /**
  * Chat is a java class implementing the iChat interface for the sake of abstraction. Chat is the container of messages which
- * are being sent between two users. The chat contains an advertisement to make sure that two users can only have one chat considering
+ * are being sent between two users. The chat contains an advertisementID to make sure that two users can only have one chat considering
  * one specific advertisement.
  */
 
 public class Chat implements iChat {
     private List<iMessage> messages;
-    private String senderID;
-    private String receiverID;
     private String chatID;
-    private String receiverUsername;
     private String uniqueAdID;
-    private String senderUsername;
-    private DataModel dataModel;
+    private iUser userOne;
+    private iUser userTwo;
+    private boolean isActive;
+    private String imageURL;
 
 
-    public Chat(String uniqueChatID,String senderID,String receiverID, String uniqueAdID, String receiverUsername, String senderUsername, DataModel dataModel) {
-        this.dataModel = dataModel;
-        this.senderID = senderID;
-        this.receiverID = receiverID;
+    Chat(String uniqueChatID, iUser userOne, iUser userTwo, String uniqueAdID,String imageURL, boolean isActive) {
+        this.userOne = userOne;
+        this.userTwo = userTwo;
         this.chatID = uniqueChatID;
-        this.receiverUsername = receiverUsername;
-        this.senderUsername = senderUsername;
         this.uniqueAdID = uniqueAdID;
-        dataModel.getMessages(uniqueChatID, this, messagesList -> messages = messagesList);
+        this.isActive = isActive;
+        this.imageURL = imageURL;
     }
-
 
 
     /**
@@ -45,7 +41,6 @@ public class Chat implements iChat {
         for (int i = 0; i < messages.size(); i++) {
             if ((messages.get(i).getTimeSent()) >= (timeLastMessageSent)) {
                 timeLastMessageSent = messages.get(i).getTimeSent();
-
             }
         }
         return timeLastMessageSent;
@@ -53,14 +48,6 @@ public class Chat implements iChat {
 
     public List<iMessage> getMessages() {
         return this.messages;
-    }
-
-    public String getSenderID() {
-        return this.senderID;
-    }
-
-    public String getReceiverID() {
-        return this.receiverID;
     }
 
     @Override
@@ -72,32 +59,38 @@ public class Chat implements iChat {
         this.messages = messages;
     }
 
-
-    public String getReceiverUsername() {
-        return receiverUsername;
-    }
-
     @Override
-    public String getSenderUsername() {
-        return this.senderUsername;
+    public boolean isActive() {
+        return isActive;
     }
 
 
     @Override
-    public String getDisplayName() {
-        String currentUserID = dataModel.getUserID();
+    public String getReceiverName(String currentUserID) {
 
-        if (!(senderID.equals(currentUserID))) {
-            return senderUsername;
+        if (!(userOne.getId().equals(currentUserID))) {
+            return userOne.getDisplayName();
         } else {
-            return receiverUsername;
+            return userTwo.getDisplayName();
         }
-
     }
 
     @Override
-    public String getUniqueIDAdID() {
+    public String getAdID() {
         return this.uniqueAdID;
 
+    }
+    @Override
+    public String getImageURL(){
+        return this.imageURL;
+    }
+
+    @Override
+    public String getReceiverID(String currentUserID) {
+        if (!(userOne.getId().equals(currentUserID))) {
+            return userOne.getId();
+        } else {
+            return userTwo.getId();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.masthuggis.boki.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -26,6 +28,7 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 public class ChatFragment extends Fragment implements ChatPresenter.View {
     private ChatPresenter presenter;
     private View view;
+    private MessagesRecyclerViewAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -39,9 +42,6 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
     public void onResume() {
         Log.e("DEBUG", "onResume of MessageFragment");
         super.onResume();
-        if(this.presenter!=null){
-           // setupList(presenter);
-        }
     }
     @Override
     public void onDestroy() {
@@ -55,10 +55,10 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
      */
     private void setupList(ChatPresenter chatPresenter) {
         RecyclerView recyclerView = view.findViewById(R.id.messages_recyclerview);
-        MessagesRecyclerViewAdapter adapter = new MessagesRecyclerViewAdapter(this.getContext(),chatPresenter);
+        adapter = new MessagesRecyclerViewAdapter(this.getContext(),chatPresenter);
         recyclerView.setAdapter(adapter);
         int spanCount = 1;
-        int spacing = 10;
+        int spacing = 25;
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), spanCount);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, true));
@@ -120,5 +120,26 @@ public class ChatFragment extends Fragment implements ChatPresenter.View {
         showThumbnails(chatPresenter);
         hideLoadingScreen();
 
+    }
+
+    @Override
+    public void displayToast(String displayName) {
+
+        Context context = getContext();
+        CharSequence text = displayName + " har tagit bort annonsen ni diskuterat, er konversation kommer att arkiveras.";
+        int duration = Toast.LENGTH_LONG;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+
+    }
+
+    @Override
+    public void updateThumbnails() {
+        if (adapter == null) {
+            setupList(presenter);
+        } else {
+            adapter.notifyDataSetChanged();
+        }
     }
 }

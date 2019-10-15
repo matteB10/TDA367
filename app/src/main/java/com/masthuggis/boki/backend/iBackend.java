@@ -3,22 +3,22 @@ package com.masthuggis.boki.backend;
 import com.masthuggis.boki.backend.callbacks.DBCallback;
 import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
-import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
-import com.masthuggis.boki.model.Chat;
 import com.masthuggis.boki.model.observers.BackendObserver;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface iBackend {
-    void deleteAd(String uniqueID);
+    void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID);
 
-    void updateAd(String adID, String newTitle, long newPrice, String newDescription, List<String> newTagList, String newCondition, File imageFile);
+    void removeChat(String userID, String chatID);
 
-    void writeAdvertToFirebase(File imageFile, HashMap<String, Object> dataMap);
+    void updateAdToFirebase(File imageFile, Map<String, Object> dataMap);
+
+    void writeAdvertToFirebase(File imageFile, Map<String, Object> dataMap);
 
     void addAdToFavourites(String adID, String userID);
 
@@ -26,17 +26,19 @@ public interface iBackend {
 
     void getFavouriteIDs(DBMapCallback dbMapCallback);
 
-     void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
+    void deleteIDFromFavourites(String favouriteID);
 
-    void getUserChats(String userID, DBCallback DBCallback,FailureCallback failureCallback);
+    void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
+
+    void getUserChats(String userID, DBCallback DBCallback, FailureCallback failureCallback);
 
     void getUser(DBMapCallback dbMapCallback);
 
-    void getMessages(String uniqueChatID, Chat chat, DBCallback messageCallback);
+    void getMessages(String uniqueChatID, DBCallback messageCallback);
 
-    void createNewChat(String uniqueOwnerID, String advertID, stringCallback stringCallback, String receiverUsername);
+    void createNewChat(String adOwnerID, String adBuyerID, String advertID, String imageURL, stringCallback stringCallback);
 
-    void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap);
+    void writeMessage(String uniqueChatID, Map<String, Object> messageMap);
 
     void setUsername(String username, SuccessCallback successCallback);
 
@@ -50,6 +52,8 @@ public interface iBackend {
 
     boolean isUserSignedIn();
 
-    void userSignUpAndSignIn(String email, String password,String username,SuccessCallback successCallback, FailureCallback failureCallback);
+    void userSignUpAndSignIn(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback);
+
+    void getUserFromID(String userID, DBMapCallback dbMapCallback);
 
 }

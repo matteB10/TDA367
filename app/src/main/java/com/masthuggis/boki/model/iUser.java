@@ -4,15 +4,22 @@ import java.util.List;
 
 public interface iUser {
     String getId();
+
     String getDisplayName();
+
     String getEmail();
 
-
     List<iChat> getChats();
+
     void setChats(List<iChat> chats);
 
     void setAdverts(List<Advertisement> adverts);
+
+    List<Advertisement> getAdverts();
+
+    String getChatIDFromAdID(String adID);
     void addFavourite(Advertisement advertisement);
+    void removeFavourite(Advertisement advertisement);
     void setFavourites(List<Advertisement> advertisements);
     List<Advertisement> getFavourites();
 }

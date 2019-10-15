@@ -5,8 +5,12 @@ public interface AdvertsPresenterView {
 
     void updateThumbnails();
 
-    void hideLoadingScreen();
+    void showNoThumbnailsAvailableScreen();
+
+    void hideNoThumbnailsAvailableScreen();
 
     void showDetailsScreen(String id);
+
+    void hideLoadingScreen();
 
 }

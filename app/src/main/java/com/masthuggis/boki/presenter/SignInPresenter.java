@@ -17,7 +17,7 @@ public class SignInPresenter {
             view.showSignInFailedMessage("Felaktig inmatning. Skrev du verkligen rätt?");
             return;
         }
-        dataModel.SignIn(email, password, this::onSignInSuccess, errorMessage -> onSignInFailed(errorMessage));
+        dataModel.signIn(email, password, this::onSignInSuccess, errorMessage -> onSignInFailed(errorMessage));
     }
 
     private boolean anyFieldIsBadlyFormatted(String email, String password) {

@@ -1,6 +1,5 @@
 package com.masthuggis.boki.utils;
 
-import com.masthuggis.boki.backend.MockRepository;
 import com.masthuggis.boki.backend.callbacks.PerformedSearchCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
@@ -14,40 +13,50 @@ import java.util.List;
 
 public class SearchHelper {
 
-
     private SearchHelper() {
     }
 
 
     public static void search(String query, PerformedSearchCallback callback) {
         List<Advertisement> advertisements = DataModel.getInstance().getAllAdverts();
-        List<Advertisement> tempList = new ArrayList<>();
         List<Advertisement> searchRes = new ArrayList<>(); //new list with search results
         String queryStr = query.toLowerCase().trim();
 
         if (advertisements != null) {
-            tempList = new ArrayList<>(advertisements); //temporary list of all adsRefreshes the list so it accurately reflects adverts in firebase
+            performSearch(searchRes, queryStr, advertisements);
         }
-
-        searchMatchTitle(searchRes, queryStr, tempList); //searchPerformed if query matches title. run first, highest priority
-        searchMatchTags(searchRes, queryStr, tempList); //searchPerformed if query matches tag. run second, second highest priority
-        searchContainsTitle(searchRes, queryStr, tempList); //searchPerformed if title contains query.
-        searchContainsTags(searchRes, queryStr, tempList); //searchPerformed if at least one of ads tags matches query.
-
         callback.onCallback(searchRes); //searchRes contains correct adverts here
     }
 
-    public static void mockSearch(String query, PerformedSearchCallback callback) {
-        List<Advertisement> tempList = MockRepository.getInstance().getLocalJSONAds();
-        List<Advertisement> searchRes = new ArrayList<>(); //new list with searchresults
-        String queryStr = query.toLowerCase().trim();
+    /**
+     * Use filter strings to perform search, add all search results
+     * @param filters
+     */
 
+    public static void addFilters(int price, List<String> filters, PerformedSearchCallback callback){
+        List<Advertisement> advertisements = DataModel.getInstance().getAllAdverts();
+        List<Advertisement> searchRes = new ArrayList<>();
+        for(String filter : filters){
+            if (advertisements != null) {
+                filter = filter.trim().toLowerCase();
+                performSearch(searchRes,filter,advertisements);
+                addPriceFilter(searchRes,price);
+            }
+        }
+        callback.onCallback(searchRes);
+    }
+
+    /**
+     * Call all search methods
+     * @param searchRes
+     * @param queryStr
+     * @param tempList
+     */
+    private static void performSearch(List<Advertisement> searchRes, String queryStr, List<Advertisement> tempList){
         searchMatchTitle(searchRes, queryStr, tempList); //searchPerformed if query matches title. run first, highest priority
         searchMatchTags(searchRes, queryStr, tempList); //searchPerformed if query matches tag. run second, second highest priority
         searchContainsTitle(searchRes, queryStr, tempList); //searchPerformed if title contains query.
         searchContainsTags(searchRes, queryStr, tempList); //searchPerformed if at least one of ads tags matches query.
-
-        callback.onCallback(searchRes);
     }
 
     /**
@@ -177,5 +186,15 @@ public class SearchHelper {
             }
         }
         return false;
+    }
+    /**
+     * Search through already added search results to add price filter
+     */
+    private static void addPriceFilter(List<Advertisement> searchRes, int maxPrice){
+        for(Advertisement ad: searchRes){
+            if(maxPrice < ad.getPrice()){
+                searchRes.remove(ad);
+            }
+        }
     }
 }

@@ -38,7 +38,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-
+        favouritesIcon = findViewById(R.id.favouritesIcon);
         Intent intent = getIntent();
         String advertID = intent.getExtras().getString("advertID");
         if (advertID != null) {
@@ -48,14 +48,14 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
             if (canProceedWithTapAction()) {
-                presenter.contactOwnerButtonClicked(contactOwnerButton.getText().toString());
+                presenter.contactOwnerBtnClicked(contactOwnerButton.getText().toString()); //Should the logic be based off this string?
             }
         });
 
         Button changeAd = findViewById(R.id.changeAdButton);
         changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
         setUpFavouriteIcon();
-        setBtnForOwner();
+        setVisibilityOnButtons();
     }
 
 
@@ -82,7 +82,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         // TODO: fetch img, cache it and set it
         ImageView imageView = (ImageView) findViewById(R.id.detailsImage);
         Glide.with(this).load(url).override(220, 300).into(imageView);
-        //imageView.setImageURI(Uri.parse(url));
     }
 
     @Override
@@ -125,9 +124,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         Intent intent = new Intent(DetailsActivity.this, MessagesActivity.class);
         intent.putExtra("chatID", chatID);
         startActivity(intent);
-
     }
-
 
     /**
      * Private method trying to resolve if a tableRow with tags is filled and
@@ -157,17 +154,15 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         Context context = getApplicationContext();
         CharSequence text = "Du kan inte skicka meddelanden till dig själv.";
         int duration = Toast.LENGTH_LONG;
-
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
     }
 
 
-    private void setBtnForOwner() {
+    private void setVisibilityOnButtons() {
         if (presenter.isUserOwner()) {
             findViewById(R.id.changeAdButton).setVisibility(View.VISIBLE);
             findViewById(R.id.contactOwnerButton).setVisibility(View.GONE);
-
         } else {
             findViewById(R.id.changeAdButton).setVisibility(View.GONE);
             findViewById(R.id.contactOwnerButton).setVisibility(View.VISIBLE);
@@ -182,22 +177,26 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         startActivity(intent);
     }
 
+
     @Override
     public void setOwnerButtonText(String content) {
         contactOwnerButton.setText(content);
-
     }
 
     @Override
-    public void setFavouriteStar() {
-        Drawable favouriteStar = getResources().getDrawable(android.R.drawable.star_big_on);
+    public void setFavouriteIcon() {
+        Drawable favouriteStar = getResources().getDrawable(R.drawable.heart_filled_vector);
         favouritesIcon.setImageDrawable(favouriteStar);
     }
 
     @Override
-    public void setNotFavouriteStar() {
-        Drawable notFavouriteStar = getResources().getDrawable(android.R.drawable.star_big_off);
+    public void setNotFavouriteIcon() {
+        Drawable notFavouriteStar = getResources().getDrawable(R.drawable.heart_outline_vector);
         favouritesIcon.setImageDrawable(notFavouriteStar);
+    }
+
+    public void hideFavouriteIcon() {
+        favouritesIcon.setVisibility(View.GONE);
     }
 
     public boolean canProceedWithTapAction() {
@@ -211,13 +210,16 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
     }
 
+    //TODO comment this
+    //TODO move this logic away from Activity into Model
     private void setUpFavouriteIcon() {
         favouritesIcon = findViewById(R.id.favouritesIcon);
         if (presenter.isUserOwner()) {
             favouritesIcon.setVisibility(View.GONE);
         } else {
+            presenter.setUpFavouriteIcon();
             favouritesIcon.setOnClickListener(view -> {
-                        presenter.onFavouritesIconPressed(); //gör den bara sättbar till en början :)
+                        presenter.onFavouritesIconPressed();
                     }
             );
         }

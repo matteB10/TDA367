@@ -16,7 +16,7 @@ import com.masthuggis.boki.presenter.MainPresenter;
  * MainActivity is the primary view of the application. This is where the application will take you on launch.
  * Its main purpose is to handle the different tabs.
  */
-public class MainActivity extends AppCompatActivity implements MainPresenter.View {
+public class MainActivity extends AppCompatActivity implements MainPresenter.View, FilterFragment.OnFragmentCommunicationListener{
     private MainPresenter presenter;
 
     @Override
@@ -26,15 +26,17 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
 
         this.presenter = new MainPresenter(this, DependencyInjector.injectDataModel());
 
-        displayToastMessageIfItWasReceived();
+        displayToastMessageIfRequestWasReceived();
     }
 
-    private void displayToastMessageIfItWasReceived() {
+    private void displayToastMessageIfRequestWasReceived() {
         String toastKey = getString(R.string.putExtraToastKey);
         if (getIntent() != null && getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
-            if(!bundle.getString(toastKey).equals(null)) {
-                displayToastMessage(bundle.getString(toastKey));
+            if (bundle.getString(toastKey) != null) {
+                if(!bundle.getString(toastKey).equals(null)) {
+                    displayToastMessage(bundle.getString(toastKey));
+                }
             }
         }
     }
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         loadFragment(new HomeFragment());
         setupBottomTabNavigator();
     }
+
+
 
     /**
      * If back button is pressed the app exits. Is it better to show the previously active tab?
@@ -107,6 +111,13 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onFiltersChanged(Bundle args) {
+        Fragment fragment = new HomeFragment();
+        fragment.setArguments(args);
+        loadFragment(fragment);
     }
 
 }

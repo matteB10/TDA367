@@ -93,8 +93,10 @@ public class FilterFragment extends Fragment implements FilterPresenter.View {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFilterTagsChanged(presenter.getActiveTags());
-                mListener.onPriceChanged(presenter.getMaxPrice());
+                Bundle args = new Bundle();
+                args.putInt("price",presenter.getMaxPrice());
+                args.putStringArrayList("tags",new ArrayList<>(presenter.getActiveTags()));
+                mListener.onFiltersChanged(args);
             }
         });
     }
@@ -127,5 +129,11 @@ public class FilterFragment extends Fragment implements FilterPresenter.View {
         super.onDetach();
         mListener = null;
     }
+
+    interface OnFragmentCommunicationListener {
+
+        void onFiltersChanged(Bundle args);
+    }
+
 
 }
