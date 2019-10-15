@@ -70,7 +70,7 @@ public class DataModel implements BackendObserver {
                         public void onCallback(List<iChat> chatsList) {
                             user.setChats(chatsList);
                             user.setAdverts(getAdsFromCurrentUser());
-                            getFavouritesFromUser(advertisements -> {
+                            getFavouritesFromFirebase(advertisements -> {
                                 user.setFavourites(advertisements);
                                 successCallback.onSuccess();
                             });
@@ -173,9 +173,10 @@ public class DataModel implements BackendObserver {
     /**
      * Gets a user's favourites, with logical checks for if the user is logged in and
      * if the local list of advertisements has been set
+     *
      * @param advertisementCallback
      */
-    private void getFavouritesFromUser(advertisementCallback advertisementCallback) {
+    private void getFavouritesFromFirebase(advertisementCallback advertisementCallback) {
         if (user == null) {
             return;
         }
@@ -187,9 +188,8 @@ public class DataModel implements BackendObserver {
     }
 
     /**
-     *
-     * @param advertisements
-     * @return
+     * @param advertisements A given list of advertisements, can contain adverts that are not favourites of the user
+     * @return A list containing all advertisements the current user has as favourites in the backend
      */
     private List<Advertisement> getFavouritesFromList(List<Advertisement> advertisements) {
         List<Advertisement> favourites = new ArrayList<>();
@@ -208,7 +208,7 @@ public class DataModel implements BackendObserver {
     }
 
     /**
-     * Returns a boolean of whether or not the ad is not marked as a favourite, returned via the callback
+     * Returns a boolean of whether or not the given adID exists under the User's list of ID:s in the database
      */
     private void isAdMarkedAsFavourite(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
         repository.getUserFavourites(new FavouriteIDsCallback() {

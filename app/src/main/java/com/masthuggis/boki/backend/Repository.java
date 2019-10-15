@@ -62,6 +62,7 @@ public class Repository {
         thread.start();
     }
 
+
     public void getUserFavourites(FavouriteIDsCallback favouriteIDsCallback) {
         backend.getFavouriteIDs(new DBMapCallback() {
             @Override
