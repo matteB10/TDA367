@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -50,44 +51,26 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
 
     @Override
     protected View onCreateHeaderLayout() {
-        // TODO: show header
-        return new TextView(getActivity());
+        View header = getLayoutInflater().inflate(R.layout.home_header, null);
+        setupSortSpinner(header);
+        setupSearchField(header);
+        return header;
     }
 
-    @Override
-    protected View onCreateNoResultsFoundLayout() {
-        // TODO: implement
-        return new TextView(getActivity());
-    }
-
-    /*
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        this.view = inflater.inflate(R.layout.home_fragment, container, false);
-        setupSortSpinner();
-        setupSearchField();
-        return view;
-    }
-     */
-
-    /*
-    private void setupSortSpinner() {
+    private Spinner setupSortSpinner(View view) {
         Spinner spinner = view.findViewById(R.id.sortPickerSpinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, presenter.getSortOptions());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+        return spinner;
     }
-
-     */
 
     //Adds a listener for when the user performs a searchPerformed, reacts to when enter key is pressed
     //makes the keyboard disappear then calls on the presenter to perform the searchPerformed with given input
-    /*
-    private void setupSearchField() {
+    private void setupSearchField(View view) {
         searchField = view.findViewById(R.id.searchFieldEditText);
-        searchField.setOnKeyListener((view, keyCode, keyEvent) -> {
+        searchField.setOnKeyListener((v, keyCode, keyEvent) -> {
             if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
                     (keyCode == KeyEvent.KEYCODE_ENTER)) {
                 hideKeyboard();
@@ -114,9 +97,13 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         });
     }
 
-     */
+    @Override
+    protected View onCreateNoResultsFoundLayout() {
+        // TODO: implement
+        return new TextView(getActivity());
+    }
 
-    /*
+
     private void hideKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
@@ -127,7 +114,6 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         String query = searchField.getText().toString();
         presenter.searchPerformed(query);
     }
-     */
 
     @Override
     public void showNoThumbnailsAvailableScreen() {
