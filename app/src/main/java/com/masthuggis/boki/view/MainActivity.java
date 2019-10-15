@@ -26,15 +26,17 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
 
         this.presenter = new MainPresenter(this, DependencyInjector.injectDataModel());
 
-        displayToastMessageIfItWasReceived();
+        displayToastMessageIfRequestWasReceived();
     }
 
-    private void displayToastMessageIfItWasReceived() {
+    private void displayToastMessageIfRequestWasReceived() {
         String toastKey = getString(R.string.putExtraToastKey);
         if (getIntent() != null && getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
-            if(!bundle.getString(toastKey).equals(null)) {
-                displayToastMessage(bundle.getString(toastKey));
+            if (bundle.getString(toastKey) != null) {
+                if(!bundle.getString(toastKey).equals(null)) {
+                    displayToastMessage(bundle.getString(toastKey));
+                }
             }
         }
     }
