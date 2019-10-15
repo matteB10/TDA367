@@ -65,13 +65,10 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setContentView(R.layout.activity_create_advert);
         presenter = new CreateAdPresenter(this, DependencyInjector.injectDataModel());
         enablePublishButton(false);
+        Intent intent = getIntent();
         displayPreDefTagButtons();
         setListeners();
         setUpView();
-        Intent intent = getIntent();
-        setListeners();
-        //updateDataFromModel();
-
 
         if (intent.getExtras() != null) { //If there is an ad (user is editing existing ad)
             String advertID = intent.getExtras().getString("advertID");
@@ -80,7 +77,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
     }
 
-    /**Setting up view depending on if the user are creating an ad or editing an existing one
+    /**
+     * Setting up view depending on if the user are creating an ad or editing an existing one
      */
     private void setUpView() {
         TextView headerTextView = findViewById(R.id.headerTextView);
@@ -227,8 +225,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
         return Bitmap.createScaledBitmap(bitmap, 800, 800, false); //TODO is this even necessary?
     }
-    //Tags----------------------------------------------------------
 
+    //Tags----------------------------------------------------------
     /**
      * Reads predefined subject strings from resources,
      *
@@ -341,7 +339,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      * @return a new TableRow
      */
 
-    private TableRow getCurrentTagRow(int parentViewID) {
+    private ViewGroup getCurrentTagRow(int parentViewID) {
         ViewGroup parentLayout = findViewById(parentViewID);
         int noOfRows = parentLayout.getChildCount();
         for (int i = 0; i < noOfRows; i++) {
@@ -349,7 +347,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
                 return (TableRow) parentLayout.getChildAt(i);
             }
         }
-        TableRow tr = new TableRow(this);
+        ViewGroup tr = new TableRow(this);
         parentLayout.addView(tr, StylingHelper.getTableRowLayoutParams(this));
         return tr;
     }
@@ -531,8 +529,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void setUserDefTagsListener(Button btn) {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 presenter.userDefTagsChanged(btn.getText().toString());
+
             }
         });
     }
@@ -553,6 +552,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             }
         });
     }
+
 
     //setters -------------------------------------------------------
     @Override
@@ -579,6 +579,10 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         currentDescription.setText(description);
     }
 
+    /**
+     * Used when editing an already existing advertisement
+     * @param tags, all tags saved in advertisement
+     */
     @Override
     public void setTags(List<String> tags) {
         for (String str : tags) {
