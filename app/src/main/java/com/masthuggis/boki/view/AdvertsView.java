@@ -45,9 +45,11 @@ abstract class AdvertsView extends Fragment implements AdvertsPresenterView {
      */
     private void setupNoResultsFoundView() {
         View noResultsFound = onCreateNoResultsFoundLayout();
-        noAdvertsFoundContainer = view.findViewById(R.id.advertsViewNoAdvertsFound);
-        noAdvertsFoundContainer.addView(noResultsFound);
-        noAdvertsFoundContainer.setVisibility(View.GONE);
+        if (noResultsFound != null) {
+            noAdvertsFoundContainer = view.findViewById(R.id.advertsViewNoAdvertsFound);
+            noAdvertsFoundContainer.addView(noResultsFound);
+            noAdvertsFoundContainer.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -56,8 +58,10 @@ abstract class AdvertsView extends Fragment implements AdvertsPresenterView {
      */
     private void setupHeader() {
         View header = onCreateHeaderLayout();
-        LinearLayout headerContainer = view.findViewById(R.id.advertsViewHeader);
-        headerContainer.addView(header);
+        if (header != null) {
+            LinearLayout headerContainer = view.findViewById(R.id.advertsViewHeader);
+            headerContainer.addView(header);
+        }
     }
 
     /**

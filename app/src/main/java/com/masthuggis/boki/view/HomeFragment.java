@@ -66,8 +66,11 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         return spinner;
     }
 
-    //Adds a listener for when the user performs a searchPerformed, reacts to when enter key is pressed
-    //makes the keyboard disappear then calls on the presenter to perform the searchPerformed with given input
+    /**
+     * Adds a listener for when the user performs a searchPerformed, reacts to when enter key is pressed
+     * makes the keyboard disappear then calls on the presenter to perform the searchPerformed with given input
+     * @param view
+     */
     private void setupSearchField(View view) {
         searchField = view.findViewById(R.id.searchFieldEditText);
         searchField.setOnKeyListener((v, keyCode, keyEvent) -> {
@@ -100,7 +103,7 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
     @Override
     protected View onCreateNoResultsFoundLayout() {
         // TODO: implement
-        return new TextView(getActivity());
+        return null;
     }
 
 
