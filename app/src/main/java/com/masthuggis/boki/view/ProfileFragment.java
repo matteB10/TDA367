@@ -1,86 +1,44 @@
 package com.masthuggis.boki.view;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
+import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.AdvertsPresenterView;
 import com.masthuggis.boki.presenter.ProfilePresenter;
-import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
 /**
  * Profile page used for displaying the adverts that the user have published. Also have an settings
  * button to navigate to the app-wide settings.
  */
-public class ProfileFragment extends Fragment implements ProfilePresenter.View, AdvertsPresenterView {
+public class ProfileFragment extends AdvertsView implements ProfilePresenter.View, AdvertsPresenterView {
     private ProfilePresenter presenter;
-    private View view;
-    private ProductsRecyclerViewAdapter recyclerViewAdapter;
-    private Button signOutBtn;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        this.view = inflater.inflate(R.layout.profile_fragment,container,false);
-        setupPresenter();
-        setupHeader();
-        return view;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.viewIsBeingDestroyed();
-    }
-
-    private void setupPresenter() {
-        this.presenter = new ProfilePresenter(this, DependencyInjector.injectDataModel());
-        this.presenter.initPresenter();
-    }
-
-    private void setupHeader() {
-        signOutBtn = view.findViewById(R.id.signInButton);
-        signOutBtn.setOnClickListener(view -> presenter.onSignOutPressed());
-    }
-
-    private void setupList() {
-        RecyclerView recyclerView = view.findViewById(R.id.profileRecyclerView);
-        recyclerView.setNestedScrollingEnabled(false);
-        recyclerViewAdapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
-        recyclerView.setAdapter(recyclerViewAdapter);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
-    }
-
-    @Override
-    public void updateThumbnails() {
-        if (recyclerViewAdapter == null) {
-            setupList();
-        } else {
-            recyclerViewAdapter.notifyDataSetChanged();
+    protected AdvertsPresenter getPresenter() {
+        if (presenter == null) {
+            this.presenter = new ProfilePresenter(this, DependencyInjector.injectDataModel());
         }
-
-        LinearLayout noResultsContainer = view.findViewById(R.id.noResultsFound);
-        noResultsContainer.setVisibility(View.GONE);
+        return presenter;
     }
 
     @Override
-    public void showNoThumbnailsAvailableScreen() {
-        LinearLayout noResultsContainer = view.findViewById(R.id.noResultsFound);
-        noResultsContainer.setVisibility(View.VISIBLE);
+    protected View onCreateHeaderLayout() {
+        View header = getLayoutInflater().inflate(R.layout.profile_header, null);
+        Button signOutBtn = header.findViewById(R.id.signOutButton);
+        signOutBtn.setOnClickListener(v -> presenter.onSignOutPressed());
+        return header;
+    }
+
+    @Override
+    protected View onCreateNoResultsFoundLayout() {
+        View noResults = getLayoutInflater().inflate(R.layout.profile_no_adverts, null);
+        Button goToPublishPageButton = noResults.findViewById(R.id.profileNoAdvertsSellYourBookButton);
+        goToPublishPageButton.setOnClickListener(v -> showCreateAdPage());
+        return noResults;
     }
 
     @Override
@@ -89,22 +47,8 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
         startActivity(intent);
     }
 
-    @Override
-    public void showLoadingScreen() {
-        ProgressBar progressBar = view.findViewById(R.id.profileProgressBar);
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideLoadingScreen() {
-        ProgressBar progressBar = view.findViewById(R.id.profileProgressBar);
-        progressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void showDetailsScreen(String id) {
-        Intent intent = new Intent(getContext(), DetailsActivity.class);
-        intent.putExtra("advertID", id);
+    private void showCreateAdPage() {
+        Intent intent = new Intent(getActivity(), CreateAdActivity.class);
         startActivity(intent);
     }
 }

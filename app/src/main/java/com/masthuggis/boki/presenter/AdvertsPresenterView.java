@@ -7,7 +7,10 @@ public interface AdvertsPresenterView {
 
     void showNoThumbnailsAvailableScreen();
 
-    void hideLoadingScreen();
+    void hideNoThumbnailsAvailableScreen();
 
     void showDetailsScreen(String id);
+
+    void hideLoadingScreen();
+
 }
