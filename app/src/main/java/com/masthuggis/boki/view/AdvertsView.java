@@ -104,6 +104,10 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
      */
     protected abstract AdvertsPresenter getPresenter();
 
+    /**
+     * Updates the data that is displayed in the recyclerView. Will be called when for example
+     * the sorting changes or a search is performed.
+     */
     @Override
     public void updateThumbnails() {
         if (recyclerViewAdapter == null) {
@@ -113,16 +117,28 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
         }
     }
 
+    /**
+     * Shows a message explaining that no data is available with the layout provided by the
+     * concrete implementations.
+     */
     @Override
     public void showNoThumbnailsAvailableScreen() {
         noAdvertsFoundContainer.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Hides the message explaining that no data is available. For example called whenever there
+     * is data to show.
+     */
     @Override
     public void hideNoThumbnailsAvailableScreen() {
         noAdvertsFoundContainer.setVisibility(View.GONE);
     }
 
+    /**
+     * Opens a details view showing more information about the advert that was pressed.
+     * @param id
+     */
     @Override
     public void showDetailsScreen(String id) {
         Intent intent = new Intent(getContext(), DetailsActivity.class);
@@ -130,12 +146,19 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
         startActivity(intent);
     }
 
+    /**
+     * Shows a progressbar to indicate that content is loading. For example used when a network
+     * request is made.
+     */
     @Override
     public void showLoadingScreen() {
         ProgressBar progressBar = view.findViewById(R.id.advertsViewProgressbar);
         progressBar.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Hides the progressbar that indicates that content is loading.
+     */
     @Override
     public void hideLoadingScreen() {
         ProgressBar progressBar = view.findViewById(R.id.advertsViewProgressbar);
