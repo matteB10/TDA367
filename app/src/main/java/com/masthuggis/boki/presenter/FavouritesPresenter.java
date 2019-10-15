@@ -18,7 +18,7 @@ public class FavouritesPresenter implements IProductsPresenter {
         this.view = view;
         this.dataModel = dataModel;
         view.showLoadingScreen();
-        this.favourites = DataModel.getInstance().getUserFavourites();
+        this.favourites = this.dataModel.getUserFavourites();
         view.hideLoadingScreen();
     }
 
