@@ -13,6 +13,7 @@ public interface iUser {
 
     void setAdverts(List<Advertisement> adverts);
     void addFavourite(Advertisement advertisement);
+    void removeFavourite(Advertisement advertisement);
     void setFavourites(List<Advertisement> advertisements);
     List<Advertisement> getFavourites();
 }

@@ -11,12 +11,11 @@ import com.masthuggis.boki.model.observers.BackendObserver;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 
 public interface iBackend {
     void deleteAd(String uniqueID);
 
-    void updateAd(String adID, String newTitle, long newPrice, String newDescription, List<String> newTagList, String newCondition, File imageFile);
+    void updateAdToFirebase(File imageFile, HashMap<String, Object> dataMap);
 
     void writeAdvertToFirebase(File imageFile, HashMap<String, Object> dataMap);
 
@@ -26,7 +25,9 @@ public interface iBackend {
 
     void getFavouriteIDs(DBMapCallback dbMapCallback);
 
-     void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
+    void deleteIDFromFavourites(String favouriteID);
+
+    void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
 
     void getUserChats(String userID, DBCallback DBCallback,FailureCallback failureCallback);
 

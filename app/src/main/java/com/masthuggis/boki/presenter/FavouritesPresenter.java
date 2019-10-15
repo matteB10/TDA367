@@ -3,13 +3,14 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.ClickDelayHelper;
+import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.List;
 
 public class FavouritesPresenter implements IProductsPresenter {
 
-    private final AdvertsPresenterView view; //TODO maybe have to change this
+    private final AdvertsPresenterView view;
     private List<Advertisement> favourites;
 
     public FavouritesPresenter(AdvertsPresenterView view) {
@@ -26,6 +27,7 @@ public class FavouritesPresenter implements IProductsPresenter {
         thumbnailView.setId(advert.getUniqueID());
         thumbnailView.setTitle(advert.getTitle());
         thumbnailView.setPrice(advert.getPrice());
+        setCondition(advert, thumbnailView);
         if (advert.getImageUrl() != null) {
             thumbnailView.setImageURL(advert.getImageUrl());
         }
@@ -48,5 +50,11 @@ public class FavouritesPresenter implements IProductsPresenter {
 
     private boolean canProceedWithTapAction() {
         return ClickDelayHelper.canProceedWithTapAction();
+    }
+
+    private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
+        int drawable = StylingHelper.getConditionDrawable(a.getCondition());
+        int text = StylingHelper.getConditionText(a.getCondition());
+        thumbnailView.setCondition(text, drawable);
     }
 }

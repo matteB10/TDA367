@@ -68,24 +68,25 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         Intent intent = getIntent();
         displayPreDefTagButtons();
         setListeners();
-        updateDataFromModel();
         setUpView();
 
         if (intent.getExtras() != null) { //If there is an ad (user is editing existing ad)
             String advertID = intent.getExtras().getString("advertID");
-            presenter.getAdbyID(advertID);
+            presenter.setAd(advertID);
+            presenter.setUpView();
         }
     }
 
-    /** Setting up view depending on if the user are creating an ad or editing an existing one
+    /**
+     * Setting up view depending on if the user are creating an ad or editing an existing one
      */
     private void setUpView() {
         TextView headerTextView = findViewById(R.id.headerTextView);
-        if (getIntent().getExtras() != null) {
-            headerTextView.setText("Ändra din annons"); //TODO lägga till i strings
+        boolean editMode = getIntent().getExtras() != null;
+        if (editMode) {
+            headerTextView.setText(getResources().getString(R.string.addAdvertHeaderEdit));
         }
-        setButtonVisibility();
-        setTextViews();
+        setButtonVisibility(editMode);
     }
 
     private void setListeners() {
@@ -101,38 +102,13 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setSaveBtnListener();
     }
 
-    private void updateDataFromModel() {
-        if (presenter.getImageUrl() != null) {
-            Glide.with(this).load(presenter.getImageUrl()).into(imageViewDisplay);
-        }
-        title.setText(presenter.getTitle());
-        description.setText(presenter.getDescription());
-        if (presenter.getIsValidPrice()) {
-            price.setText("" + presenter.getPrice());
+
+    private void setButtonVisibility(boolean editMode) {
+        if(editMode){
+            publishAdButton.setVisibility(View.GONE);
         } else {
-            showInputPrompt();
-        }
-    }
-
-    private void showInputPrompt() {
-        price.setText("");
-    }
-
-    private void setTextViews() {
-        if (getIntent().getExtras() != null) {
-            TextView currentTags = findViewById(R.id.textView3);
-            currentTags.setText("Dina nuvarande taggar"); //TODO lägga till i strings
-        }
-    }
-
-
-    private void setButtonVisibility() {
-        if (getIntent().getExtras() == null) {
-            enablePublishButton(false);
             deleteAdButton.setVisibility(View.GONE);
             saveAdButton.setVisibility(View.GONE);
-        } else {
-            publishAdButton.setVisibility(View.GONE);
         }
     }
 
@@ -163,7 +139,16 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         publishAdButton.setEnabled(b);
         publishAdButton.setBackground(getDrawable(StylingHelper.getPrimaryButtonDrawable(b)));
     }
-
+    /**
+     * Enables save(update) ad button when all mandatory fields contains
+     * valid input.
+     */
+    @Override
+    public void enableSaveButton(boolean b) {
+        saveAdButton = findViewById(R.id.saveAdBtn);
+        saveAdButton.setEnabled(b);
+        saveAdButton.setBackground(getDrawable(StylingHelper.getPrimaryButtonDrawable(b)));
+    }
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -207,12 +192,13 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageViewDisplay = findViewById(R.id.addImageView);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { //When image has been taken
-            compressOnEmulator();
+            compressImage();
+            presenter.imageChanged();
         }
     }
 
     //Compresses images without trying to crop image with android OS
-    private void compressOnEmulator() {
+    private void compressImage() {
         Bitmap bitmap = compressBitmap();
         try {
             OutputStream out = new FileOutputStream(currentImageFile.getPath());
@@ -239,8 +225,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
         return Bitmap.createScaledBitmap(bitmap, 800, 800, false); //TODO is this even necessary?
     }
-    //Tags----------------------------------------------------------
 
+    //Tags----------------------------------------------------------
     /**
      * Reads predefined subject strings from resources,
      *
@@ -311,7 +297,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     @Override
-    public void setTagStyling(String tag, boolean isSelected) {
+    public void setPreDefTagSelected(String tag, boolean isSelected) {
         for (Button btn : preDefTagButtons) {
             if (btn.getText().equals(tag)) {
                 StylingHelper.setTagButtonStyling(btn, isSelected);
@@ -320,7 +306,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     /**
-     * Called in presenter when a user defined a new tag
+     * Called in presenter when a user defined a new tag, adds new
+     * tag as a button in layout.
      *
      * @param tag
      */
@@ -333,11 +320,24 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         currentUserTagTableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
     }
 
+    /**
+     * Called from presenter when a user have clicked on a user def tag.
+     * Removes selected tag and updates view.
+     *
+     * @param tag
+     */
+
     @Override
     public void removeUserTagButton(String tag) {
-        userDefTagButtons.remove(getButtonFromText(tag));
+        userDefTagButtons.remove(getButtonFromText(tag, userDefTagButtons));
         updateUserDefTags();
     }
+    /**
+     * Returns first not filled row in a layout given as parameter,
+     * or a new row if all rows are filled or layout has no rows.
+     * @param parentViewID
+     * @return a new TableRow
+     */
 
     private ViewGroup getCurrentTagRow(int parentViewID) {
         ViewGroup parentLayout = findViewById(parentViewID);
@@ -351,20 +351,38 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         parentLayout.addView(tr, StylingHelper.getTableRowLayoutParams(this));
         return tr;
     }
+    /**
+     * Used to update tags layout correctly if a tag
+     * has been deleted.
+     */
 
     private void updateUserDefTags() {
         ViewGroup parentLayout = findViewById(R.id.tagsLinearLayout);
         clearLayout(parentLayout);
         populateTagsLayout(userDefTagButtons, parentLayout);
     }
-
-    private Button getButtonFromText(String text) {
-        for (Button btn : userDefTagButtons) {
-            if (btn.getText().toString().equals(text)) {
+    /**
+     * Takes in a string and returns matching button if possible
+     *
+     * @param btnText, the button text
+     * @return a button if btnText matches the text of a button
+     */
+    private Button getButtonFromText(String btnText, List<Button> buttons) {
+        for (Button btn : buttons) {
+            if (btn.getText().toString().equals(btnText)) {
                 return btn;
             }
         }
         return null;
+    }
+    /**
+     * Checks if tag is preDef or userDef
+     * @param tag
+     * @return
+     */
+    private boolean isPreDefTag(String tag) {
+        List<String> preDefTags = getPreDefTagStrings();
+        return (preDefTags.contains(tag));
     }
 
     /**
@@ -383,34 +401,31 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void setDeleteBtnListener() {
         deleteAdButton = findViewById(R.id.removeAdBtn);
         deleteAdButton.setOnClickListener(view -> {
-            presenter.removeAdBtnPressed();
-            Intent intent = new Intent(CreateAdActivity.this, MainActivity.class);
-            intent.putExtra("advertID", presenter.getID());
-            startActivity(intent);
-            finish();
+            presenter.deleteAdvert();
+            getBackToMain(getString(R.string.toastDeletedAd));
         });
     }
 
     private void setSaveBtnListener() {
         saveAdButton = findViewById(R.id.saveAdBtn);
         saveAdButton.setOnClickListener(view -> {
-            presenter.saveAdBtnPressed(currentImageFile);
-            Intent intent = new Intent(CreateAdActivity.this, MainActivity.class);
-            intent.putExtra("advertID", presenter.getID());
-            startActivity(intent);
-            finish();
+            presenter.updateAdvert();
+            getBackToMain(getString(R.string.toastUpdatedAd));
         });
     }
 
     private void setPublishAdListener() {
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setOnClickListener(view -> {
-            presenter.publishAdvert();
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtra(getString(R.string.putExtraToastKey), "Din annons är nu upplagd");
-            startActivity(intent);
-            finish();
+            presenter.saveAdvert();
+            getBackToMain(getString(R.string.toastCreatedAd));
         });
+    }
+    private void getBackToMain(String toastMessage){
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra(getString(R.string.putExtraToastKey),toastMessage);
+        startActivity(intent);
+        finish();
     }
 
     private void setConditionGroupListener() {
@@ -514,8 +529,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void setUserDefTagsListener(Button btn) {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 presenter.userDefTagsChanged(btn.getText().toString());
+
             }
         });
     }
@@ -537,6 +553,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         });
     }
 
+
     //setters -------------------------------------------------------
     @Override
     public void setTitle(String name) {
@@ -547,7 +564,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     @Override
     public void setPrice(long price) {
         TextView currentPrice = findViewById(R.id.priceEditText);
-        currentPrice.setText(String.valueOf(price) + " kr");
+        currentPrice.setText(String.valueOf(price));
     }
 
     @Override
@@ -562,25 +579,19 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         currentDescription.setText(description);
     }
 
+    /**
+     * Used when editing an already existing advertisement
+     * @param tags, all tags saved in advertisement
+     */
     @Override
     public void setTags(List<String> tags) {
-        LinearLayout parentLayout = findViewById(R.id.tagsLinearLayout);
-        TableRow tableRow = new TableRow(this);
-        Button btn;
         for (String str : tags) {
-            btn = createTagButton(str, true);
-            tableRow = getTableRow(tableRow, parentLayout);
-            tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
-            tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
-        }
-        parentLayout.addView(tableRow);
-    }
+            if (isPreDefTag(str)) {
+                setPreDefTagSelected(str, true); //if str is preDefTag, style as selected
+            } else {
+                displayUserTagButton(str);
 
-    private TableRow getTableRow(TableRow tableRow, LinearLayout parentLayout) {
-        if (tableRow.getChildCount() % 3 == 0) {
-            parentLayout.addView(tableRow);
-            return new TableRow(this);
+            }
         }
-        return tableRow;
     }
 }

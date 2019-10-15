@@ -55,6 +55,10 @@ public class DataModel implements BackendObserver {
         repository.addBackendObserver(this);
     }
 
+
+    /**
+     * Initializes all fields in the User-object of the application with data gotten from firebase with the corresponding userID
+     */
     public void initUser(SuccessCallback successCallback) {
         if (isLoggedIn()) {
             userRepository.getUser(new userCallback() {
@@ -66,10 +70,10 @@ public class DataModel implements BackendObserver {
                         public void onCallback(List<iChat> chatsList) {
                             user.setChats(chatsList);
                             user.setAdverts(getAdsFromCurrentUser());
-                            getFavouritesFromLoggedInUser(advertisements -> {
+                            getFavouritesFromFirebase(advertisements -> {
                                 user.setFavourites(advertisements);
                                 successCallback.onSuccess();
-                            }); //TODO fix this maybe
+                            });
                         }
                     });
                 }
@@ -148,7 +152,6 @@ public class DataModel implements BackendObserver {
         this.allAds.add(ad);
     }
 
-    //Same functionality as above method but based off of firebase
     public Advertisement getAdFromAdID(String ID) {
         for (Advertisement ad : allAds) {
             if (ad.getUniqueID().equals(ID))
@@ -167,44 +170,78 @@ public class DataModel implements BackendObserver {
         return userAds;
     }
 
-    private void getFavouritesFromLoggedInUser(advertisementCallback advertisementCallback) {
+    /**
+     * Gets a user's favourites, with logical checks for if the user is logged in and
+     * if the local list of advertisements has been set
+     *
+     * @param advertisementCallback
+     */
+    private void getFavouritesFromFirebase(advertisementCallback advertisementCallback) {
         if (user == null) {
             return;
         }
         if (allAds == null || allAds.isEmpty()) {
             fetchAllAdverts(advertisements -> advertisementCallback.onCallback(getFavouritesFromList(advertisements)));
         } else {
-            advertisementCallback.onCallback(getFavouritesFromList(allAds)); //TODO change this
+            advertisementCallback.onCallback(getFavouritesFromList(allAds));
         }
     }
 
+    /**
+     * @param advertisements A given list of advertisements, can contain adverts that are not favourites of the user
+     * @return A list containing all advertisements the current user has as favourites in the backend
+     */
     private List<Advertisement> getFavouritesFromList(List<Advertisement> advertisements) {
         List<Advertisement> favourites = new ArrayList<>();
         for (Advertisement ad : advertisements) {
-            isAdMarkedAsFavourite(ad.getUniqueID(), new MarkedAsFavouriteCallback() {
+            isAFavourite(ad.getUniqueID(), new MarkedAsFavouriteCallback() {
                 @Override
                 public void onCallback(boolean markedAsFavourite) {
-                    favourites.add(ad);
+                    if (markedAsFavourite) {
+                        ad.markAsFavourite();
+                        favourites.add(ad);
+                    }
                 }
             });
         }
         return favourites;
     }
 
-    //Yikes
-    public void isAdMarkedAsFavourite(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
+    /**
+     * Returns a boolean of whether or not the given adID exists under the User's list of ID:s in the database
+     */
+    private void isAFavourite(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
         repository.getUserFavourites(new FavouriteIDsCallback() {
             @Override
             public void onCallback(List<String> favouriteIDs) {
                 if (favouriteIDs != null) { //Only check if user actually has favourites, otherwise NullPointerException
-                    for (String adID : favouriteIDs) {
-                        if (adID.equals(uniqueAdID))
-                            markedAsFavouriteCallback.onCallback(true);
+                    for (String favouriteID : favouriteIDs) {
+                        if(adStillExists(favouriteID) && favouriteID.equals(uniqueAdID)) {
+                            markedAsFavouriteCallback.onCallback(true); //Only call method if true, would otherwise call when not needed
+                        }
                     }
+                    //If reached, no favourite ID matched THAT particular ad ID
                 }
             }
         });
     }
+
+
+    private boolean adStillExists(String favouriteID) {
+        for (Advertisement advertisement : allAds) {
+            if (advertisement.getUniqueID().equals(favouriteID)) {
+                return true;
+            }
+        }
+        //If this is reached, no existing advertisement has the ID that is stored under user favourites in database
+        deleteIDFromFavourites(favouriteID);
+        return false;
+    }
+
+    private void deleteIDFromFavourites(String favouriteID) {
+        repository.deleteIDFromFavourites(favouriteID);
+    }
+
 
     private List<Advertisement> retrieveAdsFromUserID(List<Advertisement> adverts) {
         List<Advertisement> userAds = new ArrayList<>();
@@ -281,24 +318,20 @@ public class DataModel implements BackendObserver {
         return null;
     }
 
-    public void removeExistingAdvert(String uniqueID) {
-        repository.deleteAd(uniqueID);
+    // Delete existing advert
+    public void removeExistingAdvert(Advertisement ad) {
+        repository.deleteAd(ad);
     }
 
-    public void updateAd(Advertisement ad, File imageFile) {
-        String adID = ad.getUniqueID();
-        String title = ad.getTitle();
-        Long price = ad.getPrice();
-        String description = ad.getDescription();
-        List<String> tagList = ad.getTags();
-        String condition = ad.getCondition().toString();
-        repository.updateAd(adID, title, price, description, tagList, condition, imageFile);
+    // Updates existing advert
+    public void updateAd(File imageFile, Advertisement ad) {
+        repository.updateAdvert(imageFile, ad);
     }
 
-
-   /* public void setUsername(String username) {
-        userRepository.setUsername(username);
-    }*/
+    // Saves new advert
+    public void saveAdvert(File currentImageFile, Advertisement advertisement) {
+        repository.saveAdvert(currentImageFile, advertisement);
+    }
 
 
     public void signOut() {
@@ -345,18 +378,30 @@ public class DataModel implements BackendObserver {
         });
     }
 
-    public void addToFavourites(String adID) {
+    /**
+     * Adds an advertisement to the user's favourites
+     * Adds the advert in firebase via user and advert ID
+     * Removes it from the local list via the actual advertisement-object
+     *
+     * @param advertisement
+     */
+    public void addToFavourites(Advertisement advertisement) {
         String userID = getUserID();
-        repository.addToFavourites(adID, userID);
+        repository.addToFavourites(advertisement.getUniqueID(), userID);
+        user.addFavourite(advertisement);
     }
 
-    public void removeFromFavourites(String adID) {
+    /**
+     * Removes a given advertisement from user's favourites
+     * Removes in firebase via user and advert ID
+     * Removes in local list via the actual advertisement-object
+     *
+     * @param advertisement the advertisement to be removed
+     */
+    public void removeFromFavourites(Advertisement advertisement) {
         String userID = getUserID();
-        repository.removeFromFavourites(adID, userID);
-    }
-
-    public void saveAdvert(File currentImageFile, Advertisement advertisement) {
-        repository.saveAdvert(currentImageFile, advertisement);
+        repository.removeFromFavourites(advertisement.getUniqueID(), userID);
+        user.removeFavourite(advertisement);
     }
 
     void fetchUserChats(String userID, chatCallback chatCallback) {

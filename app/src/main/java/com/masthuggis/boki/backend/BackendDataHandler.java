@@ -1,7 +1,6 @@
 package com.masthuggis.boki.backend;
 
 import android.net.Uri;
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -29,7 +28,6 @@ import com.google.firebase.storage.UploadTask;
 import com.masthuggis.boki.backend.callbacks.DBCallback;
 import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
-import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Chat;
@@ -126,6 +124,26 @@ public class BackendDataHandler implements iBackend {
         });
     }
 
+    public void deleteIDFromFavourites(String favouriteID) {
+        String userID = DataModel.getInstance().getUserID();
+        db.collection("users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    deleteID(favouriteID, task);
+                }
+            }
+        });
+    }
+
+    private void deleteID(String favouriteID, Task<DocumentSnapshot> task) {
+        DocumentSnapshot userData = task.getResult();
+        String userID = (String) userData.get("userID");
+        List<String> favourites = (List<String>) userData.get("favourites");
+        favourites.remove(favouriteID);
+        db.collection("users").document(userID).update("favourites", favourites);
+    }
+
 
     private void writeToDatabase(HashMap<String, Object> data) {
         isWritingAdvertToDatabase = true;
@@ -162,9 +180,7 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    //might want to run this on separate thread created by caller
     public void readAllAdvertData(DBCallback DBCallback) {
-        List<Map<String, Object>> advertDataList = new ArrayList<>();
         db.collection("market").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) { //Runs every time change happens i market
@@ -317,15 +333,6 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    //TODO check if looping through list is actually necessary
-    private void removeFromFavourites(List<String> favourites, String adID) {
-        for (String favouriteID : favourites) {
-            if (favouriteID.equals(adID)) {
-                favourites.remove(adID);
-            }
-        }
-    }
-
     private boolean isAlreadyFavourite(List<String> favourites, String adID) {
         for (String id : favourites) {
             if (id.equals(adID))
@@ -458,8 +465,9 @@ public class BackendDataHandler implements iBackend {
 
     }
 
-    public void updateAd(String adID, String newTitle, long newPrice, String newDescription,
-                         List<String> tags, String newCondition, File imageFile) {
+
+    public void updateAdToFirebase(File imageFile, HashMap<String, Object> dataMap) {
+        String adID = (String) dataMap.get("uniqueAdID");
         advertPath.whereEqualTo("uniqueAdID", adID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -467,18 +475,18 @@ public class BackendDataHandler implements iBackend {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 advertPath.document(documentSnapshot.getId())
-                                        .update("title", newTitle);
+                                        .update("title", dataMap.get("title"));
                                 advertPath.document(documentSnapshot.getId())
-                                        .update("price", newPrice);
+                                        .update("price", dataMap.get("price"));
                                 advertPath.document(documentSnapshot.getId())
-                                        .update("description", newDescription);
+                                        .update("description", dataMap.get("description"));
                                 advertPath.document(documentSnapshot.getId())
-                                        .update("condition", newCondition);
+                                        .update("condition", dataMap.get("condition"));
                                 advertPath.document(documentSnapshot.getId())
-                                        .update("tags", tags);
+                                        .update("tags", dataMap.get("tags"));
                             }
                             if (imageFile != null) {
-                                uploadImageToFirebase(imageFile, adID, new SuccessCallback() {
+                                uploadImageToFirebase(imageFile, dataMap.get("uniqueAdID").toString(), new SuccessCallback() {
                                     @Override
                                     public void onSuccess() {
 
