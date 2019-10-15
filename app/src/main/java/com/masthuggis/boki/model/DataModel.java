@@ -264,10 +264,12 @@ public class DataModel implements BackendObserver {
         return allAds;
     }
 
+    public boolean isUserOwner(Advertisement advertisement) {
+        return user.getId().equals(advertisement.getUniqueOwnerID());
+    }
+
     public void loggedOut() {
-
         this.user = null;
-
     }
 
     public String getUserID() {

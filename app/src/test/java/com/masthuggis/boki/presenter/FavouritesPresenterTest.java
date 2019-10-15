@@ -1,5 +1,6 @@
 package com.masthuggis.boki.presenter;
 
+import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
@@ -10,6 +11,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import static org.mockito.Mockito.when;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 
 public class FavouritesPresenterTest {
 
-    FavouritesPresenter presenter = new FavouritesPresenter(null); //TODO create mock View, inject
+    FavouritesPresenter presenter = new FavouritesPresenter(null, DependencyInjector.injectDataModel()); //TODO create mock View, inject
 
     @Mock
     private DataModel databaseMock;

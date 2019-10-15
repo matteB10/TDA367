@@ -1,6 +1,5 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.callbacks.MarkedAsFavouriteCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
@@ -29,7 +28,8 @@ public class DetailsPresenter {
         this.view = view;
         this.advertisement = this.dataModel.getAdFromAdID(advertID);
         setupView();
-        setFavouriteIconStatus();
+
+        setUpFavouriteIcon();
     }
 
     /**
@@ -77,14 +77,9 @@ public class DetailsPresenter {
     }
 
     public boolean isUserOwner() {
-        try {
-            String loggedinUser = dataModel.getUserID();
-            String ownerofAd = advertisement.getUniqueOwnerID();
-            return loggedinUser.equals(ownerofAd);
-        } catch (Exception e) {
-            return false;
-        }
+        return dataModel.isUserOwner(advertisement);
     }
+
 
     public void onChangedAdBtnPressed() {
         String uniqueID = advertisement.getUniqueID();
@@ -115,12 +110,13 @@ public class DetailsPresenter {
         } else {
             advertisement.markAsFavourite();
             dataModel.addToFavourites(advertisement);
-            setFavouriteIconStatus();
+            setUpFavouriteIcon();
         }
     }
 
 
-    public void setFavouriteIconStatus() {
+    public void setUpFavouriteIcon() {
+        if (isUserOwner())
         if (currentAdvertIsFavourite()) {
             view.setFavouriteIcon();
         } else {
