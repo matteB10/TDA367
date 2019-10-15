@@ -1,10 +1,8 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.callbacks.MarkedAsFavouriteCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.iConditionable;
 
@@ -29,7 +27,8 @@ public class DetailsPresenter {
         this.view = view;
         this.advertisement = this.dataModel.getAdFromAdID(advertID);
         setupView();
-        setFavouriteIconStatus();
+
+        setUpFavouriteIcon();
     }
 
     /**
@@ -62,15 +61,16 @@ public class DetailsPresenter {
         }
         //public void createNewChat(String uniqueOwnerID,String advertID, stringCallback stringCallback,String receiverUsername) {
 
-        dataModel.createNewChat(advertisement.getUniqueOwnerID(), dataModel.getUserID(), advertisement.getUniqueID(), advertisement.getImageUrl(), new stringCallback() {
-            @Override
-            public void onCallback(String chatID) {
-                view.openChat(chatID);
-
-            }
-        });
 
 
+        dataModel.createNewChat(advertisement.getUniqueOwnerID(), dataModel.getUserID(), advertisement.getUniqueID(),
+                advertisement.getImageUrl(), new stringCallback() {
+                    @Override
+                    public void onCallback(java.lang.String chatID) {
+                        view.openChat(chatID);
+
+                    }
+                });
     }
 
 
@@ -79,13 +79,7 @@ public class DetailsPresenter {
     }
 
     public boolean isUserOwner() {
-        try {
-            String loggedinUser = dataModel.getUserID();
-            String ownerofAd = advertisement.getUniqueOwnerID();
-            return loggedinUser.equals(ownerofAd);
-        } catch (Exception e) {
-            return false;
-        }
+        return dataModel.isUserOwner(advertisement);
     }
 
     public void onChangedAdBtnPressed() {
@@ -93,23 +87,19 @@ public class DetailsPresenter {
         view.showEditView(uniqueID);
     }
 
-    public void contactOwnerButtonClicked(String contactOwnerButtonText) {
-        if (contactOwnerButtonText.equals("Starta chatt")) {
-            if (dataModel.getUserChats() != null) {
-                for (iChat chats : dataModel.getUserChats()) {
-                    if (chats.getAdID().equals(advertisement.getUniqueID())) {
-                        openChat(chats.getChatID());
-                        return;
-                    }
-                }
+    public void contactOwnerBtnClicked(String btnText) {
+        if (btnText.equals("Starta chatt")) {
+            String chatID = dataModel.findChatID(advertisement.getUniqueID());
+            if (chatID != null) {
+                openChat(chatID);
+            } else {
+                createNewChat();
             }
-            createNewChat();
         } else {
             view.setOwnerButtonText("Starta chatt");
         }
     }
 
-    //Necessary to change local variable (isMarkedAsFavourite) inside method, otherwise it has to update from firebase while in Detail View
     public void onFavouritesIconPressed() {
         if (currentAdvertIsFavourite()) {
             dataModel.removeFromFavourites(advertisement);
@@ -117,30 +107,21 @@ public class DetailsPresenter {
         } else {
             advertisement.markAsFavourite();
             dataModel.addToFavourites(advertisement);
-            setFavouriteIconStatus();
         }
     }
 
-
-    public void setFavouriteIconStatus() {
-        if (currentAdvertIsFavourite()) {
+    public void setUpFavouriteIcon() {
+        if (isUserOwner()) {
+            view.hideFavouriteIcon();
+        } else if (currentAdvertIsFavourite()) {
             view.setFavouriteIcon();
         } else {
             view.setNotFavouriteIcon();
         }
     }
 
-    /**
-     * Checks if advertisement held by DetailsPresenter is marked as a favourite
-     * Has to check via the ID:s of the adverts, holds references to different Java-Objects
-     */
-    private boolean currentAdvertIsFavourite() { //Can't do the check like this, referencing different objects! Maybe like hashcode or check on their id's?
-        List<Advertisement> userFavourites = dataModel.getUserFavourites();
-        for (Advertisement favourite : userFavourites) {
-            if (favourite.getUniqueID().equals(advertisement.getUniqueID())) {
-                return true;
-            }
-        } return false;
+    private boolean currentAdvertIsFavourite() {
+        return dataModel.isAFavourite(advertisement);
     }
 
     public interface View extends iConditionable {
@@ -167,6 +148,8 @@ public class DetailsPresenter {
         void setFavouriteIcon();
 
         void setNotFavouriteIcon();
+
+        void hideFavouriteIcon();
     }
 
 

@@ -77,6 +77,7 @@
     <string name="search">Search</string>
 
     <string name="putExtraToastKey">toast</string>
+    <string name="noFavoritesFound">Du har inga favoriter sparade ännu. För att spara en favorit gå in på en annons och tryck på hjärtat.</string>
 
     <string name="searchHint">Sök efter titlar...</string>
     <string name="sign_out">Logga ut</string>
@@ -85,6 +86,9 @@
     <string name="hintnewPrice">ange nytt pris</string>
     <string name="myMessages">Mina meddelanden</string>
     <string name="myBooksTitle">Mina böcker</string>
+
+    <string name="yourFavorites">Dina favoriter</string>
+    <string name="noUserAdvertsFound">Du har inte lagt upp några böcker på försäljning. Vill du göra det nu?</string>
 
     <string name="toastDeletedAd">Din annons är borttagen</string>
     <string name="toastUpdatedAd">Din annons är uppdaterad</string>
