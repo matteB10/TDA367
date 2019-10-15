@@ -85,6 +85,9 @@
     <string name="hintNewTitle">ange ny titel</string>
     <string name="hintnewPrice">ange nytt pris</string>
 
+    <string name="yourFavorites">Dina favoriter</string>
+    <string name="noUserAdvertsFound">Du har inte lagt upp några böcker på försäljning. Vill du göra det nu?</string>
+
     <string name="toastDeletedAd">Din annons är borttagen</string>
     <string name="toastUpdatedAd">Din annons är uppdaterad</string>
     <string name="toastCreatedAd">Din annons är upplagd</string>

@@ -3,12 +3,14 @@ package com.masthuggis.boki.view;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.AdvertsPresenterView;
 import com.masthuggis.boki.presenter.ProfilePresenter;
+import com.masthuggis.boki.utils.ViewCreator;
 
 /**
  * Profile page used for displaying the adverts that the user have published. Also have an settings
@@ -36,6 +38,8 @@ public class ProfileFragment extends AdvertsView implements ProfilePresenter.Vie
     @Override
     protected View onCreateNoResultsFoundLayout() {
         View noResults = getLayoutInflater().inflate(R.layout.profile_no_adverts, null);
+        LinearLayout container = noResults.findViewById(R.id.profileNoAdvertsFound);
+        container.addView(ViewCreator.createSimpleText(getActivity(), getString(R.string.noUserAdvertsFound)), 0);
         Button goToPublishPageButton = noResults.findViewById(R.id.profileNoAdvertsSellYourBookButton);
         goToPublishPageButton.setOnClickListener(v -> showCreateAdPage());
         return noResults;

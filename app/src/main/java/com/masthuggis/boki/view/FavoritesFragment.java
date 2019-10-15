@@ -8,6 +8,7 @@ import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.AdvertsPresenterView;
 import com.masthuggis.boki.presenter.FavouritesPresenter;
+import com.masthuggis.boki.utils.ViewCreator;
 
 public class FavoritesFragment extends AdvertsView implements AdvertsPresenterView {
 
@@ -23,16 +24,11 @@ public class FavoritesFragment extends AdvertsView implements AdvertsPresenterVi
 
     @Override
     protected View onCreateHeaderLayout() {
-        // TODO: implement
-        return new TextView(getActivity());
+        return ViewCreator.createHeader(getActivity(), getString(R.string.yourFavorites));
     }
 
     @Override
     protected View onCreateNoResultsFoundLayout() {
-        TextView textView = new TextView(getActivity());
-        textView.setText(getString(R.string.noFavoritesFound));
-        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        textView.setTextAppearance(android.R.style.TextAppearance_Medium);
-        return textView;
+        return ViewCreator.createSimpleText(getActivity(), getString(R.string.noFavoritesFound));
     }
 }
