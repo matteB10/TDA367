@@ -151,6 +151,11 @@ public class HomeFragment extends Fragment implements AdvertsPresenterView, Adap
         }
     }
 
+    @Override
+    public void showNoThumbnailsAvailableScreen() {
+        // TODO: implement
+    }
+
     /**
      * Called when the sorting option changes. For example, sorting for lowest price.
      *

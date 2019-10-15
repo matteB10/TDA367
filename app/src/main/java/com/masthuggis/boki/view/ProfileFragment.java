@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
@@ -71,6 +72,15 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
         } else {
             recyclerViewAdapter.notifyDataSetChanged();
         }
+
+        LinearLayout noResultsContainer = view.findViewById(R.id.noResultsFound);
+        noResultsContainer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showNoThumbnailsAvailableScreen() {
+        LinearLayout noResultsContainer = view.findViewById(R.id.noResultsFound);
+        noResultsContainer.setVisibility(View.VISIBLE);
     }
 
     @Override
