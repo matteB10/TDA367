@@ -2,17 +2,16 @@ package com.masthuggis.boki.model;
 
 import com.masthuggis.boki.backend.BackendFactory;
 import com.masthuggis.boki.backend.Repository;
-import com.masthuggis.boki.backend.RepositoryFactory;
-import com.masthuggis.boki.backend.UserRepository;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
+import com.masthuggis.boki.backend.callbacks.MarkedAsFavouriteCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.backend.callbacks.chatCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.backend.callbacks.userCallback;
-import com.masthuggis.boki.backend.callbacks.MarkedAsFavouriteCallback;
+import com.masthuggis.boki.backend.iRepository;
 import com.masthuggis.boki.model.observers.AdvertisementObserver;
 import com.masthuggis.boki.model.observers.BackendObserver;
 import com.masthuggis.boki.model.observers.ChatObserver;
@@ -22,6 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DataModel implements BackendObserver {
 
@@ -33,13 +33,13 @@ public class DataModel implements BackendObserver {
     private final List<AdvertisementObserver> marketAdvertisementObservers = new ArrayList<>();
     private final List<AdvertisementObserver> userAdvertisementObservers = new ArrayList<>();
     private final List<MessagesObserver> messagesObservers = new ArrayList<>();
-    private Repository repository;
-    private UserRepository userRepository;
+    private iRepository repository;
 
 
     private DataModel() {
         initBackend();
         // initUser();
+        fetchAllAdverts();
     }
 
     public static DataModel getInstance() {
@@ -50,8 +50,7 @@ public class DataModel implements BackendObserver {
     }
 
     private void initBackend() {
-        repository = RepositoryFactory.createRepository(BackendFactory.createBackend(), this);
-        userRepository = RepositoryFactory.createUserRepository(BackendFactory.createBackend(), this);
+        repository = new Repository(BackendFactory.createBackend());
         repository.addBackendObserver(this);
     }
 
@@ -61,16 +60,18 @@ public class DataModel implements BackendObserver {
      */
     public void initUser(SuccessCallback successCallback) {
         if (isLoggedIn()) {
-            userRepository.getUser(new userCallback() {
+            repository.getUser(new userCallback() {
                 @Override
                 public void onCallback(iUser newUser) {
                     user = newUser;
+                    user.setAdverts(getAdsFromCurrentUser());
+
                     fetchUserChats(user.getId(), new chatCallback() {
                         @Override
                         public void onCallback(List<iChat> chatsList) {
                             user.setChats(chatsList);
-                            user.setAdverts(getAdsFromCurrentUser());
-                            getFavouritesFromFirebase(advertisements -> {
+                            initMessages();
+                            getFavouritesFromLoggedInUser(advertisements -> {
                                 user.setFavourites(advertisements);
                                 successCallback.onSuccess();
                             });
@@ -80,6 +81,18 @@ public class DataModel implements BackendObserver {
             });
         }
     }
+
+    private void initMessages() {
+        for (iChat chat : user.getChats()) {
+            getMessages(chat.getChatID(), new messagesCallback() {
+                @Override
+                public void onCallback(List<iMessage> messagesList) {
+                    chat.setMessages(messagesList);
+                }
+            });
+        }
+    }
+
 
     public void addChatObserver(ChatObserver chatObserver) {
         this.chatObservers.add(chatObserver);
@@ -134,8 +147,8 @@ public class DataModel implements BackendObserver {
         }
     }
 
-    public void SignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
-        userRepository.signIn(email, password, new SuccessCallback() {
+    public void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
+        repository.signIn(email, password, new SuccessCallback() {
             @Override
             public void onSuccess() {
                 initUser(new SuccessCallback() {
@@ -170,27 +183,28 @@ public class DataModel implements BackendObserver {
         return userAds;
     }
 
-    /**
-     * Gets a user's favourites, with logical checks for if the user is logged in and
-     * if the local list of advertisements has been set
-     *
-     * @param advertisementCallback
-     */
-    private void getFavouritesFromFirebase(advertisementCallback advertisementCallback) {
-        if (user == null) {
-            return;
-        } else {
-            advertisementCallback.onCallback(getFavouritesFromList(allAds));
+
+/*    private List<Advertisement> getFavouritesFromLoggedInUser() {
+        List<Advertisement> favourites = new ArrayList<>();
+        for (Advertisement ad : allAds) {
+            isAdMarkedAsFavourite(ad.getUniqueID(), new MarkedAsFavouriteCallback() {
+                @Override
+                public void onCallback(boolean markedAsFavourite) {
+                    favourites.add(ad);
+                }
+            });
         }
-    }
+        return favourites;
+    }*/
+
 
     /**
-     * @param advertisements A given list of advertisements, can contain adverts that are not favourites of the user
      * @return A list containing all advertisements the current user has as favourites in the backend
      */
-    private List<Advertisement> getFavouritesFromList(List<Advertisement> advertisements) {
+    private void getFavouritesFromLoggedInUser(advertisementCallback advertisementCallback) {
         List<Advertisement> favourites = new ArrayList<>();
-        for (Advertisement ad : advertisements) {
+        int i = allAds.size() - 1;
+        for (Advertisement ad : allAds) {
             isAFavourite(ad.getUniqueID(), new MarkedAsFavouriteCallback() {
                 @Override
                 public void onCallback(boolean markedAsFavourite) {
@@ -200,8 +214,10 @@ public class DataModel implements BackendObserver {
                     }
                 }
             });
+            if (allAds.get(i).equals(ad)) {
+                advertisementCallback.onCallback(favourites);
+            }
         }
-        return favourites;
     }
 
     /**
@@ -213,7 +229,7 @@ public class DataModel implements BackendObserver {
             public void onCallback(List<String> favouriteIDs) {
                 if (favouriteIDs != null) { //Only check if user actually has favourites, otherwise NullPointerException
                     for (String favouriteID : favouriteIDs) {
-                        if(adStillExists(favouriteID) && favouriteID.equals(uniqueAdID)) {
+                        if (adStillExists(favouriteID) && favouriteID.equals(uniqueAdID)) {
                             markedAsFavouriteCallback.onCallback(true); //Only call method if true, would otherwise call when not needed
                         }
                     }
@@ -246,16 +262,17 @@ public class DataModel implements BackendObserver {
             if (ad.getUniqueOwnerID().equals(user.getId()))
                 userAds.add(ad);
         }
+        user.setAdverts(userAds);
         return userAds;
     }
 
 
-    public void fetchAllAdverts(advertisementCallback advertisementCallback) {
+    void fetchAllAdverts() {
         repository.fetchAllAdverts(new advertisementCallback() {
             @Override
             public void onCallback(List<Advertisement> advertisements) {
+
                 allAds = advertisements;
-                advertisementCallback.onCallback(allAds);
             }
         });
     }
@@ -278,12 +295,12 @@ public class DataModel implements BackendObserver {
         return user.getEmail();
     }
 
-    public String getUserDisplayName() {
+    String getUserDisplayName() {
         return this.user.getDisplayName();
     }
 
     public boolean isLoggedIn() {
-        return userRepository.isUserLoggedIn();
+        return repository.isUserLoggedIn();
     }
 
     public List<iChat> getUserChats() {
@@ -295,12 +312,13 @@ public class DataModel implements BackendObserver {
     }
 
 
-    public void createNewChat(String uniqueOwnerID, String advertID, stringCallback stringCallback, String receiverUsername) {
-        userRepository.createNewChat(uniqueOwnerID, advertID, stringCallback, receiverUsername);
+    public void createNewChat(String adOwnerID, String adBuyerID, String
+            advertID, String imageURL, stringCallback stringCallback) {
+        repository.createNewChat(adOwnerID, adBuyerID, advertID, imageURL, stringCallback);
     }
 
     public void sendMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
-        userRepository.writeMessage(uniqueChatID, messageMap);
+        repository.writeMessage(uniqueChatID, messageMap);
     }
 
     public iChat findChatByID(String ID) {
@@ -315,28 +333,47 @@ public class DataModel implements BackendObserver {
         return null;
     }
 
-    // Delete existing advert
-    public void removeExistingAdvert(Advertisement ad) {
-        repository.deleteAd(ad);
+
+    public void removeExistingAdvert(String adID, String userID) {
+        List<Map<String, String>> chatReceiverAndUserIDMap = new ArrayList<>();
+        Map<String, String> adIDAndUserID = new HashMap<>();
+        adIDAndUserID.put("adID", adID);
+        adIDAndUserID.put("userID", userID);
+        List<String> chatIDs = new ArrayList<>();
+        for (iChat chat : user.getChats()) {
+            Map<String, String> map = new HashMap<>();
+            if (chat.getAdID().equals(adID)) {
+
+                map.put("receiverID", chat.getReceiverID(user.getId()));
+                map.put("chatID", chat.getChatID());
+                chatReceiverAndUserIDMap.add(map);
+            }
+        }
+        user.getChatIDFromAdID(adID);
+        repository.deleteAd(chatReceiverAndUserIDMap, adIDAndUserID);
     }
 
-    // Updates existing advert
+
     public void updateAd(File imageFile, Advertisement ad) {
         repository.updateAdvert(imageFile, ad);
     }
 
-    // Saves new advert
     public void saveAdvert(File currentImageFile, Advertisement advertisement) {
         repository.saveAdvert(currentImageFile, advertisement);
     }
 
+   /* public void setUsername(String username) {
+        userRepository.setUsername(username);
+    }*/
+
 
     public void signOut() {
-        userRepository.signOut();
+        repository.signOut();
     }
 
-    public void signUp(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback) {
-        userRepository.signUp(email, password, username, new SuccessCallback() {
+    public void signUp(String email, String password, String username, SuccessCallback
+            successCallback, FailureCallback failureCallback) {
+        repository.signUp(email, password, username, new SuccessCallback() {
             @Override
             public void onSuccess() {
                 initUser(new SuccessCallback() {
@@ -365,8 +402,8 @@ public class DataModel implements BackendObserver {
         notifyChatObservers();
     }
 
-    void getMessages(String uniqueChatID, Chat chat, messagesCallback messagesCallback) {
-        userRepository.getMessages(uniqueChatID, chat, new messagesCallback() {
+    private void getMessages(String uniqueChatID, messagesCallback messagesCallback) {
+        repository.getMessages(uniqueChatID, new messagesCallback() {
             @Override
             public void onCallback(List<iMessage> messagesList) {
                 messagesCallback.onCallback(messagesList);
@@ -401,8 +438,8 @@ public class DataModel implements BackendObserver {
         user.removeFavourite(advertisement);
     }
 
-    void fetchUserChats(String userID, chatCallback chatCallback) {
-        userRepository.getUserChats(userID, new chatCallback() {
+    private void fetchUserChats(String userID, chatCallback chatCallback) {
+        repository.getUserChats(userID, new chatCallback() {
             @Override
             public void onCallback(List<iChat> chatsList) {
                 chatCallback.onCallback(chatsList);
@@ -410,4 +447,7 @@ public class DataModel implements BackendObserver {
         });
     }
 
+    public void removeChat(String userID, String chatID) {
+        repository.removeChat(userID, chatID);
+    }
 }

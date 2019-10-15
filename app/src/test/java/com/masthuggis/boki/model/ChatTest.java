@@ -42,7 +42,7 @@ public class ChatTest {
         Chat chat = new Chat("uniqueChatID", "senderID", "receiverID","uniqueAdID","receiverUsername", "senderUsername", databaseMock);
 
         Mockito.when(databaseMock.getUserDisplayName()).thenReturn(chat.getReceiverUsername());
-        String displayname = chat.getDisplayName();
+        String displayname = chat.getReceiverName();
         assertEquals(displayname, chat.getSenderUsername());
     }
 }

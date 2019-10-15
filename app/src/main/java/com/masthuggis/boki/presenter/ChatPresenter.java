@@ -4,9 +4,12 @@ import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.model.observers.ChatObserver;
 import com.masthuggis.boki.utils.ClickDelayHelper;
-import com.masthuggis.boki.view.MessagesRecyclerViewAdapter;
+import com.masthuggis.boki.view.ChatThumbnailView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * ChatPresenter is the presenter class for the view called ChatFragment.
@@ -26,8 +29,16 @@ public class ChatPresenter implements ChatObserver {
         chats = this.dataModel.getUserChats();
         view.showUserChats(this);
         this.view.hideLoadingScreen();
-        this.dataModel.addChatObserver(this);
+        for (iChat chat : chats) {
+            if (!(chat.isActive())) {
+                view.displayToast(chat.getReceiverName(dataModel.getUserID()));
+                dataModel.removeChat(dataModel.getUserID(), chat.getChatID());
 
+            }
+        }
+        this.chats = this.dataModel.getUserChats();
+        sortChatsAccordingToLastMessageSent();
+        this.dataModel.addChatObserver(this);
     }
 
     /**
@@ -35,23 +46,50 @@ public class ChatPresenter implements ChatObserver {
      */
 
     public void onRowPressed(String chatID) {
-        view.showMessagesScreen(chatID);
+
+        for (iChat chat : chats) {
+            if (chat.getChatID().equals(chatID)) {
+                view.showMessagesScreen(chatID);
+                return;
+
+            }
+        }
     }
 
-    public void bindViewHolderAtPosition(int position, MessagesRecyclerViewAdapter.
-            ViewHolder holder) {
-        if (chats.size() < position || chats == null) {
+    public void bindViewHolderAtPosition(int position, ChatThumbnailView holder) {
+        if (chats == null ||chats.size() < position) {
             return;
         }
         iChat c = chats.get(position);
 
-        //TODO FIXA SÅ ATT TIDEN SYNS HÄR MED ETT VETTIGT DATUMSYSTEM
-        //  String timeLastMessageSent = c.timeLastMessageSent();
 
-        holder.setUserTextView(c.getDisplayName());
+        String str = formatTimeLastMessageSent(c.timeLastMessageSent());
+        holder.setDateTextView(str);
+        holder.setUserTextView(c.getReceiverName(dataModel.getUserID()));
         holder.setChatID(c.getChatID());
-        holder.setDateTextView("" + c.timeLastMessageSent());
-        holder.setMessageImageView(dataModel.getAdFromAdID(c.getUniqueIDAdID()).getImageUrl());
+        holder.setMessageImageView(c.getImageURL());
+
+
+    }
+
+    private String formatTimeLastMessageSent(long l) {
+        if(l ==0){
+            return "";
+        }
+        String str = Long.toString(l);
+        char[] cArr = str.toCharArray();
+        String st = "" + cArr[6] + cArr[7] + "." + cArr[8] + cArr[9] + "." + cArr[10] + cArr[11]
+                + " " + cArr[4] + cArr[5] + "/" + cArr[2] + cArr[3] + " - " + cArr[0] + cArr[1];
+        return st;
+    }
+
+    private void sortChatsAccordingToLastMessageSent() {
+        List<iChat> sorted = new ArrayList<>(chats).stream()
+                .sorted((adOne, adTwo) -> ((int) (adOne.timeLastMessageSent() - adTwo.timeLastMessageSent())))
+                .collect(Collectors.toList());
+        Collections.reverse(sorted);
+
+        chats = sorted;
     }
 
     /**
@@ -71,6 +109,9 @@ public class ChatPresenter implements ChatObserver {
     @Override
     public void onChatUpdated() {
         this.chats = dataModel.getUserChats();
+        sortChatsAccordingToLastMessageSent();
+        view.updateThumbnails();
+
 
     }
 
@@ -96,5 +137,9 @@ public class ChatPresenter implements ChatObserver {
         void showMessagesScreen(String chatID);
 
         void showUserChats(ChatPresenter chatPresenter);
+
+        void displayToast(String displayName);
+        void updateThumbnails();
+
     }
 }

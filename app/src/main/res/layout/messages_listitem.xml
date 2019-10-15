@@ -39,23 +39,24 @@
             android:layout_marginBottom="0dp"
             android:layout_toEndOf="@+id/messageImageView"
             android:text="Random User"
-            android:textAlignment="center"
-            android:textSize="20sp" />
+            android:textAlignment="textStart"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/message_time"
-            android:layout_width="153dp"
-            android:layout_height="26dp"
-
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="21dp"
+            android:layout_marginStart="39dp"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="13dp"
             android:layout_toEndOf="@+id/message_user"
             android:text="TESTDATE"
             android:textAlignment="textStart"
-            android:textSize="18sp" />
+            android:textSize="16sp"
+            android:textStyle="italic" />
     </RelativeLayout>
 
 </LinearLayout>

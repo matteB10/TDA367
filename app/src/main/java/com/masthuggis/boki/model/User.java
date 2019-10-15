@@ -60,6 +60,22 @@ public class User implements iUser {
 
     @Override
     public void setAdverts(List<Advertisement> adverts) {
-        this.advertisements = advertisements;
+        this.advertisements = adverts;
+    }
+
+    @Override
+    public List<Advertisement> getAdverts() {
+        return advertisements;
+    }
+
+    @Override
+    public String getChatIDFromAdID(String adID) {
+         for(iChat chat:chats){
+             if(chat.getAdID().equals(adID)){
+                 return chat.getChatID();
+             }
+         }
+         return "";
+
     }
 }

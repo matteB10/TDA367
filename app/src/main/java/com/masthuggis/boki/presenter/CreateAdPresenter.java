@@ -38,7 +38,7 @@ public class CreateAdPresenter {
 
 
     public void deleteAdvert(){
-       dataModel.removeExistingAdvert(advertisement);
+       dataModel.removeExistingAdvert(advertisement.getUniqueID(),advertisement.getUniqueOwnerID());
     }
 
     public void updateAdvert(){

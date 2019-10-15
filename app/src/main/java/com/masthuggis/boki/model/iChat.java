@@ -5,20 +5,19 @@ import java.util.List;
 public interface iChat {
     List<iMessage> getMessages();
 
-    String getReceiverID();
-
     String getChatID();
-
-    String getReceiverUsername();
-
-    String getSenderUsername();
-
-    String getSenderID();
 
     long timeLastMessageSent();
 
+    String getReceiverName(String currentUserID);
 
-    String getDisplayName();
+    String getAdID();
 
-    String getUniqueIDAdID();
+    void setMessages(List<iMessage> messagesList);
+
+    boolean isActive();
+
+    String getImageURL();
+
+    String getReceiverID(String currentUserID);
 }

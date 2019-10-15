@@ -83,6 +83,8 @@
     <string name="newPrice">ange nytt pris</string>
     <string name="hintNewTitle">ange ny titel</string>
     <string name="hintnewPrice">ange nytt pris</string>
+    <string name="myMessages">Mina meddelanden</string>
+    <string name="myBooksTitle">Mina böcker</string>
 
     <string name="toastDeletedAd">Din annons är borttagen</string>
     <string name="toastUpdatedAd">Din annons är uppdaterad</string>

@@ -14,7 +14,7 @@ public class FavouritesPresenter extends AdvertsPresenter {
     public FavouritesPresenter(AdvertsPresenterView view, DataModel dataModel) {
         super(view, dataModel);
         this.view = view;
-    }
+u    }
 
     public List<Advertisement> getData() {
         return super.dataModel.getUserFavourites();

@@ -62,13 +62,15 @@ public class DetailsPresenter {
         }
         //public void createNewChat(String uniqueOwnerID,String advertID, stringCallback stringCallback,String receiverUsername) {
 
-        dataModel.createNewChat(advertisement.getUniqueOwnerID(), advertisement.getUniqueID(), new stringCallback() {
+        dataModel.createNewChat(advertisement.getUniqueOwnerID(), dataModel.getUserID(), advertisement.getUniqueID(), advertisement.getImageUrl(), new stringCallback() {
             @Override
             public void onCallback(String chatID) {
-
                 view.openChat(chatID);
+
             }
-        }, advertisement.getOwner());
+        });
+
+
     }
 
 
@@ -95,7 +97,7 @@ public class DetailsPresenter {
         if (contactOwnerButtonText.equals("Starta chatt")) {
             if (dataModel.getUserChats() != null) {
                 for (iChat chats : dataModel.getUserChats()) {
-                    if (chats.getUniqueIDAdID().equals(advertisement.getUniqueID())) {
+                    if (chats.getAdID().equals(advertisement.getUniqueID())) {
                         openChat(chats.getChatID());
                         return;
                     }

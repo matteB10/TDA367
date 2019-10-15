@@ -51,7 +51,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         presenter.onBindThumbnailViewAtPosition(position, holder);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements ThumbnailView {
+    class ViewHolder extends RecyclerView.ViewHolder implements ThumbnailView {
 
         private TextView titleTextView;
         private TextView priceTextView;
@@ -60,7 +60,7 @@ public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRe
         private TextView conditionTextView;
         private String id;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.titleTextView);
             priceTextView = itemView.findViewById(R.id.priceTextView);
