@@ -18,6 +18,9 @@ import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.AdvertsPresenterView;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 
+/**
+ * Abstract class to be used by views wanting to display a list of adverts.
+ */
 abstract class AdvertsView extends Fragment implements AdvertsPresenterView {
     protected AdvertsPresenter presenter;
     private View view;
@@ -35,6 +38,11 @@ abstract class AdvertsView extends Fragment implements AdvertsPresenterView {
         return view;
     }
 
+    /**
+     * Setups the layout to be displayed when no results are found. The default is for this view
+     * to be hidden. The view will be viewable if the presenter asks it to showed. The layout to
+     * be used is implemented in the subclass.
+     */
     private void setupNoResultsFoundView() {
         View noResultsFound = onCreateNoResultsFoundLayout();
         noAdvertsFoundContainer = view.findViewById(R.id.advertsViewNoAdvertsFound);
@@ -42,12 +50,19 @@ abstract class AdvertsView extends Fragment implements AdvertsPresenterView {
         noAdvertsFoundContainer.setVisibility(View.GONE);
     }
 
+    /**
+     * Setups the layout to be used on top of the list of adverts. It could be viewed as a header
+     * of the screen.
+     */
     private void setupHeader() {
         View header = onCreateHeaderLayout();
         LinearLayout headerContainer = view.findViewById(R.id.advertsViewHeader);
         headerContainer.addView(header);
     }
 
+    /**
+     * Setups the recyclerviews adapter, layout and spacing
+     */
     private void setupList() {
         RecyclerView recyclerView = view.findViewById(R.id.advertsViewRecycler);
         recyclerView.setNestedScrollingEnabled(false);
@@ -58,22 +73,35 @@ abstract class AdvertsView extends Fragment implements AdvertsPresenterView {
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
     }
 
+    /**
+     * Notifies the presenter that the view has been destroyed. Ideally used by the presenter
+     * to prevent memory leaks.
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
         presenter.viewIsBeingDestroyed();
     }
 
+    /**
+     * Asks the concrete implementations to provide a layout to be used above the adverts list,
+     * acting as a header.
+     * @return
+     */
     protected abstract View onCreateHeaderLayout();
 
+    /**
+     * Asks the concrete implementation to provide a layout for when no adverts are found.
+     * @return
+     */
     protected abstract View onCreateNoResultsFoundLayout();
 
+    /**
+     * Asks the concrete implementation to provide the presenter to be used.
+     * @return
+     */
     protected abstract AdvertsPresenter getPresenter();
-
-    public View getView() {
-        return view;
-    }
-
+    
     @Override
     public void updateThumbnails() {
         if (recyclerViewAdapter == null) {
