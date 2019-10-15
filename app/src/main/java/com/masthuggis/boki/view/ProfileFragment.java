@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -80,12 +81,14 @@ public class ProfileFragment extends Fragment implements ProfilePresenter.View, 
 
     @Override
     public void showLoadingScreen() {
-        // TODO: show loading animation
+        ProgressBar progressBar = view.findViewById(R.id.profileProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoadingScreen() {
-        // TODO: hide loading animation
+        ProgressBar progressBar = view.findViewById(R.id.profileProgressBar);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
