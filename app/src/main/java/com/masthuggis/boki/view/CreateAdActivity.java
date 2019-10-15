@@ -407,6 +407,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         publishAdButton = findViewById(R.id.publishAdButton);
         publishAdButton.setOnClickListener(view -> {
             presenter.publishAdvert();
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra(getString(R.string.putExtraToastKey), "Din annons är nu upplagd");
+            startActivity(intent);
             finish();
         });
     }
@@ -532,16 +535,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
                     return true;
                 }
                 return false;
-            }
-        });
-    }
-
-    private void elinsListener(Button btn, List<String> tags){
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               removeUserTagButton(btn.getText().toString());
-               tags.remove(btn.toString());
             }
         });
     }

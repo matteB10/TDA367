@@ -1,15 +1,17 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.model.Advert;
 
 import org.junit.Test;
 
 import java.io.File;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests basic funtionality of CreateAdPresenter
@@ -35,6 +37,26 @@ public class CreateAdPresenterTest {
         }
 
         @Override
+        public void setTitle(String name) {
+
+        }
+
+        @Override
+        public void setPrice(long price) {
+
+        }
+
+        @Override
+        public void setImageUrl(String url) {
+
+        }
+
+        @Override
+        public void setDescription(String description) {
+
+        }
+
+        @Override
         public void enablePublishButton(boolean isEnabled) {
             buttonEnabled = isEnabled;
         }
@@ -57,6 +79,11 @@ public class CreateAdPresenterTest {
         @Override
         public File getCurrentImageFile() {
             return null;
+        }
+
+        @Override
+        public void setTags(List<String> tags) {
+
         }
     }
 

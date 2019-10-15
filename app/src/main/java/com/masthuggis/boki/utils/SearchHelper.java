@@ -20,28 +20,24 @@ public class SearchHelper {
 
 
     public static void search(String query, PerformedSearchCallback callback) {
+        List<Advertisement> advertisements = DataModel.getInstance().getAllAdverts();
+        List<Advertisement> tempList = new ArrayList<>();
+        List<Advertisement> searchRes = new ArrayList<>(); //new list with search results
+        String queryStr = query.toLowerCase().trim();
 
+        if (advertisements != null) {
+            tempList = new ArrayList<>(advertisements); //temporary list of all adsRefreshes the list so it accurately reflects adverts in firebase
+        }
 
-        Thread thread = new Thread(() -> DataModel.getInstance().fetchAllAdverts(advertisements -> {
-            List<Advertisement> tempList = new ArrayList<>();
-            List<Advertisement> searchRes = new ArrayList<>(); //new list with search results
-            String queryStr = query.toLowerCase().trim();
+        searchMatchTitle(searchRes, queryStr, tempList); //searchPerformed if query matches title. run first, highest priority
+        searchMatchTags(searchRes, queryStr, tempList); //searchPerformed if query matches tag. run second, second highest priority
+        searchContainsTitle(searchRes, queryStr, tempList); //searchPerformed if title contains query.
+        searchContainsTags(searchRes, queryStr, tempList); //searchPerformed if at least one of ads tags matches query.
 
-            if (advertisements != null) {
-                tempList = new ArrayList<>(advertisements); //temporary list of all adsRefreshes the list so it accurately reflects adverts in firebase
-            }
-            searchMatchTitle(searchRes, queryStr, tempList); //searchPerformed if query matches title. run first, highest priority
-            searchMatchTags(searchRes, queryStr, tempList); //searchPerformed if query matches tag. run second, second highest priority
-            searchContainsTitle(searchRes, queryStr, tempList); //searchPerformed if title contains query.
-            searchContainsTags(searchRes, queryStr, tempList); //searchPerformed if at least one of ads tags matches query.
-
-            callback.onCallback(searchRes); //searchRes contains correct adverts here
-        }));
-        thread.start();
+        callback.onCallback(searchRes); //searchRes contains correct adverts here
     }
 
     public static void mockSearch(String query, PerformedSearchCallback callback) {
-
         List<Advertisement> tempList = MockRepository.getInstance().getLocalJSONAds();
         List<Advertisement> searchRes = new ArrayList<>(); //new list with searchresults
         String queryStr = query.toLowerCase().trim();

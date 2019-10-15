@@ -1,7 +1,6 @@
 package com.masthuggis.boki.presenter;
 
-import android.provider.ContactsContract;
-
+import com.masthuggis.boki.backend.callbacks.MarkedAsFavouriteCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
@@ -23,12 +22,23 @@ import java.util.List;
 public class DetailsPresenter {
     private View view;
     private Advertisement advertisement;
+    private DataModel dataModel;
+    boolean isMarkedAsFavourite;
 
 
     public DetailsPresenter(View view, String advertID, DataModel dataModel) {
+        this.dataModel = dataModel;
         this.view = view;
-        this.advertisement = DataModel.getInstance().getAdFromAdID(advertID);
+        this.advertisement = this.dataModel.getAdFromAdID(advertID);
         setupView();
+        initFavouriteStar();
+
+        dataModel.isAdMarkedAsFavourite(advertID, new MarkedAsFavouriteCallback() {
+            @Override
+            public void onCallback(boolean markedAsFavourite) {
+                isMarkedAsFavourite = markedAsFavourite;
+            }
+        });
     }
 
     /**
@@ -55,21 +65,33 @@ public class DetailsPresenter {
 
     private void createNewChat() {
 
-        if (advertisement.getUniqueOwnerID().equals(DataModel.getInstance().getUserID())) {
+        if (advertisement.getUniqueOwnerID().equals(dataModel.getUserID())) {
             view.showToast();
             return;
         }
         //public void createNewChat(String uniqueOwnerID,String advertID, stringCallback stringCallback,String receiverUsername) {
 
-            DataModel.getInstance().createNewChat(advertisement.getUniqueOwnerID(),advertisement.getUniqueID(), new stringCallback() {
+        dataModel.createNewChat(advertisement.getUniqueOwnerID(), advertisement.getUniqueID(), new stringCallback() {
             @Override
             public void onCallback(String chatID) {
 
                 view.openChat(chatID);
             }
-        },advertisement.getOwner());
+        }, advertisement.getOwner());
     }
 
+    private void initFavouriteStar() {
+        dataModel.isAdMarkedAsFavourite(advertisement.getUniqueID(), new MarkedAsFavouriteCallback() {
+            @Override
+            public void onCallback(boolean markedAsFavourite) {
+                if (markedAsFavourite) {
+                    view.setFavouriteStar();
+                } else {
+                    view.setNotFavouriteStar();
+                }
+            }
+        });
+    }
 
     private void openChat(String chatID) {
         view.openChat(chatID);
@@ -77,10 +99,9 @@ public class DetailsPresenter {
 
     public boolean isUserOwner() {
         try {
-            String loggedinUser = DataModel.getInstance().getUserID();
-            String ownerofAd    = advertisement.getUniqueOwnerID();
+            String loggedinUser = dataModel.getUserID();
+            String ownerofAd = advertisement.getUniqueOwnerID();
             return loggedinUser.equals(ownerofAd);
-
         } catch (Exception e) {
             return false;
         }
@@ -93,8 +114,8 @@ public class DetailsPresenter {
 
     public void contactOwnerButtonClicked(String contactOwnerButtonText) {
         if (contactOwnerButtonText.equals("Starta chatt")) {
-            if (DataModel.getInstance().getUserChats() != null) {
-                for (iChat chats : DataModel.getInstance().getUserChats()) {
+            if (dataModel.getUserChats() != null) {
+                for (iChat chats : dataModel.getUserChats()) {
                     if (chats.getUniqueIDAdID().equals(advertisement.getUniqueID())) {
                         openChat(chats.getChatID());
                         return;
@@ -108,7 +129,15 @@ public class DetailsPresenter {
     }
 
     public void onFavouritesIconPressed() {
-        DataModel.getInstance().addToFavourites(advertisement.getUniqueID());
+        if (isMarkedAsFavourite) {
+            dataModel.removeFromFavourites(advertisement.getUniqueID());
+            view.setNotFavouriteStar();
+            isMarkedAsFavourite = false;
+        } else {
+            dataModel.addToFavourites(advertisement.getUniqueID());
+            view.setFavouriteStar();
+            isMarkedAsFavourite = true;
+        }
     }
 
     public interface View extends iConditionable {
@@ -131,6 +160,10 @@ public class DetailsPresenter {
         void showEditView(String uniqueID);
 
         void setOwnerButtonText(String content);
+
+        void setFavouriteStar();
+
+        void setNotFavouriteStar();
     }
 
 

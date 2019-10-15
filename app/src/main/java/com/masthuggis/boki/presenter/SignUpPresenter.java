@@ -1,6 +1,5 @@
 package com.masthuggis.boki.presenter;
 
-import androidx.annotation.Nullable;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.FormHelper;
 
@@ -33,7 +32,7 @@ public class SignUpPresenter {
         view.signedIn();
     }
 
-    private void onSignUpFailed(@Nullable String errorMessage) {
+    private void onSignUpFailed(String errorMessage) {
         view.showSignUpFailedMessage(errorMessage);
     }
 

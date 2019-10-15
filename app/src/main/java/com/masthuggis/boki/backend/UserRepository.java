@@ -1,11 +1,15 @@
 package com.masthuggis.boki.backend;
 
+import androidx.annotation.Nullable;
+
 import com.masthuggis.boki.backend.callbacks.DBCallback;
+import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.chatCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
+import com.masthuggis.boki.backend.callbacks.userCallback;
 import com.masthuggis.boki.model.Chat;
 import com.masthuggis.boki.model.ChatFactory;
 import com.masthuggis.boki.model.DataModel;
@@ -45,10 +49,7 @@ public class UserRepository {
      */
 
     public void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
-        backend.userSignIn(email, password, () -> {
-            logUserIn();
-            successCallback.onSuccess();
-        }, failureCallback::onFailure);
+        backend.userSignIn(email, password, successCallback,failureCallback);
     }
 
     /**
@@ -57,31 +58,21 @@ public class UserRepository {
      * @param successCallback A callback which indicates what should happen if the login is successful.
      */
 
-    public void signUp(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
-        backend.userSignUp(email, password, successCallback, failureCallback);
+    public void signUp(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback) {
+        backend.userSignUpAndSignIn(email, password,username,successCallback, failureCallback);
     }
 
-    public void signInAfterRegistration(String email, String password, String username) {
-        backend.userSignIn(email, password, new SuccessCallback() {
+
+    public void getUser(userCallback userCallback) {
+        backend.getUser(new DBMapCallback() {
             @Override
-            public void onSuccess() {
-                UserRepository.this.setUsername(username, new SuccessCallback() {
-                    @Override
-                    public void onSuccess() {
-                        UserRepository.this.logUserIn();
-                    }
-                });
+            public void onCallBack(Map<String, Object> dataMap) {
+
+                iUser user = UserFactory.createUser(dataMap.get("email").toString(), dataMap.get("username").toString(), dataMap.get("userID").toString());
+                userCallback.onCallback(user);
             }
-        }, errorMessage -> {
-
         });
-    }
 
-    public iUser logUserIn() {
-        iUser user;
-        Map<String, String> map = backend.getUser();
-        user = UserFactory.createUser(map.get("email"), map.get("username"), map.get("userID"));
-        return user;
     }
 
     public boolean isUserLoggedIn() {
@@ -102,6 +93,11 @@ public class UserRepository {
                 }
                 chatCallback.onCallback(chatList);
 
+            }
+        }, new FailureCallback() {
+            @Override
+            public void onFailure(@Nullable String errorMessage) {
+                chatCallback.onCallback(new ArrayList<>());
             }
         });
     }
