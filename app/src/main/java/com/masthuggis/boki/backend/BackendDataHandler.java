@@ -141,7 +141,7 @@ public class BackendDataHandler implements iBackend {
         String userID = (String) userData.get("userID");
         List<String> favourites = (List<String>) userData.get("favourites");
         favourites.remove(favouriteID);
-        db.collection("users").document(userID).update("favourites",favourites);
+        db.collection("users").document(userID).update("favourites", favourites);
     }
 
 
@@ -466,8 +466,8 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    public void  updateAdToFirebase(File imageFile, HashMap<String, Object> dataMap) {
-        String adID = (String)dataMap.get("uniqueAdID");
+    public void updateAdToFirebase(File imageFile, HashMap<String, Object> dataMap) {
+        String adID = (String) dataMap.get("uniqueAdID");
         advertPath.whereEqualTo("uniqueAdID", adID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
