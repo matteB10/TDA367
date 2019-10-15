@@ -28,15 +28,19 @@ public class CreateAdPresenter {
         this.view = view;
 
     }
-
+    /** getting adID to set up the right view for the user
+     * @param adID is the individual ID for a specific ad.
+     */
     public void setAd(String adID){
         advertisement = dataModel.getAdFromAdID(adID);
         validPrice = true;
     }
 
+
     public void deleteAdvert(){
        dataModel.removeExistingAdvert(advertisement);
     }
+
     public void updateAdvert(){
        dataModel.updateAd(view.getCurrentImageFile(),advertisement);
        advertisement = null;
@@ -65,11 +69,15 @@ public class CreateAdPresenter {
     }
 
 
+
+    /**Method called when the title edit view is changed, to save the
+     * new title to the model.
+     * @param title
+     */
     public void titleChanged(String title) {
         advertisement.setTitle(title);
         view.enablePublishButton(allFieldsValid());
         view.enableSaveButton(allFieldsValid());
-
     }
 
     /**
@@ -88,7 +96,10 @@ public class CreateAdPresenter {
         view.enableSaveButton(allFieldsValid());
     }
 
-    //cannot check for valid input, all input is valid
+    /**
+     * Updating model with new description information
+     * @param description
+     */
     public void descriptionChanged(String description) {
         advertisement.setDescription(description);
     }
@@ -106,7 +117,7 @@ public class CreateAdPresenter {
 
     /**
      * Gets string from user defined tag.
-     * Shows user tag as a button if its added, if tag is already
+     * Shows user-tag as a button if it's added, if tag is already
      * added to advertisement it is removed
      * @param tag
      */
@@ -119,9 +130,7 @@ public class CreateAdPresenter {
         advertisement.tagsChanged(tag);
     }
 
-    /**
-     * Checks if tag is selected
-     *
+    /** Checks if tag is selected
      * @return true if tag is selected
      */
     private boolean isTagSelected(String tag) {
@@ -177,7 +186,6 @@ public class CreateAdPresenter {
         return advertisement;
     }
 
-
     public View getView() {
         return view;
     }
@@ -201,6 +209,7 @@ public class CreateAdPresenter {
     public List<String> getTags(){
         return advertisement.getTags();
     }
+
 
     public interface View {
 
@@ -227,12 +236,6 @@ public class CreateAdPresenter {
         File getCurrentImageFile();
 
         void setTags(List<String> tags);
-
-
-
-
-        //TODO: create methods for future same page error messages in view
-
     }
 
 }
