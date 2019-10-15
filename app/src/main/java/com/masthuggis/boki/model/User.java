@@ -1,5 +1,6 @@
 package com.masthuggis.boki.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User implements iUser {
@@ -14,6 +15,7 @@ public class User implements iUser {
         this.email = email;
         this.displayname = displayname;
         this.userID = userID;
+        this.favourites = new ArrayList<>(); //Will probably not remain as this list, new list will be set
     }
 
     public void addFavourite(Advertisement advertisement) {

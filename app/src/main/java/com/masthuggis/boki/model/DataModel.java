@@ -179,9 +179,6 @@ public class DataModel implements BackendObserver {
     private void getFavouritesFromFirebase(advertisementCallback advertisementCallback) {
         if (user == null) {
             return;
-        }
-        if (allAds == null || allAds.isEmpty()) {
-            fetchAllAdverts(advertisements -> advertisementCallback.onCallback(getFavouritesFromList(advertisements)));
         } else {
             advertisementCallback.onCallback(getFavouritesFromList(allAds));
         }

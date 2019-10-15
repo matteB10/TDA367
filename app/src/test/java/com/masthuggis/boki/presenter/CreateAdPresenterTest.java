@@ -60,7 +60,6 @@ public class CreateAdPresenterTest {
         Mockito.doNothing().when(databaseMock).saveAdvert(null, advertisement);
         Mockito.doNothing().when(databaseMock).removeExistingAdvert(advertisement);
         assertFalse(databaseMock.getAdFromAdID("id").equals(advertisement));
-
     }
 
     @Test
@@ -72,7 +71,6 @@ public class CreateAdPresenterTest {
         Mockito.doNothing().when(databaseMock).updateAd(null, advertisement);
 
         assertEquals(advertisement.getTitle(), databaseMock.getAdFromAdID("id").getTitle());
-
     }
 
     @Test

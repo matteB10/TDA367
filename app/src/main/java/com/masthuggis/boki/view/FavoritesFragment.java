@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.AdvertsPresenterView;
 import com.masthuggis.boki.presenter.FavouritesPresenter;
 import com.masthuggis.boki.presenter.IProductsPresenter;
@@ -36,7 +37,7 @@ public class FavoritesFragment extends Fragment implements AdvertsPresenterView 
     }
 
     private void initPresenter() {
-        this.presenter = new FavouritesPresenter(this);
+        this.presenter = new FavouritesPresenter(this, DependencyInjector.injectDataModel());
     }
 
     private void initAssets() {

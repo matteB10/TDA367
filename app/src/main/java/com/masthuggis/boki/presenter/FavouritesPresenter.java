@@ -12,9 +12,11 @@ public class FavouritesPresenter implements IProductsPresenter {
 
     private final AdvertsPresenterView view;
     private List<Advertisement> favourites;
+    private DataModel dataModel;
 
-    public FavouritesPresenter(AdvertsPresenterView view) {
+    public FavouritesPresenter(AdvertsPresenterView view, DataModel dataModel) {
         this.view = view;
+        this.dataModel = dataModel;
         view.showLoadingScreen();
         this.favourites = DataModel.getInstance().getUserFavourites();
         view.hideLoadingScreen();
