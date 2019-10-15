@@ -83,9 +83,13 @@ public class DataModel implements BackendObserver {
                             });
                         }
                     });
+                }else{
+                    successCallback.onSuccess();
+
                 }
             }
         });
+
 
     }
 
