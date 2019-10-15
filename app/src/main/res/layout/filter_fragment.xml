@@ -90,7 +90,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
         android:gravity="left"
-        android:text="@string/maxPrice"
+        android:text="@string/inputMaxPrice"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -98,17 +98,56 @@
 
     <SeekBar
         android:id="@+id/priceSeekBar"
-        android:progressTint="@color/colorGreyDark"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="30dp"
-        tools:layout_editor_absoluteX="173dp"
-        tools:layout_editor_absoluteY="288dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:max="1000"
+        android:progressTint="@color/colorGreyDark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/priceTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/priceTextView" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/priceTextConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="40dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/priceSeekBar">
+
+        <TextView
+            android:id="@+id/minPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/minPrice"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/actualPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/minPrice"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/maxPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:text="@string/maxPrice"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
         android:id="@+id/applyFilterButton"

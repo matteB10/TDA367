@@ -84,7 +84,13 @@
     <string name="hintNewTitle">ange ny titel</string>
     <string name="hintnewPrice">ange nytt pris</string>
 
+
+    <!--- filter activity -->
     <string name="filter">Filtrera</string>
-    <string name="maxPrice">Ange maxpris:</string>
+    <string name="inputMaxPrice">Ange maxpris:</string>
+    <string name="minPrice">0 kr</string>
+    <string name="maxPrice">1000+ kr</string>
+
+
 
 </resources>
