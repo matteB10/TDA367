@@ -21,7 +21,7 @@ import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 /**
  * Abstract class to be used by views wanting to display a list of adverts.
  */
-abstract class AdvertsView extends Fragment implements AdvertsPresenterView {
+public abstract class AdvertsView extends Fragment implements AdvertsPresenterView {
     protected AdvertsPresenter presenter;
     private View view;
     private ProductsRecyclerViewAdapter recyclerViewAdapter;

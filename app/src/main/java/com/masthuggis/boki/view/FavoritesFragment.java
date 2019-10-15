@@ -3,6 +3,7 @@ package com.masthuggis.boki.view;
 import android.view.View;
 import android.widget.TextView;
 
+import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.AdvertsPresenterView;
@@ -28,7 +29,10 @@ public class FavoritesFragment extends AdvertsView implements AdvertsPresenterVi
 
     @Override
     protected View onCreateNoResultsFoundLayout() {
-        // TODO: implement
-        return new TextView(getActivity());
+        TextView textView = new TextView(getActivity());
+        textView.setText(getString(R.string.noFavoritesFound));
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        textView.setTextAppearance(android.R.style.TextAppearance_Medium);
+        return textView;
     }
 }
