@@ -10,7 +10,7 @@ import java.util.List;
 
 public class FavouritesPresenter implements IProductsPresenter {
 
-    private final AdvertsPresenterView view; //TODO maybe have to change this
+    private final AdvertsPresenterView view;
     private List<Advertisement> favourites;
 
     public FavouritesPresenter(AdvertsPresenterView view) {

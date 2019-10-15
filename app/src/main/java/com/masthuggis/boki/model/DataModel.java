@@ -55,6 +55,8 @@ public class DataModel implements BackendObserver {
         repository.addBackendObserver(this);
     }
 
+
+    //Initializes all fields in the User-object of the application with data gotten from firebase with the corresponding userID
     public void initUser(SuccessCallback successCallback) {
         if (isLoggedIn()) {
             userRepository.getUser(new userCallback() {
@@ -69,7 +71,7 @@ public class DataModel implements BackendObserver {
                             getFavouritesFromLoggedInUser(advertisements -> {
                                 user.setFavourites(advertisements);
                                 successCallback.onSuccess();
-                            }); //TODO fix this maybe
+                            });
                         }
                     });
                 }
@@ -174,32 +176,37 @@ public class DataModel implements BackendObserver {
         if (allAds == null || allAds.isEmpty()) {
             fetchAllAdverts(advertisements -> advertisementCallback.onCallback(getFavouritesFromList(advertisements)));
         } else {
-            advertisementCallback.onCallback(getFavouritesFromList(allAds)); //TODO change this
+            advertisementCallback.onCallback(getFavouritesFromList(allAds));
         }
     }
 
+    //Returns a list with all adverts the user has marked as favourites
     private List<Advertisement> getFavouritesFromList(List<Advertisement> advertisements) {
         List<Advertisement> favourites = new ArrayList<>();
         for (Advertisement ad : advertisements) {
             isAdMarkedAsFavourite(ad.getUniqueID(), new MarkedAsFavouriteCallback() {
                 @Override
                 public void onCallback(boolean markedAsFavourite) {
-                    favourites.add(ad);
+                    if (markedAsFavourite) {
+                        favourites.add(ad);
+                        ad.markAsFavourite();
+                    } else {
+                        ad.markAsNotFavourite();
+                    }
                 }
             });
         }
         return favourites;
     }
 
-    //Yikes
+    //Returns a boolean of whether or not the ad is not marked as a favourite, returned via the callback
     public void isAdMarkedAsFavourite(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
         repository.getUserFavourites(new FavouriteIDsCallback() {
             @Override
             public void onCallback(List<String> favouriteIDs) {
                 if (favouriteIDs != null) { //Only check if user actually has favourites, otherwise NullPointerException
                     for (String adID : favouriteIDs) {
-                        if (adID.equals(uniqueAdID))
-                            markedAsFavouriteCallback.onCallback(true);
+                        markedAsFavouriteCallback.onCallback(adID.equals(uniqueAdID));
                     }
                 }
             }

@@ -31,7 +31,7 @@ public class DetailsPresenter {
         this.view = view;
         this.advertisement = this.dataModel.getAdFromAdID(advertID);
         setupView();
-        initFavouriteStar();
+        //initFavouriteStar();
 
         dataModel.isAdMarkedAsFavourite(advertID, new MarkedAsFavouriteCallback() {
             @Override
@@ -39,6 +39,7 @@ public class DetailsPresenter {
                 isMarkedAsFavourite = markedAsFavourite;
             }
         });
+        initFavveStar();
     }
 
     /**
@@ -85,12 +86,20 @@ public class DetailsPresenter {
             @Override
             public void onCallback(boolean markedAsFavourite) {
                 if (markedAsFavourite) {
-                    view.setFavouriteStar();
+                    view.setFavouriteIcon();
                 } else {
-                    view.setNotFavouriteStar();
+                    view.setNotFavouriteIcon();
                 }
             }
         });
+    }
+
+    private void initFavveStar() {
+        if (advertisement.isMarkedAsFavourite()) {
+            view.setFavouriteIcon();
+        } else {
+            view.setNotFavouriteIcon();
+        }
     }
 
     private void openChat(String chatID) {
@@ -131,13 +140,13 @@ public class DetailsPresenter {
     //Necessary to change local variable (isMarkedAsFavourite) inside method, otherwise it has to update from firebase while in Detail View
     public void onFavouritesIconPressed() {
         if (isMarkedAsFavourite) {
+            advertisement.markAsNotFavourite();
             dataModel.removeFromFavourites(advertisement.getUniqueID());
-            view.setNotFavouriteStar();
-            isMarkedAsFavourite = false;
+            view.setNotFavouriteIcon();
         } else {
+            advertisement.markAsFavourite();
             dataModel.addToFavourites(advertisement.getUniqueID());
-            view.setFavouriteStar();
-            isMarkedAsFavourite = true;
+            view.setFavouriteIcon();
         }
     }
 
@@ -162,9 +171,9 @@ public class DetailsPresenter {
 
         void setOwnerButtonText(String content);
 
-        void setFavouriteStar();
+        void setFavouriteIcon();
 
-        void setNotFavouriteStar();
+        void setNotFavouriteIcon();
     }
 
 

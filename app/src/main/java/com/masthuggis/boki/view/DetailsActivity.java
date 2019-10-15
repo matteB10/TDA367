@@ -3,7 +3,9 @@ package com.masthuggis.boki.view;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -38,7 +40,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-
+        favouritesIcon = findViewById(R.id.favouritesIcon);
         Intent intent = getIntent();
         String advertID = intent.getExtras().getString("advertID");
         if (advertID != null) {
@@ -186,14 +188,14 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
     @Override
-    public void setFavouriteStar() {
-        Drawable favouriteStar = getResources().getDrawable(android.R.drawable.btn_star_big_on);
+    public void setFavouriteIcon() {
+        Drawable favouriteStar = getResources().getDrawable(R.drawable.heart_filled_vector);
         favouritesIcon.setImageDrawable(favouriteStar);
     }
 
     @Override
-    public void setNotFavouriteStar() {
-        Drawable notFavouriteStar = getResources().getDrawable(android.R.drawable.btn_star_big_off);
+    public void setNotFavouriteIcon() {
+        Drawable notFavouriteStar = getResources().getDrawable(R.drawable.heart_outline_vector);
         favouritesIcon.setImageDrawable(notFavouriteStar);
     }
 

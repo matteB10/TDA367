@@ -45,7 +45,7 @@ public class FavoritesFragment extends Fragment implements AdvertsPresenterView 
     }
 
     private void setupList() {
-        recyclerViewAdapter = new ProductsRecyclerViewAdapter(getContext(), presenter); //TODO change this
+        recyclerViewAdapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
         recyclerView.setAdapter(recyclerViewAdapter);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);

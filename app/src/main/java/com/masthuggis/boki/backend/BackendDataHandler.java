@@ -317,15 +317,6 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    //TODO check if looping through list is actually necessary
-    private void removeFromFavourites(List<String> favourites, String adID) {
-        for (String favouriteID : favourites) {
-            if (favouriteID.equals(adID)) {
-                favourites.remove(adID);
-            }
-        }
-    }
-
     private boolean isAlreadyFavourite(List<String> favourites, String adID) {
         for (String id : favourites) {
             if (id.equals(adID))
