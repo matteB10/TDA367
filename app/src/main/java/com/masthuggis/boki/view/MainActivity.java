@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         String toastKey = getString(R.string.putExtraToastKey);
         if (getIntent() != null && getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
-            if(!bundle.getString(toastKey).equals(null)) {
+            if(bundle.getString(toastKey) != null) {
                 displayToastMessage(bundle.getString(toastKey));
             }
         }

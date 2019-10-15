@@ -3,7 +3,9 @@ package com.masthuggis.boki.view;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -38,7 +40,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-
+        favouritesIcon = findViewById(R.id.favouritesIcon);
         Intent intent = getIntent();
         String advertID = intent.getExtras().getString("advertID");
         if (advertID != null) {
@@ -124,7 +126,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         Intent intent = new Intent(DetailsActivity.this, MessagesActivity.class);
         intent.putExtra("chatID", chatID);
         startActivity(intent);
-
     }
 
 
@@ -156,7 +157,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         Context context = getApplicationContext();
         CharSequence text = "Du kan inte skicka meddelanden till dig själv.";
         int duration = Toast.LENGTH_LONG;
-
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
     }
@@ -166,7 +166,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         if (presenter.isUserOwner()) {
             findViewById(R.id.changeAdButton).setVisibility(View.VISIBLE);
             findViewById(R.id.contactOwnerButton).setVisibility(View.GONE);
-
         } else {
             findViewById(R.id.changeAdButton).setVisibility(View.GONE);
             findViewById(R.id.contactOwnerButton).setVisibility(View.VISIBLE);
@@ -181,21 +180,21 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         startActivity(intent);
     }
 
+
     @Override
     public void setOwnerButtonText(String content) {
         contactOwnerButton.setText(content);
-
     }
 
     @Override
-    public void setFavouriteStar() {
-        Drawable favouriteStar = getResources().getDrawable(android.R.drawable.star_big_on);
+    public void setFavouriteIcon() {
+        Drawable favouriteStar = getResources().getDrawable(R.drawable.heart_filled_vector);
         favouritesIcon.setImageDrawable(favouriteStar);
     }
 
     @Override
-    public void setNotFavouriteStar() {
-        Drawable notFavouriteStar = getResources().getDrawable(android.R.drawable.star_big_off);
+    public void setNotFavouriteIcon() {
+        Drawable notFavouriteStar = getResources().getDrawable(R.drawable.heart_outline_vector);
         favouritesIcon.setImageDrawable(notFavouriteStar);
     }
 
@@ -210,11 +209,13 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
     }
 
+    //TODO comment this
     private void setUpFavouriteIcon() {
         favouritesIcon = findViewById(R.id.favouritesIcon);
         if (presenter.isUserOwner()) {
             favouritesIcon.setVisibility(View.GONE);
         } else {
+            presenter.setFavouriteIconStatus();
             favouritesIcon.setOnClickListener(view -> {
                         presenter.onFavouritesIconPressed(); //gör den bara sättbar till en början :)
                     }

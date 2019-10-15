@@ -7,6 +7,11 @@ import java.util.List;
  */
 public interface Advertisement {
 
+    boolean isMarkedAsFavourite();
+
+    void markAsFavourite();
+
+    void markAsNotFavourite();
 
     String getDatePublished();
 

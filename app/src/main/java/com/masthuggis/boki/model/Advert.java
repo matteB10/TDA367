@@ -27,6 +27,7 @@ public class Advert implements Advertisement {
     private List<String> tags;
     private String imageUrl;
     private String owner;
+    private boolean markedAsFavourite;
 
 
     public Advert() {
@@ -166,6 +167,21 @@ public class Advert implements Advertisement {
     @Override
     public String getOwner() {
         return this.owner;
+    }
+
+    @Override
+    public boolean isMarkedAsFavourite() {
+        return this.markedAsFavourite;
+    }
+
+    @Override
+    public void markAsFavourite() {
+        this.markedAsFavourite = true;
+    }
+
+    @Override
+    public void markAsNotFavourite() {
+        this.markedAsFavourite = false;
     }
 
 

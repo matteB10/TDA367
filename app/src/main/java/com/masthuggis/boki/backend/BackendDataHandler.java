@@ -160,9 +160,7 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    //might want to run this on separate thread created by caller
     public void readAllAdvertData(DBCallback DBCallback) {
-        List<Map<String, Object>> advertDataList = new ArrayList<>();
         db.collection("market").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) { //Runs every time change happens i market
@@ -314,15 +312,6 @@ public class BackendDataHandler implements iBackend {
         });
     }
 
-
-    //TODO check if looping through list is actually necessary
-    private void removeFromFavourites(List<String> favourites, String adID) {
-        for (String favouriteID : favourites) {
-            if (favouriteID.equals(adID)) {
-                favourites.remove(adID);
-            }
-        }
-    }
 
     private boolean isAlreadyFavourite(List<String> favourites, String adID) {
         for (String id : favourites) {

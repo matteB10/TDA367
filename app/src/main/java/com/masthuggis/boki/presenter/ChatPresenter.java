@@ -52,7 +52,6 @@ public class ChatPresenter implements ChatObserver {
         holder.setChatID(c.getChatID());
         holder.setDateTextView("" + c.timeLastMessageSent());
         holder.setMessageImageView(dataModel.getAdFromAdID(c.getUniqueIDAdID()).getImageUrl());
-
     }
 
     /**
@@ -81,7 +80,6 @@ public class ChatPresenter implements ChatObserver {
 
     /**
      * Makes sure the user cant open multiple chats at the same time by tapping a chat multiple times in a row.
-     *
      */
     public boolean canProceedWithTapAction() {
         return ClickDelayHelper.canProceedWithTapAction();

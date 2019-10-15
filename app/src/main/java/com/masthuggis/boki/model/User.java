@@ -20,6 +20,10 @@ public class User implements iUser {
         favourites.add(advertisement);
     }
 
+    public void removeFavourite(Advertisement advertisement) {
+        favourites.remove(advertisement);
+    }
+
     public void setFavourites(List<Advertisement> advertisements) {
         this.favourites = advertisements;
     }
