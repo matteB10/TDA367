@@ -40,11 +40,17 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
      * @param adverts the updated adverts lists that will be displayed.
      */
     public void updateAdverts(List<Advertisement> adverts) {
-        if (stateOfAdvertsIsInvalid(adverts) || view == null) {
+        if (adverts == null || view == null) {
             return;
         }
 
-        this.adverts = sort(adverts);
+        if (adverts.isEmpty()) {
+            view.showNoThumbnailsAvailableScreen();
+        } else {
+            view.hideNoThumbnailsAvailableScreen();
+            this.adverts = sort(adverts);
+        }
+
         view.hideLoadingScreen();
         view.updateThumbnails();
     }
@@ -110,7 +116,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
      */
     @Override
     public int getItemCount() {
-        if (stateOfAdvertsIsInvalid(adverts)) {
+        if (adverts == null) {
             return 0;
         }
 
@@ -155,10 +161,6 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
 
     private boolean requestedPositionIsTooLarge(int position) {
         return adverts.size() <= position;
-    }
-
-    private boolean stateOfAdvertsIsInvalid(List<Advertisement> adverts) {
-        return adverts.isEmpty() || adverts == null;
     }
 
     private boolean isFirstThumbnailToBeDisplayed(int position) {
