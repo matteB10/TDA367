@@ -45,11 +45,9 @@ abstract class AdvertsView extends Fragment implements AdvertsPresenterView {
      */
     private void setupNoResultsFoundView() {
         View noResultsFound = onCreateNoResultsFoundLayout();
-        if (noResultsFound != null) {
-            noAdvertsFoundContainer = view.findViewById(R.id.advertsViewNoAdvertsFound);
-            noAdvertsFoundContainer.addView(noResultsFound);
-            noAdvertsFoundContainer.setVisibility(View.GONE);
-        }
+        noAdvertsFoundContainer = view.findViewById(R.id.advertsViewNoAdvertsFound);
+        noAdvertsFoundContainer.addView(noResultsFound);
+        noAdvertsFoundContainer.setVisibility(View.GONE);
     }
 
     /**
