@@ -39,7 +39,6 @@ public class DataModel implements BackendObserver {
 
     private DataModel() {
         initBackend();
-        // initUser();
     }
 
     public static DataModel getInstance() {
@@ -199,6 +198,9 @@ public class DataModel implements BackendObserver {
      * @return A list containing all advertisements the current user has as favourites in the backend
      */
     private void getFavouritesFromLoggedInUser(advertisementCallback advertisementCallback) {
+        if(allAds.size()==0){
+            advertisementCallback.onCallback(new ArrayList<>());
+        }
         List<Advertisement> favourites = new ArrayList<>();
         int i = allAds.size() - 1;
         for (Advertisement ad : allAds) {

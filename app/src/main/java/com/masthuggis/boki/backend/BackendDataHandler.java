@@ -190,6 +190,11 @@ public class BackendDataHandler implements iBackend {
                     Log.w(TAG, "Listen failed", e);
                     return;
                 }
+                if(queryDocumentSnapshots.size()==0){
+                    List <Map<String,Object>> newList = new ArrayList<>();
+                    DBCallback.onCallBack(newList);
+                    return;
+                }
                 List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
                 updateAdvertsDataListWithImgUrl(adverts, DBCallback::onCallBack);
             }
