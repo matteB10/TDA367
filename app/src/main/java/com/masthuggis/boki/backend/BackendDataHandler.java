@@ -225,7 +225,7 @@ public class BackendDataHandler implements iBackend {
     }
 
     private void updateAdvertsDataListWithImgUrl(List<Map<String, Object>> adverts, DBCallback dbCallback) {
-        List<Map<String,Object>> advertsWithImages = new ArrayList<>();
+        List<Map<String, Object>> advertsWithImages = new ArrayList<>();
         for (Map<String, Object> map : adverts) {
             getFirebaseURL((String) map.get("uniqueAdID"), new stringCallback() {
                 @Override
@@ -291,13 +291,14 @@ public class BackendDataHandler implements iBackend {
                     data.put("uniqueChatID", uniqueChatID);
                     data.put("isActive", isActive);
                     chatDataList.add(data);
+                    if (chatDataList.size() == queryDocumentSnapshots.size()) {
+                        successCallback.onSuccess();
+                    }
+                }});
+            }
 
-                }
-            });
         }
-        successCallback.onSuccess();
 
-    }
 
     public void createNewChat(String adOwnerID, String otherUserID, String advertID, String imageURL, stringCallback stringCallback) {
 
