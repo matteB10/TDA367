@@ -34,12 +34,9 @@ public class DataModel implements BackendObserver {
     private final List<AdvertisementObserver> userAdvertisementObservers = new ArrayList<>();
     private final List<MessagesObserver> messagesObservers = new ArrayList<>();
     private iRepository repository;
-    private boolean isOnInit = true;
-
 
     private DataModel() {
         initBackend();
-
     }
 
     public static DataModel getInstance() {
@@ -63,35 +60,26 @@ public class DataModel implements BackendObserver {
         initialAdvertFetch(new SuccessCallback() {
             @Override
             public void onSuccess() {
-                if (isLoggedIn() && isOnInit) {
-                    repository.getUser(new userCallback() {
-                        @Override
-                        public void onCallback(iUser newUser) {
-                            user = newUser;
-                            user.setAdverts(getAdsFromCurrentUser());
-
-                            fetchUserChats(user.getId(), new chatCallback() {
-                                @Override
-                                public void onCallback(List<iChat> chatsList) {
-                                    user.setChats(chatsList);
-                                    initMessages();
-                                    getFavouritesFromLoggedInUser(advertisements -> {
-                                        user.setFavourites(advertisements);
-                                        successCallback.onSuccess();
-                                        isOnInit = false;
-                                    });
-                                }
-                            });
-                        }
-                    });
-                }else{
-                    successCallback.onSuccess();
-
-                }
+                repository.getUser(new userCallback() {
+                    @Override
+                    public void onCallback(iUser newUser) {
+                        user = newUser;
+                        user.setAdverts(getAdsFromCurrentUser());
+                        fetchUserChats(user.getId(), new chatCallback() {
+                            @Override
+                            public void onCallback(List<iChat> chatsList) {
+                                user.setChats(chatsList);
+                                initMessages();
+                                getFavouritesFromLoggedInUser(advertisements -> {
+                                    user.setFavourites(advertisements);
+                                    successCallback.onSuccess();
+                                });
+                            }
+                        });
+                    }
+                });
             }
         });
-
-
     }
 
     private void initMessages() {
@@ -164,12 +152,6 @@ public class DataModel implements BackendObserver {
             @Override
             public void onSuccess() {
                 successCallback.onSuccess();
-
-             /*   initUser(new SuccessCallback() {
-                    @Override
-                    public void onSuccess() {
-                    }
-                });*/
             }
         }, failureCallback);
     }
@@ -200,7 +182,7 @@ public class DataModel implements BackendObserver {
      * @return A list containing all advertisements the current user has as favourites in the backend
      */
     private void getFavouritesFromLoggedInUser(advertisementCallback advertisementCallback) {
-        if(allAds.size()==0){
+        if (allAds.size() == 0) {
             advertisementCallback.onCallback(new ArrayList<>());
         }
         List<Advertisement> favourites = new ArrayList<>();
@@ -279,9 +261,12 @@ public class DataModel implements BackendObserver {
 
 
     void initialAdvertFetch(SuccessCallback successCallback) {
-        repository.initialAdvertFetch(advertisements -> {
-            allAds = advertisements;
-            successCallback.onSuccess();
+        repository.initialAdvertFetch(new advertisementCallback() {
+            @Override
+            public void onCallback(List<Advertisement> advertisements) {
+                allAds = advertisements;
+                successCallback.onSuccess();
+            }
         });
     }
 
@@ -385,7 +370,6 @@ public class DataModel implements BackendObserver {
 
     public void signOut() {
         repository.signOut();
-        isOnInit = true;
     }
 
     public void signUp(String email, String password, String username, SuccessCallback
