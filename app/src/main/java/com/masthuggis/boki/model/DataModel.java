@@ -191,7 +191,7 @@ public class DataModel implements BackendObserver {
         return favourites;
     }
 
-    //Yikes
+
     private void isMarkedAsFavourite(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
         repository.getUserFavourites(new FavouriteIDsCallback() {
             @Override
