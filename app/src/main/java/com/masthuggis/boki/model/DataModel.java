@@ -56,7 +56,7 @@ public class DataModel implements BackendObserver {
     /**
      * Initializes all fields in the User-object of the application with data gotten from firebase with the corresponding userID
      */
-    public void initUser() {
+    public void initUser(SuccessCallback successCallback) {
         initialAdvertFetch(new SuccessCallback() {
             @Override
             public void onSuccess() {
@@ -72,6 +72,7 @@ public class DataModel implements BackendObserver {
                                 initMessages();
                                 getFavouritesFromLoggedInUser(advertisements -> {
                                     user.setFavourites(advertisements);
+                                    successCallback.onSuccess();
                                 });
                             }
                         });

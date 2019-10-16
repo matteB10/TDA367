@@ -11,8 +11,12 @@ public class MainPresenter {
         this.view = view;
         this.dataModel = dataModel;
         if (dataModel.isLoggedIn()) {
-            dataModel.initUser();
-            view.showMainScreen();
+            dataModel.initUser(new SuccessCallback() {
+                @Override
+                public void onSuccess() {
+                    view.showMainScreen(); //Don't show main screen until everything has been set up
+                }
+            });
         } else {
             view.showSignInScreen();
         }
