@@ -1,8 +1,6 @@
 package com.masthuggis.boki.utils;
 
-import com.masthuggis.boki.backend.callbacks.PerformedSearchCallback;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.model.DataModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +15,14 @@ public class SearchHelper {
     }
 
 
-    public static void search(String query, PerformedSearchCallback callback) {
-        List<Advertisement> advertisements = DataModel.getInstance().getAllAdverts();
+    public static List<Advertisement> search(String query,  List<Advertisement> advertisements) {
         List<Advertisement> searchRes = new ArrayList<>(); //new list with search results
         String queryStr = query.toLowerCase().trim();
 
         if (advertisements != null) {
             performSearch(searchRes, queryStr, advertisements);
         }
-        callback.onCallback(searchRes); //searchRes contains correct adverts here
+       return searchRes;
     }
 
     /**
@@ -33,8 +30,7 @@ public class SearchHelper {
      * @param filters
      */
 
-    public static void addFilters(int price, List<String> filters, PerformedSearchCallback callback){
-        List<Advertisement> advertisements = DataModel.getInstance().getAllAdverts();
+    public static List<Advertisement> filters(int price, List<String> filters, List<Advertisement> advertisements){
         List<Advertisement> searchRes = new ArrayList<>();
         for(String filter : filters){
             if (advertisements != null) {
@@ -43,7 +39,8 @@ public class SearchHelper {
                 addPriceFilter(searchRes,price);
             }
         }
-        callback.onCallback(searchRes);
+        return searchRes;
+
     }
 
     /**

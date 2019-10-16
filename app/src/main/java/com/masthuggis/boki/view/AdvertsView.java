@@ -32,15 +32,17 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.adverts_view, container, false);
         this.presenter = getPresenter();
-        setupHeader();
         setupNoResultsFoundView();
         this.presenter.initPresenter();
-        collectData(this);
+        setupHeader();
         return view;
     }
 
+    //AdvertsView getParentView(){
+    //    return this;
+    //}
 
-    void collectData(AdvertsView parent){}
+    //void collectData(){}
     //TODO: should either be abstract or be in this class.. but needs to be called in onCreateView, cant be done from HomeFragment
 
     /**

@@ -16,7 +16,7 @@ import com.masthuggis.boki.presenter.MainPresenter;
  * MainActivity is the primary view of the application. This is where the application will take you on launch.
  * Its main purpose is to handle the different tabs.
  */
-public class MainActivity extends AppCompatActivity implements MainPresenter.View, FilterFragment.OnFragmentCommunicationListener{
+public class MainActivity extends AppCompatActivity implements MainPresenter.View{
     private MainPresenter presenter;
 
     @Override
@@ -113,12 +113,13 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         return false;
     }
 
+    /*
     @Override
     public void onFiltersChanged(Bundle args) {
         Fragment fragment = new HomeFragment();
         fragment.setArguments(args);
         loadFragment(fragment);
-    }
+    }*/
 
 }
 

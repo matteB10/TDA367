@@ -101,6 +101,9 @@
     <string name="minPrice">0 kr</string>
     <string name="maxPrice">1000+ kr</string>
 
+    <!-- no sorting display string -->
+    <string name="pickSorting">Välj sortering..</string>
+
 
 
 </resources>

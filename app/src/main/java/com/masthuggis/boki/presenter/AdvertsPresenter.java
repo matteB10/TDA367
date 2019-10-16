@@ -38,7 +38,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
      * Sorts adverts and tells the view to update UI.
      * @param adverts the updated adverts lists that will be displayed.
      */
-    public void updateAdverts(List<Advertisement> adverts) {
+     void updateAdverts(List<Advertisement> adverts) {
         if (adverts == null || view == null) {
             return;
         }
@@ -64,6 +64,10 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
 
         view.showLoadingScreen();
         updateAdverts(getData());
+    }
+
+    protected List<Advertisement> getCurrentDisplayedAds(){
+        return adverts;
     }
 
     /**

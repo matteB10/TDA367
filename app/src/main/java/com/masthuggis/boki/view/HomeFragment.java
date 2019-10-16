@@ -20,8 +20,6 @@ import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.HomePresenter;
 
-import java.util.List;
-
 /**
  * Home page displaying all the adverts that have been published to the market.
  * Will also include searchPerformed and sort buttons in the future.
@@ -61,12 +59,12 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
     /**
      * Collects data from bundle if passed when creating the fragment
      */
-    @Override
-    void collectData(AdvertsView parent){
-        if(parent.getArguments() != null){
+/*
+    void collectData(){
+        if(this.getArguments() != null){
             try {
-                int price = parent.getArguments().getInt("price");
-                List<String> filterTags = parent.getArguments().getStringArrayList("tags");
+                int price = this.getArguments().getInt("price");
+                List<String> filterTags = this.getArguments().getStringArrayList("tags");
                 presenter.addFilters(price,filterTags);
             }catch (NullPointerException n){
                 n.printStackTrace();
@@ -74,7 +72,7 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
             }
         }
 
-    }
+    }*/
 
     /**
      * Adds a listener for when the user performs a searchPerformed, reacts to when enter key is pressed

@@ -1,6 +1,5 @@
 package com.masthuggis.boki.view;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,7 @@ public class FilterFragment extends Fragment implements FilterPresenter.View {
     private FilterPresenter presenter;
     private List<Button> tags = new ArrayList<>();
     private View view;
-    private OnFragmentCommunicationListener mListener;
+    //private OnFragmentCommunicationListener mListener;
 
 
 
@@ -93,10 +92,11 @@ public class FilterFragment extends Fragment implements FilterPresenter.View {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle args = new Bundle();
-                args.putInt("price",presenter.getMaxPrice());
-                args.putStringArrayList("tags",new ArrayList<>(presenter.getActiveTags()));
-                mListener.onFiltersChanged(args);
+                HomeFragment nextFrag = new HomeFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, nextFrag, "HomeFragment")
+                        .addToBackStack(null)
+                        .commitAllowingStateLoss();
             }
         });
     }
@@ -113,6 +113,8 @@ public class FilterFragment extends Fragment implements FilterPresenter.View {
         String s = i + " kr";
         t.setText(s);
     }
+
+    /*
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -133,7 +135,7 @@ public class FilterFragment extends Fragment implements FilterPresenter.View {
     interface OnFragmentCommunicationListener {
 
         void onFiltersChanged(Bundle args);
-    }
+    }*/
 
 
 }

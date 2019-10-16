@@ -3,6 +3,7 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.sorting.SortManager;
+import com.masthuggis.boki.utils.Filter;
 import com.masthuggis.boki.utils.SearchHelper;
 
 import java.util.List;
@@ -19,14 +20,16 @@ public final class HomePresenter extends AdvertsPresenter {
     private final AdvertsPresenterView view;
     private int selectedSortOption = 0;
 
+
     public HomePresenter(AdvertsPresenterView view, DataModel dataModel) {
         super(view, dataModel);
         this.view = view;
     }
 
+
     @Override
     public List<Advertisement> getData() {
-        return dataModel.getAllAdverts();
+        return super.getCurrentDisplayedAds();
     }
 
     /**
@@ -38,24 +41,24 @@ public final class HomePresenter extends AdvertsPresenter {
     public void searchPerformed(String query) {
         view.showLoadingScreen();
 
-        if(!searchFieldIsEmpty(query)){
-            SearchHelper.search(query, searchResult -> super.updateAdverts(searchResult));
+        if (!searchFieldIsEmpty(query)) {
+            updateAdverts(SearchHelper.search(query,super.getCurrentDisplayedAds()));
         }
+    }
         /*
         if (searchFieldIsEmpty(query)) {
             super.updateAdverts();
         } else {
             SearchHelper.search(query, searchResult -> super.updateAdverts(searchResult));
         }*/
-    }
 
     /**
      * Apply filters, display search result
-     * @param price maxPrice
-     * @param tags filter tags
      */
-    public void addFilters(int price, List<String> tags){
-        SearchHelper.addFilters(price, tags, searchResult -> super.updateAdverts(searchResult));
+    public void addFilters(){
+        int maxPrice = Filter.getInstance().getMaxPrice();
+        List<String> filterTags = Filter.getInstance().getTags();
+        updateAdverts(SearchHelper.filters(maxPrice,filterTags,super.getCurrentDisplayedAds()));
     }
 
     /**
@@ -66,7 +69,7 @@ public final class HomePresenter extends AdvertsPresenter {
      */
     @Override
     public List<Advertisement> sort(List<Advertisement> adverts) {
-        return SortManager.getInstance().sort(selectedSortOption, adverts);
+       return SortManager.getInstance().sort(selectedSortOption,adverts);
     }
 
     public String[] getSortOptions() {
@@ -80,7 +83,7 @@ public final class HomePresenter extends AdvertsPresenter {
      */
     public void sortOptionSelected(int pos) {
         selectedSortOption = pos;
-        super.updateAdverts();
+        super.updateAdverts(getData());
     }
 
     private boolean searchFieldIsEmpty(String query) {

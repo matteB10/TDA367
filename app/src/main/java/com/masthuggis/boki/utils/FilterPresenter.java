@@ -1,14 +1,12 @@
 package com.masthuggis.boki.utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FilterPresenter {
 
-    View view;
-    List<String> preDefTags = new ArrayList<>();
-    List<String> activeTags = new ArrayList<>();
-    int maxPrice;
+    private View view;
+    private static Filter filter = Filter.getInstance();
+    private List<String> preDefTags;
 
 
     public FilterPresenter(FilterPresenter.View view) {
@@ -17,9 +15,9 @@ public class FilterPresenter {
 
     public void tagsChanged(String tag) {
         if (isSelected(tag)) {
-            activeTags.add(tag);
+            filter.addTag(tag);
         } else {
-            activeTags.remove(tag);
+            filter.removeTag(tag);
         }
         view.addTag(tag, !isSelected(tag));
     }
@@ -29,15 +27,15 @@ public class FilterPresenter {
     }
 
     public List<String> getActiveTags() {
-        return activeTags;
+        return filter.getTags();
     }
 
     public int getMaxPrice() {
-        return maxPrice;
+        return filter.getMaxPrice();
     }
 
     public void maxPriceChanged(int i) {
-        maxPrice = i;
+        filter.setMaxPrice(i);
         view.setMaxPrice(i);
     }
 
@@ -46,7 +44,7 @@ public class FilterPresenter {
     }
 
     private boolean isSelected(String tag) {
-        for (String t : activeTags) {
+        for (String t : filter.getTags()) {
             if (t.equals(tag)) {
                 return false;
             }
