@@ -1,5 +1,6 @@
 package com.masthuggis.boki.backend;
 
+import com.masthuggis.boki.backend.callbacks.DBCallback;
 import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
@@ -48,17 +49,27 @@ class AdvertRepository {
     }
 
 
-    void fetchAllAdverts(advertisementCallback advertisementCallback) {
-        Thread thread = new Thread(() -> backend.readAllAdvertData(advertDataList -> {
-            List<Advertisement> allAds = new ArrayList<>();
-            for (Map<String, Object> dataMap : advertDataList) {
-                allAds.add(retrieveAdvert(dataMap));
-            }
-            advertisementCallback.onCallback(allAds);
+    void initialAdvertFetch(advertisementCallback advertisementCallback) {
+        Thread thread = new Thread(() -> backend.initialAdvertFetch(advertDataList -> {
+            extractAdvertsFromData(advertisementCallback, advertDataList);
         }));
         thread.start();
     }
 
+    void attachMarketListener(advertisementCallback advertisementCallback) {
+        Thread thread = new Thread(() -> backend.attachMarketListener(advertDataList -> {
+            extractAdvertsFromData(advertisementCallback, advertDataList);
+        }));
+        thread.start();
+    }
+
+    private void extractAdvertsFromData(advertisementCallback advertisementCallback, List<Map<String, Object>> advertDataList) {
+        List<Advertisement> allAds = new ArrayList<>();
+        for (Map<String, Object> dataMap : advertDataList) {
+            allAds.add(retrieveAdvert(dataMap));
+        }
+        advertisementCallback.onCallback(allAds);
+    }
 
     private Advertisement retrieveAdvert(Map<String, Object> dataMap) {
         String title = "" + dataMap.get("title");
@@ -84,10 +95,8 @@ class AdvertRepository {
     }
 
     void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID) {
-        backend.deleteAd(chatReceiverAndUserIDMap,adIDAndUserID);
+        backend.deleteAd(chatReceiverAndUserIDMap, adIDAndUserID);
     }
-
-
 
 
     void addBackendObserver(BackendObserver backendObserver) {
@@ -104,14 +113,16 @@ class AdvertRepository {
 
 
     void removeAdFromFavourites(String adID, String userID) {
-        backend.removeAdFromFavourites(adID,userID);
+        backend.removeAdFromFavourites(adID, userID);
     }
-    public void updateAdvert(File imageFile, Advertisement advertisement){
+
+    public void updateAdvert(File imageFile, Advertisement advertisement) {
         Map<String, Object> dataMap = new HashMap<>();
-        dataMap = mapAdData(dataMap,advertisement);
+        dataMap = mapAdData(dataMap, advertisement);
         backend.updateAdToFirebase(imageFile, dataMap);
     }
-    private Map<String, Object> mapAdData(Map<String,Object> dataMap, Advertisement advertisement){
+
+    private Map<String, Object> mapAdData(Map<String, Object> dataMap, Advertisement advertisement) {
         dataMap.put("title", advertisement.getTitle());
         dataMap.put("description", advertisement.getDescription());
         dataMap.put("uniqueOwnerID", advertisement.getUniqueOwnerID());

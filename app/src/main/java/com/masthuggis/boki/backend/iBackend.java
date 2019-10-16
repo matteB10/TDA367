@@ -46,7 +46,9 @@ public interface iBackend {
 
     void addBackendObserver(BackendObserver backendObserver);
 
-    void readAllAdvertData(DBCallback DBCallback);
+    void initialAdvertFetch(DBCallback dbCallback);
+
+    void attachMarketListener(DBCallback DBCallback);
 
     void removeBackendObserver(BackendObserver backendObserver);
 

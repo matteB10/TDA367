@@ -39,6 +39,7 @@ public class DataModel implements BackendObserver {
 
     private DataModel() {
         initBackend();
+
     }
 
     public static DataModel getInstance() {
@@ -51,6 +52,7 @@ public class DataModel implements BackendObserver {
     private void initBackend() {
         repository = new Repository(BackendFactory.createBackend());
         repository.addBackendObserver(this);
+        attachAdvertsObserver();
     }
 
 
@@ -58,7 +60,7 @@ public class DataModel implements BackendObserver {
      * Initializes all fields in the User-object of the application with data gotten from firebase with the corresponding userID
      */
     public void initUser(SuccessCallback successCallback) {
-        fetchAllAdverts(new SuccessCallback() {
+        initialAdvertFetch(new SuccessCallback() {
             @Override
             public void onSuccess() {
                 if (isLoggedIn() && isOnInit) {
@@ -276,14 +278,16 @@ public class DataModel implements BackendObserver {
     }
 
 
-    void fetchAllAdverts(SuccessCallback successCallback) {
-        repository.fetchAllAdverts(new advertisementCallback() {
-            @Override
-            public void onCallback(List<Advertisement> advertisements) {
+    void initialAdvertFetch(SuccessCallback successCallback) {
+        repository.initialAdvertFetch(advertisements -> {
+            allAds = advertisements;
+            successCallback.onSuccess();
+        });
+    }
 
-                allAds = advertisements;
-                successCallback.onSuccess();
-            }
+    void attachAdvertsObserver() {
+        repository.attachAdvertsObserver(advertisements -> {
+            allAds = advertisements;
         });
     }
 
