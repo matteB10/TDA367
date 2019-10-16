@@ -222,7 +222,6 @@ public class DataModel implements BackendObserver {
         });
     }
 
-
     //
     public boolean isAFavourite(Advertisement advertisement) {
         List<Advertisement> userFavourites = user.getFavourites();

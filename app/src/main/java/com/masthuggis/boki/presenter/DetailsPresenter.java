@@ -105,8 +105,8 @@ public class DetailsPresenter {
             dataModel.removeFromFavourites(advertisement);
             view.setNotFavouriteIcon();
         } else {
-            advertisement.markAsFavourite();
             dataModel.addToFavourites(advertisement);
+            view.setFavouriteIcon();
         }
     }
 

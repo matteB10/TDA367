@@ -149,7 +149,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         return btn;
     }
 
-
     public void showToast() {
         Context context = getApplicationContext();
         CharSequence text = "Du kan inte skicka meddelanden till dig själv.";
@@ -169,14 +168,12 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         }
     }
 
-
     @Override
     public void showEditView(String uniqueID) {
         Intent intent = new Intent(DetailsActivity.this, CreateAdActivity.class);
         intent.putExtra("advertID", uniqueID);
         startActivity(intent);
     }
-
 
     @Override
     public void setOwnerButtonText(String content) {
@@ -210,8 +207,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
     }
 
-    //TODO comment this
-    //TODO move this logic away from Activity into Model
     private void setUpFavouriteIcon() {
         favouritesIcon = findViewById(R.id.favouritesIcon);
         if (presenter.isUserOwner()) {
