@@ -84,14 +84,12 @@ public class DataModel implements BackendObserver {
                             });
                         }
                     });
-                }else{
+                } else {
                     successCallback.onSuccess();
 
                 }
             }
         });
-
-
     }
 
     private void initMessages() {
@@ -164,12 +162,6 @@ public class DataModel implements BackendObserver {
             @Override
             public void onSuccess() {
                 successCallback.onSuccess();
-
-             /*   initUser(new SuccessCallback() {
-                    @Override
-                    public void onSuccess() {
-                    }
-                });*/
             }
         }, failureCallback);
     }
@@ -200,7 +192,7 @@ public class DataModel implements BackendObserver {
      * @return A list containing all advertisements the current user has as favourites in the backend
      */
     private void getFavouritesFromLoggedInUser(advertisementCallback advertisementCallback) {
-        if(allAds.size()==0){
+        if (allAds.size() == 0) {
             advertisementCallback.onCallback(new ArrayList<>());
         }
         List<Advertisement> favourites = new ArrayList<>();
