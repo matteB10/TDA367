@@ -10,16 +10,12 @@ public class MainPresenter {
     public MainPresenter(View view, DataModel dataModel) {
         this.view = view;
         this.dataModel = dataModel;
-        dataModel.initUser(new SuccessCallback() {
-            @Override
-            public void onSuccess() {
-                if (dataModel.isLoggedIn()) {
-                    view.showMainScreen();
-                } else {
-                    view.showSignInScreen();
-                }
-            }
-        });
+        if (dataModel.isLoggedIn()) {
+            dataModel.initUser();
+            view.showMainScreen();
+        } else {
+            view.showSignInScreen();
+        }
     }
 
     public interface View {
