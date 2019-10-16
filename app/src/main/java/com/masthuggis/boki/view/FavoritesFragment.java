@@ -1,5 +1,6 @@
 package com.masthuggis.boki.view;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -30,5 +31,13 @@ public class FavoritesFragment extends AdvertsView implements AdvertsPresenterVi
     @Override
     protected View onCreateNoResultsFoundLayout() {
         return ViewCreator.createSimpleText(getActivity(), getString(R.string.noFavoritesFound));
+    }
+
+    @Override
+    public void showDetailsScreen(String id) {
+        Intent intent = new Intent(getContext(), DetailsActivity.class);
+        intent.putExtra("advertID", id);
+        intent.putExtra("fromFavourites", true);
+        startActivity(intent);
     }
 }

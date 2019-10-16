@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         setContentView(R.layout.activity_main);
 
         this.presenter = new MainPresenter(this, DependencyInjector.injectDataModel());
-
+        favouritesNavigationCheck();
         displayToastMessageIfRequestWasReceived();
     }
 
@@ -38,6 +38,13 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
                     displayToastMessage(bundle.getString(toastKey));
                 }
             }
+        }
+    }
+
+    private void favouritesNavigationCheck() {
+        String navKey = "toFavourites";
+        if (getIntent() != null && getIntent().getBooleanExtra(navKey,false)) {
+            loadFragment(new FavoritesFragment());
         }
     }
 

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
@@ -217,6 +218,19 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
                         presenter.onFavouritesIconPressed();
                     }
             );
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getIntent().getBooleanExtra("fromFavourites", false)) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("toFavourites", true);
+            startActivity(intent); //TODO this creates both new MainActivity and MainPresenter, presenter navigates to homeFragment
+        } else { //Might not be necessary
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
         }
 
     }

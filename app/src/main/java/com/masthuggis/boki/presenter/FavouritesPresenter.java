@@ -21,4 +21,5 @@ public class FavouritesPresenter extends AdvertsPresenter {
     public List<Advertisement> sort(List<Advertisement> adverts) {
         return SortManager.getInstance().sortWithDefaultSorting(adverts);
     }
+
 }
