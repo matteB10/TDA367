@@ -192,7 +192,6 @@ public class DataModel implements BackendObserver {
                 @Override
                 public void onCallback(boolean markedAsFavourite) {
                     if (markedAsFavourite) {
-                        ad.markAsFavourite();
                         favourites.add(ad);
                     }
                 }
