@@ -95,4 +95,10 @@
     <string name="toastUpdatedAd">Din annons är uppdaterad</string>
     <string name="toastCreatedAd">Din annons är upplagd</string>
 
+
+
+    //Errors
+    <string name="noAdvertFoundDetailsPresenter">"Hittar ingen annons med denna beskrivning."</string>
+
+
 </resources>

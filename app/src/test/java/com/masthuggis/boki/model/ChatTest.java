@@ -24,26 +24,28 @@ public class ChatTest {
 
     @Test
     public void testTimeLastMessageSent() {
-        //TODO fix these tests so they fit according to the constructor in Chat, can't run other tests otherwise
-        /*when(databaseMock.getUserID()).thenReturn("userID");
-        Mockito.doNothing().when(databaseMock).getMessages(null, null, null);
-        Advertisement advertisement = new Advert("datePublished", "uniqueOwnerID", "id", "title", "description", 123123, Advert.Condition.NEW, "imageURL", new ArrayList<>(), "owner");
+        when(databaseMock.getUserID()).thenReturn("userID");
 
-        Chat chat = new Chat("uniqueChatID", "senderID", "receiverID","uniqueAdID","receiverUsername", "senderUsername", databaseMock);
+        Chat chat = new Chat("123123123",null,null,"31321321","imageURL",true);
         chat.setMessages(new ArrayList<>());
         chat.getMessages().add(new Message("meddelande", 123123, "senderID"));
         chat.getMessages().add(new Message("meddelande2", 123, "senderID2"));
-        assertEquals(chat.timeLastMessageSent(), 123123);*/
+        assertEquals(chat.timeLastMessageSent(), 123123);
     }
 
     @Test
-    public void testGetDisplayName() {
+    public void testGetReceiverName() {
+        iUser currentUser = UserFactory.createUser("email","MyDisplayName","currentUserID");
+        iUser receiverUser = UserFactory.createUser("email2","receiverUser","receiverUserID");
 
-        /*Advertisement advertisement = new Advert("datePublished", "uniqueOwnerID", "id", "title", "description", 123123, Advert.Condition.NEW, "imageURL", new ArrayList<>(), "owner");
-        Chat chat = new Chat("uniqueChatID", "senderID", "receiverID","uniqueAdID","receiverUsername", "senderUsername", databaseMock);
+        Chat chat = new Chat("uniqueChatID", currentUser, receiverUser,"123321321123","imageURL", true);
 
-        Mockito.when(databaseMock.getUserDisplayName()).thenReturn(chat.getReceiverUsername());
-        String displayname = chat.getReceiverName();
-        assertEquals(displayname, chat.getSenderUsername());*/
+        when(databaseMock.getUserID()).thenReturn(currentUser.getId());
+        when(databaseMock.getUserDisplayName()).thenReturn(currentUser.getDisplayName());
+
+
+        String displayname = chat.getReceiverName(databaseMock.getUserID());
+
+        assertEquals(receiverUser.getDisplayName(),displayname);
     }
 }

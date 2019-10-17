@@ -135,14 +135,12 @@ public class DataModel implements BackendObserver {
         repository.signIn(email, password, () -> successCallback.onSuccess(), failureCallback);
     }
 
-    public void addAdvertisement(Advertisement ad) {
-        this.allAds.add(ad);
-    }
 
     public Advertisement getAdFromAdID(String ID) {
         for (Advertisement ad : allAds) {
             if (ad.getUniqueID().equals(ID))
                 return ad;
+
         }
         return null; //TODO Fix a better solution to handle NPExc....
     }
@@ -183,7 +181,7 @@ public class DataModel implements BackendObserver {
      * Returns a boolean of whether or not the given adID exists under the User's list of ID:s in the database
      */
     private void isAFavouriteInDatabase(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
-        repository.getUserFavourites(favouriteIDs -> {
+        repository.getUserFavourites(user.getId(),favouriteIDs -> {
             if (favouriteIDs != null) { //Only check if user actually has favourites, otherwise NullPointerException
                 for (String favouriteID : favouriteIDs) {
                     if (adStillExists(favouriteID) && favouriteID.equals(uniqueAdID)) {
@@ -194,7 +192,6 @@ public class DataModel implements BackendObserver {
         });
     }
 
-    //
     public boolean isAFavourite(Advertisement advertisement) {
         List<Advertisement> userFavourites = user.getFavourites();
         for (Advertisement favourite : userFavourites) {
@@ -213,12 +210,12 @@ public class DataModel implements BackendObserver {
             }
         }
         //If this is reached, no existing advertisement has the ID that is stored under user favourites in database
-        deleteIDFromFavourites(favouriteID);
+        deleteIDFromFavourites(user.getId(),favouriteID);
         return false;
     }
 
-    private void deleteIDFromFavourites(String favouriteID) {
-        repository.deleteIDFromFavourites(favouriteID);
+    private void deleteIDFromFavourites(String id, String favouriteID) {
+        repository.deleteIDFromFavourites(id,favouriteID);
     }
 
 
@@ -336,6 +333,7 @@ public class DataModel implements BackendObserver {
 
     public void signOut() {
         repository.signOut();
+        loggedOut();
     }
 
     public void signUp(String email, String password, String username, SuccessCallback

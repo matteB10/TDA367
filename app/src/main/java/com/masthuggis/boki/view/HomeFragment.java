@@ -34,6 +34,7 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         if (presenter == null) {
             this.presenter = new HomePresenter(this, DependencyInjector.injectDataModel());
         }
+
         return presenter;
     }
 
@@ -51,13 +52,13 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         return header;
     }
 
-    private Spinner setupSortSpinner(View view) {
+    private void setupSortSpinner(View view) {
         Spinner spinner = view.findViewById(R.id.sortPickerSpinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, presenter.getSortOptions());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-        return spinner;
+
     }
 
     /**

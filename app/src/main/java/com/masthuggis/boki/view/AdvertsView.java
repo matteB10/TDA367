@@ -29,16 +29,19 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
     private ProductsRecyclerViewAdapter recyclerViewAdapter;
     private RecyclerView recyclerView;
     private LinearLayout noAdvertsFoundContainer;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.adverts_view, container, false);
         this.presenter = getPresenter();
+
         setupHeader();
         setupNoResultsFoundView();
         setupPullToRefresh();
         this.presenter.initPresenter();
+
         return view;
     }
 
@@ -108,18 +111,21 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
     /**
      * Asks the concrete implementations to provide a layout to be used above the adverts list,
      * acting as a header.
+     *
      * @return
      */
     protected abstract View onCreateHeaderLayout();
 
     /**
      * Asks the concrete implementation to provide a layout for when no adverts are found.
+     *
      * @return
      */
     protected abstract View onCreateNoResultsFoundLayout();
 
     /**
      * Asks the concrete implementation to provide the presenter to be used.
+     *
      * @return
      */
     protected abstract AdvertsPresenter getPresenter();
@@ -166,6 +172,7 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
 
     /**
      * Opens a details view showing more information about the advert that was pressed.
+     *
      * @param id
      */
     @Override

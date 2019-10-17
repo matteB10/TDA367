@@ -1,7 +1,5 @@
 package com.masthuggis.boki.backend;
 
-import com.masthuggis.boki.backend.callbacks.DBCallback;
-import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.AdFactory;
@@ -85,8 +83,8 @@ class AdvertRepository {
         return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageUrl, tags, owner);
     }
 
-    void getUserFavourites(FavouriteIDsCallback favouriteIDsCallback) {
-        backend.getFavouriteIDs(dataMap -> favouriteIDsCallback.onCallback((List<String>) dataMap.get("favourites")));
+    void getUserFavourites(String userID,FavouriteIDsCallback favouriteIDsCallback) {
+        backend.getFavouriteIDs(userID, dataMap -> favouriteIDsCallback.onCallback((List<String>) dataMap.get("favourites")));
     }
 
     void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID) {

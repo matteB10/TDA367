@@ -5,10 +5,10 @@ public class Message implements iMessage {
     private long timeSent;
     private String senderID;
 
-    public Message(String message, long timeSent, String senderID) {
-        this.message = message;
-        this.timeSent = timeSent;
-        this.senderID = senderID;
+    Message(String message, long timeSent, String senderID) {
+        this.message= message;
+        this.timeSent=timeSent;
+        this.senderID=senderID;
     }
 
     public void setMessage(String message) {

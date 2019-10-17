@@ -28,22 +28,30 @@ public class CreateAdPresenter {
         this.view = view;
 
     }
-    /** getting adID to set up the right view for the user
+
+    /**
+     * getting adID to set up the right view for the user
+     *
      * @param adID is the individual ID for a specific ad.
      */
-    public void setAd(String adID){
-        advertisement = dataModel.getAdFromAdID(adID);
+    public void setAd(String adID) {
+        try {
+            advertisement = dataModel.getAdFromAdID(adID);
+        } catch (Exception e) {
+            view.displayNotFoundToast("Det finns ingen annons som matchar denna data.");
+            return;
+        }
         validPrice = true;
     }
 
 
-    public void deleteAdvert(){
-       dataModel.removeExistingAdvert(advertisement.getUniqueID(),advertisement.getUniqueOwnerID());
+    public void deleteAdvert() {
+        dataModel.removeExistingAdvert(advertisement.getUniqueID(), advertisement.getUniqueOwnerID());
     }
 
-    public void updateAdvert(){
-       dataModel.updateAd(view.getCurrentImageFile(),advertisement);
-       advertisement = null;
+    public void updateAdvert() {
+        dataModel.updateAd(view.getCurrentImageFile(), advertisement);
+        advertisement = null;
     }
 
     /**
@@ -52,7 +60,7 @@ public class CreateAdPresenter {
      */
     //Need to change imageFile in advert to inputStream from View
     public void saveAdvert() {
-        if((advertisement.getDatePublished().equals(""))) {
+        if ((advertisement.getDatePublished().equals(""))) {
             setAdvertDate();
         }
         dataModel.saveAdvert(view.getCurrentImageFile(), advertisement);
@@ -60,18 +68,19 @@ public class CreateAdPresenter {
     }
 
 
-    public void setUpView(){
-            view.setTitle(advertisement.getTitle());
-            view.setPrice(advertisement.getPrice());
-            view.setDescription(advertisement.getDescription());
-            view.setImageUrl(advertisement.getImageUrl());
-            view.setTags(advertisement.getTags());
+    public void setUpView() {
+        view.setTitle(advertisement.getTitle());
+        view.setPrice(advertisement.getPrice());
+        view.setDescription(advertisement.getDescription());
+        view.setImageUrl(advertisement.getImageUrl());
+        view.setTags(advertisement.getTags());
     }
 
 
-
-    /**Method called when the title edit view is changed, to save the
+    /**
+     * Method called when the title edit view is changed, to save the
      * new title to the model.
+     *
      * @param title
      */
     public void titleChanged(String title) {
@@ -83,13 +92,14 @@ public class CreateAdPresenter {
     /**
      * If price is parsable to an int, price is updated in advert.
      * boolean variable also set due to default value zero is valid
+     *
      * @param price
      */
     public void priceChanged(String price) {
         if (FormHelper.getInstance().isValidPrice(price)) {
             advertisement.setPrice(Integer.parseInt(price));
             validPrice = true;
-        }else{
+        } else {
             validPrice = false;
         }
         view.enablePublishButton(allFieldsValid());
@@ -98,6 +108,7 @@ public class CreateAdPresenter {
 
     /**
      * Updating model with new description information
+     *
      * @param description
      */
     public void descriptionChanged(String description) {
@@ -119,18 +130,21 @@ public class CreateAdPresenter {
      * Gets string from user defined tag.
      * Shows user-tag as a button if it's added, if tag is already
      * added to advertisement it is removed
+     *
      * @param tag
      */
     public void userDefTagsChanged(String tag) {
-        if(isTagSelected(tag)) {
+        if (isTagSelected(tag)) {
             view.displayUserTagButton(tag);
-        }else{
+        } else {
             view.removeUserTagButton(tag);
         }
         advertisement.tagsChanged(tag);
     }
 
-    /** Checks if tag is selected
+    /**
+     * Checks if tag is selected
+     *
      * @return true if tag is selected
      */
     private boolean isTagSelected(String tag) {
@@ -154,7 +168,7 @@ public class CreateAdPresenter {
     /**
      * Checks if publishbutton should be enabled when image has changed
      */
-    public void imageChanged(){
+    public void imageChanged() {
         view.enablePublishButton(allFieldsValid());
         view.enableSaveButton(allFieldsValid());
     }
@@ -167,7 +181,7 @@ public class CreateAdPresenter {
      */
     private boolean allFieldsValid() {
         boolean valid = advertisement.getTitle().length() > 2 && validPrice && advertisement.isValidCondition() &&
-                (view.getCurrentImageFile()!= null || advertisement.getImageUrl() != null);
+                (view.getCurrentImageFile() != null || advertisement.getImageUrl() != null);
         return (valid);
     }
 
@@ -206,7 +220,7 @@ public class CreateAdPresenter {
         return (int) advertisement.getPrice();
     }
 
-    public List<String> getTags(){
+    public List<String> getTags() {
         return advertisement.getTags();
     }
 
@@ -236,6 +250,8 @@ public class CreateAdPresenter {
         File getCurrentImageFile();
 
         void setTags(List<String> tags);
+
+        void displayNotFoundToast(String toast);
     }
 
 }

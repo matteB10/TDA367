@@ -15,12 +15,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.DetailsPresenter;
+import com.masthuggis.boki.utils.ClickDelayHelper;
 import com.masthuggis.boki.utils.StylingHelper;
 
 import java.util.List;
@@ -33,7 +33,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     private Button contactOwnerButton;
     private ImageView favouritesIcon;
     private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
-    private static final long MIN_THUMBNAIL_CLICK_TIME_INTERVAL = 300;
 
 
     @Override
@@ -46,17 +45,19 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         if (advertID != null) {
             presenter = new DetailsPresenter(this, advertID, DependencyInjector.injectDataModel());
         }
+        if (presenter.isValid()) {
+            contactOwnerButton = findViewById(R.id.contactOwnerButton);
+            contactOwnerButton.setOnClickListener(view -> {
+                if (canProceedWithTapAction()) {
+                    presenter.contactOwnerBtnClicked(contactOwnerButton.getText().toString()); //Should the logic be based off this string?
+                }
+            });
+            Button changeAd = findViewById(R.id.changeAdButton);
+            changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
+            setUpFavouriteIcon();
+            setVisibilityOnButtons();
+        }
 
-        contactOwnerButton = findViewById(R.id.contactOwnerButton);
-        contactOwnerButton.setOnClickListener(view -> {
-            if (canProceedWithTapAction()) {
-                presenter.contactOwnerBtnClicked(contactOwnerButton.getText().toString()); //Should the logic be based off this string?
-            }
-        });
-        Button changeAd = findViewById(R.id.changeAdButton);
-        changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
-        setUpFavouriteIcon();
-        setVisibilityOnButtons();
     }
 
 
@@ -196,17 +197,13 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         favouritesIcon.setVisibility(View.GONE);
     }
 
-    public boolean canProceedWithTapAction() {
-        boolean canProceed = tapActionWasNotTooFast();
-        lastTimeThumbnailWasClicked = System.currentTimeMillis();
-        return canProceed;
-    }
+    @Override
+    public void nothingToDisplay(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        super.onBackPressed();
 
-    private boolean tapActionWasNotTooFast() {
-        long elapsedTimeSinceLastClick = System.currentTimeMillis() - lastTimeThumbnailWasClicked;
-        return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
+        finish();
     }
-
     private void setUpFavouriteIcon() {
         favouritesIcon = findViewById(R.id.favouritesIcon);
         if (presenter.isUserOwner()) {
@@ -230,5 +227,9 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         }
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
+    }
+
+    public boolean canProceedWithTapAction() {
+        return ClickDelayHelper.canProceedWithTapAction();
     }
 }
