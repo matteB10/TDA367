@@ -13,6 +13,7 @@ public class MainPresenter {
     }
 
     public void init(boolean favouriteNav) {
+        view.hideBottomNavBar();
         if (dataModel.isLoggedIn()) {
             dataModel.initUser(() -> {
                 if (favouriteNav) {
@@ -20,17 +21,22 @@ public class MainPresenter {
                 } else {
                     view.showMainScreen();
                 }
+                view.showBottomNavBar();
             });
         } else {
             view.showSignInScreen();
         }
     }
-    
+
     public interface View {
         void showSignInScreen();
 
         void showMainScreen();
 
         void showFavouritesScreen();
+
+        void hideBottomNavBar();
+
+        void showBottomNavBar();
     }
 }

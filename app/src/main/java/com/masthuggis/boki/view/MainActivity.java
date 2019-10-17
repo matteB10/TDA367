@@ -23,11 +23,13 @@ import com.masthuggis.boki.presenter.MainPresenter;
 public class MainActivity extends AppCompatActivity implements MainPresenter.View {
     private MainPresenter presenter;
 
+    private BottomNavigationView bottomNavigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         this.presenter = new MainPresenter(this, DependencyInjector.injectDataModel());
         favouritesNavigationCheck();
         displayToastMessageIfRequestWasReceived();
@@ -66,12 +68,24 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
 
     @Override
     public void showFavouritesScreen() {
-        BottomNavigationView bottomNav = setupBottomTabNavigator();
-        showFavouritesViewAndIcon(bottomNav);
+        setupBottomTabNavigator();
+        showFavouritesViewAndIcon();
     }
 
-    private void showFavouritesViewAndIcon(BottomNavigationView bottomNav) {
-        View view = bottomNav.findViewById(R.id.navigation_favorites);
+    @Override
+    public void showBottomNavBar() {
+        //BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideBottomNavBar() {
+        //BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.GONE);
+    }
+
+    private void showFavouritesViewAndIcon() {
+        View view = bottomNavigationView.findViewById(R.id.navigation_favorites);
         view.performClick();
     }
 
@@ -83,10 +97,8 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         moveTaskToBack(true);
     }
 
-    private BottomNavigationView setupBottomTabNavigator() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setOnNavigationItemSelectedListener(navListener);
-        return bottomNav;
+    private void setupBottomTabNavigator() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
     }
 
     /**
