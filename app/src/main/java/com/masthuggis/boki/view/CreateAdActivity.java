@@ -158,7 +158,10 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         startActivity(intent); //TODO check here to see what fragment was the previous one, maybe
     }
 
-    //images--------------------------------------------------------
+
+    /**
+     * Sends a request to the operating system for the application's use of the device's camera
+     */
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -190,6 +193,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         return image;
     }
 
+    /**
+     * Method that is run after android OS has completed taking a picture
+     */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         imageViewDisplay = findViewById(R.id.addImageView);
@@ -200,18 +206,82 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
     }
 
-    //Compresses images
+    /**
+     * Compresses the size of the image taken by the user, checks if rotation is necessary and, if so, rotates the image to portrait mode
+     * Also sets the image held by the ImageView shown to the user to the compressed and rotated image
+     */
     private void compressAndRotateImage() {
-        try { //TODO fix this pl0x
+        try {
             Bitmap initialBitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
             Bitmap rotatedImage = rotateImageIfRequired(initialBitmap, currentImageFile.getAbsolutePath());
             Bitmap finalBitmap = compressBitmap(rotatedImage);
-            OutputStream out = new FileOutputStream(currentImageFile.getPath());
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out); //Probably this line that actually writes to the file, rotate before
             setImageView(finalBitmap); //Set compressed and scaled image so user sees actual result
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * @param input the bitmap that should be compressed
+     * @return a bitmap of the same image, but compressed
+     * @throws IOException if the path used to create an OutputStream isn't valid
+     */
+    private Bitmap compressBitmap(Bitmap input) throws IOException {
+        BitmapFactory.Options imageOptions = new BitmapFactory.Options();
+        imageOptions.inJustDecodeBounds = true;
+        Bitmap scaled = Bitmap.createScaledBitmap(input, 1024, 1024, false);
+        OutputStream out = new FileOutputStream(currentImageFile.getPath());
+        scaled.compress(Bitmap.CompressFormat.JPEG, 80, out); //Compresses bitmap and writes result to currentImage's path
+        return BitmapFactory.decodeFile(currentImageFile.getPath());
+    }
+
+
+    /**
+     *
+     * @param imageBitmap the Bitmap to be rotated
+     * @param imagePath the path to the image taken, used in order to determine how much rotation is needed
+     * @return a bitmap of the rotated image
+     * @throws IOException if the supplied image path is invalid
+     */
+    private Bitmap rotateImageIfRequired(Bitmap imageBitmap, String imagePath) throws IOException {
+        int rotationDegrees = getRotationDegrees(imagePath);
+        return rotateImage(imageBitmap, rotationDegrees);
+    }
+
+    /**
+     *
+     * @param imagePath path to the image taken by the user, holds metadata about its orientation
+     * @return the degrees of rotation needed for picture to be oriented in portrait mode
+     * @throws IOException if supplied image path is invalid
+     */
+    private int getRotationDegrees(String imagePath) throws IOException {
+        ExifInterface exifInterface = new ExifInterface(imagePath);
+        int orientationTag = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        switch (orientationTag) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return 90;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return 180;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return 270;
+            default:
+                return 0;
+
+        }
+    }
+
+    /**
+     * @param image the bitmap to be rotated
+     * @param degrees the degrees of rotation
+     * @return a rotated bitmap of the same image as was given as input
+     */
+    private Bitmap rotateImage(Bitmap image, int degrees) {
+        if (degrees == 0) {
+            return image;
+        }
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
     }
 
     public File getCurrentImageFile() {
@@ -221,37 +291,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void setImageView(Bitmap bitmap) {
         imageViewDisplay.setImageBitmap(bitmap);
     }
-
-    //Compresses image, sets hardcoded resolution
-    private Bitmap compressBitmap(Bitmap input) {
-        BitmapFactory.Options imageOptions = new BitmapFactory.Options();
-        imageOptions.inJustDecodeBounds = true;
-        return Bitmap.createScaledBitmap(input, 1024, 1024, false);
-    }
-
-
-    private Bitmap rotateImageIfRequired(Bitmap imageBitmap, String imagePath) throws IOException {
-        ExifInterface exifInterface = new ExifInterface(imagePath);
-        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                return rotateImage(imageBitmap, 90);
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                return rotateImage(imageBitmap, 180);
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                return rotateImage(imageBitmap, 270);
-            default:
-                return imageBitmap;
-        }
-    }
-
-    private Bitmap rotateImage(Bitmap image, int degrees) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degrees);
-        return Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
-        //image.recycle();
-    }
-
 
     //Tags----------------------------------------------------------
 
