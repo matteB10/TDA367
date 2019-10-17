@@ -3,6 +3,8 @@ package com.masthuggis.boki.view;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,7 +33,6 @@ import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -196,20 +197,21 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageViewDisplay = findViewById(R.id.addImageView);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { //When image has been taken
-            compressImage();
+            compressAndRotateImage();
             presenter.imageChanged();
         }
     }
 
-    //Compresses images without trying to crop image with android OS
-    private void compressImage() {
-        Bitmap bitmap = compressBitmap();
-        try {
+    //Compresses images
+    private void compressAndRotateImage() {
+        try { //TODO fix this pl0x
+            Bitmap initialBitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
+            Bitmap rotatedImage = rotateImageIfRequired(initialBitmap, currentImageFile.getAbsolutePath());
+            Bitmap finalBitmap = compressBitmap(rotatedImage);
             OutputStream out = new FileOutputStream(currentImageFile.getPath());
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
-            Bitmap image = BitmapFactory.decodeFile(currentImageFile.getPath());
-            setImageView(image); //Set compressed and scaled image so user sees actual result
-        } catch (FileNotFoundException e) {
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out); //Probably this line that actually writes to the file, rotate before
+            setImageView(finalBitmap); //Set compressed and scaled image so user sees actual result
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -222,13 +224,36 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageViewDisplay.setImageBitmap(bitmap);
     }
 
-    //Compresses image, sets resolution, should probably only be used when running app on emulator
-    private Bitmap compressBitmap() {
+    //Compresses image, sets hardcoded resolution
+    private Bitmap compressBitmap(Bitmap input) {
         BitmapFactory.Options imageOptions = new BitmapFactory.Options();
         imageOptions.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
-        return Bitmap.createScaledBitmap(bitmap, 800, 800, false); //TODO is this even necessary?
+        return Bitmap.createScaledBitmap(input, 1024, 1024, false);
     }
+
+
+    private Bitmap rotateImageIfRequired(Bitmap imageBitmap, String imagePath) throws IOException {
+        ExifInterface exifInterface = new ExifInterface(imagePath);
+        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return rotateImage(imageBitmap, 90);
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return rotateImage(imageBitmap, 180);
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return rotateImage(imageBitmap, 270);
+            default:
+                return imageBitmap;
+        }
+    }
+
+    private Bitmap rotateImage(Bitmap image, int degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
+        //image.recycle();
+    }
+
 
     //Tags----------------------------------------------------------
 

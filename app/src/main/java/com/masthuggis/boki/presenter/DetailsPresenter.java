@@ -21,13 +21,19 @@ public class DetailsPresenter {
     private View view;
     private Advertisement advertisement;
     private DataModel dataModel;
+    private boolean isValid;
 
     public DetailsPresenter(View view, String advertID, DataModel dataModel) {
         this.dataModel = dataModel;
         this.view = view;
         this.advertisement = this.dataModel.getAdFromAdID(advertID);
-        if(advertisement==null){
+        if (advertisement == null) {
+            view.nothingToDisplay("Hittar ingen annons, var vänlig uppdatera vyn.");
+            isValid = false;
+            return;
 
+        } else {
+            isValid = true;
         }
         setupView();
 
@@ -63,7 +69,6 @@ public class DetailsPresenter {
             return;
         }
         //public void createNewChat(String uniqueOwnerID,String advertID, stringCallback stringCallback,String receiverUsername) {
-
 
 
         dataModel.createNewChat(advertisement.getUniqueOwnerID(), dataModel.getUserID(), advertisement.getUniqueID(),
@@ -108,8 +113,8 @@ public class DetailsPresenter {
             dataModel.removeFromFavourites(advertisement);
             view.setNotFavouriteIcon();
         } else {
-            advertisement.markAsFavourite();
             dataModel.addToFavourites(advertisement);
+            view.setFavouriteIcon();
         }
     }
 
@@ -125,6 +130,9 @@ public class DetailsPresenter {
 
     private boolean currentAdvertIsFavourite() {
         return dataModel.isAFavourite(advertisement);
+    }
+    public boolean isValid(){
+        return isValid;
     }
 
     public interface View extends iConditionable {
@@ -153,6 +161,8 @@ public class DetailsPresenter {
         void setNotFavouriteIcon();
 
         void hideFavouriteIcon();
+
+        void nothingToDisplay(String message);
     }
 
 

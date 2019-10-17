@@ -78,6 +78,7 @@
 
     <string name="putExtraToastKey">toast</string>
     <string name="noFavoritesFound">Du har inga favoriter sparade ännu. För att spara en favorit gå in på en annons och tryck på hjärtat.</string>
+    <string name="noAdvertsInMarketFound">Det finns inga annonser att visa. Har du möjligen aktiverat för många filter?</string>
 
     <string name="searchHint">Sök efter titlar...</string>
     <string name="sign_out">Logga ut</string>
@@ -93,5 +94,11 @@
     <string name="toastDeletedAd">Din annons är borttagen</string>
     <string name="toastUpdatedAd">Din annons är uppdaterad</string>
     <string name="toastCreatedAd">Din annons är upplagd</string>
+
+
+
+    //Errors
+    <string name="noAdvertFoundDetailsPresenter">"Hittar ingen annons med denna beskrivning."</string>
+
 
 </resources>

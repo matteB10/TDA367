@@ -10,10 +10,14 @@ public class MainPresenter {
     public MainPresenter(View view, DataModel dataModel) {
         this.view = view;
         this.dataModel = dataModel;
+    }
+
+    public void init(boolean favouriteNav) {
         if (dataModel.isLoggedIn()) {
-            dataModel.initUser(new SuccessCallback() {
-                @Override
-                public void onSuccess() {
+            dataModel.initUser(() -> {
+                if (favouriteNav) {
+                    view.showFavouritesScreen();
+                } else {
                     view.showMainScreen();
                 }
             });
@@ -21,10 +25,12 @@ public class MainPresenter {
             view.showSignInScreen();
         }
     }
-
+    
     public interface View {
         void showSignInScreen();
 
         void showMainScreen();
+
+        void showFavouritesScreen();
     }
 }

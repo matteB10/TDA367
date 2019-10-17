@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+            android:orientation="vertical" >
             <LinearLayout
                 android:id="@+id/advertsViewHeader"
                 android:layout_width="match_parent"
@@ -24,7 +15,6 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="8dp"
                 android:orientation="vertical">
-
             </LinearLayout>
 
             <ProgressBar
@@ -44,23 +34,17 @@
                 android:layout_marginBottom="4dp"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="visible" />
+                android:visibility="visible"></LinearLayout>
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                tools:context="com.masthuggis.boki.view.HomeFragment"
-                android:id="@+id/swiperefresh"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/advertsViewRecycler"
+                    android:id="@+id/pullToRefresh"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
+                    android:layout_height="wrap_content">
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/advertsViewRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                    />
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-
-
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

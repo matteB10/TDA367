@@ -77,7 +77,7 @@ public class ChatPresenter implements ChatObserver {
             return "";
         }
         String str = Long.toString(l);
-        if(str.length()> 6){
+        if(str.length()> 12){
             return "Invalid time format.";
         }
         char[] cArr = str.toCharArray();

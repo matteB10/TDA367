@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +27,7 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
     protected AdvertsPresenter presenter;
     private View view;
     private ProductsRecyclerViewAdapter recyclerViewAdapter;
+    private RecyclerView recyclerView;
     private LinearLayout noAdvertsFoundContainer;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -34,38 +36,13 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.adverts_view, container, false);
         this.presenter = getPresenter();
-        this.swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
 
         setupHeader();
         setupNoResultsFoundView();
+        setupPullToRefresh();
         this.presenter.initPresenter();
-        this.swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
 
-        swipeRefreshLayout.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-
-                        // This method performs the actual data-refresh operation.
-                        // The method calls setRefreshing(false) when it's finished.
-                        presenter.getData();
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }
-        );
         return view;
-    }
-
-    /**
-     * Setups the layout to be displayed when no results are found. The default is for this view
-     * to be hidden. The view will be viewable if the presenter asks it to showed. The layout to
-     * be used is implemented in the subclass.
-     */
-    private void setupNoResultsFoundView() {
-        View noResultsFound = onCreateNoResultsFoundLayout();
-        noAdvertsFoundContainer = view.findViewById(R.id.advertsViewNoAdvertsFound);
-        noAdvertsFoundContainer.addView(noResultsFound);
-        noAdvertsFoundContainer.setVisibility(View.GONE);
     }
 
     /**
@@ -81,10 +58,38 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
     }
 
     /**
+     * Setups the layout to be displayed when no results are found. The default is for this view
+     * to be hidden. The view will be viewable if the presenter asks it to showed. The layout to
+     * be used is implemented in the subclass.
+     */
+    private void setupNoResultsFoundView() {
+        View noResultsFound = onCreateNoResultsFoundLayout();
+        noAdvertsFoundContainer = view.findViewById(R.id.advertsViewNoAdvertsFound);
+        noAdvertsFoundContainer.addView(noResultsFound);
+        noAdvertsFoundContainer.setVisibility(View.GONE);
+    }
+
+    /**
+     * Setups the pull to refresh by asking the concrete implementation if they want to use the
+     * functionality. If they do, the action handler is setup, else it is disabled.
+     */
+    private void setupPullToRefresh() {
+        SwipeRefreshLayout swipeRefresh = view.findViewById(R.id.pullToRefresh);
+        if (shouldUsePullToRefresh()) {
+            swipeRefresh.setOnRefreshListener(() -> {
+                optionalPullToRefreshHandler().onCallback();
+                swipeRefresh.setRefreshing(false);
+            });
+        } else {
+            disablePullToRefresh();
+        }
+    }
+
+    /**
      * Setups the recyclerviews adapter, layout and spacing
      */
     private void setupList() {
-        RecyclerView recyclerView = view.findViewById(R.id.advertsViewRecycler);
+        recyclerView = view.findViewById(R.id.advertsViewRecycler);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerViewAdapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -126,6 +131,13 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
     protected abstract AdvertsPresenter getPresenter();
 
     /**
+     * Gives the concrete implementation the option to provide an action, and therefor activate
+     * the pull-to-refresh behavior. If pull-to-refresh is not desired a null can be returned.
+     * @return
+     */
+    protected abstract @Nullable PullToRefreshCallback optionalPullToRefreshHandler();
+
+    /**
      * Updates the data that is displayed in the recyclerView. Will be called when for example
      * the sorting changes or a search is performed.
      */
@@ -140,11 +152,12 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
 
     /**
      * Shows a message explaining that no data is available with the layout provided by the
-     * concrete implementations.
+     * concrete implementations. Also hides the recycler (by hiding the containing refreshlayout)
      */
     @Override
     public void showNoThumbnailsAvailableScreen() {
         noAdvertsFoundContainer.setVisibility(View.VISIBLE);
+        view.findViewById(R.id.pullToRefresh).setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -154,6 +167,7 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
     @Override
     public void hideNoThumbnailsAvailableScreen() {
         noAdvertsFoundContainer.setVisibility(View.GONE);
+        view.findViewById(R.id.pullToRefresh).setVisibility(View.VISIBLE);
     }
 
     /**
@@ -185,5 +199,19 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
     public void hideLoadingScreen() {
         ProgressBar progressBar = view.findViewById(R.id.advertsViewProgressbar);
         progressBar.setVisibility(View.GONE);
+    }
+
+
+    /**
+     * If the concrete implementation provides a callback to optionalPullToRefreshHandler pull-to-refresh
+     * will be used, in other case it will be disabled.
+     * @return
+     */
+    private boolean shouldUsePullToRefresh() {
+        return optionalPullToRefreshHandler() != null;
+    }
+
+    private void disablePullToRefresh() {
+        view.findViewById(R.id.pullToRefresh).setEnabled(false);
     }
 }

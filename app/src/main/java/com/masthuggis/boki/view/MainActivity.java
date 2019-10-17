@@ -2,6 +2,7 @@ package com.masthuggis.boki.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         setContentView(R.layout.activity_main);
 
         this.presenter = new MainPresenter(this, DependencyInjector.injectDataModel());
-
+        favouritesNavigationCheck();
         displayToastMessageIfRequestWasReceived();
     }
 
@@ -33,12 +34,15 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         String toastKey = getString(R.string.putExtraToastKey);
         if (getIntent() != null && getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
-            if (bundle.getString(toastKey) != null) {
-                if(!bundle.getString(toastKey).equals(null)) {
-                    displayToastMessage(bundle.getString(toastKey));
-                }
+            if (bundle.get(toastKey) != null){
+                displayToastMessage(bundle.getString(toastKey));
             }
         }
+    }
+
+    private void favouritesNavigationCheck() {
+        boolean navigateToFavourites = getIntent().getBooleanExtra("toFavourites", false);
+        presenter.init(navigateToFavourites);
     }
 
     private void displayToastMessage(String message) {
@@ -57,7 +61,16 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         setupBottomTabNavigator();
     }
 
+    @Override
+    public void showFavouritesScreen() {
+        BottomNavigationView bottomNav = setupBottomTabNavigator();
+        showFavouritesViewAndIcon(bottomNav);
+    }
 
+    private void showFavouritesViewAndIcon(BottomNavigationView bottomNav) {
+        View view = bottomNav.findViewById(R.id.navigation_favorites);
+        view.performClick();
+    }
 
     /**
      * If back button is pressed the app exits. Is it better to show the previously active tab?
@@ -67,9 +80,10 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         moveTaskToBack(true);
     }
 
-    private void setupBottomTabNavigator() {
+    private BottomNavigationView setupBottomTabNavigator() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
+        return bottomNav;
     }
 
     /**
@@ -98,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
             default:
                 break;
         }
-
         return loadFragment(fragment);
     };
 

@@ -12,10 +12,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.HomePresenter;
+import com.masthuggis.boki.utils.ViewCreator;
 
 /**
  * Home page displaying all the adverts that have been published to the market.
@@ -33,6 +36,12 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         }
 
         return presenter;
+    }
+
+    @Nullable
+    @Override
+    protected PullToRefreshCallback optionalPullToRefreshHandler() {
+        return () -> presenter.updateFromUserInteraction();
     }
 
     @Override
@@ -88,8 +97,7 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
 
     @Override
     protected View onCreateNoResultsFoundLayout() {
-        // TODO: implement
-        return new TextView(getActivity());
+        return ViewCreator.createSimpleText(getActivity(), getString(R.string.noAdvertsInMarketFound));
     }
 
 
@@ -102,16 +110,6 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
     private void performSearch() {
         String query = searchField.getText().toString();
         presenter.searchPerformed(query);
-    }
-
-    @Override
-    public void showNoThumbnailsAvailableScreen() {
-        // TODO: implement
-    }
-
-    @Override
-    public void hideNoThumbnailsAvailableScreen() {
-        // TODO: implement
     }
 
     /**
