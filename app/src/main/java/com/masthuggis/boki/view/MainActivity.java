@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
     private void showFavouritesViewAndIcon(BottomNavigationView bottomNav) {
         View view = bottomNav.findViewById(R.id.navigation_favorites);
         view.performClick();
-        loadFragment(new FavoritesFragment());
     }
 
     /**

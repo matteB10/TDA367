@@ -228,9 +228,10 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra("toFavourites", true);
             startActivity(intent);
-        } else { //Might not be necessary
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+            return;
         }
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+
     }
 }
