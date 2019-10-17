@@ -2,6 +2,8 @@ package com.masthuggis.boki.presenter;
 
 import android.view.View;
 
+import androidx.annotation.Nullable;
+
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advert;
@@ -10,6 +12,7 @@ import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.UserFactory;
 import com.masthuggis.boki.model.sorting.SortManager;
 import com.masthuggis.boki.view.AdvertsView;
+import com.masthuggis.boki.view.PullToRefreshCallback;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,9 +40,9 @@ public class AdvertsPresenterTest {
         onCreateNoResultsFoundCalled = false;
         presenter = new MockPresenter(new MockView(), DependencyInjector.injectDataModel());
 
-        Mockito.doNothing().when(databaseMock).
+        Mockito.doNothing().when(databaseMock);
 
-        testData = new ArrayList<>();
+
         testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Advert.Condition.GOOD,"", new ArrayList<>(),null));
         testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Advert.Condition.GOOD,"", new ArrayList<>(),null));
         testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Advert.Condition.GOOD,"", new ArrayList<>(),null));
@@ -83,6 +86,12 @@ public class AdvertsPresenterTest {
 
         @Override
         protected AdvertsPresenter getPresenter() {
+            return null;
+        }
+
+        @Nullable
+        @Override
+        protected PullToRefreshCallback optionalPullToRefreshHandler() {
             return null;
         }
     }
