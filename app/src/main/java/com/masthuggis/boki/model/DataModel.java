@@ -70,9 +70,12 @@ public class DataModel implements BackendObserver {
                             public void onCallback(List<iChat> chatsList) {
                                 user.setChats(chatsList);
                                 initMessages();
-                                getFavouritesFromLoggedInUser(advertisements -> {
-                                    user.setFavourites(advertisements);
-                                    successCallback.onSuccess();
+                                getFavouritesFromLoggedInUser(new advertisementCallback() {
+                                    @Override
+                                    public void onCallback(List<Advertisement> advertisements) {
+                                        user.setFavourites(advertisements);
+                                        successCallback.onSuccess();
+                                    }
                                 });
                             }
                         });
@@ -363,10 +366,6 @@ public class DataModel implements BackendObserver {
         repository.saveAdvert(currentImageFile, advertisement);
     }
 
-   /* public void setUsername(String username) {
-        userRepository.setUsername(username);
-    }*/
-
 
     public void signOut() {
         repository.signOut();
@@ -378,13 +377,6 @@ public class DataModel implements BackendObserver {
             @Override
             public void onSuccess() {
                 successCallback.onSuccess();
-           /*     initUser(new SuccessCallback() {
-                    @Override
-                    public void onSuccess() {
-                        successCallback.onSuccess();
-
-                    }
-                });*/
             }
         }, failureCallback);
     }

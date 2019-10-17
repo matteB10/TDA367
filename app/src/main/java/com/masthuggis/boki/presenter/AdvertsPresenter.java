@@ -38,7 +38,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
      * Sorts adverts and tells the view to update UI.
      * @param adverts the updated adverts lists that will be displayed.
      */
-    public void updateAdverts(List<Advertisement> adverts) {
+    void updateAdverts(List<Advertisement> adverts) {
         if (adverts == null || view == null) {
             return;
         }
@@ -74,6 +74,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
     /**
      * Concrete implementations provides their desired way of sorting. If no sorting is desired,
      * the same list of adverts can be returned.
+     *
      * @param adverts
      * @return
      */
@@ -84,6 +85,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
      * sorting option to render the items in the desired order. It only sorts when the first item
      * is requested, and thereafter uses the sorted list, instead of sorting for each item. It is
      * highly unlikely for the sorting to change will the list is to be rendered.
+     *
      * @param position
      * @param thumbnailView
      */
@@ -111,6 +113,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
     /**
      * Returns of the number of adverts to be rendered in the list. If the list is empty or not defined
      * the list shall not be rendered, and therefor the length is zero.
+     *
      * @return
      */
     @Override
@@ -124,6 +127,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
 
     /**
      * Asks the view to display the details view of the view that was pressed if the tap is valid.
+     *
      * @param uniqueAdvertID
      */
     @Override
@@ -146,6 +150,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
 
     /**
      * Asks helper class to make sure there was no taps in fast succession.
+     *
      * @return
      */
     private boolean canProceedWithTapAction() {

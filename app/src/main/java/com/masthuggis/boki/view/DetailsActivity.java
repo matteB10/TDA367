@@ -232,7 +232,5 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         }
-
     }
-
 }
