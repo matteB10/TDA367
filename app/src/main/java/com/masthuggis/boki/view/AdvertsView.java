@@ -27,6 +27,7 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
     protected AdvertsPresenter presenter;
     private View view;
     private ProductsRecyclerViewAdapter recyclerViewAdapter;
+    private RecyclerView recyclerView;
     private LinearLayout noAdvertsFoundContainer;
 
     @Override
@@ -85,7 +86,7 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
      * Setups the recyclerviews adapter, layout and spacing
      */
     private void setupList() {
-        RecyclerView recyclerView = view.findViewById(R.id.advertsViewRecycler);
+        recyclerView = view.findViewById(R.id.advertsViewRecycler);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerViewAdapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -145,11 +146,12 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
 
     /**
      * Shows a message explaining that no data is available with the layout provided by the
-     * concrete implementations.
+     * concrete implementations. Also hides the recycler (by hiding the containing refreshlayout)
      */
     @Override
     public void showNoThumbnailsAvailableScreen() {
         noAdvertsFoundContainer.setVisibility(View.VISIBLE);
+        view.findViewById(R.id.pullToRefresh).setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -159,6 +161,7 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
     @Override
     public void hideNoThumbnailsAvailableScreen() {
         noAdvertsFoundContainer.setVisibility(View.GONE);
+        view.findViewById(R.id.pullToRefresh).setVisibility(View.VISIBLE);
     }
 
     /**
