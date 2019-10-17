@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.AdvertsPresenter;
@@ -34,14 +36,10 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         return presenter;
     }
 
+    @Nullable
     @Override
-    protected boolean shouldUsePullToRefresh() {
-        return true;
-    }
-
-    @Override
-    protected void optionalPullToRefreshAction() {
-        String hello = "";
+    protected PullToRefreshCallback optionalPullToRefreshHandler() {
+        return () -> presenter.updateFromUserInteraction();
     }
 
     @Override

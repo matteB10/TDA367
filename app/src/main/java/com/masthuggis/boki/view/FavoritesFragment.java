@@ -3,6 +3,8 @@ package com.masthuggis.boki.view;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.AdvertsPresenter;
@@ -22,9 +24,10 @@ public class FavoritesFragment extends AdvertsView implements AdvertsPresenterVi
         return presenter;
     }
 
+    @Nullable
     @Override
-    protected boolean shouldUsePullToRefresh() {
-        return false;
+    protected PullToRefreshCallback optionalPullToRefreshHandler() {
+        return null;
     }
 
     @Override

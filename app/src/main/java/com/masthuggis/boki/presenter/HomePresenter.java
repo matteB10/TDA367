@@ -74,10 +74,7 @@ public final class HomePresenter extends AdvertsPresenter {
         return query.equals("");
     }
 
-     public void updateFromUserInteraction() {
-        selectedSortOption = 0;
+    public void updateFromUserInteraction() {
         super.updateAdverts();
-
-
     }
 }

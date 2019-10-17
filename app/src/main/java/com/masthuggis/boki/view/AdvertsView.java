@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,7 +19,6 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.AdvertsPresenterView;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
-import com.masthuggis.boki.utils.NotImplementedException;
 
 /**
  * Abstract class to be used by views wanting to display a list of adverts.
@@ -70,8 +70,12 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
      * functionality. If they do, the action handler is setup, else it is disabled.
      */
     private void setupPullToRefresh() {
+        SwipeRefreshLayout swipeRefresh = view.findViewById(R.id.pullToRefresh);
         if (shouldUsePullToRefresh()) {
-            addPullToRefreshActionHandler();
+            swipeRefresh.setOnRefreshListener(() -> {
+                optionalPullToRefreshHandler().onCallback();
+                swipeRefresh.setRefreshing(false);
+            });
         } else {
             disablePullToRefresh();
         }
@@ -120,19 +124,11 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
     protected abstract AdvertsPresenter getPresenter();
 
     /**
-     * Asks the concrete implementation if a pull to refresh action should be used to update data.
+     * Gives the concrete implementation the option to provide an action, and therefor activate
+     * the pull-to-refresh behavior. If pull-to-refresh is not desired a null can be returned.
      * @return
      */
-    protected abstract boolean shouldUsePullToRefresh();
-
-    /**
-     * Gives the concrete implementation the option to provide a handler whenever the pull-to-refresh
-     * is activated by overriding.
-     * @throws NotImplementedException
-     */
-    protected void optionalPullToRefreshAction() throws NotImplementedException {
-        throw new NotImplementedException("View set shouldUsePullToRefresh without implementing the refresh action");
-    }
+    protected abstract @Nullable PullToRefreshCallback optionalPullToRefreshHandler();
 
     /**
      * Updates the data that is displayed in the recyclerView. Will be called when for example
@@ -195,20 +191,15 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
         progressBar.setVisibility(View.GONE);
     }
 
-    /**
-     * Setups so whenever the pull-to-refresh is activated the action is called. If it has not been
-     * implemented by subclasses the disable functionality is disabled.
-     */
-    private void addPullToRefreshActionHandler() {
-        ((SwipeRefreshLayout) view.findViewById(R.id.pullToRefresh)).setOnRefreshListener(() -> {
-            try {
-                optionalPullToRefreshAction();
-            } catch (NotImplementedException exception) {
-                disablePullToRefresh();
-            }
-        });
-    }
 
+    /**
+     * If the concrete implementation provides a callback to optionalPullToRefreshHandler pull-to-refresh
+     * will be used, in other case it will be disabled.
+     * @return
+     */
+    private boolean shouldUsePullToRefresh() {
+        return optionalPullToRefreshHandler() != null;
+    }
 
     private void disablePullToRefresh() {
         view.findViewById(R.id.pullToRefresh).setEnabled(false);
