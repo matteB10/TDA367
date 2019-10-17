@@ -49,7 +49,6 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
             view.hideNoThumbnailsAvailableScreen();
             this.adverts = sort(adverts);
         }
-
         view.hideLoadingScreen();
         view.updateThumbnails();
     }

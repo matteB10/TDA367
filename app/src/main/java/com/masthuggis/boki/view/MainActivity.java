@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
 
     @Override
     public void showFavouritesScreen() {
+
         loadFragment(new FavoritesFragment());
         setupBottomTabNavigator();
     }
@@ -106,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
             default:
                 break;
         }
-
         return loadFragment(fragment);
     };
 

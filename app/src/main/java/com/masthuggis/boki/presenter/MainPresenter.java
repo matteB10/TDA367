@@ -14,22 +14,18 @@ public class MainPresenter {
 
     public void init(boolean favouriteNav) {
         if (dataModel.isLoggedIn()) {
-            dataModel.initUser(new SuccessCallback() {
-                @Override
-                public void onSuccess() {
-                    if (favouriteNav) {
-                        view.showFavouritesScreen();
-                    } else {
-                        view.showMainScreen();
-                    }
+            dataModel.initUser(() -> {
+                if (favouriteNav) {
+                    view.showFavouritesScreen();
+                } else {
+                    view.showMainScreen();
                 }
             });
         } else {
             view.showSignInScreen();
         }
     }
-
-
+    
     public interface View {
         void showSignInScreen();
 

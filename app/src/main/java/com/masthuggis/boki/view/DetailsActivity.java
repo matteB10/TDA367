@@ -223,7 +223,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed() { //TODO when this is called, new User-object is created
         if (getIntent().getBooleanExtra("fromFavourites", false)) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra("toFavourites", true);
