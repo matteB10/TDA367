@@ -223,11 +223,11 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
     @Override
-    public void onBackPressed() { //TODO when this is called, new User-object is created
+    public void onBackPressed() {
         if (getIntent().getBooleanExtra("fromFavourites", false)) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra("toFavourites", true);
-            startActivity(intent); //TODO this creates both new MainActivity and MainPresenter, presenter navigates to homeFragment
+            startActivity(intent);
         } else { //Might not be necessary
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);

@@ -2,6 +2,9 @@ package com.masthuggis.boki.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -63,9 +66,10 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
 
     @Override
     public void showFavouritesScreen() {
-
+        BottomNavigationView bottomnav = findViewById(R.id.bottom_navigation);
+        View view = bottomnav.findViewById(R.id.navigation_favorites);
+        view.performClick();
         loadFragment(new FavoritesFragment());
-        setupBottomTabNavigator();
     }
 
     /**
