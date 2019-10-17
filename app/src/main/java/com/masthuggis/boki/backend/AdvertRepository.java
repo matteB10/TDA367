@@ -86,12 +86,7 @@ class AdvertRepository {
     }
 
     void getUserFavourites(FavouriteIDsCallback favouriteIDsCallback) {
-        backend.getFavouriteIDs(new DBMapCallback() {
-            @Override
-            public void onCallBack(Map<String, Object> dataMap) {
-                favouriteIDsCallback.onCallback((List<String>) dataMap.get("favourites"));
-            }
-        });
+        backend.getFavouriteIDs(dataMap -> favouriteIDsCallback.onCallback((List<String>) dataMap.get("favourites")));
     }
 
     void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID) {

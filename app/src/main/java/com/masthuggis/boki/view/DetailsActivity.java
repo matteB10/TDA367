@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -52,7 +53,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
                 presenter.contactOwnerBtnClicked(contactOwnerButton.getText().toString()); //Should the logic be based off this string?
             }
         });
-
         Button changeAd = findViewById(R.id.changeAdButton);
         changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
         setUpFavouriteIcon();
@@ -80,8 +80,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
     @Override
     public void setImageUrl(String url) {
-        // TODO: fetch img, cache it and set it
-        ImageView imageView = (ImageView) findViewById(R.id.detailsImage);
+        ImageView imageView = findViewById(R.id.detailsImage);
         Glide.with(this).load(url).override(220, 300).into(imageView);
     }
 
@@ -183,14 +182,14 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
 
     @Override
     public void setFavouriteIcon() {
-        Drawable favouriteStar = getResources().getDrawable(R.drawable.heart_filled_vector);
-        favouritesIcon.setImageDrawable(favouriteStar);
+        Drawable favouriteIcon = ContextCompat.getDrawable(this, R.drawable.heart_filled_vector);
+        favouritesIcon.setImageDrawable(favouriteIcon);
     }
 
     @Override
     public void setNotFavouriteIcon() {
-        Drawable notFavouriteStar = getResources().getDrawable(R.drawable.heart_outline_vector);
-        favouritesIcon.setImageDrawable(notFavouriteStar);
+        Drawable notFavouriteIcon = ContextCompat.getDrawable(this, R.drawable.heart_outline_vector);
+        favouritesIcon.setImageDrawable(notFavouriteIcon);
     }
 
     public void hideFavouriteIcon() {
@@ -219,7 +218,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
                     }
             );
         }
-
     }
 
     @Override
@@ -232,6 +230,5 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         }
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
-
     }
 }

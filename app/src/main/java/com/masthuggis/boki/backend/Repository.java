@@ -127,7 +127,6 @@ public class Repository implements iRepository {
     @Override
     public void getUserFavourites(FavouriteIDsCallback favouriteIDsCallback) {
         advertRepository.getUserFavourites(favouriteIDsCallback);
-
     }
 
 }
