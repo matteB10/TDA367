@@ -1,7 +1,7 @@
 package com.masthuggis.boki.utils;
 
 import com.masthuggis.boki.backend.MockRepository;
-import com.masthuggis.boki.backend.callbacks.PerformedSearchCallback;
+import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 
@@ -19,7 +19,7 @@ public class SearchHelper {
     }
 
 
-    public static void search(String query, PerformedSearchCallback callback) {
+    public static void search(String query, advertisementCallback callback) {
         List<Advertisement> advertisements = DataModel.getInstance().getAllAdverts();
         List<Advertisement> tempList = new ArrayList<>();
         List<Advertisement> searchRes = new ArrayList<>(); //new list with search results
@@ -37,7 +37,7 @@ public class SearchHelper {
         callback.onCallback(searchRes); //searchRes contains correct adverts here
     }
 
-    public static void mockSearch(String query, PerformedSearchCallback callback) {
+    public static void mockSearch(String query, advertisementCallback callback) {
         List<Advertisement> tempList = MockRepository.getInstance().getLocalJSONAds();
         List<Advertisement> searchRes = new ArrayList<>(); //new list with searchresults
         String queryStr = query.toLowerCase().trim();

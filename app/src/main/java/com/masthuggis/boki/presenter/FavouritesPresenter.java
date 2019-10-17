@@ -14,11 +14,12 @@ public class FavouritesPresenter extends AdvertsPresenter {
     }
 
     public List<Advertisement> getData() {
-        return super.dataModel.getUserFavourites();
+        return super.dataModel.getUserFavourites(); //User held by datamodel here is a different object
     }
 
     @Override
     public List<Advertisement> sort(List<Advertisement> adverts) {
         return SortManager.getInstance().sortWithDefaultSorting(adverts);
     }
+
 }
