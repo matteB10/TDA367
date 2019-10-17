@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 public class DataModel implements BackendObserver {
 
@@ -84,7 +85,7 @@ public class DataModel implements BackendObserver {
                             });
                         }
                     });
-                }else{
+                } else {
                     successCallback.onSuccess();
 
                 }
@@ -174,18 +175,34 @@ public class DataModel implements BackendObserver {
         }, failureCallback);
     }
 
-    public void addAdvertisement(Advertisement ad) {
-        this.allAds.add(ad);
-    }
 
-    public Advertisement getAdFromAdID(String ID) {
-        for (Advertisement ad : allAds) {
-            if (ad.getUniqueID().equals(ID))
-                return ad;
+    public Advertisement getAdFromAdID(String ID) throws NoSuchElementException {
+        try {
+            for (Advertisement ad : allAds) {
+                if (ad.getUniqueID().equals(ID))
+                    return ad;
+            }
+            throw new NoSuchElementException();
+        } catch (NoSuchElementException e ) {
+
+
         }
         return null; //TODO Fix a better solution to handle NPExc....
     }
 
+
+    /*     try {
+     for (Button btn : buttons) {
+         if (btn.getText().toString().equals(btnText)) {
+             return btn;
+         }
+     }
+     throw new NoSuchFieldException();
+
+ } catch (NoSuchFieldException e) {
+     Toast.makeText(getApplicationContext(), "Ingen knapp med detta namn hittas tyvärr, prova uppdatera vyn.", Toast.LENGTH_SHORT).show();
+ }
+     return null;*/
     public List<Advertisement> getAdsFromCurrentUser() {
         List<Advertisement> userAds = new ArrayList<>();
         for (Advertisement ad : allAds) {
@@ -200,7 +217,7 @@ public class DataModel implements BackendObserver {
      * @return A list containing all advertisements the current user has as favourites in the backend
      */
     private void getFavouritesFromLoggedInUser(advertisementCallback advertisementCallback) {
-        if(allAds.size()==0){
+        if (allAds.size() == 0) {
             advertisementCallback.onCallback(new ArrayList<>());
         }
         List<Advertisement> favourites = new ArrayList<>();
@@ -225,7 +242,8 @@ public class DataModel implements BackendObserver {
     /**
      * Returns a boolean of whether or not the given adID exists under the User's list of ID:s in the database
      */
-    private void isAFavouriteInDatabase(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
+    private void isAFavouriteInDatabase(String uniqueAdID, MarkedAsFavouriteCallback
+            markedAsFavouriteCallback) {
         repository.getUserFavourites(new FavouriteIDsCallback() {
             @Override
             public void onCallback(List<String> favouriteIDs) {

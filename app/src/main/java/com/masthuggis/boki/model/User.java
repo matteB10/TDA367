@@ -70,12 +70,11 @@ public class User implements iUser {
 
     @Override
     public String getChatIDFromAdID(String adID) {
-         for(iChat chat:chats){
-             if(chat.getAdID().equals(adID)){
-                 return chat.getChatID();
-             }
-         }
-         return "";
-
+        for (iChat chat : chats) {
+            if (chat.getAdID().equals(adID)) {
+                return chat.getChatID();
+            }
+        }
+        return "";
     }
 }

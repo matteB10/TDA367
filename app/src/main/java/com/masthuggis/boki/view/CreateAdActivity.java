@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -37,6 +38,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * An acitivity for creating a new advertisement
@@ -104,7 +106,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
 
     private void setButtonVisibility(boolean editMode) {
-        if(editMode){
+        if (editMode) {
             publishAdButton.setVisibility(View.GONE);
         } else {
             deleteAdButton.setVisibility(View.GONE);
@@ -139,6 +141,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         publishAdButton.setEnabled(b);
         publishAdButton.setBackground(getDrawable(StylingHelper.getPrimaryButtonDrawable(b)));
     }
+
     /**
      * Enables save(update) ad button when all mandatory fields contains
      * valid input.
@@ -149,6 +152,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         saveAdButton.setEnabled(b);
         saveAdButton.setBackground(getDrawable(StylingHelper.getPrimaryButtonDrawable(b)));
     }
+
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -227,6 +231,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     //Tags----------------------------------------------------------
+
     /**
      * Reads predefined subject strings from resources,
      *
@@ -329,12 +334,18 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     @Override
     public void removeUserTagButton(String tag) {
-        userDefTagButtons.remove(getButtonFromText(tag, userDefTagButtons));
+        Button btn = getButtonFromText(tag, userDefTagButtons);
+        if (btn == null) {
+            return;
+        }
+        userDefTagButtons.remove(btn);
         updateUserDefTags();
     }
+
     /**
      * Returns first not filled row in a layout given as parameter,
      * or a new row if all rows are filled or layout has no rows.
+     *
      * @param parentViewID
      * @return a new TableRow
      */
@@ -351,6 +362,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         parentLayout.addView(tr, StylingHelper.getTableRowLayoutParams(this));
         return tr;
     }
+
     /**
      * Used to update tags layout correctly if a tag
      * has been deleted.
@@ -361,22 +373,31 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         clearLayout(parentLayout);
         populateTagsLayout(userDefTagButtons, parentLayout);
     }
+
     /**
      * Takes in a string and returns matching button if possible
      *
      * @param btnText, the button text
      * @return a button if btnText matches the text of a button
      */
-    private Button getButtonFromText(String btnText, List<Button> buttons) {
-        for (Button btn : buttons) {
-            if (btn.getText().toString().equals(btnText)) {
-                return btn;
+    private Button getButtonFromText(String btnText, List<Button> buttons) throws NoSuchElementException {
+        try {
+            for (Button btn : buttons) {
+                if (btn.getText().toString().equals(btnText)) {
+                    return btn;
+                }
             }
+            throw new NoSuchElementException();
+
+        } catch (NoSuchElementException e) {
+            Toast.makeText(getApplicationContext(), "Ingen knapp med detta namn hittas tyvärr, prova uppdatera vyn.", Toast.LENGTH_SHORT).show();
         }
         return null;
     }
+
     /**
      * Checks if tag is preDef or userDef
+     *
      * @param tag
      * @return
      */
@@ -421,9 +442,10 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             getBackToMain(getString(R.string.toastCreatedAd));
         });
     }
-    private void getBackToMain(String toastMessage){
+
+    private void getBackToMain(String toastMessage) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.putExtra(getString(R.string.putExtraToastKey),toastMessage);
+        intent.putExtra(getString(R.string.putExtraToastKey), toastMessage);
         startActivity(intent);
         finish();
     }
@@ -581,6 +603,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * Used when editing an already existing advertisement
+     *
      * @param tags, all tags saved in advertisement
      */
     @Override
@@ -593,5 +616,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
             }
         }
+    }
+
+    @Override
+    public void displayNotFoundToast(String toast) {
+        Toast.makeText(getApplicationContext(),toast , Toast.LENGTH_SHORT).show();
+
     }
 }

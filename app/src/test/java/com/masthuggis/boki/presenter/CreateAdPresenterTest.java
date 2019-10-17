@@ -76,7 +76,7 @@ public class CreateAdPresenterTest {
     @Test
     public void testTitleChanged() {
         presenter.titleChanged("new title");
-        assertTrue(presenter.getAdvertisement().getTitle() == "new title");
+        assertTrue(presenter.getAdvertisement().getTitle().equals("new title"));
 
     }
 

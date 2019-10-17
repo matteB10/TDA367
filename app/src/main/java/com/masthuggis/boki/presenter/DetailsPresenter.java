@@ -26,6 +26,9 @@ public class DetailsPresenter {
         this.dataModel = dataModel;
         this.view = view;
         this.advertisement = this.dataModel.getAdFromAdID(advertID);
+        if(advertisement==null){
+
+        }
         setupView();
 
         setUpFavouriteIcon();

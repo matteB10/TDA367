@@ -48,9 +48,6 @@ public class Repository implements iRepository {
         advertRepository.deleteAd(chatReceiverAndUserIDMap,adIDAndUserID);
     }
 
-
-
-
     public void addBackendObserver(BackendObserver backendObserver) {
         advertRepository.addBackendObserver(backendObserver);
     }

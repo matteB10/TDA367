@@ -24,7 +24,7 @@ public interface iRepository {
 
     void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID);
 
-    public void initialAdvertFetch(advertisementCallback advertisementCallback);
+     void initialAdvertFetch(advertisementCallback advertisementCallback);
 
     void addBackendObserver(BackendObserver backendObserver);
 
