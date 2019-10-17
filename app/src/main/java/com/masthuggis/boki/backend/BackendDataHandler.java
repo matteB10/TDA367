@@ -3,6 +3,8 @@ package com.masthuggis.boki.backend;
 import android.net.Uri;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -130,7 +132,7 @@ public class BackendDataHandler implements iBackend {
         String userID = DataModel.getInstance().getUserID();
         db.collection("users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onComplete( Task<DocumentSnapshot> task) {
+            public void onComplete(Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     deleteID(favouriteID, task);
                 }
@@ -181,38 +183,63 @@ public class BackendDataHandler implements iBackend {
         }
     }
 
-
-    public void readAllAdvertData(DBCallback DBCallback) {
-        db.collection("market").addSnapshotListener(new EventListener<QuerySnapshot>() {
+    @Override
+    public void initialAdvertFetch(DBCallback dbCallback) {
+        db.collection("market").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onEvent(QuerySnapshot queryDocumentSnapshots,  FirebaseFirestoreException e) { //Runs every time change happens i market
-                if (e != null) { //Can't attach listener, is path correct to firebase?
-                    Log.w(TAG, "Listen failed", e);
-                    return;
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    List<Map<String, Object>> advertsData = new ArrayList<>();
+                    for (DocumentSnapshot advertData : task.getResult().getDocuments()) {
+                        advertsData.add(advertData.getData());
+                    }
+                    updateAdvertsDataListWithImgUrl(advertsData, dbCallback::onCallBack);
                 }
-                List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
-                updateAdvertsDataListWithImgUrl(adverts, DBCallback::onCallBack);
             }
         });
     }
 
 
-    private void updateAdvertsDataListWithImgUrl(List<DocumentSnapshot> adverts, DBCallback dbCallback) {
-        List<Map<String, Object>> advertDataList = new ArrayList<>();
-        for (DocumentSnapshot snapshot : adverts) {
-            Map<String, Object> toBeAdded = snapshot.getData();
-            getFirebaseURL((String) toBeAdded.get("uniqueAdID"), new stringCallback() {
+    public void attachMarketListener(DBCallback DBCallback) {
+        db.collection("market").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) { //Runs every time change happens i market
+                if (e != null) { //Can't attach listener, is path correct to firebase?
+                    Log.w(TAG, "Listen failed", e);
+                    return;
+                }
+                if (queryDocumentSnapshots.size() == 0) {
+                    List<Map<String, Object>> newList = new ArrayList<>();
+                    DBCallback.onCallBack(newList);
+                    return;
+                }
+                List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
+                List<Map<String, Object>> advertDataList = new ArrayList<>();
+                for (DocumentSnapshot snapshot : adverts) {
+                    Map<String, Object> toBeAdded = snapshot.getData();
+                    advertDataList.add(toBeAdded);
+                }
+                updateAdvertsDataListWithImgUrl(advertDataList, DBCallback::onCallBack);
+            }
+        });
+    }
+
+    private void updateAdvertsDataListWithImgUrl(List<Map<String, Object>> adverts, DBCallback dbCallback) {
+        List<Map<String, Object>> advertsWithImages = new ArrayList<>();
+        for (Map<String, Object> map : adverts) {
+            getFirebaseURL((String) map.get("uniqueAdID"), new stringCallback() {
                 @Override
                 public void onCallback(String url) {
-                    toBeAdded.put("imgUrl", url);
-                    advertDataList.add(toBeAdded);
-                    if (advertDataList.size() == adverts.size()) {
-                        dbCallback.onCallBack(advertDataList);
+                    map.put("imgUrl", url);
+                    advertsWithImages.add(map);
+                    if (advertsWithImages.size() == adverts.size()) {
+                        dbCallback.onCallBack(adverts);
                     }
                 }
             });
         }
     }
+
 
     private void getFirebaseURL(String uniqueID, stringCallback stringCallback) {
         imagesRef.child(uniqueID).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -228,7 +255,7 @@ public class BackendDataHandler implements iBackend {
     public void getUserChats(String userID, DBCallback DBCallback, FailureCallback failureCallback) {
         db.collection("users").document(userID).collection("myConversations").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent( QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
+            public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
                 List<Map<String, Object>> chatDataList = new ArrayList<>();
                 if (e != null) {
                     Log.w(TAG, "Listen failed.", e);
@@ -253,7 +280,7 @@ public class BackendDataHandler implements iBackend {
     private void createChats(QuerySnapshot queryDocumentSnapshots, List<Map<String, Object>> chatDataList, SuccessCallback successCallback) {
         for (QueryDocumentSnapshot q : queryDocumentSnapshots) {
             String uniqueChatID = (q.getData().get("uniqueChatID").toString());
-            boolean isActive = ((boolean)q.getData().get("isActive"));
+            boolean isActive = ((boolean) q.getData().get("isActive"));
             db.collection("chats").document(uniqueChatID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -262,17 +289,16 @@ public class BackendDataHandler implements iBackend {
                         return;
                     }
                     data.put("uniqueChatID", uniqueChatID);
-                    data.put("isActive",isActive);
+                    data.put("isActive", isActive);
                     chatDataList.add(data);
                     if (chatDataList.size() == queryDocumentSnapshots.size()) {
                         successCallback.onSuccess();
                     }
-                }
-            });
-
+                }});
+            }
 
         }
-    }
+
 
     public void createNewChat(String adOwnerID, String otherUserID, String advertID, String imageURL, stringCallback stringCallback) {
 
@@ -282,7 +308,7 @@ public class BackendDataHandler implements iBackend {
         Map
                 <String, Object> chatMap = new HashMap<>();
         chatMap.put("uniqueChatID", uniqueChatID);
-        chatMap.put("isActive",true);
+        chatMap.put("isActive", true);
 
 
         Map<String, Object> messagesMap = new HashMap<>();
@@ -292,8 +318,8 @@ public class BackendDataHandler implements iBackend {
         messagesMap.put("userOneID", otherUserID);
         messagesMap.put("userTwoID", adOwnerID);
         messagesMap.put("advertID", advertID);
-        messagesMap.put("imageURL",imageURL);
-       // messagesMap.put("isActive", true);
+        messagesMap.put("imageURL", imageURL);
+        // messagesMap.put("isActive", true);
 
 
         DocumentReference dfSender = db.collection("users").document(otherUserID).collection("myConversations").document(uniqueChatID);
@@ -479,24 +505,25 @@ public class BackendDataHandler implements iBackend {
         String adID = adIDAndUserID.get("adID");
         String userID = adIDAndUserID.get("userID");
         advertPath.document((adID)).delete();
-        deleteChat(chatReceiverAndUserIDMap,adID,userID);
+        deleteChat(chatReceiverAndUserIDMap, adID, userID);
         notifyAdvertObservers();
 
     }
 
 
     private void deleteChat(List<Map<String, String>> mapList, String adID, String userID) {
-        Map<String,Object> updates = new HashMap<>();
-        updates.put("isActive",false);
-        for(Map<String, String> map :mapList){
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("isActive", false);
+        for (Map<String, String> map : mapList) {
             userPath.document(Objects.requireNonNull(map.get("receiverID"))).collection("myConversations").document(Objects.requireNonNull(map.get("chatID"))).update(updates);
             userPath.document(userID).collection("myConversations").document(Objects.requireNonNull(map.get("chatID"))).delete();
 
         }
         notifyChatObservers();
     }
+
     @Override
-    public void removeChat(String userID, String chatID){
+    public void removeChat(String userID, String chatID) {
         userPath.document(userID).collection("myConversations").document(chatID).delete();
 
     }
@@ -508,7 +535,7 @@ public class BackendDataHandler implements iBackend {
         advertPath.whereEqualTo("uniqueAdID", adID).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete( Task<QuerySnapshot> task) {
+                    public void onComplete(Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 advertPath.document(documentSnapshot.getId())

@@ -36,8 +36,12 @@ public class Repository implements iRepository {
         advertRepository.saveAdvert(imageFile, ad);
     }
 
-    public void fetchAllAdverts(advertisementCallback advertisementCallback) {
-        advertRepository.fetchAllAdverts(advertisementCallback);
+    public void initialAdvertFetch(advertisementCallback advertisementCallback) {
+        advertRepository.initialAdvertFetch(advertisementCallback);
+    }
+
+    public void attachAdvertsObserver(advertisementCallback advertisementCallback) {
+        advertRepository.attachMarketListener(advertisementCallback);
     }
 
     public void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID){

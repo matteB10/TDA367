@@ -24,10 +24,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".view.MessagesActivity"></activity>
         <activity android:name=".view.SignUpActivity" />
-        <activity android:name=".view.FilterActivity"/>
         <activity android:name=".view.SignInActivity" />
         <activity android:name=".view.DetailsActivity" />
-        <activity android:name=".view.SettingsActivity" />
         <activity android:name=".view.HomeFragment" />
         <activity android:name=".view.CreateAdActivity"
             android:windowSoftInputMode="stateHidden"

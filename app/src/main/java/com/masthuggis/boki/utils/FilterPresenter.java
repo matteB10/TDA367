@@ -38,6 +38,16 @@ public class FilterPresenter {
         filter.setMaxPrice(i);
         view.setMaxPrice(i);
     }
+    public void setUpView(){
+        if(filter.getTags().size() > 0){
+            setSelectedTags();
+        }if(filter.getMaxPrice() != 0){
+            view.setMaxPrice(filter.getMaxPrice());
+        }
+    }
+    public void unSetView(){
+        view = null;
+    }
 
     public void setPreDefTags(List<String> strTags) {
         this.preDefTags = strTags;
@@ -50,6 +60,11 @@ public class FilterPresenter {
             }
         }
         return true;
+    }
+    private void setSelectedTags(){
+        for(String tag : filter.getTags()){
+            view.addTag(tag,true);
+        }
     }
 
 

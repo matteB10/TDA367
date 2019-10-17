@@ -1,11 +1,12 @@
 package com.masthuggis.boki.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Filter {
 
-    private List<String> tags;
-    private int maxPrice;
+    private List<String> tags = new ArrayList<>();
+    private int maxPrice = 500; //max value on filtering screen
     private static Filter filter;
 
     private Filter() {

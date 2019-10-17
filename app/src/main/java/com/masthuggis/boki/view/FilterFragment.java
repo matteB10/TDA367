@@ -25,39 +25,36 @@ public class FilterFragment extends Fragment implements FilterPresenter.View {
     private FilterPresenter presenter;
     private List<Button> tags = new ArrayList<>();
     private View view;
-    //private OnFragmentCommunicationListener mListener;
 
-
-
-    public static FilterFragment newInstance() {
-        return new FilterFragment();
-    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        this.view = inflater.inflate(R.layout.filter_fragment,container,false);
+        this.view = inflater.inflate(R.layout.filter_fragment, container, false);
         presenter = new FilterPresenter(this);
         initTags();
         initSeekBar();
         setTagListeners();
         initDoneButton();
+        presenter.setUpView();
         return view;
     }
 
     /**
      * Get list of subject tags from resources, displays as buttons in view
      */
-    private void initTags(){
+    private void initTags() {
         presenter.setPreDefTags(Arrays.asList(getResources().getStringArray(R.array.preDefSubjectTags))); //set pre def tags in presenter
-        tags = TagHelper.createPreDefTagButtons(presenter.getPreDefTags(),getContext());
-        TagHelper.displayPreDefTagButtons(view.findViewById(R.id.filterTagsLinearLayout),new ArrayList<>(tags), getContext());
+        tags = TagHelper.createPreDefTagButtons(presenter.getPreDefTags(), getContext());
+        TagHelper.displayPreDefTagButtons(view.findViewById(R.id.filterTagsLinearLayout), new ArrayList<>(tags), getContext());
     }
+
     /**
      * Set listener on price SeekBar, notifies presenter
      */
-    private void initSeekBar(){
+    private void initSeekBar() {
         SeekBar maxPrice = view.findViewById(R.id.priceSeekBar);
+        maxPrice.setProgress(500); //Maximum price set as default
         maxPrice.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -76,8 +73,8 @@ public class FilterFragment extends Fragment implements FilterPresenter.View {
         });
     }
 
-    private void setTagListeners(){
-        for(Button btn : tags){
+    private void setTagListeners() {
+        for (Button btn : tags) {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -87,7 +84,8 @@ public class FilterFragment extends Fragment implements FilterPresenter.View {
             });
         }
     }
-    private void initDoneButton(){
+
+    private void initDoneButton() {
         Button btn = view.findViewById(R.id.applyFilterButton);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,45 +95,38 @@ public class FilterFragment extends Fragment implements FilterPresenter.View {
                         .replace(R.id.fragment_container, nextFrag, "HomeFragment")
                         .addToBackStack(null)
                         .commitAllowingStateLoss();
+
+
             }
         });
     }
 
 
+
     @Override
     public void addTag(String tag, boolean isSelected) {
         Button btn = TagHelper.getButtonWithText(tag, new ArrayList<>(tags));
-        StylingHelper.setTagButtonStyling(btn,isSelected);
+        StylingHelper.setTagButtonStyling(btn, isSelected);
     }
+
     @Override
-    public void setMaxPrice(int i){
-        TextView t = view.findViewById(R.id.actualPriceTextView);
+    public void setMaxPrice(int i) {
+        TextView textView = view.findViewById(R.id.actualPriceTextView);
+        SeekBar seekBar = view.findViewById(R.id.priceSeekBar);
         String s = i + " kr";
-        t.setText(s);
+        textView.setText(s);
+        seekBar.setProgress(i);
     }
 
-    /*
+    /**
+     * Notifies the presenter that the view has been destroyed.
+     */
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentCommunicationListener) {
-            mListener = (OnFragmentCommunicationListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentCommunicationListener");
-        }
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.unSetView();
+
     }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    interface OnFragmentCommunicationListener {
-
-        void onFiltersChanged(Bundle args);
-    }*/
 
 
 }

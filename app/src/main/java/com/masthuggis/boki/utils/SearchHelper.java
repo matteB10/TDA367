@@ -11,71 +11,102 @@ import java.util.List;
 
 public class SearchHelper {
 
+    private static boolean hasActiveSearch = false;
+    private static boolean hasActiveFilters = false;
+
+
     private SearchHelper() {
     }
 
 
-    public static List<Advertisement> search(String query,  List<Advertisement> advertisements) {
+    public static List<Advertisement> search(String query, List<Advertisement> advertisements) {
         List<Advertisement> searchRes = new ArrayList<>(); //new list with search results
         String queryStr = query.toLowerCase().trim();
+        hasActiveSearch = query.length() != 0; //if empty query, activeSearch set to 0.
 
         if (advertisements != null) {
             performSearch(searchRes, queryStr, advertisements);
         }
-       return searchRes;
+        return searchRes;
     }
 
     /**
      * Use filter strings to perform search, add all search results
+     *
      * @param filters
      */
 
-    public static List<Advertisement> filters(int price, List<String> filters, List<Advertisement> advertisements){
+    public static List<Advertisement> filters(int price, List<String> filters, List<Advertisement> advertisements) {
+        hasActiveFilters = true; //price filter is always activated if user clicked on filtering screen once
         List<Advertisement> searchRes = new ArrayList<>();
-        for(String filter : filters){
-            if (advertisements != null) {
-                filter = filter.trim().toLowerCase();
-                performSearch(searchRes,filter,advertisements);
-                addPriceFilter(searchRes,price);
-            }
+        List<Advertisement> adsToBeSearched = new ArrayList<>(advertisements);
+        if (price == 500) {
+            price = FormHelper.getInstance().getValidMaxPrice(); //max price filter is 500+, actual maxPrice getting from formhelper;
+        }
+        if (filters.size() == 0) {
+            searchRes = addPriceFilter(adsToBeSearched, price);
+        } else {
+            searchRes = filterWithTagsAndPrice(adsToBeSearched, filters, price);
         }
         return searchRes;
 
     }
 
     /**
+     * If active filter tags, filter both tags and price
+     */
+    private static List<Advertisement> filterWithTagsAndPrice(List<Advertisement> adsToBeSearched, List<String> filters, int price) {
+        List<Advertisement> searchRes = new ArrayList<>();
+        for (String filter : filters) {
+
+            filter = filter.trim().toLowerCase();
+            adsToBeSearched = performSearch(searchRes, filter, adsToBeSearched);
+        }
+        searchRes = addPriceFilter(searchRes, price);
+        return searchRes;
+    }
+
+    /**
      * Call all search methods
+     *
      * @param searchRes
      * @param queryStr
-     * @param tempList
+     * @param listTosearch
      */
-    private static void performSearch(List<Advertisement> searchRes, String queryStr, List<Advertisement> tempList){
-        searchMatchTitle(searchRes, queryStr, tempList); //searchPerformed if query matches title. run first, highest priority
-        searchMatchTags(searchRes, queryStr, tempList); //searchPerformed if query matches tag. run second, second highest priority
-        searchContainsTitle(searchRes, queryStr, tempList); //searchPerformed if title contains query.
-        searchContainsTags(searchRes, queryStr, tempList); //searchPerformed if at least one of ads tags matches query.
+    private static List<Advertisement> performSearch(List<Advertisement> searchRes, String queryStr, List<Advertisement> listTosearch) {
+        listTosearch = searchMatchTitle(searchRes, queryStr, listTosearch); //searchPerformed if query matches title. run first, highest priority
+        if (queryStr.length() > 3) { //not a relevant search result if title or tag contains less than 4 characters in query
+            listTosearch = searchMatchTags(searchRes, queryStr, listTosearch); //searchPerformed if query matches tag. run second, second highest priority
+            listTosearch = searchContainsTitle(searchRes, queryStr, listTosearch); //searchPerformed if title contains query.
+            listTosearch = searchContainsTags(searchRes, queryStr, listTosearch); //searchPerformed if at least one of ads tags matches query.
+        }
+        return listTosearch;
     }
 
     /**
      * Checks if title matches searchPerformed string and ads that Advert to searchPerformed result
      * if true.
+     *
      * @param searchRes list to add matching advert
      * @param query     the searchPerformed string
      * @param ads       list of adverts
      */
-    private static void searchMatchTitle(List<Advertisement> searchRes, String
+    private static List<Advertisement> searchMatchTitle(List<Advertisement> searchRes, String
             query, List<Advertisement> ads) {
+        List<Advertisement> listToSearch = new ArrayList<>(ads);
         Advertisement ad;
-        for (int i = 0; i < ads.size(); i++) {
+        int endLoop = ads.size();
+        for (int i = 0; i < endLoop; i++) {
             ad = ads.get(i);
             String title = ad.getTitle().toLowerCase().trim();
 
             if (titleStartsWithQuery(title, query)) {
                 searchRes.add(ad);
-                ads.remove(ad);
+                listToSearch.remove(ad);
 
             }
         }
+        return listToSearch;
     }
 
     /**
@@ -87,16 +118,18 @@ public class SearchHelper {
      * @param ads       list of adverts
      */
 
-    private static void searchMatchTags(List<Advertisement> searchRes, String
-            query, List<Advertisement> ads) {
+    private static List<Advertisement> searchMatchTags(List<Advertisement> searchRes, String query, List<Advertisement> ads) {
         Advertisement ad;
-        for (int i = 0; i < ads.size(); i++) {
+        List<Advertisement> listToSearch = new ArrayList<>(ads);
+        int endLoop = ads.size();
+        for (int i = 0; i < endLoop; i++) {
             ad = ads.get(i);
             if (tagsStartWithQuery(ad.getTags(), query)) {
                 searchRes.add(ad);
-                ads.remove(ad);
+                listToSearch.remove(ad);
             }
         }
+        return listToSearch;
     }
 
     /**
@@ -108,16 +141,18 @@ public class SearchHelper {
      * @param ads       list of adverts
      */
 
-    private static void searchContainsTitle(List<Advertisement> searchRes, String
-            query, List<Advertisement> ads) {
+    private static List<Advertisement> searchContainsTitle(List<Advertisement> searchRes, String query, List<Advertisement> ads) {
         Advertisement ad;
-        for (int i = 0; i < ads.size(); i++) {
+        List<Advertisement> listToSearch = new ArrayList<>(ads);
+        int endLoop = ads.size();
+        for (int i = 0; i < endLoop; i++) {
             ad = ads.get(i);
             if (ad.getTitle().toLowerCase().trim().contains(query)) {
                 searchRes.add(ad);
-                ads.remove(ad);
+                listToSearch.remove(ad);
             }
         }
+        return listToSearch;
     }
 
     /**
@@ -126,16 +161,18 @@ public class SearchHelper {
      * @param ads
      */
 
-    private static void searchContainsTags(List<Advertisement> searchRes, String
-            query, List<Advertisement> ads) {
+    private static List<Advertisement> searchContainsTags(List<Advertisement> searchRes, String query, List<Advertisement> ads) {
         Advertisement ad;
-        for (int i = 0; i < ads.size(); i++) {
+        List<Advertisement> listToSearch = new ArrayList<>(ads);
+        int endLoop = ads.size();
+        for (int i = 0; i < endLoop; i++) {
             ad = ads.get(i);
             if (tagsContainsQuery(ad.getTags(), query)) {
                 searchRes.add(ad);
-                ads.remove(ad);
+                listToSearch.remove(ad);
             }
         }
+        return listToSearch;
     }
 
     /**
@@ -184,14 +221,27 @@ public class SearchHelper {
         }
         return false;
     }
+
     /**
      * Search through already added search results to add price filter
      */
-    private static void addPriceFilter(List<Advertisement> searchRes, int maxPrice){
-        for(Advertisement ad: searchRes){
-            if(maxPrice < ad.getPrice()){
-                searchRes.remove(ad);
+    private static List<Advertisement> addPriceFilter(List<Advertisement> searchRes, int maxPrice) {
+        Advertisement ad;
+        List<Advertisement> searchResult = new ArrayList<>();
+        for (int i = 0; i < searchRes.size(); i++) {
+            ad = searchRes.get(i);
+            if (maxPrice > ad.getPrice()) {
+                searchResult.add(ad);
             }
         }
+        return searchResult;
+    }
+
+    public static boolean isActiveSearch() {
+        return hasActiveSearch;
+    }
+
+    public static boolean isActiveFilters() {
+        return hasActiveFilters;
     }
 }

@@ -33,17 +33,10 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
         this.view = inflater.inflate(R.layout.adverts_view, container, false);
         this.presenter = getPresenter();
         setupNoResultsFoundView();
-        this.presenter.initPresenter();
         setupHeader();
+        this.presenter.initPresenter();
         return view;
     }
-
-    //AdvertsView getParentView(){
-    //    return this;
-    //}
-
-    //void collectData(){}
-    //TODO: should either be abstract or be in this class.. but needs to be called in onCreateView, cant be done from HomeFragment
 
     /**
      * Setups the layout to be displayed when no results are found. The default is for this view

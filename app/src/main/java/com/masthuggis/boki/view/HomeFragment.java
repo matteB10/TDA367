@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
@@ -29,6 +30,25 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
     private HomePresenter presenter;
     private EditText searchField;
 
+    /*
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+       // collectData();
+        return v;
+    }*/
+
+    /**
+     * Checks for information about previous fragment is set in arguments
+
+    private void collectData() {
+        if (this.getArguments() != null) {
+            String prevFragment = (String) this.getArguments().get("prevFragment");
+            if (prevFragment.equals("filterFragment")) {
+                presenter.applyFilters(presenter.getData());
+            }
+        }
+    }*/
 
     @Override
     protected AdvertsPresenter getPresenter() {
@@ -56,27 +76,11 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         return spinner;
     }
 
-    /**
-     * Collects data from bundle if passed when creating the fragment
-     */
-/*
-    void collectData(){
-        if(this.getArguments() != null){
-            try {
-                int price = this.getArguments().getInt("price");
-                List<String> filterTags = this.getArguments().getStringArrayList("tags");
-                presenter.addFilters(price,filterTags);
-            }catch (NullPointerException n){
-                n.printStackTrace();
-                System.out.println("could not find any passed on data");
-            }
-        }
-
-    }*/
 
     /**
      * Adds a listener for when the user performs a searchPerformed, reacts to when enter key is pressed
      * makes the keyboard disappear then calls on the presenter to perform the searchPerformed with given input
+     *
      * @param view
      */
     private void setupSearchField(View view) {
@@ -113,7 +117,8 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         // TODO: implement
         return new TextView(getActivity());
     }
-    private void setFilterButtonListener(View view){
+
+    private void setFilterButtonListener(View view) {
         Button filterButton = view.findViewById(R.id.homeFilterButton);
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,14 +140,16 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         presenter.searchPerformed(query);
     }
 
-    private void startFilterFragment(){
+    private void startFilterFragment() {
         Fragment filter = new FilterFragment();
         loadFragment(filter);
     }
+
     private boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
-            getFragmentManager()
-                    .beginTransaction()
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().addToBackStack("HomeFragment");
+            fragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .commitAllowingStateLoss();
             return true;

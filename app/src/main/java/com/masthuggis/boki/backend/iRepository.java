@@ -20,11 +20,11 @@ public interface iRepository {
 
     void saveAdvert(File imageFile, Advertisement ad);
 
-    void fetchAllAdverts(advertisementCallback advertisementCallback);
+    void attachAdvertsObserver(advertisementCallback advertisementCallback);
 
     void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID);
 
-
+    public void initialAdvertFetch(advertisementCallback advertisementCallback);
 
     void addBackendObserver(BackendObserver backendObserver);
 

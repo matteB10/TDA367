@@ -1,0 +1,46 @@
+# Meeting Agenda
+
+Group:Masthuggis
+Date: 15/10 - 19
+Chair: Isak Lindgren
+Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak Lindgren, Elin Melander
+
+
+## Objectives (5 min) 
+
+-Code review.
+-Fortsättning i veckan.
+-Elin åker fredag/lördag.
+-Dokument
+-Viktigaste fixarna sista veckan.
+-Målet är att vara "färdiga" fredag.
+
+
+## Discussion items (35 min)
+
+- Bra att kunna ta inspiration av de andras RAD och SDD för att bättre förstå vad innehållet kan vara i ett sådant dokument.
+- Struktur för repositories, finns en existerande version med ett interface som implementeras av ett konkret repository som delegerar metoder till rätt repository
+. Frågan är om detta är en bättre lösning än den som finns där DataModel håller en konkret version av varje repository som existerar istället för endast ett interface. Det blir mer kod och mer att ändra om en ändring ska göras, men innebär samtidigt ett lösare beroende på  repository och DataModel har endast ett beroende på ett interface istället för att detta ska varje gång en ny repository implementeras.
+
+-Code review imorgon onsdag 16/10 kl 10-12.
+
+Buggar/Fixar att göra i veckan
+-Fixa checkar för ifall listor är tomma, tex. mina annonser, sökningar osv och visa ett meddelande istället, chattar också.
+-Kolla igenom layouts, se ifall de är ungefär samma i avstånd, size och liknande. Finns lite hårdkodade grejer som kan vara bra att se över.
+- Titel och spacing i chatten.
+-TESTER!!! De måste skrivas. På allt, och kommentarer på kod!! Väldigt viktigt!
+
+## Outcomes and assignments (5 min)
+
+
+- Matilda fixar med filtrering.
+-Arvid fixar favoriter, är i princip fungerande, jobbar på "non-functional requirements". Refactorering och buggfixning.
+-Joel gör allmänn cleanup, fixar lite UI-grejer, refactoring osv.
+-Isak fixar färdigt deletion av ads/chatt, fortsätter med buggfixning av init.
+-Elin skriver tester.
+
+
+
+## Wrap up
+
+ - Nästa möte imorgon 16/10 kl 10 då vi gör code review.
