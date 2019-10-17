@@ -83,8 +83,8 @@ class AdvertRepository {
         return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageUrl, tags, owner);
     }
 
-    void getUserFavourites(FavouriteIDsCallback favouriteIDsCallback) {
-        backend.getFavouriteIDs(dataMap -> favouriteIDsCallback.onCallback((List<String>) dataMap.get("favourites")));
+    void getUserFavourites(String userID,FavouriteIDsCallback favouriteIDsCallback) {
+        backend.getFavouriteIDs(userID, dataMap -> favouriteIDsCallback.onCallback((List<String>) dataMap.get("favourites")));
     }
 
     void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID) {

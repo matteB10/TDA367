@@ -206,5 +206,10 @@ public class CreateAdPresenterTest {
 
         @Override
         public void setTags(List<String> tags) { }
+
+        @Override
+        public void displayNotFoundToast(String toast) {
+
+        }
     }
 }

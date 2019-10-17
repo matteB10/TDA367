@@ -82,8 +82,8 @@ public class Repository implements iRepository {
     }
 
     @Override
-    public void deleteIDFromFavourites(String favouriteID) {
-        userRepository.deleteIDFromFavourites(favouriteID);
+    public void deleteIDFromFavourites(String id, String favouriteID) {
+        userRepository.deleteIDFromFavourites(id,favouriteID);
 
 
     }
@@ -109,6 +109,7 @@ public class Repository implements iRepository {
 
     public void signOut() {
         userRepository.signOut();
+
     }
 
     @Override
@@ -122,8 +123,8 @@ public class Repository implements iRepository {
 
     }
     @Override
-    public void getUserFavourites(FavouriteIDsCallback favouriteIDsCallback) {
-        advertRepository.getUserFavourites(favouriteIDsCallback);
+    public void getUserFavourites(String userID,FavouriteIDsCallback favouriteIDsCallback) {
+        advertRepository.getUserFavourites(userID,favouriteIDsCallback);
     }
 
 }

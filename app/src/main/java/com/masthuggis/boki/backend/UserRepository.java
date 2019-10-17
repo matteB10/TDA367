@@ -1,9 +1,5 @@
 package com.masthuggis.boki.backend;
 
-import androidx.annotation.Nullable;
-
-import com.masthuggis.boki.backend.callbacks.DBCallback;
-import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.chatCallback;
@@ -136,8 +132,8 @@ public class UserRepository {
         backend.removeChat(userID, chatID);
     }
 
-    public void deleteIDFromFavourites(String favouriteID) {
-        backend.deleteIDFromFavourites(favouriteID);
+    void deleteIDFromFavourites(String id, String favouriteID) {
+        backend.deleteIDFromFavourites(id,favouriteID);
     }
 }
 

@@ -53,10 +53,10 @@ public interface iRepository {
 
     void removeChat(String userID, String chatID);
 
-    void getUserFavourites(FavouriteIDsCallback favouriteIDsCallback);
+    void getUserFavourites(String userID,FavouriteIDsCallback favouriteIDsCallback);
      void removeFromFavourites(String adID, String userID);
 
-    void deleteIDFromFavourites(String favouriteID);
+    void deleteIDFromFavourites(String id, String favouriteID);
 
     void updateAdvert(File imageFile, Advertisement ad);
 }
