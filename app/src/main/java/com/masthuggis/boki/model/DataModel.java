@@ -55,6 +55,8 @@ public class DataModel implements BackendObserver {
 
     /**
      * Initializes all fields in the User-object of the application with data gotten from firebase with the corresponding userID
+     * Is a must to call each init-related method in the callback of the previous one to make sure that all methods are
+     * completed, since a method called first does not always finish first.
      */
     public void initUser(SuccessCallback successCallback) {
         initialAdvertFetch(new SuccessCallback() {
@@ -65,14 +67,17 @@ public class DataModel implements BackendObserver {
                     public void onCallback(iUser newUser) {
                         user = newUser;
                         user.setAdverts(getAdsFromCurrentUser());
-                        fetchUserChats(user.getId(), new chatCallback() {
+                        getFavouritesFromLoggedInUser(new advertisementCallback() {
                             @Override
-                            public void onCallback(List<iChat> chatsList) {
-                                user.setChats(chatsList);
-                                initMessages();
-                                getFavouritesFromLoggedInUser(advertisements -> {
-                                    user.setFavourites(advertisements);
-                                    successCallback.onSuccess();
+                            public void onCallback(List<Advertisement> advertisements) {
+                                user.setFavourites(advertisements);
+                                fetchUserChats(user.getId(), new chatCallback() {
+                                    @Override
+                                    public void onCallback(List<iChat> chatsList) {
+                                        user.setChats(chatsList);
+                                        initMessages();
+                                        successCallback.onSuccess();
+                                    }
                                 });
                             }
                         });
@@ -363,10 +368,6 @@ public class DataModel implements BackendObserver {
         repository.saveAdvert(currentImageFile, advertisement);
     }
 
-   /* public void setUsername(String username) {
-        userRepository.setUsername(username);
-    }*/
-
 
     public void signOut() {
         repository.signOut();
@@ -378,13 +379,6 @@ public class DataModel implements BackendObserver {
             @Override
             public void onSuccess() {
                 successCallback.onSuccess();
-           /*     initUser(new SuccessCallback() {
-                    @Override
-                    public void onSuccess() {
-                        successCallback.onSuccess();
-
-                    }
-                });*/
             }
         }, failureCallback);
     }

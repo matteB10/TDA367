@@ -431,9 +431,7 @@ public class BackendDataHandler implements iBackend {
         });
     }
 
-
     public void getUser(DBMapCallback dbMapCallback) {
-        Map<String, String> userMap = new HashMap<>();
         String userID = auth.getCurrentUser().getUid();
         db.collection("users").document(userID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
@@ -441,7 +439,6 @@ public class BackendDataHandler implements iBackend {
                 dbMapCallback.onCallBack(documentSnapshot.getData());
             }
         });
-
     }
 
     public void writeMessage(String uniqueChatID, Map<String, Object> messageMap) {

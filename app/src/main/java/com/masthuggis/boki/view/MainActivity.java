@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.masthuggis.boki.R;
+import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.MainPresenter;
 
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         setContentView(R.layout.activity_main);
 
         this.presenter = new MainPresenter(this, DependencyInjector.injectDataModel());
-
+        favouritesNavigationCheck();
         displayToastMessageIfRequestWasReceived();
     }
 
@@ -33,12 +34,15 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         String toastKey = getString(R.string.putExtraToastKey);
         if (getIntent() != null && getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
-            if (bundle.getString(toastKey) != null) {
-                if(!bundle.getString(toastKey).equals(null)) {
-                    displayToastMessage(bundle.getString(toastKey));
-                }
+            if (bundle.get(toastKey) != null){
+                displayToastMessage(bundle.getString(toastKey));
             }
         }
+    }
+
+    private void favouritesNavigationCheck() {
+        boolean navigateToFavourites = getIntent().getBooleanExtra("toFavourites", false);
+        presenter.init(navigateToFavourites);
     }
 
     private void displayToastMessage(String message) {
@@ -57,7 +61,12 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         setupBottomTabNavigator();
     }
 
+    @Override
+    public void showFavouritesScreen() {
 
+        loadFragment(new FavoritesFragment());
+        setupBottomTabNavigator();
+    }
 
     /**
      * If back button is pressed the app exits. Is it better to show the previously active tab?
@@ -98,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
             default:
                 break;
         }
-
         return loadFragment(fragment);
     };
 
