@@ -66,8 +66,12 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
 
     @Override
     public void showFavouritesScreen() {
-        BottomNavigationView bottomnav = findViewById(R.id.bottom_navigation);
-        View view = bottomnav.findViewById(R.id.navigation_favorites);
+        BottomNavigationView bottomNav = setupBottomTabNavigator();
+        showFavouritesViewAndIcon(bottomNav);
+    }
+
+    private void showFavouritesViewAndIcon(BottomNavigationView bottomNav) {
+        View view = bottomNav.findViewById(R.id.navigation_favorites);
         view.performClick();
         loadFragment(new FavoritesFragment());
     }
@@ -80,9 +84,10 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         moveTaskToBack(true);
     }
 
-    private void setupBottomTabNavigator() {
+    private BottomNavigationView setupBottomTabNavigator() {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
+        return bottomNav;
     }
 
     /**
