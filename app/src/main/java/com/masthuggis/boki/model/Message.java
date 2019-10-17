@@ -5,7 +5,7 @@ public class Message implements iMessage {
     private long timeSent;
     private String senderID;
 
-    public Message(String message, long timeSent, String senderID) {
+    Message(String message, long timeSent, String senderID) {
         this.message= message;
         this.timeSent=timeSent;
         this.senderID=senderID;

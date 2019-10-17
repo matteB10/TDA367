@@ -2,13 +2,7 @@ package com.masthuggis.boki;
 
 import androidx.test.runner.AndroidJUnit4;
 
-import com.masthuggis.boki.backend.MockRepository;
-import com.masthuggis.boki.presenter.HomePresenter;
-
-import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -17,7 +11,7 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(AndroidJUnit4.class)
 public class HomeFragmentTest {
-    @Test
+  /*  @Test
     public void numAdvertsShow_IsSameAsRepository() {
         HomePresenter.View view = createHomeView();
         HomePresenter presenter = new HomePresenter(view, DependencyInjector.injectDataModel());
@@ -49,5 +43,5 @@ public class HomeFragmentTest {
 
             }
         };
-    }
+    }*/
 }
