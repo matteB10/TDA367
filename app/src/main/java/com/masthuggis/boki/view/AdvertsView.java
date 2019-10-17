@@ -12,11 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.AdvertsPresenterView;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
+import com.masthuggis.boki.utils.NotImplementedException;
 
 /**
  * Abstract class to be used by views wanting to display a list of adverts.
@@ -34,8 +36,21 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
         this.presenter = getPresenter();
         setupHeader();
         setupNoResultsFoundView();
+        setupPullToRefresh();
         this.presenter.initPresenter();
         return view;
+    }
+
+    /**
+     * Setups the layout to be used on top of the list of adverts. It could be viewed as a header
+     * of the screen.
+     */
+    private void setupHeader() {
+        View header = onCreateHeaderLayout();
+        if (header != null) {
+            LinearLayout headerContainer = view.findViewById(R.id.advertsViewHeader);
+            headerContainer.addView(header);
+        }
     }
 
     /**
@@ -51,14 +66,14 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
     }
 
     /**
-     * Setups the layout to be used on top of the list of adverts. It could be viewed as a header
-     * of the screen.
+     * Setups the pull to refresh by asking the concrete implementation if they want to use the
+     * functionality. If they do, the action handler is setup, else it is disabled.
      */
-    private void setupHeader() {
-        View header = onCreateHeaderLayout();
-        if (header != null) {
-            LinearLayout headerContainer = view.findViewById(R.id.advertsViewHeader);
-            headerContainer.addView(header);
+    private void setupPullToRefresh() {
+        if (shouldUsePullToRefresh()) {
+            addPullToRefreshActionHandler();
+        } else {
+            disablePullToRefresh();
         }
     }
 
@@ -103,6 +118,21 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
      * @return
      */
     protected abstract AdvertsPresenter getPresenter();
+
+    /**
+     * Asks the concrete implementation if a pull to refresh action should be used to update data.
+     * @return
+     */
+    protected abstract boolean shouldUsePullToRefresh();
+
+    /**
+     * Gives the concrete implementation the option to provide a handler whenever the pull-to-refresh
+     * is activated by overriding.
+     * @throws NotImplementedException
+     */
+    protected void optionalPullToRefreshAction() throws NotImplementedException {
+        throw new NotImplementedException("View set shouldUsePullToRefresh without implementing the refresh action");
+    }
 
     /**
      * Updates the data that is displayed in the recyclerView. Will be called when for example
@@ -163,5 +193,24 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
     public void hideLoadingScreen() {
         ProgressBar progressBar = view.findViewById(R.id.advertsViewProgressbar);
         progressBar.setVisibility(View.GONE);
+    }
+
+    /**
+     * Setups so whenever the pull-to-refresh is activated the action is called. If it has not been
+     * implemented by subclasses the disable functionality is disabled.
+     */
+    private void addPullToRefreshActionHandler() {
+        ((SwipeRefreshLayout) view.findViewById(R.id.pullToRefresh)).setOnRefreshListener(() -> {
+            try {
+                optionalPullToRefreshAction();
+            } catch (NotImplementedException exception) {
+                disablePullToRefresh();
+            }
+        });
+    }
+
+
+    private void disablePullToRefresh() {
+        view.findViewById(R.id.pullToRefresh).setEnabled(false);
     }
 }

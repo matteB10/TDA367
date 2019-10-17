@@ -35,6 +35,16 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
     }
 
     @Override
+    protected boolean shouldUsePullToRefresh() {
+        return true;
+    }
+
+    @Override
+    protected void optionalPullToRefreshAction() {
+        String hello = "";
+    }
+
+    @Override
     protected View onCreateHeaderLayout() {
         View header = getLayoutInflater().inflate(R.layout.home_header, null);
         setupSortSpinner(header);

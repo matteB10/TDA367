@@ -23,6 +23,11 @@ public class FavoritesFragment extends AdvertsView implements AdvertsPresenterVi
     }
 
     @Override
+    protected boolean shouldUsePullToRefresh() {
+        return false;
+    }
+
+    @Override
     protected View onCreateHeaderLayout() {
         return ViewCreator.createHeader(getActivity(), getString(R.string.yourFavorites));
     }

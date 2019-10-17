@@ -28,6 +28,11 @@ public class ProfileFragment extends AdvertsView implements ProfilePresenter.Vie
     }
 
     @Override
+    protected boolean shouldUsePullToRefresh() {
+        return false;
+    }
+
+    @Override
     protected View onCreateHeaderLayout() {
         View header = getLayoutInflater().inflate(R.layout.profile_header, null);
         Button signOutBtn = header.findViewById(R.id.signOutButton);
