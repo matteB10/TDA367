@@ -23,9 +23,9 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class AdvertsPresenterTest {
+public class ListPresenterTest {
 
-    private AdvertsPresenter presenter;
+    private ListPresenter presenter;
     private ListPresenterView view;
     private boolean onCreateHeaderCalled;
     private boolean onCreateNoResultsFoundCalled;
@@ -52,7 +52,7 @@ public class AdvertsPresenterTest {
     }
 
 
-    class MockPresenter extends AdvertsPresenter {
+    class MockPresenter extends ListPresenter {
         public MockPresenter(ListPresenterView view, DataModel dataModel) {
             super(view, dataModel);
         }
@@ -83,7 +83,7 @@ public class AdvertsPresenterTest {
         }
 
         @Override
-        protected AdvertsPresenter getPresenter() {
+        protected ListPresenter getPresenter() {
             return null;
         }
 

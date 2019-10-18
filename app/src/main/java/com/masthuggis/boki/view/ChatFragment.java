@@ -30,7 +30,7 @@ public class ChatFragment extends ListView implements ChatPresenter.View {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.presenter = new ChatPresenter(this, DependencyInjector.injectDataModel());
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        presenter.updateAdverts();
+        presenter.updateData();
         return v;
     }
 

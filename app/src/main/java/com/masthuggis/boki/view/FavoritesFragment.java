@@ -25,7 +25,7 @@ public class FavoritesFragment extends ListView {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.presenter = new FavouritesPresenter(this, DependencyInjector.injectDataModel());
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        presenter.updateAdverts();
+        presenter.updateData();
         return v;
     }
 

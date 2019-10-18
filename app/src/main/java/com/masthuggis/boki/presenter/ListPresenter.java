@@ -7,38 +7,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Abstract presenter containing the common logic of presenters showing a list of adverts. Template
+ * Abstract presenter containing the common logic of presenters showing a list of data. Template
  * method pattern is used to make the concrete implementations able to implement their unique
  * way to get data and sort.
  */
-public abstract class AdvertsPresenter<T, U> implements IProductsPresenter<U> {
+public abstract class ListPresenter<T, U> implements IListPresenter<U> {
 
     protected ListPresenterView view;
     protected final DataModel dataModel;
-    private List<T> adverts;
+    private List<T> data;
 
-    AdvertsPresenter(ListPresenterView view, DataModel dataModel) {
+    ListPresenter(ListPresenterView view, DataModel dataModel) {
         this.view = view;
-        this.adverts = new ArrayList<>();
+        this.data = new ArrayList<>();
         this.dataModel = dataModel;
     }
 
     /**
-     * Sorts adverts and tells the view to update UI.
+     * Sorts data and tells the view to update UI.
      *
-     * @param adverts the updated adverts lists that will be displayed.
+     * @param data the updated data lists that will be displayed.
      */
-    void updateAdverts(List<T> adverts) {
-        if (adverts == null || view == null) {
+    void updateData(List<T> data) {
+        if (data == null || view == null) {
             return;
         }
 
-        if (adverts.isEmpty()) {
+        if (data.isEmpty()) {
             view.showNoThumbnailsAvailableScreen();
         } else {
             view.hideNoThumbnailsAvailableScreen();
 
-            this.adverts = sort(adverts);
+            this.data = sort(data);
         }
 
         view.hideLoadingScreen();
@@ -46,22 +46,23 @@ public abstract class AdvertsPresenter<T, U> implements IProductsPresenter<U> {
     }
 
     /**
-     * Sorts adverts and tells the view to update UI.
-     * @param adverts the updated adverts lists that will be displayed.
+     * Sorts data and tells the view to update UI.
+     * @param data the updated data lists that will be displayed.
      */
-    void updateAdverts(List<T> adverts, boolean sort) {
-        if (adverts == null || view == null) {
+    void updateData(List<T> data, boolean sort) {
+        if (data == null || view == null) {
             return;
         }
 
-        if (adverts.isEmpty()) {
+        if (data.isEmpty()) {
             view.showNoThumbnailsAvailableScreen();
         } else {
             view.hideNoThumbnailsAvailableScreen();
-            if(sort) {
-                this.adverts = sort(adverts);
+
+            if (sort) {
+                this.data = sort(data);
             }else{
-                this.adverts = adverts;
+                this.data = data;
             }
         }
 
@@ -72,24 +73,24 @@ public abstract class AdvertsPresenter<T, U> implements IProductsPresenter<U> {
     /**
      * Asks the concrete implementations to get data and then updates the UI.
      */
-    public void updateAdverts() {
+    public void updateData() {
         if (view == null) {
             return;
         }
 
         view.showLoadingScreen();
-        updateAdverts(getData());
+        updateData(getData());
     }
 
     /**
-     * Get adverts currently showed in view
+     * Get data currently showed in view
      */
-    protected List<T> getCurrentDisplayedAds() {
-        return adverts;
+    protected List<T> getCurrentDisplayedData() {
+        return data;
     }
 
-    void setCurrentDisplayedAds(List<T> adverts) {
-        this.adverts = adverts;
+    void setCurrentDisplayedData(List<T> data) {
+        this.data = data;
     }
 
     /**
@@ -99,12 +100,12 @@ public abstract class AdvertsPresenter<T, U> implements IProductsPresenter<U> {
 
     /**
      * Concrete implementations provides their desired way of sorting. If no sorting is desired,
-     * the same list of adverts can be returned.
+     * the same list of data can be returned.
      *
-     * @param adverts list of adverts to be sorted
+     * @param data list of data to be sorted
      * @return
      */
-    public abstract List<T> sort(List<T> adverts);
+    public abstract List<T> sort(List<T> data);
 
     /**
      * Binds each recyclerview item by setting the fields of ThumbnailView. It asks for the desired
@@ -113,24 +114,24 @@ public abstract class AdvertsPresenter<T, U> implements IProductsPresenter<U> {
      * highly unlikely for the sorting to change will the list is to be rendered.
      *
      * @param position
-     * @param thumbnailView
+     * @param dataView
      */
     @Override
-    public abstract void onBindThumbnailViewAtPosition(int position, U thumbnailView);
+    public abstract void onBindThumbnailViewAtPosition(int position, U dataView);
 
     /**
-     * Returns of the number of adverts to be rendered in the list. If the list is empty or not defined
+     * Returns of the number of data to be rendered in the list. If the list is empty or not defined
      * the list shall not be rendered, and therefor the length is zero.
      *
      * @return
      */
     @Override
     public int getItemCount() {
-        if (adverts == null) {
+        if (data == null) {
             return 0;
         }
 
-        return adverts.size();
+        return data.size();
     }
 
     /**

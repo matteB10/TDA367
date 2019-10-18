@@ -14,7 +14,7 @@ import java.util.List;
  * accordingly.
  * @param <T>
  */
-public final class ProfilePresenter<T extends ListPresenterView & ProfilePresenter.View> extends AdvertsPresenter<Advertisement, ThumbnailView> {
+public final class ProfilePresenter<T extends ListPresenterView & ProfilePresenter.View> extends ListPresenter<Advertisement, ThumbnailView> {
 
     private final T profileView;
 
@@ -29,8 +29,8 @@ public final class ProfilePresenter<T extends ListPresenterView & ProfilePresent
     }
 
     @Override
-    public List<Advertisement> sort(List<Advertisement> adverts) {
-        return SortManager.getInstance().sortWithDefaultSorting(adverts);
+    public List<Advertisement> sort(List<Advertisement> data) {
+        return SortManager.getInstance().sortWithDefaultSorting(data);
     }
 
     public void onSignOutPressed() {
@@ -43,7 +43,7 @@ public final class ProfilePresenter<T extends ListPresenterView & ProfilePresent
     }
 
     @Override
-    public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
-        AdvertsPresenterHelper.onBindThumbnailViewAtPosition(position, thumbnailView, getCurrentDisplayedAds());
+    public void onBindThumbnailViewAtPosition(int position, ThumbnailView dataView) {
+        AdvertsPresenterHelper.onBindThumbnailViewAtPosition(position, dataView, getCurrentDisplayedData());
     }
 }

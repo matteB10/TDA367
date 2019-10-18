@@ -14,8 +14,7 @@ import java.util.stream.Collectors;
 /**
  * ChatPresenter is the presenter class for the view called ChatFragment.
  */
-
-public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> extends AdvertsPresenter<iChat, ChatThumbnailView> implements ChatObserver {
+public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> extends ListPresenter<iChat, ChatThumbnailView> implements ChatObserver {
 
     private final T view;
 
@@ -32,26 +31,26 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
     }
 
     @Override
-    public List<iChat> sort(List<iChat> adverts) {
-        return sortChatsAccordingToLastMessageSent(adverts);
+    public List<iChat> sort(List<iChat> data) {
+        return sortChatsAccordingToLastMessageSent(data);
     }
 
     @Override
-    public void onBindThumbnailViewAtPosition(int position, ChatThumbnailView thumbnailView) {
-        List<iChat> chats = getCurrentDisplayedAds();
+    public void onBindThumbnailViewAtPosition(int position, ChatThumbnailView dataView) {
+        List<iChat> chats = getCurrentDisplayedData();
         if (chats == null || chats.size() < position) {
             return;
         }
         iChat c = chats.get(position);
         String str = formatTimeLastMessageSent(c.timeLastMessageSent());
-        thumbnailView.setDateTextView(str);
-        thumbnailView.setUserTextView(c.getReceiverName(dataModel.getUserID()));
-        thumbnailView.setChatID(c.getChatID());
-        thumbnailView.setMessageImageView(c.getImageURL());
+        dataView.setDateTextView(str);
+        dataView.setUserTextView(c.getReceiverName(dataModel.getUserID()));
+        dataView.setChatID(c.getChatID());
+        dataView.setMessageImageView(c.getImageURL());
     }
 
     private void checkIfChatsAreActive() {
-        for (iChat chat : getCurrentDisplayedAds()) {
+        for (iChat chat : getCurrentDisplayedData()) {
             if (!(chat.isActive())) {
                 view.displayToast(chat.getReceiverName(dataModel.getUserID()));
                 dataModel.removeChat(dataModel.getUserID(), chat.getChatID());
@@ -64,7 +63,7 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
      */
     @Override
     public void onRowPressed(String chatID) {
-        for (iChat chat : getCurrentDisplayedAds()) {
+        for (iChat chat : getCurrentDisplayedData()) {
             if (chat.getChatID().equals(chatID)) {
                 view.showMessagesScreen(chatID);
                 return;
@@ -99,7 +98,7 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
      */
     @Override
     public void onChatUpdated() {
-        super.updateAdverts();
+        super.updateData();
         /*
         this.chats = dataModel.getUserChats();
         sortChatsAccordingToLastMessageSent();

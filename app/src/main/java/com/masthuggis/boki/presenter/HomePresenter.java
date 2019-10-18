@@ -17,7 +17,7 @@ import java.util.List;
  * interface. It displays all the market adverts with the option to sort and search.
  * It is an observer of the market so it can update its data accordingly.
  */
-public final class HomePresenter extends AdvertsPresenter<Advertisement, ThumbnailView> {
+public final class HomePresenter extends ListPresenter<Advertisement, ThumbnailView> {
 
     private final ListPresenterView view;
     private int selectedSortOption = 0;
@@ -25,13 +25,13 @@ public final class HomePresenter extends AdvertsPresenter<Advertisement, Thumbna
     public HomePresenter(ListPresenterView view, DataModel dataModel) {
         super(view, dataModel);
         this.view = view;
-        setCurrentDisplayedAds(applyFilters(dataModel.getAllAdverts()));
+        setCurrentDisplayedData(applyFilters(dataModel.getAllAdverts()));
     }
 
 
     @Override
     public List<Advertisement> getData() {
-        if (getCurrentDisplayedAds().size() == 0 && !SearchHelper.isActiveSearch()) {
+        if (getCurrentDisplayedData().size() == 0 && !SearchHelper.isActiveSearch()) {
             if (!SearchHelper.isActiveFilters())
                 return new ArrayList<>(dataModel.getAllAdverts());
 
@@ -39,7 +39,7 @@ public final class HomePresenter extends AdvertsPresenter<Advertisement, Thumbna
         if (SearchHelper.isActiveFilters()) {
             return applyFilters(new ArrayList<>(dataModel.getAllAdverts()));
         }
-        return getCurrentDisplayedAds();
+        return getCurrentDisplayedData();
     }
 
 
@@ -52,9 +52,9 @@ public final class HomePresenter extends AdvertsPresenter<Advertisement, Thumbna
     public void searchPerformed(String query) {
         view.showLoadingScreen();
         if (!searchFieldIsEmpty(query)) {
-            updateAdverts(SearchHelper.search(query, getData()), false);
+            updateData(SearchHelper.search(query, getData()), false);
         }else{
-            updateAdverts(SearchHelper.search(query, getData()), true);
+            updateData(SearchHelper.search(query, getData()), true);
         }
     }
 
@@ -72,12 +72,12 @@ public final class HomePresenter extends AdvertsPresenter<Advertisement, Thumbna
     /**
      * If boolean is true,  sort using the selected sort option
      *
-     * @param adverts
+     * @param data
      * @return
      */
     @Override
-    public List<Advertisement> sort(List<Advertisement> adverts) {
-        return SortManager.getInstance().sort(selectedSortOption, adverts);
+    public List<Advertisement> sort(List<Advertisement> data) {
+        return SortManager.getInstance().sort(selectedSortOption, data);
     }
 
     public String[] getSortOptions() {
@@ -91,7 +91,7 @@ public final class HomePresenter extends AdvertsPresenter<Advertisement, Thumbna
      */
     public void sortOptionSelected(int pos) {
         selectedSortOption = pos;
-        updateAdverts(getData());
+        updateData(getData());
     }
 
     private boolean searchFieldIsEmpty(String query) {
@@ -99,11 +99,11 @@ public final class HomePresenter extends AdvertsPresenter<Advertisement, Thumbna
     }
 
     public void updateFromUserInteraction() {
-        super.updateAdverts();
+        super.updateData();
     }
 
     @Override
-    public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
-        AdvertsPresenterHelper.onBindThumbnailViewAtPosition(position, thumbnailView, getCurrentDisplayedAds());
+    public void onBindThumbnailViewAtPosition(int position, ThumbnailView dataView) {
+        AdvertsPresenterHelper.onBindThumbnailViewAtPosition(position, dataView, getCurrentDisplayedData());
     }
 }
