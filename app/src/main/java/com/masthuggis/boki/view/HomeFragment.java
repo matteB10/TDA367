@@ -1,37 +1,69 @@
 package com.masthuggis.boki.view;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
-import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.HomePresenter;
+import com.masthuggis.boki.utils.GridSpacingItemDecoration;
+import com.masthuggis.boki.utils.ViewCreator;
 
 /**
  * Home page displaying all the adverts that have been published to the market.
  * Will also include searchPerformed and sort buttons in the future.
  */
-public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelectedListener {
+public class HomeFragment extends ListView implements AdapterView.OnItemSelectedListener {
 
     private HomePresenter presenter;
     private EditText searchField;
 
     @Override
-    protected AdvertsPresenter getPresenter() {
-        if (presenter == null) {
-            this.presenter = new HomePresenter(this, DependencyInjector.injectDataModel());
-        }
-        return presenter;
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.presenter = new HomePresenter(this, DependencyInjector.injectDataModel());
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        presenter.updateData();
+        return v;
+    }
+
+    @Override
+    protected RecyclerView.Adapter getAdapter() {
+        return new ProductsRecyclerViewAdapter(getContext(), presenter);
+    }
+
+    @Override
+    protected RecyclerView.LayoutManager getLayoutManager() {
+        return new GridLayoutManager(getContext(), 2);
+    }
+
+    @Override
+    protected RecyclerView.ItemDecoration getSpacingDecorator() {
+        return new GridSpacingItemDecoration(2, 40, true);
+    }
+
+    @Nullable
+    @Override
+    protected PullToRefreshCallback optionalPullToRefreshHandler() {
+        return () -> presenter.updateFromUserInteraction();
     }
 
     @Override
@@ -39,21 +71,22 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         View header = getLayoutInflater().inflate(R.layout.home_header, null);
         setupSortSpinner(header);
         setupSearchField(header);
+        setFilterButtonListener(header);
         return header;
     }
 
-    private Spinner setupSortSpinner(View view) {
+    private void setupSortSpinner(View view) {
         Spinner spinner = view.findViewById(R.id.sortPickerSpinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, presenter.getSortOptions());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-        return spinner;
     }
 
     /**
      * Adds a listener for when the user performs a searchPerformed, reacts to when enter key is pressed
      * makes the keyboard disappear then calls on the presenter to perform the searchPerformed with given input
+     *
      * @param view
      */
     private void setupSearchField(View view) {
@@ -87,10 +120,18 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
 
     @Override
     protected View onCreateNoResultsFoundLayout() {
-        // TODO: implement
-        return new TextView(getActivity());
+        return ViewCreator.createSimpleText(getActivity(), getString(R.string.noAdvertsInMarketFound));
     }
 
+    private void setFilterButtonListener(View view) {
+        Button filterButton = view.findViewById(R.id.homeFilterButton);
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startFilterFragment();
+            }
+        });
+    }
 
     private void hideKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -103,14 +144,21 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         presenter.searchPerformed(query);
     }
 
-    @Override
-    public void showNoThumbnailsAvailableScreen() {
-        // TODO: implement
+    private void startFilterFragment() {
+        Fragment filter = new FilterFragment();
+        loadFragment(filter);
     }
 
-    @Override
-    public void hideNoThumbnailsAvailableScreen() {
-        // TODO: implement
+    private boolean loadFragment(Fragment fragment) {
+        if (fragment != null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().addToBackStack("HomeFragment");
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commitAllowingStateLoss();
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -131,4 +179,9 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         presenter.sortOptionSelected(0);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.viewIsBeingDestroyed();
+    }
 }

@@ -12,10 +12,4 @@ public class AdFactory {
 
         return new Advert(datePublished, uniqueOwnerID, id, title, description, price, condition, imageUrl, tags, owner);
     }
-
-    public static Advertisement createAd() {
-        return new Advert();
-    }
-
-
 }

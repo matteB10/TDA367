@@ -1,11 +1,10 @@
 package com.masthuggis.boki.backend;
 
-import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.AdFactory;
+import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.model.Condition;
 import com.masthuggis.boki.model.observers.BackendObserver;
 
 import java.io.File;
@@ -76,7 +75,7 @@ class AdvertRepository {
         long price = (long) dataMap.get("price");
         List<String> tags = (List<String>) dataMap.get("tags");
         String uniqueOwnerID = (String) dataMap.get("uniqueOwnerID");
-        Condition condition = Condition.valueOf((String) dataMap.get("condition"));
+        Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
         String owner = (String) dataMap.get("advertOwner");
@@ -84,13 +83,8 @@ class AdvertRepository {
         return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageUrl, tags, owner);
     }
 
-    void getUserFavourites(FavouriteIDsCallback favouriteIDsCallback) {
-        backend.getFavouriteIDs(new DBMapCallback() {
-            @Override
-            public void onCallBack(Map<String, Object> dataMap) {
-                favouriteIDsCallback.onCallback((List<String>) dataMap.get("favourites"));
-            }
-        });
+    void getUserFavourites(String userID,FavouriteIDsCallback favouriteIDsCallback) {
+        backend.getFavouriteIDs(userID, dataMap -> favouriteIDsCallback.onCallback((List<String>) dataMap.get("favourites")));
     }
 
     void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID) {

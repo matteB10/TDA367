@@ -1,6 +1,5 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.model.DataModel;
 
 public class MainPresenter {
@@ -10,12 +9,18 @@ public class MainPresenter {
     public MainPresenter(View view, DataModel dataModel) {
         this.view = view;
         this.dataModel = dataModel;
+    }
+
+    public void init(boolean favouriteNav) {
+        view.hideBottomNavBar();
         if (dataModel.isLoggedIn()) {
-            dataModel.initUser(new SuccessCallback() {
-                @Override
-                public void onSuccess() {
-                    view.showMainScreen(); //Don't show main screen until everything has been set up
+            dataModel.initUser(() -> {
+                if (favouriteNav) {
+                    view.showFavouritesScreen();
+                } else {
+                    view.showMainScreen();
                 }
+                view.showBottomNavBar();
             });
         } else {
             view.showSignInScreen();
@@ -26,5 +31,11 @@ public class MainPresenter {
         void showSignInScreen();
 
         void showMainScreen();
+
+        void showFavouritesScreen();
+
+        void hideBottomNavBar();
+
+        void showBottomNavBar();
     }
 }

@@ -1,9 +1,5 @@
 package com.masthuggis.boki.backend;
 
-import androidx.annotation.Nullable;
-
-import com.masthuggis.boki.backend.callbacks.DBCallback;
-import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.chatCallback;
@@ -44,7 +40,7 @@ public class UserRepository {
      *                        it either tells the model to log in or not.
      */
 
-    public void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
+    void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
         backend.userSignIn(email, password, successCallback, failureCallback);
     }
 
@@ -54,19 +50,16 @@ public class UserRepository {
      * @param successCallback A callback which indicates what should happen if the login is successful.
      */
 
-    public void signUp(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback) {
+    void signUp(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback) {
         backend.userSignUpAndSignIn(email, password, username, successCallback, failureCallback);
     }
 
 
-    public void getUser(userCallback userCallback) {
-        backend.getUser(new DBMapCallback() {
-            @Override
-            public void onCallBack(Map<String, Object> dataMap) {
+    void getUser(userCallback userCallback) {
+        backend.getUser(dataMap -> {
 
-                iUser user = UserFactory.createUser(dataMap.get("email").toString(), dataMap.get("username").toString(), dataMap.get("userID").toString());
-                userCallback.onCallback(user);
-            }
+            iUser user = UserFactory.createUser(dataMap.get("email").toString(), dataMap.get("username").toString(), dataMap.get("userID").toString());
+            userCallback.onCallback(user);
         });
 
     }
@@ -75,70 +68,44 @@ public class UserRepository {
         return backend.isUserSignedIn();
     }
 
-
     void getUserChats(String userID, chatCallback chatCallback) {
-
-
-        backend.getUserChats(userID, new DBCallback() {
-            @Override
-            public void onCallBack(List<Map<String, Object>> chatMap) {
-                List<iChat> chatList = new ArrayList<>();
-                for (Map<String, Object> map : chatMap) {
-                    List<iUser> userList = new ArrayList<>();
-                    createUser(map.get("userOneID").toString(), new userCallback() {
-                        @Override
-                        public void onCallback(iUser newUser) {
-                            userList.add(newUser);
-                            createUser(map.get("userTwoID").toString(), new userCallback() {
-                                @Override
-                                public void onCallback(iUser newUser) {
-                                    userList.add(newUser);
-                                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString()
-                                            , userList.get(0), userList.get(1), map.get("advertID").toString(), map.get("imageURL").toString(), (boolean) map.get("isActive")));
-                                    if (chatList.size() == chatMap.size()) {
-                                        chatCallback.onCallback(chatList);
-                                    }
-                                }
-                            });
+        backend.getUserChats(userID, chatMap -> {
+            List<iChat> chatList = new ArrayList<>();
+            for (Map<String, Object> map : chatMap) {
+                List<iUser> userList = new ArrayList<>();
+                createUser(map.get("userOneID").toString(), newUser -> {
+                    userList.add(newUser);
+                    createUser(map.get("userTwoID").toString(), newUser1 -> {
+                        userList.add(newUser1);
+                        chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString()
+                                , userList.get(0), userList.get(1), map.get("advertID").toString(), map.get("imageURL").toString(), (boolean) map.get("isActive")));
+                        if (chatList.size() == chatMap.size()) {
+                            chatCallback.onCallback(chatList);
                         }
                     });
+                });
 
-                }
             }
-        }, new FailureCallback() {
-            @Override
-            public void onFailure(@Nullable String errorMessage) {
-                chatCallback.onCallback(new ArrayList<>());
-            }
-        });
+        }, errorMessage -> chatCallback.onCallback(new ArrayList<>()));
     }
 
     private void createUser(String userID, userCallback userCallback) {
-        backend.getUserFromID(userID, new DBMapCallback() {
-
-            @Override
-            public void onCallBack(Map<String, Object> dataMap) {
-                userCallback.onCallback(UserFactory.createUser(dataMap.get("email").toString(), dataMap.get("username").toString(), dataMap.get("userID").toString()));
-            }
-        });
+        backend.getUserFromID(userID, dataMap -> userCallback.onCallback(UserFactory.createUser(dataMap.get("email").toString(), dataMap.get("username").toString(), dataMap.get("userID").toString())));
     }
 
     public void getMessages(String uniqueChatID, messagesCallback messagesCallback) {
         List<iMessage> messages = new ArrayList<>();
 
-        backend.getMessages(uniqueChatID, new DBCallback() {
-            @Override
-            public void onCallBack(List<Map<String, Object>> advertDataList) {
-                if (advertDataList.size() == 0) {
-                    return;
-                }
-                messages.clear();
-                for (Map<String, Object> objectMap : advertDataList) {
-                    messages.add(MessageFactory.createMessage(objectMap.get("message")
-                            .toString(), Long.parseLong(objectMap.get("timeSent").toString()), objectMap.get("sender").toString()));
-                }
-
+        backend.getMessages(uniqueChatID, advertDataList -> {
+            if (advertDataList.size() == 0) {
+                return;
             }
+            messages.clear();
+            for (Map<String, Object> objectMap : advertDataList) {
+                messages.add(MessageFactory.createMessage(objectMap.get("message")
+                        .toString(), Long.parseLong(objectMap.get("timeSent").toString()), objectMap.get("sender").toString()));
+            }
+
         });
         messagesCallback.onCallback(messages);
 
@@ -162,11 +129,11 @@ public class UserRepository {
     }
 
     void removeChat(String userID, String chatID) {
-        backend.removeChat(userID,chatID);
+        backend.removeChat(userID, chatID);
     }
 
-    public void deleteIDFromFavourites(String favouriteID) {
-        backend.deleteIDFromFavourites(favouriteID);
+    void deleteIDFromFavourites(String id, String favouriteID) {
+        backend.deleteIDFromFavourites(id,favouriteID);
     }
 }
 

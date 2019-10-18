@@ -59,7 +59,7 @@ public class CreateAdPresenterTest {
     @Test
     public void testDeleteAdvert() {
         Mockito.doNothing().when(databaseMock).saveAdvert(null, advertisement);
-        Mockito.doNothing().when(databaseMock).removeExistingAdvert(advertisement);
+        Mockito.doNothing().when(databaseMock).removeExistingAdvert(advertisement.getUniqueID(),advertisement.getUniqueOwnerID());
         assertFalse(databaseMock.getAdFromAdID("id").equals(advertisement));
     }
 
@@ -77,7 +77,7 @@ public class CreateAdPresenterTest {
     @Test
     public void testTitleChanged() {
         presenter.titleChanged("new title");
-        assertTrue(presenter.getAdvertisement().getTitle() == "new title");
+        assertTrue(presenter.getAdvertisement().getTitle().equals("new title"));
 
     }
 
@@ -207,5 +207,10 @@ public class CreateAdPresenterTest {
 
         @Override
         public void setTags(List<String> tags) { }
+
+        @Override
+        public void displayNotFoundToast(String toast) {
+
+        }
     }
 }

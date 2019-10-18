@@ -2,7 +2,6 @@ package com.masthuggis.boki.model.sorting;
 
 import com.masthuggis.boki.model.Advertisement;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

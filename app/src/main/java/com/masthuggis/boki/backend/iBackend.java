@@ -24,9 +24,9 @@ public interface iBackend {
 
     void removeAdFromFavourites(String adID, String userID);
 
-    void getFavouriteIDs(DBMapCallback dbMapCallback);
+    void getFavouriteIDs(String userID,DBMapCallback dbMapCallback);
 
-    void deleteIDFromFavourites(String favouriteID);
+    void deleteIDFromFavourites(String id, String favouriteID);
 
     void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback);
 

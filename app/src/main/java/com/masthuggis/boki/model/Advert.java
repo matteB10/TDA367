@@ -104,7 +104,9 @@ public class Advert implements Advertisement {
 
     @Override
     public void setPrice(int price) {
-        this.price = price;
+        if (price >= 0) {
+            this.price = price;
+        }
     }
 
     @Override
@@ -113,7 +115,7 @@ public class Advert implements Advertisement {
     }
 
     @Override
-    public void tagsChanged(String tag) {
+    public void toggleTag(String tag) {
         if (isNewTag(tag)) {
             tags.add(tag);
         } else {
@@ -141,6 +143,9 @@ public class Advert implements Advertisement {
             case R.id.conditionOkButton:
                 this.condition = Condition.OK;
                 break;
+            default:
+                this.condition = Condition.UNDEFINED;
+                break;
         }
     }
 
@@ -163,7 +168,6 @@ public class Advert implements Advertisement {
     public String getOwner() {
         return this.owner;
     }
-
 
 
 }

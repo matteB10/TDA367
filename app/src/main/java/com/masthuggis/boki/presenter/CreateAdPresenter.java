@@ -1,12 +1,15 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.model.AdFactory;
+import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.CurrentTimeHelper;
 import com.masthuggis.boki.utils.FormHelper;
+import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,26 +27,34 @@ public class CreateAdPresenter {
 
     public CreateAdPresenter(View view, DataModel dataModel) {
         this.dataModel = dataModel;
-        advertisement = AdFactory.createAd();
+        advertisement = AdFactory.createAd("", dataModel.getUserID(), UniqueIdCreator.getUniqueID(), "", "",
+                0, Advert.Condition.UNDEFINED, "", new ArrayList<>(), dataModel.getUserDisplayName());
         this.view = view;
-
     }
-    /** getting adID to set up the right view for the user
+
+    /**
+     * getting adID to set up the right view for the user
+     *
      * @param adID is the individual ID for a specific ad.
      */
-    public void setAd(String adID){
-        advertisement = dataModel.getAdFromAdID(adID);
+    public void setAd(String adID) {
+        try {
+            advertisement = dataModel.getAdFromAdID(adID);
+        } catch (Exception e) {
+            view.displayNotFoundToast("Det finns ingen annons som matchar denna data.");
+            return;
+        }
         validPrice = true;
     }
 
 
-    public void deleteAdvert(){
-       dataModel.removeExistingAdvert(advertisement.getUniqueID(),advertisement.getUniqueOwnerID());
+    public void deleteAdvert() {
+        dataModel.removeExistingAdvert(advertisement.getUniqueID(), advertisement.getUniqueOwnerID());
     }
 
-    public void updateAdvert(){
-       dataModel.updateAd(view.getCurrentImageFile(),advertisement);
-       advertisement = null;
+    public void updateAdvert() {
+        dataModel.updateAd(view.getCurrentImageFile(), advertisement);
+        advertisement = null;
     }
 
     /**
@@ -51,7 +62,7 @@ public class CreateAdPresenter {
      * saves advert and resets current ad in presenter
      */
     public void saveAdvert() {
-        if((advertisement.getDatePublished().equals(""))) {
+        if ((advertisement.getDatePublished().equals(""))) {
             setAdvertDate();
         }
         dataModel.saveAdvert(view.getCurrentImageFile(), advertisement);
@@ -59,13 +70,13 @@ public class CreateAdPresenter {
     }
 
 
-    public void setUpView(){
-            view.setTitle(advertisement.getTitle());
-            view.setPrice(advertisement.getPrice());
-            view.setDescription(advertisement.getDescription());
-            view.setImageUrl(advertisement.getImageUrl());
-            view.setTags(advertisement.getTags());
-            setCondition();
+    public void setUpView() {
+        view.setTitle(advertisement.getTitle());
+        view.setPrice(advertisement.getPrice());
+        view.setDescription(advertisement.getDescription());
+        view.setImageUrl(advertisement.getImageUrl());
+        view.setTags(advertisement.getTags());
+        setCondition();
     }
 
     private void setCondition(){
@@ -92,7 +103,7 @@ public class CreateAdPresenter {
         if (FormHelper.getInstance().isValidPrice(price)) {
             advertisement.setPrice(Integer.parseInt(price));
             validPrice = true;
-        }else{
+        } else {
             validPrice = false;
         }
         view.enablePublishButton(allFieldsValid());
@@ -115,7 +126,7 @@ public class CreateAdPresenter {
      */
     public void preDefTagsChanged(String tag) {
         view.setPreDefTagSelected(tag, isTagSelected(tag));
-        advertisement.tagsChanged(tag);
+        advertisement.toggleTag(tag);
     }
 
     /**
@@ -125,12 +136,12 @@ public class CreateAdPresenter {
      * @param tag
      */
     public void userDefTagsChanged(String tag) {
-        if(isTagSelected(tag)) {
+        if (isTagSelected(tag)) {
             view.displayUserTagButton(tag);
-        }else{
+        } else {
             view.removeUserTagButton(tag);
         }
-        advertisement.tagsChanged(tag);
+        advertisement.toggleTag(tag);
     }
 
     /** Checks if tag is selected
@@ -156,7 +167,7 @@ public class CreateAdPresenter {
     /**
      * Checks if publish button should be enabled when image has changed
      */
-    public void imageChanged(){
+    public void imageChanged() {
         view.enablePublishButton(allFieldsValid());
         view.enableSaveButton(allFieldsValid());
     }
@@ -168,7 +179,7 @@ public class CreateAdPresenter {
      */
     private boolean allFieldsValid() {
         boolean valid = advertisement.getTitle().length() > 2 && validPrice && advertisement.isValidCondition() &&
-                (view.getCurrentImageFile()!= null || advertisement.getImageUrl() != null);
+                (view.getCurrentImageFile() != null || advertisement.getImageUrl() != null);
         return (valid);
     }
 
@@ -205,7 +216,7 @@ public class CreateAdPresenter {
         return (int) advertisement.getPrice();
     }
 
-    public List<String> getTags(){
+    public List<String> getTags() {
         return advertisement.getTags();
     }
 
@@ -237,6 +248,8 @@ public class CreateAdPresenter {
         void setTags(List<String> tags);
 
         void toggleCondition(String id);
+
+        void displayNotFoundToast(String toast);
     }
 
 }

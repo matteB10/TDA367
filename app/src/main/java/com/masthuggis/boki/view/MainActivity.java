@@ -2,6 +2,7 @@ package com.masthuggis.boki.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,16 +17,18 @@ import com.masthuggis.boki.presenter.MainPresenter;
  * MainActivity is the primary view of the application. This is where the application will take you on launch.
  * Its main purpose is to handle the different tabs.
  */
-public class MainActivity extends AppCompatActivity implements MainPresenter.View {
+public class MainActivity extends AppCompatActivity implements MainPresenter.View{
     private MainPresenter presenter;
+
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         this.presenter = new MainPresenter(this, DependencyInjector.injectDataModel());
-
+        favouritesNavigationCheck();
         displayToastMessageIfRequestWasReceived();
     }
 
@@ -33,12 +36,15 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         String toastKey = getString(R.string.putExtraToastKey);
         if (getIntent() != null && getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
-            if (bundle.getString(toastKey) != null) {
-                if(!bundle.getString(toastKey).equals(null)) {
-                    displayToastMessage(bundle.getString(toastKey));
-                }
+            if (bundle.get(toastKey) != null){
+                displayToastMessage(bundle.getString(toastKey));
             }
         }
+    }
+
+    private void favouritesNavigationCheck() {
+        boolean navigateToFavourites = getIntent().getBooleanExtra("toFavourites", false);
+        presenter.init(navigateToFavourites);
     }
 
     private void displayToastMessage(String message) {
@@ -57,7 +63,28 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         setupBottomTabNavigator();
     }
 
+    @Override
+    public void showFavouritesScreen() {
+        setupBottomTabNavigator();
+        showFavouritesViewAndIcon();
+    }
 
+    @Override
+    public void showBottomNavBar() {
+        //BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideBottomNavBar() {
+        //BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.GONE);
+    }
+
+    private void showFavouritesViewAndIcon() {
+        View view = bottomNavigationView.findViewById(R.id.navigation_favorites);
+        view.performClick();
+    }
 
     /**
      * If back button is pressed the app exits. Is it better to show the previously active tab?
@@ -68,8 +95,7 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
     }
 
     private void setupBottomTabNavigator() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setOnNavigationItemSelectedListener(navListener);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
     }
 
     /**
@@ -98,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
             default:
                 break;
         }
-
         return loadFragment(fragment);
     };
 
@@ -112,6 +137,14 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         }
         return false;
     }
+
+    /*
+    @Override
+    public void onFiltersChanged(Bundle args) {
+        Fragment fragment = new HomeFragment();
+        fragment.setArguments(args);
+        loadFragment(fragment);
+    }*/
 
 }
 

@@ -1,30 +1,58 @@
 package com.masthuggis.boki.view;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
-import com.masthuggis.boki.presenter.AdvertsPresenter;
-import com.masthuggis.boki.presenter.AdvertsPresenterView;
 import com.masthuggis.boki.presenter.ProfilePresenter;
+import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 import com.masthuggis.boki.utils.ViewCreator;
 
 /**
  * Profile page used for displaying the adverts that the user have published. Also have an settings
  * button to navigate to the app-wide settings.
  */
-public class ProfileFragment extends AdvertsView implements ProfilePresenter.View, AdvertsPresenterView {
+public class ProfileFragment extends ListView implements ProfilePresenter.View {
     private ProfilePresenter presenter;
 
     @Override
-    protected AdvertsPresenter getPresenter() {
-        if (presenter == null) {
-            this.presenter = new ProfilePresenter(this, DependencyInjector.injectDataModel());
-        }
-        return presenter;
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.presenter = new ProfilePresenter(this, DependencyInjector.injectDataModel());
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        presenter.updateData();
+        return v;
+    }
+
+    @Override
+    protected RecyclerView.Adapter getAdapter() {
+        return new ProductsRecyclerViewAdapter(getContext(), presenter);
+    }
+
+    @Override
+    protected RecyclerView.LayoutManager getLayoutManager() {
+        return new GridLayoutManager(getContext(), 2);
+    }
+
+    @Override
+    protected RecyclerView.ItemDecoration getSpacingDecorator() {
+        return new GridSpacingItemDecoration(2, 40, true);
+    }
+
+    @Nullable
+    @Override
+    protected PullToRefreshCallback optionalPullToRefreshHandler() {
+        return null;
     }
 
     @Override
@@ -54,5 +82,15 @@ public class ProfileFragment extends AdvertsView implements ProfilePresenter.Vie
     private void showCreateAdPage() {
         Intent intent = new Intent(getActivity(), CreateAdActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * Notifies the presenter that the view has been destroyed. Ideally used by the presenter
+     * to prevent memory leaks.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.viewIsBeingDestroyed();
     }
 }

@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">boki</string>
-    <string name="title_home">home</string>
+    <string name="app_name">Boki</string>
+    <string name="title_home">Home</string>
     <string name="title_profile">Mina Annonser</string>
-    <string name="title_messages">messages</string>
-    <string name="title_favorites">favorites</string>
-    <string name="title_new_ad">new ad</string>
+    <string name="title_messages">Messages</string>
+    <string name="title_favorites">Favorites</string>
+    <string name="title_new_ad">New ad</string>
 
     <string name="back">Tillbaka</string>
     <string name="settings">Inställningar</string>
@@ -78,6 +78,8 @@
 
     <string name="putExtraToastKey">toast</string>
     <string name="noFavoritesFound">Du har inga favoriter sparade ännu. För att spara en favorit gå in på en annons och tryck på hjärtat.</string>
+    <string name="noAdvertsInMarketFound">Det finns inga annonser att visa. Har du möjligen aktiverat för många filter?</string>
+    <string name="noChatsFound">Du har inga aktiva chattar. För att kontakta en säljare öppna en annons och tryck på kontakta ägaren.</string>
 
     <string name="searchHint">Sök efter titlar...</string>
     <string name="sign_out">Logga ut</string>
@@ -93,5 +95,23 @@
     <string name="toastDeletedAd">Din annons är borttagen</string>
     <string name="toastUpdatedAd">Din annons är uppdaterad</string>
     <string name="toastCreatedAd">Din annons är upplagd</string>
+
+
+    <!--- filter activity -->
+    <string name="filter">Filtrera</string>
+    <string name="inputMaxPrice">Ange maxpris:</string>
+    <string name="minPrice">0 kr</string>
+    <string name="maxPrice">500+ kr</string>
+
+    <!-- no sorting display string -->
+    <string name="pickSorting">Välj sortering..</string>
+
+
+
+
+
+    //Errors
+    <string name="noAdvertFoundDetailsPresenter">"Hittar ingen annons med denna beskrivning."</string>
+
 
 </resources>
