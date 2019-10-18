@@ -13,14 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.presenter.IProductsPresenter;
+import com.masthuggis.boki.presenter.IListPresenter;
 
 public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder> {
 
-    private IProductsPresenter presenter;
+    private IListPresenter presenter;
     private Context mContext;
 
-    ProductsRecyclerViewAdapter(Context context, IProductsPresenter presenter) {
+    ProductsRecyclerViewAdapter(Context context, IListPresenter presenter) {
         this.mContext = context;
         this.presenter = presenter;
         getItemCount();

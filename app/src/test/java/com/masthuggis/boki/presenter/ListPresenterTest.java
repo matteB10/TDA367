@@ -24,9 +24,9 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class AdvertsPresenterTest {
+public class ListPresenterTest {
 
-    private AdvertsPresenter presenter;
+    private ListPresenter presenter;
     private ListPresenterView view;
     private boolean onCreateHeaderCalled;
     private boolean onCreateNoResultsFoundCalled;
@@ -41,7 +41,6 @@ public class AdvertsPresenterTest {
 
         Mockito.doNothing().when(databaseMock);
 
-
         testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Advert.Condition.GOOD,"", new ArrayList<>(),null));
         testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Advert.Condition.GOOD,"", new ArrayList<>(),null));
         testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Advert.Condition.GOOD,"", new ArrayList<>(),null));
@@ -53,7 +52,7 @@ public class AdvertsPresenterTest {
     }
 
 
-    class MockPresenter extends AdvertsPresenter {
+    class MockPresenter extends ListPresenter {
         public MockPresenter(ListPresenterView view, DataModel dataModel) {
             super(view, dataModel);
         }
@@ -64,8 +63,13 @@ public class AdvertsPresenterTest {
         }
 
         @Override
-        public List<Advertisement> sort(List<Advertisement> adverts) {
-            return SortManager.getInstance().sortWithDefaultSorting(adverts);
+        public List sort(List data) {
+            return data;
+        }
+
+        @Override
+        public void onBindThumbnailViewAtPosition(int position, Object dataView) {
+
         }
     }
 
@@ -97,7 +101,6 @@ public class AdvertsPresenterTest {
         protected RecyclerView.ItemDecoration getSpacingDecorator() {
             return null;
         }
-
 
         @Nullable
         @Override

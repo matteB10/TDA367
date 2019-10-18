@@ -37,13 +37,11 @@ public class HomeFragment extends ListView implements AdapterView.OnItemSelected
     private HomePresenter presenter;
     private EditText searchField;
 
-
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.presenter = new HomePresenter(this, DependencyInjector.injectDataModel());
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        presenter.updateAdverts();
+        presenter.updateData();
         return v;
     }
 
@@ -84,7 +82,6 @@ public class HomeFragment extends ListView implements AdapterView.OnItemSelected
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
     }
-
 
     /**
      * Adds a listener for when the user performs a searchPerformed, reacts to when enter key is pressed

@@ -39,9 +39,7 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
-        presenter.bindViewHolderAtPosition(position, holder);
-
+        presenter.onBindThumbnailViewAtPosition(position, holder);
     }
 
     /**
