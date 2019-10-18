@@ -13,30 +13,19 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Utility class with functionality for Fetching data from Backend in form of a .json-file.
- * The .json-file must be placed in the assets-folder of the application
+ *
+ * Class which delegates work to either BackendReader or BackendWriter depending on which method call.
+ *
  */
 public class BackendDataHandler implements iBackend {
 
     /**
-     * Singleton that handles all data-fetching from firebase
-     * Called from repositories
+     * Contains a List of backendObservers which it injects into both BackendReader and BackendWriter to make sure model keeps up to date with the newest
+     * data. See documentation considering specific methods in respective class.
      */
-
-
-
-    private boolean isWritingImageToDatabase = false;
-    private boolean isWritingAdvertToDatabase = false;
     private final List<BackendObserver> backendObservers = new ArrayList<>();
     private final BackendReader backendReader = new BackendReader(backendObservers);
     private final BackendWriter backendWriter = new BackendWriter(backendObservers);
-
-
-
-    BackendDataHandler() {
-
-    }
-
     public void addBackendObserver(BackendObserver backendObserver) {
         this.backendObservers.add(backendObserver);
     }
@@ -54,7 +43,7 @@ public class BackendDataHandler implements iBackend {
 
     //Gets a list of the ids of the adverts the current user has marked as favourites
     public void getFavouriteIDs(String userID,DBMapCallback dbMapCallback) {
-        backendReader.getFavouriteIDs(userID,dbMapCallback);
+        backendReader.fetchFavouriteIDS(userID,dbMapCallback);
     }
 
     public void deleteIDFromFavourites(String id, String favouriteID) {
@@ -74,7 +63,7 @@ public class BackendDataHandler implements iBackend {
 
 
     public void getUserChats(String userID, DBCallback DBCallback, FailureCallback failureCallback) {
-        backendReader.getUserChats(userID, DBCallback, failureCallback);
+        backendReader.attachChatSnapshotListener(userID, DBCallback, failureCallback);
     }
 
 
@@ -108,11 +97,11 @@ public class BackendDataHandler implements iBackend {
 
     @Override
     public void getUserFromID(String userID, DBMapCallback dbMapCallback) {
-        backendReader.getUserFromID(userID, dbMapCallback);
+        backendReader.fetchUserFromID(userID, dbMapCallback);
     }
 
     public void getUser(DBMapCallback dbMapCallback) {
-        backendReader.getUser(dbMapCallback);
+        backendReader.fetchCurrentUser(dbMapCallback);
     }
 
     public void writeMessage(String uniqueChatID, Map<String, Object> messageMap) {
@@ -121,22 +110,15 @@ public class BackendDataHandler implements iBackend {
 
 
     public void getMessages(String uniqueChatID, DBCallback messageCallback) {
-        backendReader.getMessages(uniqueChatID, messageCallback);
+        backendReader.attachMessagesSnapshotListener(uniqueChatID, messageCallback);
     }
 
-    public void setUsername(String username, SuccessCallback successCallback) {
-        backendWriter.setUsername(username, successCallback);
-    }
 
 
     public void signOut() {
         backendWriter.signOut();
     }
 
-
-    /**
-     * Deleting an ad with the specific adID from the database
-     */
     public void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID) {
         backendWriter.deleteAd(chatReceiverAndUserIDMap, adIDAndUserID);
 

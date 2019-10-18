@@ -2,13 +2,9 @@ package com.masthuggis.boki.backend;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,26 +29,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
-
+/**
+ * BackendWriter is a Java class which communicates with the backend database through writing only. The database used currently is Googles Firebase Firestore.
+ */
 class BackendWriter {
-    private FirebaseStorage storage = FirebaseStorage.getInstance(); //Reference to Cloud Storage that holds images
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference mainRef = storage.getReference();
-    private StorageReference imagesRef = mainRef.child("images"); //Reference to storage location of images
+    private StorageReference imagesRef = mainRef.child("images");
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private final List<BackendObserver> backendObservers;
     private CollectionReference advertPath;
     private CollectionReference chatPath;
     private CollectionReference userPath;
 
-
-    private boolean isWritingImageToDatabase = false;
-    private boolean isWritingAdvertToDatabase = false;
-
+    /**
+     * The single constructor of the class which needs a list of backendobservers to make sure it updates the current backendobservers correctly.
+     *
+     * @param backendObservers
+     */
 
     BackendWriter(List<BackendObserver> backendObservers) {
-        //Reference to database that holds users and adverts
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         advertPath = db.collection("market");
         chatPath = db.collection("chats");
@@ -66,41 +66,10 @@ class BackendWriter {
         }
     }
 
-    private void notifyMessagesObserver() {
-        for (BackendObserver backendObserver : backendObservers) {
-            backendObserver.onMessagesChanged();
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-    void setUsername(String username, SuccessCallback successCallback) {
-        FirebaseUser user = auth.getCurrentUser();
-        if (user != null) {
-            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
-            user.updateProfile(profileUpdates).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "Username set.");
-                    successCallback.onSuccess();
-                } else {
-                    //TODO FAILURECALLBACK
-                }
-            });
-        }
-    }
-
-
-
-
+    /**
+     * Tries to create a new user depending on the parameters entered by the user using Firebases Authorization function. Depending on the success or failure of the database call sends
+     * back a success -or -failurecallback. If successful user data is stored in Firebase Firestore.
+     */
     void userSignUpAndSignIn(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback) {
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("email", email);
@@ -127,6 +96,9 @@ class BackendWriter {
 
     }
 
+    /**
+     * Signs in user through the authorization function offered by Firebase. Depending on its success sends a callback to tell the app to act accordingly.
+     */
     void userSignIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -136,17 +108,48 @@ class BackendWriter {
             }
         });
     }
+
+    /**
+     * Signs out from the application through the authorization function offered by Firebase.
+     */
     void signOut() {
         auth.signOut();
     }
 
-
-
-
+    /**
+     * Writes an advertisement to Firebase Firestore.
+     *
+     * @param imageFile Needs a file which is an image to upload to Firebase Storage.
+     * @param data      Uploads a datamap to Firebase Firestore which contains all needed information to
+     *                  create a new advertisement when the data is later fetched.
+     */
     void writeAdvertToFirebase(File imageFile, Map<String, Object> data) {
         uploadImageToFirebase(imageFile, (String) data.get("uniqueAdID"), () -> writeToDatabase(data));
 
     }
+
+
+    /**
+     * Private method which writes a datamap to Firebase Firestore containing all information needed to
+     * create an advertisement when fetched.
+     *
+     * @param data
+     */
+    private void writeToDatabase(Map<String, Object> data) {
+        advertPath.document((String) data.get("uniqueAdID"))
+                .set(data).addOnSuccessListener(aVoid -> {
+            Log.d(TAG, "DocumentSnapshot successfully written!");
+        })
+                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+    }
+
+    /**
+     * Updates the information of an advertisement stored in Firebase Firestore and Storage. Takes the uniqueAdvertID from the map supplied
+     * by the method call to find the pathway to where the data of this specific advertisement is stored.
+     *
+     * @param imageFile Updates the image stored in Firebase Storage.
+     * @param dataMap   Updates the datamap needed to create an advertisement when the data is later fetched.
+     */
 
     void updateAdToFirebase(File imageFile, Map<String, Object> dataMap) {
         String adID = (String) dataMap.get("uniqueAdID");
@@ -175,37 +178,27 @@ class BackendWriter {
                     }
                 });
     }
-    private void writeToDatabase(Map<String, Object> data) {
-        isWritingAdvertToDatabase = true;
-        advertPath.document((String) data.get("uniqueAdID"))
-                .set(data).addOnSuccessListener(aVoid -> {
-            Log.d(TAG, "DocumentSnapshot successfully written!");
-            isWritingAdvertToDatabase = false;
 
+    /**
+     * Helper method which uploads given image to Firebase Storage.
+     *
+     * @param imageFile
+     * @param uniqueAdID
+     * @param successCallback
+     */
 
-        })
-                .addOnFailureListener(e -> {
-                    Log.w(TAG, "Error writing document", e);
-                    isWritingAdvertToDatabase = false;
-                });
-    }
-
+    //TODO ARVID KOMMENTARER HÄR PLS.
     private void uploadImageToFirebase(File imageFile, String uniqueAdID, SuccessCallback successCallback) {
-        isWritingImageToDatabase = true;
         try {
             InputStream uploadStream = new FileInputStream(imageFile);
             UploadTask uploadTask = imagesRef.child(uniqueAdID).putStream(uploadStream);
+            //Handle errors here
             uploadTask.addOnSuccessListener(taskSnapshot -> {
-                isWritingImageToDatabase = false;
                 successCallback.onSuccess();
 
-            }).addOnFailureListener(e -> {
-                isWritingImageToDatabase = false;
-                //Handle errors here
-                e.printStackTrace();
-            }).addOnFailureListener(new OnFailureListener() {
+            }).addOnFailureListener(Throwable::printStackTrace).addOnFailureListener(new OnFailureListener() {
                 @Override
-                public void onFailure(@NonNull Exception e) {
+                public void onFailure(@Nonnull Exception e) {
 
                 }
             });
@@ -214,9 +207,9 @@ class BackendWriter {
         }
     }
 
-
-
-
+    /**
+     * Removes an advertisement from the user storage in Firebase Firestore through using the userID and advertID
+     */
     void removeAdFromFavourites(String adID, String userID) {
         userPath.document(userID).get().addOnCompleteListener(task -> {
             List<String> favourites = (List<String>) task.getResult().getData().get("favourites");
@@ -225,20 +218,29 @@ class BackendWriter {
         });
     }
 
-
+    /**
+     * Adds an advertisement to the user storage in Firebase Firestore through using the userID and advertID.
+     * First tries to update an already existing list of adverts in the users favourites directory. Throws a NPEx
+     * if it doesn't already exists. Catch block then creates a new list and then adds the initial ad as a favourite.
+     */
     void addAdToFavourites(String adID, String userID) {
         userPath.document(userID).get().addOnCompleteListener(task -> {
             try {
                 List<String> favourites = (List<String>) task.getResult().getData().get("favourites");
                 favourites.add(adID);
-                userPath.document(userID).update("favourites", favourites); //Should write updated favourites to firebase
-            } catch (NullPointerException e) { //Is thrown if users favourite-array is currently empty
+                userPath.document(userID).update("favourites", favourites);
+            } catch (NullPointerException e) {
                 List<String> favourites = new ArrayList<>();
                 favourites.add(adID);
-                userPath.document(userID).update("favourites", favourites); //Adds initial ad as user favourite
+                userPath.document(userID).update("favourites", favourites);
             }
         });
     }
+
+    /**
+     * Deletes advertisement from the users favourite directory in Firebase Firestore using the current userID
+     * and id of the advertisement.
+     */
     void deleteIDFromFavourites(String userID, String favouriteID) {
         userPath.document(userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -248,6 +250,13 @@ class BackendWriter {
             }
         });
     }
+
+    /**
+     * Helper method for removing favourite from users favourite directory in Firebase Firestore.
+     *
+     * @param favouriteID
+     * @param task
+     */
     private void deleteID(String favouriteID, Task<DocumentSnapshot> task) {
         DocumentSnapshot userData = task.getResult();
         String userID = (String) userData.get("userID");
@@ -256,6 +265,25 @@ class BackendWriter {
         userPath.document(userID).update("favourites", favourites);
     }
 
+
+    /**
+     * Creates a new chat between two users by writing a chatID to each users myConversations directory in Firebase
+     * Firestore. Then creates a chat in the chats directory in Firestore which contains the information needed
+     * to display current sender/receiver and communicating between users through knowing the user id.
+     *
+     * @param adOwnerID      ID of the owner of advertisement.
+     * @param otherUserID    ID of the current user.
+     * @param advertID       ID of the advertisement which is the topic of the chat.
+     * @param imageURL       URL of the image belonging to the discussed advertisement.
+     * @param stringCallback Returns a string as a callback, which in this case is the unique ID of the chat.
+     */
+
+    void createNewChat(String adOwnerID, String otherUserID, String advertID, String imageURL, stringCallback stringCallback) {
+        String uniqueChatID = UniqueIdCreator.getUniqueID();
+        Map<String, Object> chatMap = prepareChatMap(uniqueChatID);
+        Map<String, Object> messagesMap = prepareMessagesMap(adOwnerID, otherUserID, advertID, imageURL);
+        writeChatAndMessageData(adOwnerID, otherUserID, stringCallback, uniqueChatID, chatMap, messagesMap);
+    }
 
     private void writeChatAndMessageData(String adOwnerID, String otherUserID, stringCallback stringCallback, String uniqueChatID, Map<String, Object> chatMap, Map<String, Object> messagesMap) {
         DocumentReference dfSender = userPath.document(otherUserID).collection("myConversations").document(uniqueChatID);
@@ -269,12 +297,18 @@ class BackendWriter {
             });
         }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
+            public void onFailure(@Nonnull Exception e) {
 
             }
         });
     }
 
+    /**
+     * Prepares a map which is then written to Firebase Firestore containing the information needed to later
+     * create a chat when the information is fetched.
+     *
+     * @returns said map.
+     */
     private Map<String, Object> prepareChatMap(String uniqueChatID) {
         Map<String, Object> chatMap = new HashMap<>();
         chatMap.put("uniqueChatID", uniqueChatID);
@@ -282,6 +316,17 @@ class BackendWriter {
         return chatMap;
     }
 
+    /**
+     * Prepares a map which is written to Firebase Firestore containing information needed to later
+     * create messages between two users contained in a chat. The information is later used to create
+     * messages when fetched.
+     *
+     * @param adOwnerID
+     * @param otherUserID
+     * @param advertID
+     * @param imageURL
+     * @return
+     */
     private Map<String, Object> prepareMessagesMap(String adOwnerID, String otherUserID, String advertID, String imageURL) {
         Map<String, Object> messagesMap = new HashMap<>();
         messagesMap.put("userOneID", otherUserID);
@@ -291,27 +336,43 @@ class BackendWriter {
         return messagesMap;
     }
 
-    void createNewChat(String adOwnerID, String otherUserID, String advertID, String imageURL, stringCallback stringCallback) {
-        String uniqueChatID = UniqueIdCreator.getUniqueID();
-        Map<String, Object> chatMap = prepareChatMap(uniqueChatID);
-        Map<String, Object> messagesMap = prepareMessagesMap(adOwnerID, otherUserID, advertID, imageURL);
-        writeChatAndMessageData(adOwnerID, otherUserID, stringCallback, uniqueChatID, chatMap, messagesMap);
-    }
-
-
+    /**
+     * Writes a new message to the folder a specific chat(supplied by the parameter uniqueChatID)
+     * containing needed information to later create and display said message when the information is
+     * fetched.
+     *
+     * @param uniqueChatID Used to find the correct pathway to said chat.
+     * @param messageMap   Map containing necessary information.
+     */
     void writeMessage(String uniqueChatID, Map<String, Object> messageMap) {
         chatPath.document(uniqueChatID).collection("messages").document().set(messageMap).addOnSuccessListener(aVoid -> {
 
         }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
+            public void onFailure(@Nonnull Exception e) {
                 e.printStackTrace();
             }
         });
     }
 
+    /**
+     * Deleting an ad with the specific adID from the database. At the same time deletes all chats
+     * considering said advertisement for all users.
+     */
+    void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID) {
+        String adID = adIDAndUserID.get("adID");
+        String userID = adIDAndUserID.get("userID");
+        advertPath.document((adID)).delete();
+        makeReceiverChatInactive(chatReceiverAndUserIDMap, userID);
 
-    private void deleteChat(List<Map<String, String>> mapList, String adID, String userID) {
+    }
+
+    /**
+     * Sets the chats of all receivers to inactive so that the receivers are notified
+     * of the removal of the advertisement.
+     */
+
+    private void makeReceiverChatInactive(List<Map<String, String>> mapList, String userID) {
         Map<String, Object> updates = new HashMap<>();
         updates.put("isActive", false);
         for (Map<String, String> map : mapList) {
@@ -322,19 +383,15 @@ class BackendWriter {
         notifyChatObservers();
     }
 
+    /**
+     * Deletes the reference to the chat from the users myConversations directory
+     * @param userID
+     * @param chatID
+     */
     void removeChat(String userID, String chatID) {
         userPath.document(userID).collection("myConversations").document(chatID).delete();
 
     }
 
-    /**
-     * Deleting an ad with the specific adID from the database
-     */
-    void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID) {
-        String adID = adIDAndUserID.get("adID");
-        String userID = adIDAndUserID.get("userID");
-        advertPath.document((adID)).delete();
-        deleteChat(chatReceiverAndUserIDMap, adID, userID);
 
-    }
 }

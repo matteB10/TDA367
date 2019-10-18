@@ -234,14 +234,14 @@ public class DataModel implements BackendObserver {
     }
 
 
-    void initialAdvertFetch(SuccessCallback successCallback) {
+    private void initialAdvertFetch(SuccessCallback successCallback) {
         repository.initialAdvertFetch(advertisements -> {
             allAds = advertisements;
             successCallback.onSuccess();
         });
     }
 
-    void attachAdvertsObserver() {
+    private void attachAdvertsObserver() {
         repository.attachAdvertsObserver(advertisements -> {
             allAds = advertisements;
         });

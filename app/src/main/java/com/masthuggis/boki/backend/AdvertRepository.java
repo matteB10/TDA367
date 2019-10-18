@@ -17,6 +17,7 @@ import java.util.Map;
  * Class providing the functionality to convert data from backend into objects to be used
  * by the domain-layer of the application.
  * Data is fetched through the iBackend interface.
+ * For methods that are delegating, check the class which is delegated to for comments.
  */
 class AdvertRepository {
 
@@ -28,7 +29,11 @@ class AdvertRepository {
 
 
     /**
+     * Converts an advertisement to a datamap which contains all information needed to later
+     * create a new advertisement.
+     *
      * @param advertisement gets saved into firebase
+     * @param imageFile     image needed to later create URL for a remote storage location.
      */
 
     void saveAdvert(File imageFile, Advertisement advertisement) {
@@ -48,9 +53,11 @@ class AdvertRepository {
 
 
     void initialAdvertFetch(advertisementCallback advertisementCallback) {
-        Thread thread = new Thread(() -> backend.initialAdvertFetch(advertDataList -> {
-            extractAdvertsFromData(advertisementCallback, advertDataList);
-        }));
+        Thread thread = new Thread(() -> {
+            backend.initialAdvertFetch(advertDataList -> {
+                extractAdvertsFromData(advertisementCallback, advertDataList);
+            });
+        });
         thread.start();
     }
 
@@ -61,6 +68,12 @@ class AdvertRepository {
         thread.start();
     }
 
+    /**
+     * Returns a List of advertisements after converting data to advertisements through a callback. This is done so that
+     * the model isn't updated until the fetch is done.
+     *
+     * @param advertDataList contains the data needed to create new advertisements.
+     */
     private void extractAdvertsFromData(advertisementCallback advertisementCallback, List<Map<String, Object>> advertDataList) {
         List<Advertisement> allAds = new ArrayList<>();
         for (Map<String, Object> dataMap : advertDataList) {
@@ -69,6 +82,12 @@ class AdvertRepository {
         advertisementCallback.onCallback(allAds);
     }
 
+    /**
+     * Converts a dataMap into advertisements through a factory.
+     *
+     * @param dataMap a Map containing all information needed to create an advertisement
+     * @return an advertisement.
+     */
     private Advertisement retrieveAdvert(Map<String, Object> dataMap) {
         String title = "" + dataMap.get("title");
         String description = (String) dataMap.get("description");
@@ -83,7 +102,7 @@ class AdvertRepository {
         return AdFactory.createAd(datePublished, uniqueOwnerID, uniqueAdID, title, description, price, condition, imageUrl, tags, owner);
     }
 
-    void getUserFavourites(String userID,FavouriteIDsCallback favouriteIDsCallback) {
+    void getUserFavourites(String userID, FavouriteIDsCallback favouriteIDsCallback) {
         backend.getFavouriteIDs(userID, dataMap -> favouriteIDsCallback.onCallback((List<String>) dataMap.get("favourites")));
     }
 
@@ -109,13 +128,19 @@ class AdvertRepository {
         backend.removeAdFromFavourites(adID, userID);
     }
 
-    public void updateAdvert(File imageFile, Advertisement advertisement) {
+
+    void updateAdvert(File imageFile, Advertisement advertisement) {
         Map<String, Object> dataMap = new HashMap<>();
-        dataMap = mapAdData(dataMap, advertisement);
+        mapAdData(dataMap, advertisement);
         backend.updateAdToFirebase(imageFile, dataMap);
     }
 
-    private Map<String, Object> mapAdData(Map<String, Object> dataMap, Advertisement advertisement) {
+    /**
+     * Adds all data from an advertisement to a map.
+     * @param dataMap
+     * @param advertisement
+     */
+    private void mapAdData(Map<String, Object> dataMap, Advertisement advertisement) {
         dataMap.put("title", advertisement.getTitle());
         dataMap.put("description", advertisement.getDescription());
         dataMap.put("uniqueOwnerID", advertisement.getUniqueOwnerID());
@@ -125,7 +150,6 @@ class AdvertRepository {
         dataMap.put("uniqueAdID", advertisement.getUniqueID());
         dataMap.put("date", advertisement.getDatePublished());
         dataMap.put("advertOwner", advertisement.getOwner());
-        return dataMap;
     }
 
 }

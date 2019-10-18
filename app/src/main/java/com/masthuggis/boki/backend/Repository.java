@@ -114,7 +114,7 @@ public class Repository implements iRepository {
 
     @Override
     public void getUser(userCallback userCallback) {
-        userRepository.getUser(userCallback);
+        userRepository.getCurrentUser(userCallback);
     }
 
     @Override
