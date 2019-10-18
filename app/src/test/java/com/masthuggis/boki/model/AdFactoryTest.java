@@ -28,8 +28,6 @@ public class AdFactoryTest {
             new ArrayList<>(),
             "owner");
 
-    @Mock
-    private DataModel databaseMock;
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();

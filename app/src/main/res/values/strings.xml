@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">boki</string>
-    <string name="title_home">home</string>
+    <string name="app_name">Boki</string>
+    <string name="title_home">Home</string>
     <string name="title_profile">Mina Annonser</string>
-    <string name="title_messages">messages</string>
-    <string name="title_favorites">favorites</string>
-    <string name="title_new_ad">new ad</string>
+    <string name="title_messages">Messages</string>
+    <string name="title_favorites">Favorites</string>
+    <string name="title_new_ad">New ad</string>
 
     <string name="back">Tillbaka</string>
     <string name="settings">Inställningar</string>

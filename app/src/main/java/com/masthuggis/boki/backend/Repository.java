@@ -27,9 +27,9 @@ public class Repository implements iRepository {
     private UserRepository userRepository;
 
 
-    public Repository(iBackend backend) {
-        this.advertRepository = new AdvertRepository(backend);
-        this.userRepository = new UserRepository(backend);
+    Repository(iBackend backend) {
+        this.advertRepository = RepositoryFactory.createAdvertRepository(backend);
+        this.userRepository = RepositoryFactory.createUserRepository(backend);
     }
 
     public void saveAdvert(File imageFile, Advertisement ad) {
@@ -44,8 +44,8 @@ public class Repository implements iRepository {
         advertRepository.attachMarketListener(advertisementCallback);
     }
 
-    public void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID){
-        advertRepository.deleteAd(chatReceiverAndUserIDMap,adIDAndUserID);
+    public void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID) {
+        advertRepository.deleteAd(chatReceiverAndUserIDMap, adIDAndUserID);
     }
 
     public void addBackendObserver(BackendObserver backendObserver) {
@@ -83,14 +83,14 @@ public class Repository implements iRepository {
 
     @Override
     public void deleteIDFromFavourites(String id, String favouriteID) {
-        userRepository.deleteIDFromFavourites(id,favouriteID);
+        userRepository.deleteIDFromFavourites(id, favouriteID);
 
 
     }
 
     @Override
     public void updateAdvert(File imageFile, Advertisement ad) {
-        advertRepository.updateAdvert(imageFile,ad);
+        advertRepository.updateAdvert(imageFile, ad);
 
     }
 
@@ -99,8 +99,8 @@ public class Repository implements iRepository {
         userRepository.getMessages(uniqueChatID, messagesCallback);
     }
 
-    public void createNewChat(String adOwnerID, String adBuyerID, String advertID,String imageURL, stringCallback stringCallback) {
-        userRepository.createNewChat(adOwnerID, adBuyerID, advertID,imageURL, stringCallback);
+    public void createNewChat(String adOwnerID, String adBuyerID, String advertID, String imageURL, stringCallback stringCallback) {
+        userRepository.createNewChat(adOwnerID, adBuyerID, advertID, imageURL, stringCallback);
     }
 
     public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
@@ -119,12 +119,13 @@ public class Repository implements iRepository {
 
     @Override
     public void removeChat(String userID, String chatID) {
-        userRepository.removeChat(userID,chatID);
+        userRepository.removeChat(userID, chatID);
 
     }
+
     @Override
-    public void getUserFavourites(String userID,FavouriteIDsCallback favouriteIDsCallback) {
-        advertRepository.getUserFavourites(userID,favouriteIDsCallback);
+    public void getUserFavourites(String userID, FavouriteIDsCallback favouriteIDsCallback) {
+        advertRepository.getUserFavourites(userID, favouriteIDsCallback);
     }
 
 }

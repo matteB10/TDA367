@@ -2,6 +2,7 @@ package com.masthuggis.boki.model;
 
 import com.masthuggis.boki.backend.BackendFactory;
 import com.masthuggis.boki.backend.Repository;
+import com.masthuggis.boki.backend.RepositoryFactory;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.MarkedAsFavouriteCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
@@ -45,7 +46,7 @@ public class DataModel implements BackendObserver {
     }
 
     private void initBackend() {
-        repository = new Repository(BackendFactory.createBackend());
+        repository = RepositoryFactory.createRepository(BackendFactory.createBackend());
         repository.addBackendObserver(this);
         attachAdvertsObserver();
     }
@@ -77,6 +78,9 @@ public class DataModel implements BackendObserver {
         }
     }
 
+    public List<ChatObserver> getChatObservers() {
+        return this.chatObservers;
+    }
 
     public void addChatObserver(ChatObserver chatObserver) {
         this.chatObservers.add(chatObserver);
@@ -251,7 +255,7 @@ public class DataModel implements BackendObserver {
         return user.getId().equals(advertisement.getUniqueOwnerID());
     }
 
-    public void loggedOut() {
+    private void loggedOut() {
         this.user = null;
     }
 
@@ -344,11 +348,6 @@ public class DataModel implements BackendObserver {
     @Override
     public void onMessagesChanged() {
         notifyMessagesObserver();
-    }
-
-    @Override
-    public void onAdvertisementsChanged() {
-        notifyMarketAdvertisementObservers();
     }
 
     @Override

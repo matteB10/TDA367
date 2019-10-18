@@ -73,16 +73,6 @@ class BackendWriter {
     }
 
 
-
-
-
-
-
-
-
-
-
-
     void setUsername(String username, SuccessCallback successCallback) {
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
