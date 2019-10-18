@@ -2,7 +2,7 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.model.sorting.SortManager;
+import com.masthuggis.boki.utils.sorting.SortManager;
 import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.List;

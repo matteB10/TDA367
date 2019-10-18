@@ -42,6 +42,7 @@ public class HomeFragment extends ListView implements AdapterView.OnItemSelected
         this.presenter = new HomePresenter(this, DependencyInjector.injectDataModel());
         View v = super.onCreateView(inflater, container, savedInstanceState);
         presenter.updateData();
+        setAndActivatePullToRefreshHandler(this.presenter::updateFromUserInteraction);
         return v;
     }
 
@@ -58,12 +59,6 @@ public class HomeFragment extends ListView implements AdapterView.OnItemSelected
     @Override
     protected RecyclerView.ItemDecoration getSpacingDecorator() {
         return new GridSpacingItemDecoration(2, 40, true);
-    }
-
-    @Nullable
-    @Override
-    protected PullToRefreshCallback optionalPullToRefreshHandler() {
-        return () -> presenter.updateFromUserInteraction();
     }
 
     @Override

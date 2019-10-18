@@ -49,12 +49,6 @@ public class ProfileFragment extends ListView implements ProfilePresenter.View {
         return new GridSpacingItemDecoration(2, 40, true);
     }
 
-    @Nullable
-    @Override
-    protected PullToRefreshCallback optionalPullToRefreshHandler() {
-        return null;
-    }
-
     @Override
     protected View onCreateHeaderLayout() {
         View header = getLayoutInflater().inflate(R.layout.profile_header, null);

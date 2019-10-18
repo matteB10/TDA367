@@ -59,12 +59,6 @@ public class ChatFragment extends ListView implements ChatPresenter.View {
         return ViewCreator.createSimpleText(getContext(), getString(R.string.noChatsFound));
     }
 
-    @Nullable
-    @Override
-    protected PullToRefreshCallback optionalPullToRefreshHandler() {
-        return null;
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();

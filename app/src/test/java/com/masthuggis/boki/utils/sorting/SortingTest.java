@@ -1,27 +1,100 @@
-package com.masthuggis.boki;
-
-import androidx.test.runner.AndroidJUnit4;
+package com.masthuggis.boki.utils.sorting;
 
 import com.masthuggis.boki.backend.MockRepository;
+import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.utils.sorting.SortFactory;
-import com.masthuggis.boki.utils.sorting.SortStrategy;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(AndroidJUnit4.class)
 public class SortingTest {
     private List<Advertisement> adverts = new ArrayList<>();
 
+
+    {
+        "books": [
+        {
+            "title": "Diskret",
+                "author": "Me",
+                "edition": 1,
+                "isbn": 0,
+                "yearPublished": 2019,
+                "price": 180,
+                "condition": "GOOD",
+                "date": "01/01/18 10:12:55"
+        }, {
+        "title": "Calculus",
+                "author": "A.ADAMS",
+                "edition": 8,
+                "isbn" : 0,
+                "yearPublished" : 2017,
+                "price" : 450,
+                "condition" : "OK",
+                "date": "01/11/18 10:12:55"
+    }, {
+        "title" : "Linjär Algebra",
+                "author" : "Stefan Lemurell",
+                "edition" : 1,
+                "isbn" : 0,
+                "yearPublished" : 2016,
+                "price" : 250,
+                "condition" : "GOOD",
+                "date": "01/12/18 10:12:55"
+    }, {
+        "title" : "Arikitektur",
+                "author" : "Stefan Lemurell",
+                "edition" : 1,
+                "isbn" : 0,
+                "yearPublished" : 2016,
+                "price" : 300,
+                "condition" : "GOOD",
+                "date": "01/01/19 10:12:55"
+    }, {
+        "title" : "Design",
+                "author" : "Stefan Lemurell",
+                "edition" : 1,
+                "isbn" : 0,
+                "yearPublished" : 2016,
+                "price" : 250,
+                "condition" : "OK",
+                "date": "02/01/19 10:12:55",
+                "userTags" : [
+        "Cool"
+        ]
+    }, {
+        "title" : "Clean Code",
+                "author" : "Robert C. Martin",
+                "edition" : 1,
+                "isbn" : "9780132350884",
+                "yearPublished" : 2008,
+                "price" : 200,
+                "condition" : "NEW",
+                "date": "03/01/19 08:12:55",
+                "preDefinedTags" : [
+        "IT/Data"
+      ],
+        "userTags" : [
+        "Programmering", "Objektorientering", "Software Engineering", "Programvaruteknik"
+      ]
+    }
+  ]
+    }
+
     @Before
     public void before() {
+        String date = "01/01/18 10:12:55";
+
+        adverts = new ArrayList<>(
+                Arrays.asList(
+                        AdFactory.createAd(date, "user1", "id1", "Diskret", )
+                )
+        );
         adverts = MockRepository.getInstance().getLocalJSONAds();
     }
 
@@ -58,7 +131,7 @@ public class SortingTest {
         sort(SortFactory.getHighestPriceSorting());
 
         assertEquals(Long.toString(adverts.get(0).getPrice()), "450");
-        assertEquals(Long.toString(adverts.get(adverts.size()-1).getPrice()), "180");
+        assertEquals(Long.toString(adverts.get(adverts.size() - 1).getPrice()), "180");
     }
 
     @Test
@@ -66,7 +139,7 @@ public class SortingTest {
         sort(SortFactory.getLowestPriceSorting());
 
         assertEquals(Long.toString(adverts.get(0).getPrice()), "180");
-        assertEquals(Long.toString(adverts.get(adverts.size()-1).getPrice()), "450");
+        assertEquals(Long.toString(adverts.get(adverts.size() - 1).getPrice()), "450");
     }
 
     @Test

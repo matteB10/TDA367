@@ -44,12 +44,6 @@ public class FavoritesFragment extends ListView {
         return new GridSpacingItemDecoration(2, 40, true);
     }
 
-    @Nullable
-    @Override
-    protected PullToRefreshCallback optionalPullToRefreshHandler() {
-        return null;
-    }
-
     @Override
     protected View onCreateHeaderLayout() {
         return ViewCreator.createHeader(getActivity(), getString(R.string.yourFavorites));
