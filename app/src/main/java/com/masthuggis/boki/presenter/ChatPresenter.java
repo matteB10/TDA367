@@ -15,32 +15,46 @@ import java.util.stream.Collectors;
  * ChatPresenter is the presenter class for the view called ChatFragment.
  */
 
-public class ChatPresenter implements ChatObserver {
+public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> extends AdvertsPresenter<iChat, ChatThumbnailView> implements ChatObserver {
 
-    private List<iChat> chats;
-    private View view;
-    private DataModel dataModel;
+    private final T view;
 
-
-    public ChatPresenter(View view, DataModel dataModel) {
+    public ChatPresenter(T view, DataModel dataModel) {
+        super(view, dataModel);
         this.view = view;
-        this.dataModel = dataModel;
-        this.view.showLoadingScreen();
-        chats = this.dataModel.getUserChats();
-        view.showUserChats(this);
-        this.view.hideLoadingScreen();
         checkIfChatsAreActive();
-        this.chats = this.dataModel.getUserChats();
-        sortChatsAccordingToLastMessageSent();
         this.dataModel.addChatObserver(this);
     }
 
+    @Override
+    public List<iChat> getData() {
+        return super.dataModel.getUserChats();
+    }
+
+    @Override
+    public List<iChat> sort(List<iChat> adverts) {
+        return sortChatsAccordingToLastMessageSent(adverts);
+    }
+
+    @Override
+    public void onBindThumbnailViewAtPosition(int position, ChatThumbnailView thumbnailView) {
+        List<iChat> chats = getCurrentDisplayedAds();
+        if (chats == null || chats.size() < position) {
+            return;
+        }
+        iChat c = chats.get(position);
+        String str = formatTimeLastMessageSent(c.timeLastMessageSent());
+        thumbnailView.setDateTextView(str);
+        thumbnailView.setUserTextView(c.getReceiverName(dataModel.getUserID()));
+        thumbnailView.setChatID(c.getChatID());
+        thumbnailView.setMessageImageView(c.getImageURL());
+    }
+
     private void checkIfChatsAreActive() {
-        for (iChat chat : chats) {
+        for (iChat chat : getCurrentDisplayedAds()) {
             if (!(chat.isActive())) {
                 view.displayToast(chat.getReceiverName(dataModel.getUserID()));
                 dataModel.removeChat(dataModel.getUserID(), chat.getChatID());
-
             }
         }
     }
@@ -48,28 +62,14 @@ public class ChatPresenter implements ChatObserver {
     /**
      * Depending on which position of the recyclerview is pressed, different messagesScreens are displayed.
      */
-
+    @Override
     public void onRowPressed(String chatID) {
-
-        for (iChat chat : chats) {
+        for (iChat chat : getCurrentDisplayedAds()) {
             if (chat.getChatID().equals(chatID)) {
                 view.showMessagesScreen(chatID);
                 return;
-
             }
         }
-    }
-
-    public void bindViewHolderAtPosition(int position, ChatThumbnailView holder) {
-        if (chats == null ||chats.size() < position) {
-            return;
-        }
-        iChat c = chats.get(position);
-        String str = formatTimeLastMessageSent(c.timeLastMessageSent());
-        holder.setDateTextView(str);
-        holder.setUserTextView(c.getReceiverName(dataModel.getUserID()));
-        holder.setChatID(c.getChatID());
-        holder.setMessageImageView(c.getImageURL());
     }
 
     private String formatTimeLastMessageSent(long l) {
@@ -86,24 +86,12 @@ public class ChatPresenter implements ChatObserver {
         return st;
     }
 
-    private void sortChatsAccordingToLastMessageSent() {
+    private List<iChat> sortChatsAccordingToLastMessageSent(List<iChat> chats) {
         List<iChat> sorted = new ArrayList<>(chats).stream()
                 .sorted((adOne, adTwo) -> ((int) (adOne.timeLastMessageSent() - adTwo.timeLastMessageSent())))
                 .collect(Collectors.toList());
         Collections.reverse(sorted);
-
-        chats = sorted;
-    }
-
-    /**
-     * Used by the recyclerview to decide how many items to display in the view.
-     */
-
-    public int getItemCount() {
-        if (chats != null) {
-            return chats.size();
-        }
-        return 0;
+        return sorted;
     }
 
     /**
@@ -111,11 +99,12 @@ public class ChatPresenter implements ChatObserver {
      */
     @Override
     public void onChatUpdated() {
+        super.updateAdverts();
+        /*
         this.chats = dataModel.getUserChats();
         sortChatsAccordingToLastMessageSent();
         view.updateThumbnails();
-
-
+         */
     }
 
     public void onDestroy() {
@@ -129,20 +118,9 @@ public class ChatPresenter implements ChatObserver {
         return ClickDelayHelper.canProceedWithTapAction();
     }
 
-
     public interface View {
-        void showLoadingScreen();
-
-        void showThumbnails(ChatPresenter chatPresenter);
-
-        void hideLoadingScreen();
-
         void showMessagesScreen(String chatID);
 
-        void showUserChats(ChatPresenter chatPresenter);
-
         void displayToast(String displayName);
-        void updateThumbnails();
-
     }
 }

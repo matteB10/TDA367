@@ -1,10 +1,7 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.ClickDelayHelper;
-import com.masthuggis.boki.utils.StylingHelper;
-import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +11,11 @@ import java.util.List;
  * method pattern is used to make the concrete implementations able to implement their unique
  * way to get data and sort.
  */
-public abstract class AdvertsPresenter implements IProductsPresenter {
+public abstract class AdvertsPresenter<T, U> implements IProductsPresenter<U> {
 
     protected ListPresenterView view;
     protected final DataModel dataModel;
-    private List<Advertisement> adverts;
+    private List<T> adverts;
 
     AdvertsPresenter(ListPresenterView view, DataModel dataModel) {
         this.view = view;
@@ -31,7 +28,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
      *
      * @param adverts the updated adverts lists that will be displayed.
      */
-    void updateAdverts(List<Advertisement> adverts) {
+    void updateAdverts(List<T> adverts) {
         if (adverts == null || view == null) {
             return;
         }
@@ -52,7 +49,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
      * Sorts adverts and tells the view to update UI.
      * @param adverts the updated adverts lists that will be displayed.
      */
-    void updateAdverts(List<Advertisement> adverts, boolean sort) {
+    void updateAdverts(List<T> adverts, boolean sort) {
         if (adverts == null || view == null) {
             return;
         }
@@ -87,18 +84,18 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
     /**
      * Get adverts currently showed in view
      */
-    protected List<Advertisement> getCurrentDisplayedAds() {
+    protected List<T> getCurrentDisplayedAds() {
         return adverts;
     }
 
-    void setCurrentDisplayedAds(List<Advertisement> adverts) {
+    void setCurrentDisplayedAds(List<T> adverts) {
         this.adverts = adverts;
     }
 
     /**
      * Concrete implementations implements this to call their respective data source.
      */
-    public abstract List<Advertisement> getData();
+    public abstract List<T> getData();
 
     /**
      * Concrete implementations provides their desired way of sorting. If no sorting is desired,
@@ -107,7 +104,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
      * @param adverts list of adverts to be sorted
      * @return
      */
-    public abstract List<Advertisement> sort(List<Advertisement> adverts);
+    public abstract List<T> sort(List<T> adverts);
 
     /**
      * Binds each recyclerview item by setting the fields of ThumbnailView. It asks for the desired
@@ -119,24 +116,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
      * @param thumbnailView
      */
     @Override
-    public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
-        if (requestedPositionIsTooLarge(position)) {
-            return;
-        }
-       /* if(!activeFilterOrSearch() && isFirstThumbnailToBeDisplayed(position)){
-            adverts = sort(adverts);
-        }*/
-
-        Advertisement a = adverts.get(position);
-        thumbnailView.setId(a.getUniqueID());
-        thumbnailView.setTitle(a.getTitle());
-        thumbnailView.setPrice(a.getPrice());
-        setCondition(a, thumbnailView);
-        if (a.getImageUrl() != null) {
-            thumbnailView.setImageURL(a.getImageUrl());
-        }
-    }
-
+    public abstract void onBindThumbnailViewAtPosition(int position, U thumbnailView);
 
     /**
      * Returns of the number of adverts to be rendered in the list. If the list is empty or not defined
@@ -183,19 +163,5 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
      */
     private boolean canProceedWithTapAction() {
         return ClickDelayHelper.canProceedWithTapAction();
-    }
-
-    private void setCondition(Advertisement a, ThumbnailView thumbnailView) {
-        int drawable = StylingHelper.getConditionDrawable(a.getCondition());
-        int text = StylingHelper.getConditionText(a.getCondition());
-        thumbnailView.setCondition(text, drawable);
-    }
-
-    private boolean requestedPositionIsTooLarge(int position) {
-        return adverts.size() <= position;
-    }
-
-    private boolean isFirstThumbnailToBeDisplayed(int position) {
-        return position == 0;
     }
 }

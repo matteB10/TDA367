@@ -79,6 +79,7 @@
     <string name="putExtraToastKey">toast</string>
     <string name="noFavoritesFound">Du har inga favoriter sparade ännu. För att spara en favorit gå in på en annons och tryck på hjärtat.</string>
     <string name="noAdvertsInMarketFound">Det finns inga annonser att visa. Har du möjligen aktiverat för många filter?</string>
+    <string name="noChatsFound">Du har inga aktiva chattar. För att kontakta en säljare öppna en annons och tryck på kontakta ägaren.</string>
 
     <string name="searchHint">Sök efter titlar...</string>
     <string name="sign_out">Logga ut</string>

@@ -37,8 +37,6 @@ public class HomeFragment extends ListView implements AdapterView.OnItemSelected
     private HomePresenter presenter;
     private EditText searchField;
 
-
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.presenter = new HomePresenter(this, DependencyInjector.injectDataModel());

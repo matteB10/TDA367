@@ -5,6 +5,7 @@ import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.sorting.SortManager;
 import com.masthuggis.boki.utils.Filter;
 import com.masthuggis.boki.utils.SearchHelper;
+import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  * interface. It displays all the market adverts with the option to sort and search.
  * It is an observer of the market so it can update its data accordingly.
  */
-public final class HomePresenter extends AdvertsPresenter {
+public final class HomePresenter extends AdvertsPresenter<Advertisement, ThumbnailView> {
 
     private final ListPresenterView view;
     private int selectedSortOption = 0;
@@ -40,6 +41,7 @@ public final class HomePresenter extends AdvertsPresenter {
         }
         return getCurrentDisplayedAds();
     }
+
 
     /**
      * When a search is performed it will display all the available adverts if the search field
@@ -98,7 +100,10 @@ public final class HomePresenter extends AdvertsPresenter {
 
     public void updateFromUserInteraction() {
         super.updateAdverts();
+    }
 
-
+    @Override
+    public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
+        AdvertsPresenterHelper.onBindThumbnailViewAtPosition(position, thumbnailView, getCurrentDisplayedAds());
     }
 }

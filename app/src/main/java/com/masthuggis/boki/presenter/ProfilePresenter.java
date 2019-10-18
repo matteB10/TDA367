@@ -3,6 +3,7 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.sorting.SortManager;
+import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * accordingly.
  * @param <T>
  */
-public final class ProfilePresenter<T extends ListPresenterView & ProfilePresenter.View> extends AdvertsPresenter {
+public final class ProfilePresenter<T extends ListPresenterView & ProfilePresenter.View> extends AdvertsPresenter<Advertisement, ThumbnailView> {
 
     private final T profileView;
 
@@ -39,5 +40,10 @@ public final class ProfilePresenter<T extends ListPresenterView & ProfilePresent
 
     public interface View {
         void showLoginScreen();
+    }
+
+    @Override
+    public void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView) {
+        AdvertsPresenterHelper.onBindThumbnailViewAtPosition(position, thumbnailView, getCurrentDisplayedAds());
     }
 }
