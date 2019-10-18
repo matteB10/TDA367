@@ -30,7 +30,7 @@ public class ChatPresenter implements ChatObserver {
         view.showUserChats(this);
         this.view.hideLoadingScreen();
         checkIfChatsAreActive();
-        this.chats = this.dataModel.getUserChats();
+       // this.chats = this.dataModel.getUserChats();
         sortChatsAccordingToLastMessageSent();
         this.dataModel.addChatObserver(this);
     }
@@ -61,7 +61,7 @@ public class ChatPresenter implements ChatObserver {
     }
 
     public void bindViewHolderAtPosition(int position, ChatThumbnailView holder) {
-        if (chats == null ||chats.size() < position) {
+        if (chats == null || chats.size() < position) {
             return;
         }
         iChat c = chats.get(position);
@@ -73,11 +73,11 @@ public class ChatPresenter implements ChatObserver {
     }
 
     private String formatTimeLastMessageSent(long l) {
-        if(l ==0){
+        if (l == 0) {
             return "";
         }
         String str = Long.toString(l);
-        if(str.length()> 12){
+        if (str.length() > 12) {
             return "Invalid time format.";
         }
         char[] cArr = str.toCharArray();
@@ -112,6 +112,7 @@ public class ChatPresenter implements ChatObserver {
     @Override
     public void onChatUpdated() {
         this.chats = dataModel.getUserChats();
+        checkIfChatsAreActive();
         sortChatsAccordingToLastMessageSent();
         view.updateThumbnails();
 
@@ -142,6 +143,7 @@ public class ChatPresenter implements ChatObserver {
         void showUserChats(ChatPresenter chatPresenter);
 
         void displayToast(String displayName);
+
         void updateThumbnails();
 
     }
