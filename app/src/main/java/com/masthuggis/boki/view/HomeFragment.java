@@ -30,25 +30,7 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
     private HomePresenter presenter;
     private EditText searchField;
 
-    /*
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, container, savedInstanceState);
-       // collectData();
-        return v;
-    }*/
-
-    /**
-     * Checks for information about previous fragment is set in arguments
-
-    private void collectData() {
-        if (this.getArguments() != null) {
-            String prevFragment = (String) this.getArguments().get("prevFragment");
-            if (prevFragment.equals("filterFragment")) {
-                presenter.applyFilters(presenter.getData());
-            }
-        }
-    }*/
+    
 
     @Override
     protected AdvertsPresenter getPresenter() {
