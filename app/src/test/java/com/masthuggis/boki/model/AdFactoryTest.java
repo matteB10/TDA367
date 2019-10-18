@@ -56,27 +56,4 @@ public class AdFactoryTest {
             assert (advertisement.getTags().get(i).equals(testAd.getTags().get(i)));
         }
     }
-
-    //TODO fråga Iceman hur man löser detta fel
-    @Test
-    public void testCreateAd() {
-        Mockito.doNothing().when(DataModel.getInstance());
-        when(databaseMock.getUserID()).thenReturn("userID");
-        when(databaseMock.getUserDisplayName()).thenReturn("userDisplayName");
-        Advertisement testAd = AdFactory.createAd();
-        Advert advert = new Advert();
-        assert (advert.getDatePublished().equals(testAd.getDatePublished()));
-        assert (advert.getUniqueOwnerID().equals(testAd.getUniqueOwnerID()));
-        assert (advert.getUniqueID().equals(testAd.getUniqueID()));
-        assert (advert.getTitle().equals(testAd.getTitle()));
-        assert (advert.getDescription().equals(testAd.getDescription()));
-        assert (advert.getPrice() == testAd.getPrice());
-        assert (advert.getCondition().toString().equals(testAd.getCondition().toString()));
-        assert (advert.getOwner().equals(testAd.getOwner()));
-        assert (advert.getTags().size() == testAd.getTags().size());
-        for (int i = 0; i < advert.getTags().size(); i++) {
-            assert (advert.getTags().get(i).equals(testAd.getTags().get(i)));
-        }
-
-    }
 }

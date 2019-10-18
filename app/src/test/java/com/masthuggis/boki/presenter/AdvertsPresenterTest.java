@@ -3,6 +3,7 @@ package com.masthuggis.boki.presenter;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.model.AdFactory;
@@ -83,9 +84,20 @@ public class AdvertsPresenterTest {
         }
 
         @Override
-        protected AdvertsPresenter getPresenter() {
+        protected RecyclerView.Adapter getAdapter() {
             return null;
         }
+
+        @Override
+        protected RecyclerView.LayoutManager getLayoutManager() {
+            return null;
+        }
+
+        @Override
+        protected RecyclerView.ItemDecoration getSpacingDecorator() {
+            return null;
+        }
+
 
         @Nullable
         @Override
