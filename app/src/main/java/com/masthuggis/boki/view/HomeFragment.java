@@ -11,8 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -20,6 +20,7 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.HomePresenter;
+import com.masthuggis.boki.utils.ViewCreator;
 
 /**
  * Home page displaying all the adverts that have been published to the market.
@@ -30,14 +31,21 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
     private HomePresenter presenter;
     private EditText searchField;
 
-    
+
 
     @Override
     protected AdvertsPresenter getPresenter() {
         if (presenter == null) {
             this.presenter = new HomePresenter(this, DependencyInjector.injectDataModel());
         }
+
         return presenter;
+    }
+
+    @Nullable
+    @Override
+    protected PullToRefreshCallback optionalPullToRefreshHandler() {
+        return () -> presenter.updateFromUserInteraction();
     }
 
     @Override
@@ -49,13 +57,13 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         return header;
     }
 
-    private Spinner setupSortSpinner(View view) {
+    private void setupSortSpinner(View view) {
         Spinner spinner = view.findViewById(R.id.sortPickerSpinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, presenter.getSortOptions());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-        return spinner;
+
     }
 
 
@@ -96,8 +104,7 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
 
     @Override
     protected View onCreateNoResultsFoundLayout() {
-        // TODO: implement
-        return new TextView(getActivity());
+        return ViewCreator.createSimpleText(getActivity(), getString(R.string.noAdvertsInMarketFound));
     }
 
     private void setFilterButtonListener(View view) {
@@ -137,16 +144,6 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void showNoThumbnailsAvailableScreen() {
-        // TODO: implement
-    }
-
-    @Override
-    public void hideNoThumbnailsAvailableScreen() {
-        // TODO: implement
     }
 
     /**

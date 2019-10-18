@@ -97,8 +97,7 @@ public final class HomePresenter extends AdvertsPresenter {
     }
 
     public void updateFromUserInteraction() {
-        selectedSortOption = 0;
-        //super.updateAdverts();
+        super.updateAdverts();
 
 
     }

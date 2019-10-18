@@ -10,21 +10,33 @@ public class MainPresenter {
     public MainPresenter(View view, DataModel dataModel) {
         this.view = view;
         this.dataModel = dataModel;
-        dataModel.initUser(new SuccessCallback() {
-            @Override
-            public void onSuccess() {
-                if (dataModel.isLoggedIn()) {
-                    view.showMainScreen();
+    }
+
+    public void init(boolean favouriteNav) {
+        view.hideBottomNavBar();
+        if (dataModel.isLoggedIn()) {
+            dataModel.initUser(() -> {
+                if (favouriteNav) {
+                    view.showFavouritesScreen();
                 } else {
-                    view.showSignInScreen();
+                    view.showMainScreen();
                 }
-            }
-        });
+                view.showBottomNavBar();
+            });
+        } else {
+            view.showSignInScreen();
+        }
     }
 
     public interface View {
         void showSignInScreen();
 
         void showMainScreen();
+
+        void showFavouritesScreen();
+
+        void hideBottomNavBar();
+
+        void showBottomNavBar();
     }
 }

@@ -76,7 +76,7 @@ public class CreateAdPresenterTest {
     @Test
     public void testTitleChanged() {
         presenter.titleChanged("new title");
-        assertTrue(presenter.getAdvertisement().getTitle() == "new title");
+        assertTrue(presenter.getAdvertisement().getTitle().equals("new title"));
 
     }
 
@@ -206,5 +206,10 @@ public class CreateAdPresenterTest {
 
         @Override
         public void setTags(List<String> tags) { }
+
+        @Override
+        public void displayNotFoundToast(String toast) {
+
+        }
     }
 }

@@ -1,7 +1,10 @@
 package com.masthuggis.boki.view;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
@@ -22,6 +25,12 @@ public class FavoritesFragment extends AdvertsView implements AdvertsPresenterVi
         return presenter;
     }
 
+    @Nullable
+    @Override
+    protected PullToRefreshCallback optionalPullToRefreshHandler() {
+        return null;
+    }
+
     @Override
     protected View onCreateHeaderLayout() {
         return ViewCreator.createHeader(getActivity(), getString(R.string.yourFavorites));
@@ -30,5 +39,13 @@ public class FavoritesFragment extends AdvertsView implements AdvertsPresenterVi
     @Override
     protected View onCreateNoResultsFoundLayout() {
         return ViewCreator.createSimpleText(getActivity(), getString(R.string.noFavoritesFound));
+    }
+
+    @Override
+    public void showDetailsScreen(String id) {
+        Intent intent = new Intent(getContext(), DetailsActivity.class);
+        intent.putExtra("advertID", id);
+        intent.putExtra("fromFavourites", true);
+        startActivity(intent);
     }
 }

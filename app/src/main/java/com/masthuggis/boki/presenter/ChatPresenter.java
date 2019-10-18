@@ -29,6 +29,13 @@ public class ChatPresenter implements ChatObserver {
         chats = this.dataModel.getUserChats();
         view.showUserChats(this);
         this.view.hideLoadingScreen();
+        checkIfChatsAreActive();
+        this.chats = this.dataModel.getUserChats();
+        sortChatsAccordingToLastMessageSent();
+        this.dataModel.addChatObserver(this);
+    }
+
+    private void checkIfChatsAreActive() {
         for (iChat chat : chats) {
             if (!(chat.isActive())) {
                 view.displayToast(chat.getReceiverName(dataModel.getUserID()));
@@ -36,9 +43,6 @@ public class ChatPresenter implements ChatObserver {
 
             }
         }
-        this.chats = this.dataModel.getUserChats();
-        sortChatsAccordingToLastMessageSent();
-        this.dataModel.addChatObserver(this);
     }
 
     /**
@@ -61,15 +65,11 @@ public class ChatPresenter implements ChatObserver {
             return;
         }
         iChat c = chats.get(position);
-
-
         String str = formatTimeLastMessageSent(c.timeLastMessageSent());
         holder.setDateTextView(str);
         holder.setUserTextView(c.getReceiverName(dataModel.getUserID()));
         holder.setChatID(c.getChatID());
         holder.setMessageImageView(c.getImageURL());
-
-
     }
 
     private String formatTimeLastMessageSent(long l) {
@@ -77,6 +77,9 @@ public class ChatPresenter implements ChatObserver {
             return "";
         }
         String str = Long.toString(l);
+        if(str.length()> 12){
+            return "Invalid time format.";
+        }
         char[] cArr = str.toCharArray();
         String st = "" + cArr[6] + cArr[7] + "." + cArr[8] + cArr[9] + "." + cArr[10] + cArr[11]
                 + " " + cArr[4] + cArr[5] + "/" + cArr[2] + cArr[3] + " - " + cArr[0] + cArr[1];

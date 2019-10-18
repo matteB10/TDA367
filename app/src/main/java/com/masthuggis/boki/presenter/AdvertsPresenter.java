@@ -48,7 +48,6 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
 
             this.adverts = sort(adverts);
         }
-
         view.hideLoadingScreen();
         view.updateThumbnails();
     }
@@ -160,16 +159,16 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
     /**
      * Asks the view to display the details view of the view that was pressed if the tap is valid.
      *
-     * @param uniqueIDoFAdvert
+     * @param uniqueAdvertID
      */
     @Override
-    public void onRowPressed(String uniqueIDoFAdvert) {
+    public void onRowPressed(String uniqueAdvertID) {
         if (view == null) {
             return;
         }
 
         if (canProceedWithTapAction()) {
-            view.showDetailsScreen(uniqueIDoFAdvert);
+            view.showDetailsScreen(uniqueAdvertID);
         }
     }
 

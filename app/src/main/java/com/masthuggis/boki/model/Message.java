@@ -5,14 +5,14 @@ public class Message implements iMessage {
     private long timeSent;
     private String senderID;
 
-    public Message(String message, long timeSent, String senderID) {
+    Message(String message, long timeSent, String senderID) {
         this.message= message;
         this.timeSent=timeSent;
         this.senderID=senderID;
     }
 
-    public String setMessage() {
-        return this.message;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     @Override
@@ -26,8 +26,7 @@ public class Message implements iMessage {
     }
 
     @Override
-    public String getSenderID(){
+    public String getSenderID() {
         return this.senderID;
     }
-
 }
