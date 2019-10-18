@@ -13,12 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
-import com.masthuggis.boki.presenter.ListPresenterView;
 import com.masthuggis.boki.presenter.FavouritesPresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 import com.masthuggis.boki.utils.ViewCreator;
 
-public class FavoritesFragment extends ListView implements ListPresenterView {
+public class FavoritesFragment extends ListView {
 
     private FavouritesPresenter presenter;
 
