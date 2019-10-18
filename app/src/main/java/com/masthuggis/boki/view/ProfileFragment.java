@@ -6,12 +6,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.AdvertsPresenterView;
 import com.masthuggis.boki.presenter.ProfilePresenter;
+import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 import com.masthuggis.boki.utils.ViewCreator;
 
 /**
@@ -24,9 +27,24 @@ public class ProfileFragment extends AdvertsView implements ProfilePresenter.Vie
     @Override
     protected AdvertsPresenter getPresenter() {
         if (presenter == null) {
-            this.presenter = new ProfilePresenter(this, DependencyInjector.injectDataModel());
+            presenter = new ProfilePresenter(this, DependencyInjector.injectDataModel());
         }
         return presenter;
+    }
+
+    @Override
+    protected RecyclerView.Adapter getAdapter() {
+        return new ProductsRecyclerViewAdapter(getContext(), presenter);
+    }
+
+    @Override
+    protected RecyclerView.LayoutManager getLayoutManager() {
+        return new GridLayoutManager(getContext(), 2);
+    }
+
+    @Override
+    protected RecyclerView.ItemDecoration getSpacingDecorator() {
+        return new GridSpacingItemDecoration(2, 40, true);
     }
 
     @Nullable
