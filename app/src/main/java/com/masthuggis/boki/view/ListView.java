@@ -10,11 +10,16 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.ListPresenterView;
+import com.masthuggis.boki.utils.GridSpacingItemDecoration;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Abstract class to be used by views wanting to display a list of adverts.
@@ -23,6 +28,8 @@ public abstract class ListView extends Fragment implements ListPresenterView {
     private View view;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter recyclerViewAdapter;
+    private Optional<RecyclerView.LayoutManager> layoutManager = Optional.empty();
+    private Optional<List<RecyclerView.ItemDecoration>> itemDecorations = Optional.empty();
     private LinearLayout noAdvertsFoundContainer;
     private boolean pullToRefreshIsActivated = false;
 
@@ -30,11 +37,9 @@ public abstract class ListView extends Fragment implements ListPresenterView {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.adverts_view, container, false);
-
         setupHeader();
         setupNoResultsFoundView();
         setupPullToRefresh();
-
         return view;
     }
 
@@ -71,15 +76,20 @@ public abstract class ListView extends Fragment implements ListPresenterView {
     }
 
     /**
-     * Setups the recyclerviews adapter, layout and spacing
+     * Setups the recyclerviews adapter, layout and spacing. If values have been provided by the
+     * concrete implementation it will use that, else default values will be used.
      */
     private void setupList() {
         recyclerView = view.findViewById(R.id.advertsViewRecycler);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerViewAdapter = getAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
-        recyclerView.setLayoutManager(getLayoutManager());
-        recyclerView.addItemDecoration(getSpacingDecorator());
+        recyclerView.setLayoutManager(layoutManager.orElse(new GridLayoutManager(getContext(), 2)));
+        if (itemDecorations.isPresent()) {
+            itemDecorations.get().forEach(item -> recyclerView.addItemDecoration(item));
+        } else {
+            recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
+        }
     }
 
     /**
@@ -99,9 +109,13 @@ public abstract class ListView extends Fragment implements ListPresenterView {
 
     protected abstract RecyclerView.Adapter getAdapter();
 
-    protected abstract RecyclerView.LayoutManager getLayoutManager();
+    public void setItemDecorations(List<RecyclerView.ItemDecoration> itemDecorations) {
+        this.itemDecorations = Optional.of(itemDecorations);
+    }
 
-    protected abstract RecyclerView.ItemDecoration getSpacingDecorator();
+    public void setLayoutManager(RecyclerView.LayoutManager layoutManager) {
+        this.layoutManager = Optional.ofNullable(layoutManager);
+    }
 
     /**
      * Gives the concrete implementation the option to provide an action, and therefor activate

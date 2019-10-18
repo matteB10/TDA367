@@ -16,16 +16,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.HomePresenter;
-import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 import com.masthuggis.boki.utils.ViewCreator;
 
 /**
@@ -49,16 +46,6 @@ public class HomeFragment extends ListView implements AdapterView.OnItemSelected
     @Override
     protected RecyclerView.Adapter getAdapter() {
         return new ProductsRecyclerViewAdapter(getContext(), presenter);
-    }
-
-    @Override
-    protected RecyclerView.LayoutManager getLayoutManager() {
-        return new GridLayoutManager(getContext(), 2);
-    }
-
-    @Override
-    protected RecyclerView.ItemDecoration getSpacingDecorator() {
-        return new GridSpacingItemDecoration(2, 40, true);
     }
 
     @Override

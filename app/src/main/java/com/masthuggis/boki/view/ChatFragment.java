@@ -19,6 +19,9 @@ import com.masthuggis.boki.presenter.ChatPresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 import com.masthuggis.boki.utils.ViewCreator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Fragment for displaying active chats of the current user.
  *
@@ -28,25 +31,23 @@ public class ChatFragment extends ListView implements ChatPresenter.View {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.presenter = new ChatPresenter(this, DependencyInjector.injectDataModel());
         View v = super.onCreateView(inflater, container, savedInstanceState);
+        this.presenter = new ChatPresenter(this, DependencyInjector.injectDataModel());
+        setupRecyclerView();
         presenter.updateData();
         return v;
+    }
+
+    private void setupRecyclerView() {
+        List<RecyclerView.ItemDecoration> decorations = new ArrayList<>();
+        decorations.add(new GridSpacingItemDecoration(1, 25, true));
+        setItemDecorations(decorations);
+        setLayoutManager(new GridLayoutManager(getContext(), 1));
     }
 
     @Override
     protected RecyclerView.Adapter getAdapter() {
         return new MessagesRecyclerViewAdapter(getContext(), presenter);
-    }
-
-    @Override
-    protected RecyclerView.LayoutManager getLayoutManager() {
-        return new GridLayoutManager(getContext(), 1);
-    }
-
-    @Override
-    protected RecyclerView.ItemDecoration getSpacingDecorator() {
-        return new GridSpacingItemDecoration(1, 25, true);
     }
 
     @Override
