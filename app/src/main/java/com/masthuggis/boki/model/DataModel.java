@@ -58,6 +58,10 @@ public class DataModel implements BackendObserver {
      * completed, since a method called first does not always finish first.
      */
     public void initUser(SuccessCallback successCallback) {
+        if(user!=null){
+            successCallback.onSuccess();
+            return;
+        }
         initialAdvertFetch(() -> repository.getUser(newUser -> {
             user = newUser;
             user.setAdverts(getAdsFromCurrentUser());
@@ -185,7 +189,7 @@ public class DataModel implements BackendObserver {
      * Returns a boolean of whether or not the given adID exists under the User's list of ID:s in the database
      */
     private void isAFavouriteInDatabase(String uniqueAdID, MarkedAsFavouriteCallback markedAsFavouriteCallback) {
-        repository.getUserFavourites(user.getId(),favouriteIDs -> {
+        repository.getUserFavourites(user.getId(), favouriteIDs -> {
             if (favouriteIDs != null) { //Only check if user actually has favourites, otherwise NullPointerException
                 for (String favouriteID : favouriteIDs) {
                     if (adStillExists(favouriteID) && favouriteID.equals(uniqueAdID)) {
@@ -214,12 +218,12 @@ public class DataModel implements BackendObserver {
             }
         }
         //If this is reached, no existing advertisement has the ID that is stored under user favourites in database
-        deleteIDFromFavourites(user.getId(),favouriteID);
+        deleteIDFromFavourites(user.getId(), favouriteID);
         return false;
     }
 
     private void deleteIDFromFavourites(String id, String favouriteID) {
-        repository.deleteIDFromFavourites(id,favouriteID);
+        repository.deleteIDFromFavourites(id, favouriteID);
     }
 
 

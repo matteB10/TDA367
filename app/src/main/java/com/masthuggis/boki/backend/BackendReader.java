@@ -2,8 +2,6 @@ package com.masthuggis.boki.backend;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,6 +22,8 @@ import com.masthuggis.boki.model.observers.BackendObserver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -192,7 +192,7 @@ class BackendReader {
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
-                public void onFailure(@NonNull Exception e) {
+                public void onFailure(@Nullable Exception e) {
 
                 }
             });
