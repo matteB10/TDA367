@@ -15,12 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.presenter.AdvertsPresenterView;
+import com.masthuggis.boki.presenter.ListPresenterView;
 
 /**
  * Abstract class to be used by views wanting to display a list of adverts.
  */
-public abstract class AdvertsView extends Fragment implements AdvertsPresenterView {
+public abstract class ListView extends Fragment implements ListPresenterView {
     private View view;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter recyclerViewAdapter;
@@ -34,7 +34,7 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
         setupHeader();
         setupNoResultsFoundView();
         setupPullToRefresh();
- 
+
         return view;
     }
 

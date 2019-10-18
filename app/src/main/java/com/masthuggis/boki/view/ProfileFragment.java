@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
-import com.masthuggis.boki.presenter.AdvertsPresenterView;
+import com.masthuggis.boki.presenter.ListPresenterView;
 import com.masthuggis.boki.presenter.ProfilePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 import com.masthuggis.boki.utils.ViewCreator;
@@ -24,7 +24,7 @@ import com.masthuggis.boki.utils.ViewCreator;
  * Profile page used for displaying the adverts that the user have published. Also have an settings
  * button to navigate to the app-wide settings.
  */
-public class ProfileFragment extends AdvertsView implements ProfilePresenter.View, AdvertsPresenterView {
+public class ProfileFragment extends ListView implements ProfilePresenter.View, ListPresenterView {
     private ProfilePresenter presenter;
 
     @Override

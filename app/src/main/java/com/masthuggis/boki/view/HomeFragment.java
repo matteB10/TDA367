@@ -29,7 +29,7 @@ import com.masthuggis.boki.utils.ViewCreator;
  * Home page displaying all the adverts that have been published to the market.
  * Will also include searchPerformed and sort buttons in the future.
  */
-public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelectedListener {
+public class HomeFragment extends ListView implements AdapterView.OnItemSelectedListener {
 
     private HomePresenter presenter;
     private EditText searchField;

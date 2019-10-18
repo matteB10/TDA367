@@ -16,11 +16,11 @@ import java.util.List;
  */
 public abstract class AdvertsPresenter implements IProductsPresenter {
 
-    protected AdvertsPresenterView view;
+    protected ListPresenterView view;
     protected final DataModel dataModel;
     private List<Advertisement> adverts;
 
-    AdvertsPresenter(AdvertsPresenterView view, DataModel dataModel) {
+    AdvertsPresenter(ListPresenterView view, DataModel dataModel) {
         this.view = view;
         this.adverts = new ArrayList<>();
         this.dataModel = dataModel;

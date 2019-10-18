@@ -1,6 +1,6 @@
 package com.masthuggis.boki.presenter;
 
-public interface AdvertsPresenterView {
+public interface ListPresenterView {
     void showLoadingScreen();
 
     void updateThumbnails();
@@ -12,5 +12,4 @@ public interface AdvertsPresenterView {
     void showDetailsScreen(String id);
 
     void hideLoadingScreen();
-
 }
