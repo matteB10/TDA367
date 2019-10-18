@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -25,6 +27,7 @@ import androidx.core.content.FileProvider;
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
+import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
@@ -70,7 +73,9 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setListeners();
         setUpView();
 
-        if (intent.getExtras() != null) { //If there is an ad (user is editing existing ad)
+
+        /**If there is an existing ad, and user wants to edit*/
+        if (intent.getExtras() != null) {
             String advertID = intent.getExtras().getString("advertID");
             presenter.setAd(advertID);
             presenter.setUpView();
@@ -95,7 +100,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setPriceListener();
         setDescriptionListener();
         setPublishAdListener();
-        setConditionGroupListener();
+        setRadioGroupListener();
         setPreDefTagsListeners();
         setUserTagTextFieldListener();
         setDeleteBtnListener();
@@ -104,7 +109,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
 
     private void setButtonVisibility(boolean editMode) {
-        if(editMode){
+        if (editMode) {
             publishAdButton.setVisibility(View.GONE);
         } else {
             deleteAdButton.setVisibility(View.GONE);
@@ -139,6 +144,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         publishAdButton.setEnabled(b);
         publishAdButton.setBackground(getDrawable(StylingHelper.getPrimaryButtonDrawable(b)));
     }
+
     /**
      * Enables save(update) ad button when all mandatory fields contains
      * valid input.
@@ -149,10 +155,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         saveAdButton.setEnabled(b);
         saveAdButton.setBackground(getDrawable(StylingHelper.getPrimaryButtonDrawable(b)));
     }
+
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent); //TODO check here to see what fragment was the previous one, maybe
+        startActivity(intent);
     }
 
     //images--------------------------------------------------------
@@ -197,7 +204,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
     }
 
-    //Compresses images without trying to crop image with android OS
     private void compressImage() {
         Bitmap bitmap = compressBitmap();
         try {
@@ -218,7 +224,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         imageViewDisplay.setImageBitmap(bitmap);
     }
 
-    //Compresses image, sets resolution, should probably only be used when running app on emulator
     private Bitmap compressBitmap() {
         BitmapFactory.Options imageOptions = new BitmapFactory.Options();
         imageOptions.inJustDecodeBounds = true;
@@ -227,6 +232,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     //Tags----------------------------------------------------------
+
     /**
      * Reads predefined subject strings from resources,
      *
@@ -326,19 +332,19 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      *
      * @param tag
      */
-
     @Override
     public void removeUserTagButton(String tag) {
         userDefTagButtons.remove(getButtonFromText(tag, userDefTagButtons));
         updateUserDefTags();
     }
+
     /**
      * Returns first not filled row in a layout given as parameter,
      * or a new row if all rows are filled or layout has no rows.
+     *
      * @param parentViewID
      * @return a new TableRow
      */
-
     private ViewGroup getCurrentTagRow(int parentViewID) {
         ViewGroup parentLayout = findViewById(parentViewID);
         int noOfRows = parentLayout.getChildCount();
@@ -351,16 +357,17 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         parentLayout.addView(tr, StylingHelper.getTableRowLayoutParams(this));
         return tr;
     }
+
     /**
      * Used to update tags layout correctly if a tag
      * has been deleted.
      */
-
     private void updateUserDefTags() {
         ViewGroup parentLayout = findViewById(R.id.tagsLinearLayout);
         clearLayout(parentLayout);
         populateTagsLayout(userDefTagButtons, parentLayout);
     }
+
     /**
      * Takes in a string and returns matching button if possible
      *
@@ -375,8 +382,10 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
         return null;
     }
+
     /**
      * Checks if tag is preDef or userDef
+     *
      * @param tag
      * @return
      */
@@ -421,36 +430,31 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             getBackToMain(getString(R.string.toastCreatedAd));
         });
     }
-    private void getBackToMain(String toastMessage){
+
+    private void getBackToMain(String toastMessage) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.putExtra(getString(R.string.putExtraToastKey),toastMessage);
+        intent.putExtra(getString(R.string.putExtraToastKey), toastMessage);
         startActivity(intent);
         finish();
     }
 
-    private void setConditionGroupListener() {
-        Button conditionGoodButton = findViewById(R.id.conditionGoodButton);
-        Button conditionNewButton = findViewById(R.id.conditionNewButton);
-        Button conditionOKButton = findViewById(R.id.conditionOkButton);
+    private void setRadioGroupListener() {
+        RadioGroup group = findViewById(R.id.conditionRadioGroup);
+        group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                presenter.conditionChanged(checkedId);
+            }
+        });
+    }
 
-        conditionGoodButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.conditionChanged(R.string.conditionGood);
-            }
-        });
-        conditionNewButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.conditionChanged(R.string.conditionNew);
-            }
-        });
-        conditionOKButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.conditionChanged(R.string.conditionOk);
-            }
-        });
+    /**
+     * Called when a radiobutton is checked. Updates the listener.
+     *
+     * @param view is the specific button that is checked.
+     */
+    public void onRadioButtonClicked(View view) {
+        setRadioGroupListener();
     }
 
     private void setImageViewListener() {
@@ -553,7 +557,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         });
     }
 
-
     //setters -------------------------------------------------------
     @Override
     public void setTitle(String name) {
@@ -581,6 +584,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     /**
      * Used when editing an already existing advertisement
+     *
      * @param tags, all tags saved in advertisement
      */
     @Override
@@ -590,8 +594,28 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
                 setPreDefTagSelected(str, true); //if str is preDefTag, style as selected
             } else {
                 displayUserTagButton(str);
-
             }
         }
     }
+
+    @Override
+    public void setCondition(Advert.Condition condition) {
+        Advert.Condition id = presenter.getAdvertisement().getCondition();
+        RadioButton conditionNew = findViewById(R.id.conditionNewButton);
+        RadioButton conditionGood = findViewById(R.id.conditionGoodButton);
+        RadioButton conditionOk = findViewById(R.id.conditionOkButton);
+        switch (id) {
+            case NEW:
+                conditionNew.toggle();
+                break;
+            case GOOD:
+                conditionGood.toggle();
+                break;
+            case OK:
+                conditionOk.toggle();
+                break;
+        }
+
+    }
+
 }

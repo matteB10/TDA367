@@ -1,6 +1,7 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.model.AdFactory;
+import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.CurrentTimeHelper;
@@ -50,7 +51,6 @@ public class CreateAdPresenter {
      * Called on click on button in createAdActivity
      * saves advert and resets current ad in presenter
      */
-    //Need to change imageFile in advert to inputStream from View
     public void saveAdvert() {
         if((advertisement.getDatePublished().equals(""))) {
             setAdvertDate();
@@ -66,8 +66,8 @@ public class CreateAdPresenter {
             view.setDescription(advertisement.getDescription());
             view.setImageUrl(advertisement.getImageUrl());
             view.setTags(advertisement.getTags());
+            view.setCondition(advertisement.getCondition());
     }
-
 
 
     /**Method called when the title edit view is changed, to save the
@@ -140,19 +140,18 @@ public class CreateAdPresenter {
     /**
      * Updates Advert when condition changed, changes
      * styling of changed condition button in view.
-     *
      * @param condition, string res condition
      */
     public void conditionChanged(int condition) {
         advertisement.setCondition(condition);
-        view.styleConditionButtonPressed(condition);
+        //view.styleConditionButtonPressed(condition);
         view.enablePublishButton(allFieldsValid());
         view.enableSaveButton(allFieldsValid());
 
     }
 
     /**
-     * Checks if publishbutton should be enabled when image has changed
+     * Checks if publish button should be enabled when image has changed
      */
     public void imageChanged(){
         view.enablePublishButton(allFieldsValid());
@@ -162,7 +161,6 @@ public class CreateAdPresenter {
     /**
      * Controls that minimal required user input is entered.
      * Valid title is all chars, length is arbitrary
-     *
      * @return
      */
     private boolean allFieldsValid() {
@@ -180,8 +178,6 @@ public class CreateAdPresenter {
     }
 
     //Getter mainly for testing purpose---------------------------------------------------
-
-
     public Advertisement getAdvertisement() {
         return advertisement;
     }
@@ -236,6 +232,8 @@ public class CreateAdPresenter {
         File getCurrentImageFile();
 
         void setTags(List<String> tags);
+
+        void setCondition(Advert.Condition condition);
     }
 
 }

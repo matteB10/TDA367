@@ -136,13 +136,13 @@ public class Advert implements Advertisement {
     @Override
     public void setCondition(int condition) {
         switch (condition) {
-            case R.string.conditionNew:
+            case R.id.conditionNewButton:
                 this.condition = Condition.NEW;
                 break;
-            case R.string.conditionGood:
+            case R.id.conditionGoodButton:
                 this.condition = Condition.GOOD;
                 break;
-            case R.string.conditionOk:
+            case R.id.conditionOkButton:
                 this.condition = Condition.OK;
                 break;
         }

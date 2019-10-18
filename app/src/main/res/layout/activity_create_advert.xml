@@ -155,11 +155,11 @@
 
                     <EditText
                         android:id="@+id/descriptionEditText"
-                        android:imeOptions="actionDone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
+                        android:imeOptions="actionDone"
                         android:inputType="textPersonName" />
 
                 </LinearLayout>
@@ -191,52 +191,57 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view" />
 
-                <LinearLayout
-                    android:id="@+id/conditionLinearLayout"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView">
 
-                    <Button
-                        android:id="@+id/conditionNewButton"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginStart="30dp"
-                        android:layout_marginTop="0dp"
-                        android:background="@drawable/button_new_condition"
-                        android:text="@string/conditionNew"
-                        android:textColor="@color/colorWhite"
+                    <RadioGroup
+                        android:id="@+id/conditionRadioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="clip_horizontal"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView" />
+                        app:layout_constraintTop_toBottomOf="@+id/textView">
 
-                    <Button
-                        android:id="@+id/conditionGoodButton"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginStart="30dp"
-                        android:layout_marginTop="0dp"
-                        android:background="@drawable/button_good_condition"
-                        android:text="@string/conditionGood"
-                        android:textColor="@color/colorWhite"
-                        app:layout_constraintStart_toEndOf="@+id/conditionNewButton"
-                        app:layout_constraintTop_toBottomOf="@+id/textView" />
+                        <RadioButton
+                            android:id="@+id/conditionNewButton"
+                            android:layout_width="100dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="30dp"
+                            android:layout_marginTop="0dp"
+                            android:background="@drawable/button_new_condition"
+                            android:button="@android:drawable/btn_radio"
+                            android:gravity="center"
+                            android:onClick="onRadioButtonClicked"
+                            android:text="@string/conditionNew"
+                            android:textColor="@color/colorWhite" />
 
-                    <Button
-                        android:id="@+id/conditionOkButton"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_marginStart="30dp"
-                        android:layout_marginTop="0dp"
-                        android:background="@drawable/button_ok_condition"
-                        android:text="@string/conditionOk"
-                        android:textColor="@color/colorWhite"
-                        app:layout_constraintStart_toEndOf="@id/conditionGoodButton"
-                        app:layout_constraintTop_toBottomOf="@+id/textView" />
-                </LinearLayout>
+                        <RadioButton
+                            android:id="@+id/conditionGoodButton"
+                            android:layout_width="100dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="30dp"
+                            android:layout_marginTop="0dp"
+                            android:background="@drawable/button_good_condition"
+                            android:button="@android:drawable/btn_radio"
+                            android:gravity="center"
+                            android:text="@string/conditionGood"
+                            android:textColor="@color/colorWhite"
+                            android:onClick="onRadioButtonClicked" />
+
+                        <RadioButton
+                            android:id="@+id/conditionOkButton"
+                            android:layout_width="100dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="30dp"
+                            android:layout_marginTop="0dp"
+                            android:background="@drawable/button_ok_condition"
+                            android:button="@android:drawable/btn_radio"
+                            android:gravity="center"
+                            android:text="@string/conditionOk"
+                            android:textColor="@color/colorWhite"
+                            android:onClick="onRadioButtonClicked"/>
+
+                    </RadioGroup>
 
                 <View
                     android:id="@+id/view2"
@@ -250,7 +255,7 @@
                     android:background="@color/colorGreyLight"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/conditionLinearLayout" />
+                    app:layout_constraintTop_toBottomOf="@id/conditionRadioGroup" />
 
                 <TextView
                     android:id="@+id/textView2"
@@ -296,21 +301,21 @@
                     android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:layout_marginStart="30dp"
+                    android:layout_marginTop="20dp"
                     android:text="@string/addAdvertTags"
                     android:textSize="20sp"
-                    tools:layout_editor_absoluteX="30dp"
-                    tools:layout_editor_absoluteY="930dp"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view3"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    tools:layout_editor_absoluteX="30dp"
+                    tools:layout_editor_absoluteY="930dp" />
 
                 <LinearLayout
                     android:id="@+id/tagsLinearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
                     android:layout_marginStart="30dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginEnd="30dp"
                     android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -319,10 +324,9 @@
 
                     <TableRow
                         android:layout_width="match_parent"
+                        android:layout_height="0dp"
                         android:layout_marginBottom="6dp"
-                        android:layout_height="20dp"
-                        android:layout_weight="1"
-                        />
+                        android:layout_weight="1" />
 
                 </LinearLayout>
 
