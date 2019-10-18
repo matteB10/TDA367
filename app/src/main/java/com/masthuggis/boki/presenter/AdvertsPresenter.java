@@ -16,19 +16,14 @@ import java.util.List;
  */
 public abstract class AdvertsPresenter implements IProductsPresenter {
 
-    protected AdvertsPresenterView view;
+    protected ListPresenterView view;
     protected final DataModel dataModel;
     private List<Advertisement> adverts;
 
-    AdvertsPresenter(AdvertsPresenterView view, DataModel dataModel) {
+    AdvertsPresenter(ListPresenterView view, DataModel dataModel) {
         this.view = view;
         this.adverts = new ArrayList<>();
         this.dataModel = dataModel;
-    }
-
-
-    public void initPresenter() {
-        updateAdverts();
     }
 
     /**
@@ -48,11 +43,13 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
 
             this.adverts = sort(adverts);
         }
+
         view.hideLoadingScreen();
         view.updateThumbnails();
     }
 
-    /**Sorts adverts and tells the view to update UI.
+    /**
+     * Sorts adverts and tells the view to update UI.
      * @param adverts the updated adverts lists that will be displayed.
      */
     void updateAdverts(List<Advertisement> adverts, boolean sort) {
@@ -90,7 +87,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
     /**
      * Get adverts currently showed in view
      */
-    List<Advertisement> getCurrentDisplayedAds() {
+    protected List<Advertisement> getCurrentDisplayedAds() {
         return adverts;
     }
 
