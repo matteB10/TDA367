@@ -2,11 +2,8 @@ package com.masthuggis.boki.model;
 
 import com.masthuggis.boki.R;
 
-import org.junit.Rule;
+
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +16,7 @@ public class AdvertTest {
     Advertisement ad = new Advert("datePublished", "uniqueOwnerID", "advertID", "title",
             "description", 123, Advert.Condition.OK, "imageUrl", tags, "owner");
 
-    @Mock
-    DataModel mockDataModel;
 
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Test
     public void testGetDateTest() {
