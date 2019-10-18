@@ -5,6 +5,7 @@ import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.Condition;
 import com.masthuggis.boki.model.observers.BackendObserver;
 
 import java.io.File;
@@ -75,7 +76,7 @@ class AdvertRepository {
         long price = (long) dataMap.get("price");
         List<String> tags = (List<String>) dataMap.get("tags");
         String uniqueOwnerID = (String) dataMap.get("uniqueOwnerID");
-        Advert.Condition condition = Advert.Condition.valueOf((String) dataMap.get("condition"));
+        Condition condition = Condition.valueOf((String) dataMap.get("condition"));
         String uniqueAdID = (String) dataMap.get("uniqueAdID");
         String datePublished = (String) dataMap.get("date");
         String owner = (String) dataMap.get("advertOwner");

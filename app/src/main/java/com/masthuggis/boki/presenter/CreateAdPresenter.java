@@ -3,6 +3,7 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.Condition;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.CurrentTimeHelper;
 import com.masthuggis.boki.utils.FormHelper;
@@ -28,7 +29,7 @@ public class CreateAdPresenter {
     public CreateAdPresenter(View view, DataModel dataModel) {
         this.dataModel = dataModel;
         advertisement = AdFactory.createAd("", dataModel.getUserID(), UniqueIdCreator.getUniqueID(), "", "",
-                0, Advert.Condition.UNDEFINED, "", new ArrayList<>(), dataModel.getUserDisplayName());
+                0, Condition.UNDEFINED, "", new ArrayList<>(), dataModel.getUserDisplayName());
         this.view = view;
     }
 
