@@ -27,7 +27,6 @@ import androidx.core.content.FileProvider;
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
-import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
@@ -599,23 +598,23 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     @Override
-    public void setCondition(Advert.Condition condition) {
-        Advert.Condition id = presenter.getAdvertisement().getCondition();
+    public void toggleCondition(String id){
         RadioButton conditionNew = findViewById(R.id.conditionNewButton);
         RadioButton conditionGood = findViewById(R.id.conditionGoodButton);
         RadioButton conditionOk = findViewById(R.id.conditionOkButton);
         switch (id) {
-            case NEW:
+            case "NEW":
                 conditionNew.toggle();
                 break;
-            case GOOD:
+            case "GOOD":
                 conditionGood.toggle();
                 break;
-            case OK:
+            case "OK":
                 conditionOk.toggle();
                 break;
         }
-
     }
+
+
 
 }

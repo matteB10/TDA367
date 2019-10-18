@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.model.AdFactory;
-import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.Condition;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,13 +52,13 @@ public class MockRepository {
     private Advertisement createBookWithoutTags(JSONObject object) {
         String title, date;
         int price;
-        Advert.Condition condition;
+        Condition condition;
         try { //Should use a factory-method instead
             title = object.getString("title");
             price = object.getInt("price");
             date = object.getString("date");
             String conditionString = object.getString("condition");
-            condition = Advert.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
+            condition = Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
             Advertisement ad = AdFactory.createAd(date, "UniqueOwnerID", "UniqueAdID", title,"", price, condition,"",new ArrayList<String>(),null);
             adverts.add(ad);
             return ad;

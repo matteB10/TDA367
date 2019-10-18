@@ -3,6 +3,7 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.Condition;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.view.ThumbnailView;
 
@@ -11,7 +12,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import static org.mockito.Mockito.when;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -36,7 +37,7 @@ public class FavouritesPresenterTest {
             "title",
             "description",
             123123,
-            Advert.Condition.NEW,
+            Condition.NEW,
             null,
             new ArrayList<>(),
             "owner");

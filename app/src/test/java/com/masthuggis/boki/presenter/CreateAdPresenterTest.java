@@ -4,6 +4,7 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.Condition;
 import com.masthuggis.boki.model.DataModel;
 
 import org.junit.Rule;
@@ -43,7 +44,7 @@ public class CreateAdPresenterTest {
             "title",
             "description",
             123123,
-            Advert.Condition.NEW,
+            Condition.NEW,
             null,
             new ArrayList<>(),
             "owner");
@@ -124,13 +125,13 @@ public class CreateAdPresenterTest {
 
     @Test
     public void testConditionChanged() {
-        assertEquals(Advert.Condition.UNDEFINED, presenter.getAdvertisement().getCondition());
+        assertEquals(Condition.UNDEFINED, presenter.getAdvertisement().getCondition());
         presenter.conditionChanged(R.string.conditionGood);
 
-        assertEquals(Advert.Condition.GOOD, presenter.getAdvertisement().getCondition());
+        assertEquals(Condition.GOOD, presenter.getAdvertisement().getCondition());
         presenter.conditionChanged(R.string.conditionNew);
 
-        assertEquals(Advert.Condition.NEW, presenter.getAdvertisement().getCondition());
+        assertEquals(Condition.NEW, presenter.getAdvertisement().getCondition());
     }
 
 

@@ -17,7 +17,7 @@ public class UserTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    Advertisement advertisement = new Advert("datePublished", "uniqueOwnerID", "id", "title", "description", 123123, Advert.Condition.NEW, "imageURL", new ArrayList<>(), "owner");
+    Advertisement advertisement = new Advert("datePublished", "uniqueOwnerID", "id", "title", "description", 123123, Condition.NEW, "imageURL", new ArrayList<>(), "owner");
 
 
     @Test

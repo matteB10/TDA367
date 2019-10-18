@@ -4,14 +4,12 @@ import android.view.View;
 
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.model.AdFactory;
-import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.Condition;
 import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.model.UserFactory;
 import com.masthuggis.boki.model.sorting.SortManager;
 import com.masthuggis.boki.view.AdvertsView;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.junit.Before;
@@ -40,9 +38,9 @@ public class AdvertsPresenterTest {
         Mockito.doNothing().when(databaseMock).
 
         testData = new ArrayList<>();
-        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Advert.Condition.GOOD,"", new ArrayList<>(),null));
-        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Advert.Condition.GOOD,"", new ArrayList<>(),null));
-        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Advert.Condition.GOOD,"", new ArrayList<>(),null));
+        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
+        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
+        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
     }
 
     @Test

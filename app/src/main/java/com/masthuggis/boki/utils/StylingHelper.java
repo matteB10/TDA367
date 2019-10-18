@@ -8,7 +8,7 @@ import android.widget.TableRow;
 
 import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.model.Advert;
+import com.masthuggis.boki.model.Condition;
 
 /**
  * Helper class for styling components programmatically
@@ -22,7 +22,7 @@ public class StylingHelper {
     }
 
 
-    public static int getConditionText(Advert.Condition condition) {
+    public static int getConditionText(Condition condition) {
         int conditionText = 0;
         switch (condition) {
             case NEW:
@@ -39,7 +39,7 @@ public class StylingHelper {
 
     }
 
-    public static int getConditionDrawable(Advert.Condition condition) {
+    public static int getConditionDrawable(Condition condition) {
         int drawable = 0;
         switch (condition) {
             case NEW:

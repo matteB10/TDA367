@@ -13,10 +13,6 @@ import java.util.List;
  */
 public class Advert implements Advertisement {
 
-    public enum Condition {
-        NEW, GOOD, OK, UNDEFINED
-    }
-
     private String datePublished;
     private String uniqueOwnerID;
     private String uniqueAdID;

@@ -26,7 +26,7 @@ public class ChatTest {
     public void testTimeLastMessageSent() {
         when(databaseMock.getUserID()).thenReturn("userID");
         Mockito.doNothing().when(databaseMock).getMessages(null, null, null);
-        Advertisement advertisement = new Advert("datePublished", "uniqueOwnerID", "id", "title", "description", 123123, Advert.Condition.NEW, "imageURL", new ArrayList<>(), "owner");
+        Advertisement advertisement = new Advert("datePublished", "uniqueOwnerID", "id", "title", "description", 123123, Condition.NEW, "imageURL", new ArrayList<>(), "owner");
 
         Chat chat = new Chat("uniqueChatID", "senderID", "receiverID","uniqueAdID","receiverUsername", "senderUsername", databaseMock);
         chat.setMessages(new ArrayList<>());
@@ -38,7 +38,7 @@ public class ChatTest {
     @Test
     public void testGetDisplayName() {
 
-        Advertisement advertisement = new Advert("datePublished", "uniqueOwnerID", "id", "title", "description", 123123, Advert.Condition.NEW, "imageURL", new ArrayList<>(), "owner");
+        Advertisement advertisement = new Advert("datePublished", "uniqueOwnerID", "id", "title", "description", 123123, Condition.NEW, "imageURL", new ArrayList<>(), "owner");
         Chat chat = new Chat("uniqueChatID", "senderID", "receiverID","uniqueAdID","receiverUsername", "senderUsername", databaseMock);
 
         Mockito.when(databaseMock.getUserDisplayName()).thenReturn(chat.getReceiverUsername());

@@ -1,7 +1,6 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.model.AdFactory;
-import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.CurrentTimeHelper;
@@ -66,9 +65,13 @@ public class CreateAdPresenter {
             view.setDescription(advertisement.getDescription());
             view.setImageUrl(advertisement.getImageUrl());
             view.setTags(advertisement.getTags());
-            view.setCondition(advertisement.getCondition());
+            setCondition();
     }
 
+    private void setCondition(){
+        String id = advertisement.getCondition().toString();
+        view.toggleCondition(id);
+    }
 
     /**Method called when the title edit view is changed, to save the
      * new title to the model.
@@ -233,7 +236,7 @@ public class CreateAdPresenter {
 
         void setTags(List<String> tags);
 
-        void setCondition(Advert.Condition condition);
+        void toggleCondition(String id);
     }
 
 }

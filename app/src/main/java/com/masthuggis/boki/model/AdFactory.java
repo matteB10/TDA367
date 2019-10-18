@@ -8,7 +8,7 @@ import java.util.List;
 public class AdFactory {
 
      public static Advertisement createAd(String datePublished, String uniqueOwnerID, String id, String title, String description, long price,
-                                         Advert.Condition condition,String imageUrl, List<String> tags,String owner) {
+                                          Condition condition, String imageUrl, List<String> tags, String owner) {
 
         return new Advert(datePublished, uniqueOwnerID, id, title, description, price, condition, imageUrl, tags, owner);
     }
