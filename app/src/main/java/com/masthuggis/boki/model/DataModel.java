@@ -263,7 +263,7 @@ public class DataModel implements BackendObserver {
         return user.getEmail();
     }
 
-    String getUserDisplayName() {
+    public String getUserDisplayName() {
         return this.user.getDisplayName();
     }
 
