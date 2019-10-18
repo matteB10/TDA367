@@ -11,36 +11,29 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.presenter.AdvertsPresenter;
-import com.masthuggis.boki.presenter.AdvertsPresenterView;
-import com.masthuggis.boki.utils.GridSpacingItemDecoration;
+import com.masthuggis.boki.presenter.ListPresenterView;
 
 /**
  * Abstract class to be used by views wanting to display a list of adverts.
  */
-public abstract class AdvertsView extends Fragment implements AdvertsPresenterView {
-    protected AdvertsPresenter presenter;
+public abstract class ListView extends Fragment implements ListPresenterView {
     private View view;
-    private ProductsRecyclerViewAdapter recyclerViewAdapter;
     private RecyclerView recyclerView;
+    private RecyclerView.Adapter recyclerViewAdapter;
     private LinearLayout noAdvertsFoundContainer;
-    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.adverts_view, container, false);
-        this.presenter = getPresenter();
 
         setupHeader();
         setupNoResultsFoundView();
         setupPullToRefresh();
-        this.presenter.initPresenter();
 
         return view;
     }
@@ -91,21 +84,10 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
     private void setupList() {
         recyclerView = view.findViewById(R.id.advertsViewRecycler);
         recyclerView.setNestedScrollingEnabled(false);
-        recyclerViewAdapter = new ProductsRecyclerViewAdapter(getContext(), presenter);
+        recyclerViewAdapter = getAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
-    }
-
-    /**
-     * Notifies the presenter that the view has been destroyed. Ideally used by the presenter
-     * to prevent memory leaks.
-     */
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.viewIsBeingDestroyed();
+        recyclerView.setLayoutManager(getLayoutManager());
+        recyclerView.addItemDecoration(getSpacingDecorator());
     }
 
     /**
@@ -123,12 +105,11 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
      */
     protected abstract View onCreateNoResultsFoundLayout();
 
-    /**
-     * Asks the concrete implementation to provide the presenter to be used.
-     *
-     * @return
-     */
-    protected abstract AdvertsPresenter getPresenter();
+    protected abstract RecyclerView.Adapter getAdapter();
+
+    protected abstract RecyclerView.LayoutManager getLayoutManager();
+
+    protected abstract RecyclerView.ItemDecoration getSpacingDecorator();
 
     /**
      * Gives the concrete implementation the option to provide an action, and therefor activate

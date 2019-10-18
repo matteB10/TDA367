@@ -31,7 +31,7 @@ public interface Advertisement {
 
     void setDescription(String description);
 
-    void tagsChanged(String tag);
+    void toggleTag(String tag);
 
     void setCondition(int condition);
 

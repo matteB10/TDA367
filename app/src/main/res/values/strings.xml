@@ -96,6 +96,18 @@
     <string name="toastCreatedAd">Din annons är upplagd</string>
 
 
+    <!--- filter activity -->
+    <string name="filter">Filtrera</string>
+    <string name="inputMaxPrice">Ange maxpris:</string>
+    <string name="minPrice">0 kr</string>
+    <string name="maxPrice">500+ kr</string>
+
+    <!-- no sorting display string -->
+    <string name="pickSorting">Välj sortering..</string>
+
+
+
+
 
     //Errors
     <string name="noAdvertFoundDetailsPresenter">"Hittar ingen annons med denna beskrivning."</string>

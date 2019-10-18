@@ -123,7 +123,7 @@ public class CreateAdPresenter {
      */
     public void preDefTagsChanged(String tag) {
         view.setPreDefTagSelected(tag, isTagSelected(tag));
-        advertisement.tagsChanged(tag);
+        advertisement.toggleTag(tag);
     }
 
     /**
@@ -139,7 +139,7 @@ public class CreateAdPresenter {
         } else {
             view.removeUserTagButton(tag);
         }
-        advertisement.tagsChanged(tag);
+        advertisement.toggleTag(tag);
     }
 
     /**
