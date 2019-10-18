@@ -27,14 +27,6 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
     }
 
     /**
-     * Initializes the presenter taking necessary actions. This should always be called after
-     * instantiating.
-     */
-    public void initPresenter() {
-        updateAdverts();
-    }
-
-    /**
      * Sorts adverts and tells the view to update UI.
      * @param adverts the updated adverts lists that will be displayed.
      */
@@ -56,7 +48,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
     /**
      * Asks the concrete implementations to get data and then updates the UI.
      */
-    void updateAdverts() {
+    public void updateAdverts() {
         if (view == null) {
             return;
         }

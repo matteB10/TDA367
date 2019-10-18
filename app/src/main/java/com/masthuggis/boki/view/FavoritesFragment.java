@@ -1,16 +1,18 @@
 package com.masthuggis.boki.view;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
-import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.AdvertsPresenterView;
 import com.masthuggis.boki.presenter.FavouritesPresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
@@ -21,11 +23,11 @@ public class FavoritesFragment extends AdvertsView implements AdvertsPresenterVi
     private FavouritesPresenter presenter;
 
     @Override
-    protected AdvertsPresenter getPresenter() {
-        if (presenter == null) {
-            presenter = new FavouritesPresenter(this, DependencyInjector.injectDataModel());
-        }
-        return presenter;
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.presenter = new FavouritesPresenter(this, DependencyInjector.injectDataModel());
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        presenter.updateAdverts();
+        return v;
     }
 
     @Override

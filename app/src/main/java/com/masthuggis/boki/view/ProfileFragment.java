@@ -1,17 +1,20 @@
 package com.masthuggis.boki.view;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
-import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.AdvertsPresenterView;
 import com.masthuggis.boki.presenter.ProfilePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
@@ -25,11 +28,11 @@ public class ProfileFragment extends AdvertsView implements ProfilePresenter.Vie
     private ProfilePresenter presenter;
 
     @Override
-    protected AdvertsPresenter getPresenter() {
-        if (presenter == null) {
-            presenter = new ProfilePresenter(this, DependencyInjector.injectDataModel());
-        }
-        return presenter;
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.presenter = new ProfilePresenter(this, DependencyInjector.injectDataModel());
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        presenter.updateAdverts();
+        return v;
     }
 
     @Override

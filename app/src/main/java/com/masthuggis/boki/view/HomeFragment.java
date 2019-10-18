@@ -1,26 +1,27 @@
 package com.masthuggis.boki.view;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
-import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.HomePresenter;
-import com.masthuggis.boki.presenter.ProfilePresenter;
 import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 import com.masthuggis.boki.utils.ViewCreator;
 
@@ -34,11 +35,11 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
     private EditText searchField;
 
     @Override
-    protected AdvertsPresenter getPresenter() {
-        if (presenter == null) {
-            presenter = new HomePresenter(this, DependencyInjector.injectDataModel());
-        }
-        return presenter;
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.presenter = new HomePresenter(this, DependencyInjector.injectDataModel());
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        presenter.updateAdverts();
+        return v;
     }
 
     @Override
@@ -76,7 +77,6 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-
     }
 
     /**
@@ -116,6 +116,16 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
     @Override
     protected View onCreateNoResultsFoundLayout() {
         return ViewCreator.createSimpleText(getActivity(), getString(R.string.noAdvertsInMarketFound));
+    }
+
+    /**
+     * Notifies the presenter that the view has been destroyed. Ideally used by the presenter
+     * to prevent memory leaks.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.viewIsBeingDestroyed();
     }
 
 
