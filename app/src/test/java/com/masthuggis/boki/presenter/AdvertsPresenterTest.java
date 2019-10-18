@@ -9,12 +9,10 @@ import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.model.UserFactory;
 import com.masthuggis.boki.model.sorting.SortManager;
-import com.masthuggis.boki.view.AdvertsView;
+import com.masthuggis.boki.view.ListView;
 import com.masthuggis.boki.view.PullToRefreshCallback;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.junit.Before;
@@ -28,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 public class AdvertsPresenterTest {
 
     private AdvertsPresenter presenter;
-    private AdvertsPresenterView view;
+    private ListPresenterView view;
     private boolean onCreateHeaderCalled;
     private boolean onCreateNoResultsFoundCalled;
     @Mock private DataModel databaseMock;
@@ -55,7 +53,7 @@ public class AdvertsPresenterTest {
 
 
     class MockPresenter extends AdvertsPresenter {
-        public MockPresenter(AdvertsPresenterView view, DataModel dataModel) {
+        public MockPresenter(ListPresenterView view, DataModel dataModel) {
             super(view, dataModel);
         }
 
@@ -70,7 +68,7 @@ public class AdvertsPresenterTest {
         }
     }
 
-    class MockView extends AdvertsView {
+    class MockView extends ListView {
 
         @Override
         protected View onCreateHeaderLayout() {

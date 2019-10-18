@@ -13,7 +13,7 @@ import java.util.List;
  * accordingly.
  * @param <T>
  */
-public final class ProfilePresenter<T extends AdvertsPresenterView & ProfilePresenter.View> extends AdvertsPresenter {
+public final class ProfilePresenter<T extends ListPresenterView & ProfilePresenter.View> extends AdvertsPresenter {
 
     private final T profileView;
 

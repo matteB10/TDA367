@@ -1,10 +1,13 @@
 package com.masthuggis.boki.view;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,21 +15,24 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
-import com.masthuggis.boki.presenter.AdvertsPresenter;
 import com.masthuggis.boki.presenter.HomePresenter;
+import com.masthuggis.boki.utils.GridSpacingItemDecoration;
 import com.masthuggis.boki.utils.ViewCreator;
 
 /**
  * Home page displaying all the adverts that have been published to the market.
  * Will also include searchPerformed and sort buttons in the future.
  */
-public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelectedListener {
+public class HomeFragment extends ListView implements AdapterView.OnItemSelectedListener {
 
     private HomePresenter presenter;
     private EditText searchField;
@@ -34,12 +40,26 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
 
 
     @Override
-    protected AdvertsPresenter getPresenter() {
-        if (presenter == null) {
-            this.presenter = new HomePresenter(this, DependencyInjector.injectDataModel());
-        }
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.presenter = new HomePresenter(this, DependencyInjector.injectDataModel());
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        presenter.updateAdverts();
+        return v;
+    }
 
-        return presenter;
+    @Override
+    protected RecyclerView.Adapter getAdapter() {
+        return new ProductsRecyclerViewAdapter(getContext(), presenter);
+    }
+
+    @Override
+    protected RecyclerView.LayoutManager getLayoutManager() {
+        return new GridLayoutManager(getContext(), 2);
+    }
+
+    @Override
+    protected RecyclerView.ItemDecoration getSpacingDecorator() {
+        return new GridSpacingItemDecoration(2, 40, true);
     }
 
     @Nullable
@@ -63,7 +83,6 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-
     }
 
 
@@ -117,7 +136,6 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         });
     }
 
-
     private void hideKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
@@ -164,4 +182,9 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         presenter.sortOptionSelected(0);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.viewIsBeingDestroyed();
+    }
 }
