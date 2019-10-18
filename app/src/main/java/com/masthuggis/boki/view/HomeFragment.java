@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
@@ -28,6 +30,8 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
 
     private HomePresenter presenter;
     private EditText searchField;
+
+
 
     @Override
     protected AdvertsPresenter getPresenter() {
@@ -49,6 +53,7 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         View header = getLayoutInflater().inflate(R.layout.home_header, null);
         setupSortSpinner(header);
         setupSearchField(header);
+        setFilterButtonListener(header);
         return header;
     }
 
@@ -61,9 +66,11 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
 
     }
 
+
     /**
      * Adds a listener for when the user performs a searchPerformed, reacts to when enter key is pressed
      * makes the keyboard disappear then calls on the presenter to perform the searchPerformed with given input
+     *
      * @param view
      */
     private void setupSearchField(View view) {
@@ -100,6 +107,16 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
         return ViewCreator.createSimpleText(getActivity(), getString(R.string.noAdvertsInMarketFound));
     }
 
+    private void setFilterButtonListener(View view) {
+        Button filterButton = view.findViewById(R.id.homeFilterButton);
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startFilterFragment();
+            }
+        });
+    }
+
 
     private void hideKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -110,6 +127,23 @@ public class HomeFragment extends AdvertsView implements AdapterView.OnItemSelec
     private void performSearch() {
         String query = searchField.getText().toString();
         presenter.searchPerformed(query);
+    }
+
+    private void startFilterFragment() {
+        Fragment filter = new FilterFragment();
+        loadFragment(filter);
+    }
+
+    private boolean loadFragment(Fragment fragment) {
+        if (fragment != null) {
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().addToBackStack("HomeFragment");
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commitAllowingStateLoss();
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -36,7 +36,6 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.adverts_view, container, false);
         this.presenter = getPresenter();
-
         setupHeader();
         setupNoResultsFoundView();
         setupPullToRefresh();

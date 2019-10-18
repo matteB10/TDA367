@@ -26,16 +26,14 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
         this.dataModel = dataModel;
     }
 
-    /**
-     * Initializes the presenter taking necessary actions. This should always be called after
-     * instantiating.
-     */
+
     public void initPresenter() {
         updateAdverts();
     }
 
     /**
      * Sorts adverts and tells the view to update UI.
+     *
      * @param adverts the updated adverts lists that will be displayed.
      */
     void updateAdverts(List<Advertisement> adverts) {
@@ -47,8 +45,32 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
             view.showNoThumbnailsAvailableScreen();
         } else {
             view.hideNoThumbnailsAvailableScreen();
+
             this.adverts = sort(adverts);
         }
+        view.hideLoadingScreen();
+        view.updateThumbnails();
+    }
+
+    /**Sorts adverts and tells the view to update UI.
+     * @param adverts the updated adverts lists that will be displayed.
+     */
+    void updateAdverts(List<Advertisement> adverts, boolean sort) {
+        if (adverts == null || view == null) {
+            return;
+        }
+
+        if (adverts.isEmpty()) {
+            view.showNoThumbnailsAvailableScreen();
+        } else {
+            view.hideNoThumbnailsAvailableScreen();
+            if(sort) {
+                this.adverts = sort(adverts);
+            }else{
+                this.adverts = adverts;
+            }
+        }
+
         view.hideLoadingScreen();
         view.updateThumbnails();
     }
@@ -56,13 +78,24 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
     /**
      * Asks the concrete implementations to get data and then updates the UI.
      */
-    void updateAdverts() {
+    public void updateAdverts() {
         if (view == null) {
             return;
         }
 
         view.showLoadingScreen();
         updateAdverts(getData());
+    }
+
+    /**
+     * Get adverts currently showed in view
+     */
+    List<Advertisement> getCurrentDisplayedAds() {
+        return adverts;
+    }
+
+    void setCurrentDisplayedAds(List<Advertisement> adverts) {
+        this.adverts = adverts;
     }
 
     /**
@@ -74,7 +107,7 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
      * Concrete implementations provides their desired way of sorting. If no sorting is desired,
      * the same list of adverts can be returned.
      *
-     * @param adverts
+     * @param adverts list of adverts to be sorted
      * @return
      */
     public abstract List<Advertisement> sort(List<Advertisement> adverts);
@@ -93,10 +126,9 @@ public abstract class AdvertsPresenter implements IProductsPresenter {
         if (requestedPositionIsTooLarge(position)) {
             return;
         }
-
-        if (isFirstThumbnailToBeDisplayed(position)) {
+       /* if(!activeFilterOrSearch() && isFirstThumbnailToBeDisplayed(position)){
             adverts = sort(adverts);
-        }
+        }*/
 
         Advertisement a = adverts.get(position);
         thumbnailView.setId(a.getUniqueID());

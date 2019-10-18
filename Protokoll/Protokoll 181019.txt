@@ -1,0 +1,62 @@
+# Meeting Agenda
+
+Group:Masthuggis
+Date: 18/10 - 19
+Chair: Arvid Sundbom
+Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak Lindgren, Elin Melander
+
+
+## Objectives (5 min) 
+
+-Skriva Tester
+-Skriva RAD och SDD.
+-Elin åker fredag.
+-Prata om att förbereda en presentation.
+-Buggfixning nu sista veckan?
+-Refaktorering och Code Review i samband med resultatet av peer-review.
+-Kika igenom dokumentet från peer-reviewn vi genomört
+## Discussion items (35 min)
+-Muntlig presentation:
+    Funktionell Demo:
+    Ge en demo, köra applikationen och visa all funktionalitet som implementerats. 
+    Kan bli ganska coolt, kör emulatorn på en dator samtidigt som någon i gruppen kör appen på mobilen samtidigt bredvid.
+    Kolla på eventuella lösningar där man kan visa en mobilskärm på projektorn så man får se appen på en faktisk mobil.
+    Teknisk genomgång:
+    Ska ha slides över applikationens uppbyggnad baserade på tillhörande SDD.
+    Teknisk genomgång + Demo ska totalt ta 15 minuter
+    QnA:
+    5 minuter sätts undan till frågor, ha koden nära till hands så den kan visas upp.
+    Hoppas att vi får måndag eftermiddag så att Matilda också kan vara med.
+    Planeringen kan bli problematisk eftersom Elin och Matilda kommer befinna sig på annan ort under en viss tid.
+    Ska försöka träffas en stund när Matilda är kvar, Elin finns med via länk.
+
+-RAD och SDD:
+    En PDF med UML-diagram har gjorts, men kodstrukturen har ändrats en del, så den måste göras om innan inlämningen.
+    Dela upp Diagrammen i Hög- och Låg-nivå, beroende på vilken grad av översikt man är ute efter. En med översikt över paket och en som är mer inriktad på klasser.
+    Domämnmodellen har tappat en "Låda", men ser annars likadan ut.
+
+-Refaktorering och Code Review:
+    Refakotrering kan göras av Elin då hon ska åka mycket tåg och därmed har en del tid att döda.
+    Kommentarer och metodnamn i BackendDataHandler måste ses över så de klargör vad koden faktiskt gör på ett bättre sätt.
+
+-Skriva tester
+    Alla skriver tester i mån av tid, i nuläget är vår code-coverage väldigt låg, måste vara betydligt högre.
+    Lite svårt att testa en del saker i vår backend, då den utgörs av Firebase. Dock har firebase en egen testfunktionalitet, vi slänger ett öga på denna.
+
+-Buggfixning/Generella förbättringar:
+    Definera en lista över Known Bugs och ha med den i inlämningsdokumenten.
+    Är lång laddningstid med en vit skärm när man backar ut ur en detaljvy,
+    detta beror på att detaljvyn och resten av applikationen är två separata activites och man växlar mellan dessa genom 
+    att växla till activites genom att starta dem från den activity man befinner sig i.
+    Även ett bugg att det skapas två HomeFragments när applikationen startas.
+
+## Outcomes and assignments (5 min)
+
+- Isak städar backenden, kollar metodnamn och metoder.
+- Arvid och Matilda skriver Tester
+- Joel ser över omstrukturering av koden, ser om vi kan få mer återanvändning av kod.
+- Elin jobbar med Pliancy och ser över UI:n lite
+
+
+## Wrap up
+ - Två nästkommande möten sker nästa vecka, Matilda kanske är med under första, Elin borta hela veckan, främst ska presentation planeras under dessa.

@@ -158,6 +158,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     public void onBackPressed() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent); //TODO check here to see what fragment was the previous one, maybe
+        finish();
     }
 
 

@@ -3,8 +3,10 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.sorting.SortManager;
+import com.masthuggis.boki.utils.Filter;
 import com.masthuggis.boki.utils.SearchHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,11 +24,21 @@ public final class HomePresenter extends AdvertsPresenter {
     public HomePresenter(AdvertsPresenterView view, DataModel dataModel) {
         super(view, dataModel);
         this.view = view;
+        setCurrentDisplayedAds(applyFilters(dataModel.getAllAdverts()));
     }
+
 
     @Override
     public List<Advertisement> getData() {
-        return dataModel.getAllAdverts();
+        if (getCurrentDisplayedAds().size() == 0 && !SearchHelper.isActiveSearch()) {
+            if (!SearchHelper.isActiveFilters())
+                return new ArrayList<>(dataModel.getAllAdverts());
+
+        }
+        if (SearchHelper.isActiveFilters()) {
+            return applyFilters(new ArrayList<>(dataModel.getAllAdverts()));
+        }
+        return getCurrentDisplayedAds();
     }
 
     /**
@@ -37,16 +49,26 @@ public final class HomePresenter extends AdvertsPresenter {
      */
     public void searchPerformed(String query) {
         view.showLoadingScreen();
-
-        if (searchFieldIsEmpty(query)) {
-            super.updateAdverts();
-        } else {
-            SearchHelper.search(query, searchResult -> super.updateAdverts(searchResult));
+        if (!searchFieldIsEmpty(query)) {
+            updateAdverts(SearchHelper.search(query, getData()), false);
+        }else{
+            updateAdverts(SearchHelper.search(query, getData()), true);
         }
     }
 
     /**
-     * Sorts using the selected sort option.
+     * Apply filters if filters are set
+     */
+    public List<Advertisement> applyFilters(List<Advertisement> ads) {
+        int maxPrice = Filter.getInstance().getMaxPrice();
+        List<String> filterTags = Filter.getInstance().getTags();
+        return (SearchHelper.filters(maxPrice, filterTags, ads));
+
+    }
+
+
+    /**
+     * If boolean is true,  sort using the selected sort option
      *
      * @param adverts
      * @return
@@ -67,14 +89,16 @@ public final class HomePresenter extends AdvertsPresenter {
      */
     public void sortOptionSelected(int pos) {
         selectedSortOption = pos;
-        super.updateAdverts();
+        updateAdverts(getData());
     }
 
     private boolean searchFieldIsEmpty(String query) {
-        return query.equals("");
+        return query.length() == 0;
     }
 
     public void updateFromUserInteraction() {
         super.updateAdverts();
+
+
     }
 }

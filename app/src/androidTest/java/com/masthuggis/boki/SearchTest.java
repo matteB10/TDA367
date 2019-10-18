@@ -1,6 +1,6 @@
 package com.masthuggis.boki;
 
-
+/*
 import androidx.test.runner.AndroidJUnit4;
 
 import com.masthuggis.boki.backend.MockRepository;
@@ -20,11 +20,14 @@ import static org.junit.Assert.assertTrue;
 @RunWith(AndroidJUnit4.class)
 public class SearchTest {
     List<Advertisement> ads = new ArrayList<>();
+}
+
 
     @Before
     public void before() {
         ads = MockRepository.getInstance().getLocalJSONAds();
     }
+
 
     @Test
     public void testGetMatchedTitleCallback() {

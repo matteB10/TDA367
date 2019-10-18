@@ -4,7 +4,6 @@ import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.StylingHelper;
-import com.masthuggis.boki.utils.iConditionable;
 
 import java.util.List;
 
@@ -135,7 +134,7 @@ public class DetailsPresenter {
         return isValid;
     }
 
-    public interface View extends iConditionable {
+    public interface View {
         void setName(String name);
 
         void setPrice(long price);
@@ -163,6 +162,8 @@ public class DetailsPresenter {
         void hideFavouriteIcon();
 
         void nothingToDisplay(String message);
+
+        void setCondition(int condition, int color);
     }
 
 
