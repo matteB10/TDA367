@@ -34,7 +34,7 @@ public abstract class AdvertsView extends Fragment implements AdvertsPresenterVi
         setupHeader();
         setupNoResultsFoundView();
         setupPullToRefresh();
-
+ 
         return view;
     }
 
