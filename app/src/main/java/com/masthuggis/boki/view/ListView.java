@@ -9,13 +9,17 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.ListPresenterView;
+import com.masthuggis.boki.utils.GridSpacingItemDecoration;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Abstract class to be used by views wanting to display a list of adverts.
@@ -24,17 +28,18 @@ public abstract class ListView extends Fragment implements ListPresenterView {
     private View view;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter recyclerViewAdapter;
+    private Optional<RecyclerView.LayoutManager> layoutManager = Optional.empty();
+    private Optional<List<RecyclerView.ItemDecoration>> itemDecorations = Optional.empty();
     private LinearLayout noAdvertsFoundContainer;
+    private boolean pullToRefreshIsActivated = false;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.adverts_view, container, false);
-
         setupHeader();
         setupNoResultsFoundView();
         setupPullToRefresh();
-
         return view;
     }
 
@@ -63,31 +68,28 @@ public abstract class ListView extends Fragment implements ListPresenterView {
     }
 
     /**
-     * Setups the pull to refresh by asking the concrete implementation if they want to use the
-     * functionality. If they do, the action handler is setup, else it is disabled.
+     * By default the pullToRefresh is not activated.
      */
     private void setupPullToRefresh() {
         SwipeRefreshLayout swipeRefresh = view.findViewById(R.id.pullToRefresh);
-        if (shouldUsePullToRefresh()) {
-            swipeRefresh.setOnRefreshListener(() -> {
-                optionalPullToRefreshHandler().onCallback();
-                swipeRefresh.setRefreshing(false);
-            });
-        } else {
-            disablePullToRefresh();
-        }
+        swipeRefresh.setEnabled(false);
     }
 
     /**
-     * Setups the recyclerviews adapter, layout and spacing
+     * Setups the recyclerviews adapter, layout and spacing. If values have been provided by the
+     * concrete implementation it will use that, else default values will be used.
      */
     private void setupList() {
         recyclerView = view.findViewById(R.id.advertsViewRecycler);
         recyclerView.setNestedScrollingEnabled(false);
         recyclerViewAdapter = getAdapter();
         recyclerView.setAdapter(recyclerViewAdapter);
-        recyclerView.setLayoutManager(getLayoutManager());
-        recyclerView.addItemDecoration(getSpacingDecorator());
+        recyclerView.setLayoutManager(layoutManager.orElse(new GridLayoutManager(getContext(), 2)));
+        if (itemDecorations.isPresent()) {
+            itemDecorations.get().forEach(item -> recyclerView.addItemDecoration(item));
+        } else {
+            recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 40, true));
+        }
     }
 
     /**
@@ -107,16 +109,29 @@ public abstract class ListView extends Fragment implements ListPresenterView {
 
     protected abstract RecyclerView.Adapter getAdapter();
 
-    protected abstract RecyclerView.LayoutManager getLayoutManager();
+    public void setItemDecorations(List<RecyclerView.ItemDecoration> itemDecorations) {
+        this.itemDecorations = Optional.of(itemDecorations);
+    }
 
-    protected abstract RecyclerView.ItemDecoration getSpacingDecorator();
+    public void setLayoutManager(RecyclerView.LayoutManager layoutManager) {
+        this.layoutManager = Optional.ofNullable(layoutManager);
+    }
 
     /**
      * Gives the concrete implementation the option to provide an action, and therefor activate
-     * the pull-to-refresh behavior. If pull-to-refresh is not desired a null can be returned.
+     * the pull-to-refresh behavior. If this method is not called pull-to-refresh will not be
+     * activated.
      * @return
      */
-    protected abstract @Nullable PullToRefreshCallback optionalPullToRefreshHandler();
+    public void setAndActivatePullToRefreshHandler(PullToRefreshCallback callback) {
+        SwipeRefreshLayout swipeRefresh = view.findViewById(R.id.pullToRefresh);
+        swipeRefresh.setEnabled(true);
+        pullToRefreshIsActivated = true;
+        swipeRefresh.setOnRefreshListener(() -> {
+            callback.onCallback();
+            swipeRefresh.setRefreshing(false);
+        });
+    }
 
     /**
      * Updates the data that is displayed in the recyclerView. Will be called when for example
@@ -138,7 +153,9 @@ public abstract class ListView extends Fragment implements ListPresenterView {
     @Override
     public void showNoThumbnailsAvailableScreen() {
         noAdvertsFoundContainer.setVisibility(View.VISIBLE);
-        view.findViewById(R.id.pullToRefresh).setVisibility(View.INVISIBLE);
+        if (pullToRefreshIsActivated) {
+            view.findViewById(R.id.pullToRefresh).setVisibility(View.INVISIBLE);
+        }
     }
 
     /**
@@ -148,7 +165,9 @@ public abstract class ListView extends Fragment implements ListPresenterView {
     @Override
     public void hideNoThumbnailsAvailableScreen() {
         noAdvertsFoundContainer.setVisibility(View.GONE);
-        view.findViewById(R.id.pullToRefresh).setVisibility(View.VISIBLE);
+        if (pullToRefreshIsActivated) {
+            view.findViewById(R.id.pullToRefresh).setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -180,19 +199,5 @@ public abstract class ListView extends Fragment implements ListPresenterView {
     public void hideLoadingScreen() {
         ProgressBar progressBar = view.findViewById(R.id.advertsViewProgressbar);
         progressBar.setVisibility(View.GONE);
-    }
-
-
-    /**
-     * If the concrete implementation provides a callback to optionalPullToRefreshHandler pull-to-refresh
-     * will be used, in other case it will be disabled.
-     * @return
-     */
-    private boolean shouldUsePullToRefresh() {
-        return optionalPullToRefreshHandler() != null;
-    }
-
-    private void disablePullToRefresh() {
-        view.findViewById(R.id.pullToRefresh).setEnabled(false);
     }
 }

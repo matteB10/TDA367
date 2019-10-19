@@ -1,4 +1,4 @@
-package com.masthuggis.boki.model.sorting;
+package com.masthuggis.boki.utils.sorting;
 
 import com.masthuggis.boki.model.Advertisement;
 

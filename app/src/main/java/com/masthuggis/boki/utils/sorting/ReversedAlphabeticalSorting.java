@@ -1,10 +1,9 @@
-package com.masthuggis.boki.model.sorting;
+package com.masthuggis.boki.utils.sorting;
 
 import com.masthuggis.boki.model.Advertisement;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
