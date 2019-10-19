@@ -11,16 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
-import com.masthuggis.boki.presenter.FavouritesPresenter;
+import com.masthuggis.boki.presenter.FavoritesPresenter;
 import com.masthuggis.boki.utils.ViewCreator;
 
 public class FavoritesFragment extends ListView {
 
-    private FavouritesPresenter presenter;
+    private FavoritesPresenter presenter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.presenter = new FavouritesPresenter(this, DependencyInjector.injectDataModel());
+        this.presenter = new FavoritesPresenter(this, DependencyInjector.injectDataModel());
         View v = super.onCreateView(inflater, container, savedInstanceState);
         presenter.updateData();
         return v;

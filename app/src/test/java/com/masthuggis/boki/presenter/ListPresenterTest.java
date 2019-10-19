@@ -1,14 +1,9 @@
 package com.masthuggis.boki.presenter;
 
-import android.view.View;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.Condition;
 import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.view.ChatFragment;
 import com.masthuggis.boki.view.ListView;
 
 import org.junit.Before;
@@ -27,42 +22,38 @@ import static org.junit.Assert.assertEquals;
 public class ListPresenterTest {
 
     private ListPresenter presenter;
-    private ListPresenterView view;
-    private boolean onCreateHeaderCalled;
-    private boolean onCreateNoResultsFoundCalled;
     private List<Advertisement> testData = new ArrayList<>();
 
     @Mock
     private ListView fragmentMock;
     @Mock
     private DataModel databaseMock;
-    @Mock
-    private ChatFragment chatFragmentMock;
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Before
     public void before() {
-        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
-        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
-        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
 
-        Mockito.when(databaseMock.getAdsFromCurrentUser()).thenReturn(testData);
     }
 
-    private void init() {
-        /*
-        //        Mockito.doNothing().when(chatFragmentMock).showUserChats(null);
-        Mockito.doNothing().when(chatFragmentMock).hideLoadingScreen();
-        Mockito.when(databaseMock.getUserChats()).thenReturn(userChats);
-        //      Mockito.doNothing().when(databaseMock).addChatObserver(null);
-        addMessagesToChats(userChats);
-        when(databaseMock.getUserID()).thenReturn("");
-         */
+    private void createTestData() {
+        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
+        testData.add(AdFactory.createAd("170101200000", "UniqueOwnerID", "UniqueAdID", "Title1","", 490, Condition.GOOD,"", new ArrayList<>(),null));
+        testData.add(AdFactory.createAd("180101200000", "UniqueOwnerID", "UniqueAdID", "Title2","", 300, Condition.GOOD,"", new ArrayList<>(),null));
+        testData.add(AdFactory.createAd("150101200000", "UniqueOwnerID", "UniqueAdID", "Title3","", 230, Condition.GOOD,"", new ArrayList<>(),null));
+        testData.add(AdFactory.createAd("130101200000", "UniqueOwnerID", "UniqueAdID", "Title4","", 300, Condition.GOOD,"", new ArrayList<>(),null));
+        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "longTitleID", "Very Specific Name For Testing Purposes","", 639, Condition.GOOD,"", new ArrayList<>(),null));
     }
+
+    private List emptyList() {
+        return new ArrayList<>();
+    }
+
 
     @Test
     public void testNumDataItemsIsCorrectWhenLoaded() {
+        createTestData();
+        Mockito.when(databaseMock.getAdsFromCurrentUser()).thenReturn(testData);
         presenter = new ProfilePresenter(fragmentMock, databaseMock);
 
         presenter.updateData();
@@ -70,44 +61,90 @@ public class ListPresenterTest {
         assertEquals(testData.size(), presenter.getItemCount());
     }
 
-    class MockPresenter extends ListPresenter {
-        MockPresenter(ListPresenterView view, DataModel dataModel) {
-            super(view, dataModel);
-        }
+    @Test
+    public void testIfDataIsNullListIsSizeZero() {
+        Mockito.when(databaseMock.getAdsFromCurrentUser()).thenReturn(null);
+        presenter = new ProfilePresenter(fragmentMock, databaseMock);
 
-        @Override
-        public List<Advertisement> getData() {
-            return testData;
-        }
+        presenter.updateData();
 
-        @Override
-        public List sort(List data) {
-            return data;
-        }
+        assertEquals(0, presenter.getItemCount());
+    }
 
-        @Override
-        public void onBindThumbnailViewAtPosition(int position, Object dataView) {
+    @Test
+    public void testIfDataIsEmptyListIsSizeZero() {
+        Mockito.when(databaseMock.getAdsFromCurrentUser()).thenReturn(emptyList());
+        presenter = new ProfilePresenter(fragmentMock, databaseMock);
 
+        presenter.updateData();
+
+        assertEquals(0, presenter.getItemCount());
+    }
+
+    @Test
+    public void testThatSortingIsNotPerformedWhenAsked() {
+        createTestData();
+        Mockito.when(databaseMock.getAllAdverts()).thenReturn(testData);
+        HomePresenter presenter = new HomePresenter(fragmentMock, databaseMock);
+        presenter.sortOptionSelected(3);
+
+        presenter.updateData(testData, false);
+
+        List<Advertisement> presenterData = presenter.getData();
+        for (int i = 0; i < testData.size(); i++) {
+            assert(testData.get(i).getTitle() == presenterData.get(i).getTitle());
         }
     }
 
-    class MockView extends ListView {
-        @Override
-        protected View onCreateHeaderLayout() {
-            onCreateHeaderCalled = true;
-            return null;
-        }
+    @Test
+    public void testThatNoDataFoundLayoutIsSetWhenThereIsNoData() {
+        /*
+        createTestData();
+        Mockito.when(databaseMock.getUserFavourites()).thenReturn(emptyList());
+        FavoritesFragment fragment = new FavoritesFragment();
+        presenter = new FavoritesPresenter(fragment, databaseMock);
 
-        @Override
-        protected View onCreateNoResultsFoundLayout() {
-            onCreateNoResultsFoundCalled = true;
-            return null;
-        }
+        presenter.updateData(testData, false);
 
-        @Override
-        protected RecyclerView.Adapter getAdapter() {
-            return null;
-        }
+        verify(fragment, times(1)).showNoThumbnailsAvailableScreen();
+         */
+    }
+
+    @Test
+    public void testSearchPerformedOnlyReturnOne() {
+        createTestData();
+        Mockito.when(databaseMock.getAllAdverts()).thenReturn(testData);
+        HomePresenter presenter = new HomePresenter(fragmentMock, databaseMock);
+
+        presenter.searchPerformed("Very Specific Name For Testing Purposes");
+
+        assertEquals(1, presenter.getItemCount());
+    }
+
+    @Test
+    public void testSearchPerformedWithNoQueryReturnsAllData() {
+        createTestData();
+        Mockito.when(databaseMock.getAllAdverts()).thenReturn(testData);
+        HomePresenter presenter = new HomePresenter(fragmentMock, databaseMock);
+
+        presenter.searchPerformed("");
+
+        assertEquals(testData.size(), presenter.getItemCount());
+    }
+
+    @Test
+    public void testThatBindingViewsIsCalledSameTimeAsDataSize() {
+        /*
+        createTestData();
+        //Mockito.when(databaseMock.getUserFavourites()).thenReturn(testData);
+        //Mockito.doReturn(null).when(presenterMock)
+        //Mockito.doNothing().when(presenterMock).
+        Mockito.when(presenterMock.getData()).thenReturn(testData);
+
+        presenterMock.getData();
+
+        verify(presenterMock, times(6)).onBindThumbnailViewAtPosition(0, null);
+         */
     }
 
 }

@@ -127,7 +127,7 @@ public abstract class ListPresenter<T, U> implements IListPresenter<U> {
      */
     @Override
     public int getItemCount() {
-        if (data == null) {
+        if (data == null || data.isEmpty()) {
             return 0;
         }
 

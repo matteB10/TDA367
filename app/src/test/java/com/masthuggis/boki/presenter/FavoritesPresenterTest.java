@@ -19,9 +19,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
-public class FavouritesPresenterTest {
+public class FavoritesPresenterTest {
 
-    FavouritesPresenter presenter = new FavouritesPresenter(null, DependencyInjector.injectDataModel()); //TODO create mock View, inject
+    FavoritesPresenter presenter = new FavoritesPresenter(null, DependencyInjector.injectDataModel()); //TODO create mock View, inject
 
     @Mock
     private DataModel databaseMock;

@@ -8,8 +8,8 @@ import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.List;
 
-public class FavouritesPresenter extends ListPresenter<Advertisement, ThumbnailView> {
-    public FavouritesPresenter(ListPresenterView view, DataModel dataModel) {
+public class FavoritesPresenter extends ListPresenter<Advertisement, ThumbnailView> {
+    public FavoritesPresenter(ListPresenterView view, DataModel dataModel) {
         super(view, dataModel);
         this.view = view;
     }
