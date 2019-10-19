@@ -14,7 +14,7 @@ public class AdvertTest {
 
 
     Advertisement ad = new Advert("datePublished", "uniqueOwnerID", "advertID", "title",
-            "description", 123, Advert.Condition.OK, "imageUrl", tags, "owner");
+            "description", 123, Condition.OK, "imageUrl", tags, "owner");
 
 
 
@@ -59,7 +59,7 @@ public class AdvertTest {
 
     @Test
     public void getConditionTest() {
-        assert (ad.getCondition().toString().equals(Advert.Condition.OK.toString()));
+        assert (ad.getCondition().toString().equals(Condition.OK.toString()));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class AdvertTest {
     @Test
     public void setTitleTest() {
         Advertisement ad = new Advert("datePublished", "uniqueOwnerID", "advertID", "title",
-                "description", 123, Advert.Condition.OK, "imageUrl", tags, "owner");
+                "description", 123, Condition.OK, "imageUrl", tags, "owner");
         assert (!ad.getTitle().equals("Title set"));
         ad.setTitle("Title set");
         assert (ad.getTitle().equals("Title set"));
@@ -79,7 +79,7 @@ public class AdvertTest {
     @Test
     public void setPriceTest() {
         Advertisement ad = new Advert("datePublished", "uniqueOwnerID", "advertID", "title",
-                "description", 123, Advert.Condition.OK, "imageUrl", tags, "owner");
+                "description", 123, Condition.OK, "imageUrl", tags, "owner");
         assert (ad.getPrice() != 999);
         ad.setPrice(999);
         assert (ad.getPrice() == 999);
@@ -92,7 +92,7 @@ public class AdvertTest {
     @Test
     public void setDescriptionTest() {
         Advertisement ad = new Advert("datePublished", "uniqueOwnerID", "advertID", "title",
-                "description", 123, Advert.Condition.OK, "imageUrl", tags, "owner");
+                "description", 123, Condition.OK, "imageUrl", tags, "owner");
         assert (!ad.getDescription().equals("Changed description"));
         ad.setDescription("Changed description");
         assert (ad.getDescription().equals("Changed description"));
@@ -106,7 +106,7 @@ public class AdvertTest {
         tags.add("tag1");
         tags.add("tag2");
         Advertisement ad = new Advert("datePublished", "uniqueOwnerID", "advertID", "title",
-                "description", 123, Advert.Condition.OK, "imageUrl", tags, "owner");
+                "description", 123, Condition.OK, "imageUrl", tags, "owner");
         assert (!ad.isNewTag("tag1"));
         assert (ad.isNewTag("newTag"));
         tags.add("newTag");
@@ -122,7 +122,7 @@ public class AdvertTest {
         tags.add("tag2");
         assert (tags.size() == 2);
         Advertisement ad = new Advert("datePublished", "uniqueOwnerID", "advertID", "title",
-                "description", 123, Advert.Condition.OK, "imageUrl", tags, "owner");
+                "description", 123, Condition.OK, "imageUrl", tags, "owner");
         ad.toggleTag("tag1");
         assert (ad.getTags().size() == 1);
         assert (ad.getTags().get(0).equals("tag2"));
@@ -134,7 +134,7 @@ public class AdvertTest {
     @Test
     public void setDatePublishedTest() {
         Advertisement ad = new Advert("datePublished", "uniqueOwnerID", "advertID", "title",
-                "description", 123, Advert.Condition.OK, "imageUrl", tags, "owner");
+                "description", 123, Condition.OK, "imageUrl", tags, "owner");
         assert (!ad.getDatePublished().equals("Changed datePublished"));
         ad.setDatePublished("Changed datePublished");
         assert (ad.getDatePublished().equals("Changed datePublished"));
@@ -143,26 +143,26 @@ public class AdvertTest {
     @Test
     public void setConditionTest() {
         Advertisement ad = new Advert("datePublished", "uniqueOwnerID", "advertID", "title",
-                "description", 123, Advert.Condition.OK, "imageUrl", tags, "owner");
-        assert (ad.getCondition() == Advert.Condition.OK);
+                "description", 123, Condition.OK, "imageUrl", tags, "owner");
+        assert (ad.getCondition() == Condition.OK);
         ad.setCondition(R.string.conditionNew);
-        assert (ad.getCondition() == Advert.Condition.NEW);
+        assert (ad.getCondition() == Condition.NEW);
         ad.setCondition(R.string.conditionGood);
-        assert (ad.getCondition() == Advert.Condition.GOOD);
+        assert (ad.getCondition() == Condition.GOOD);
         ad.setCondition(R.string.conditionOk);
-        assert (ad.getCondition() == Advert.Condition.OK);
+        assert (ad.getCondition() == Condition.OK);
         ad.setCondition(123123123);
-        assert (ad.getCondition() == Advert.Condition.UNDEFINED);
+        assert (ad.getCondition() == Condition.UNDEFINED);
         ad.setCondition(0);
-        assert (ad.getCondition() == Advert.Condition.UNDEFINED);
+        assert (ad.getCondition() == Condition.UNDEFINED);
         ad.setCondition(R.string.conditionOk);
-        assert (ad.getCondition() == Advert.Condition.OK);
+        assert (ad.getCondition() == Condition.OK);
     }
 
     @Test
     public void isValidConditionTest() {
         Advertisement ad = new Advert("datePublished", "uniqueOwnerID", "advertID", "title",
-                "description", 123, Advert.Condition.OK, "imageUrl", tags, "owner");
+                "description", 123, Condition.OK, "imageUrl", tags, "owner");
         assert (ad.isValidCondition());
         ad.setCondition(0);
         assert (!ad.isValidCondition());
@@ -173,11 +173,11 @@ public class AdvertTest {
     @Test
     public void getOwnerTest() {
         Advertisement ad = new Advert("datePublished", "uniqueOwnerID", "advertID", "title",
-                "description", 123, Advert.Condition.OK, "imageUrl", tags, "owner");
+                "description", 123, Condition.OK, "imageUrl", tags, "owner");
 
         assert (ad.getOwner().equals("owner"));
         Advert ad2 = new Advert("datePublished", "uniqueOwnerID", "advertID", "title",
-                "description", 123, Advert.Condition.OK, "imageUrl", tags, "owner2");
+                "description", 123, Condition.OK, "imageUrl", tags, "owner2");
         assert (!ad.getOwner().equals("owner2"));
         assert (ad2.getOwner().equals("owner2"));
         Advertisement ad3 = ad;

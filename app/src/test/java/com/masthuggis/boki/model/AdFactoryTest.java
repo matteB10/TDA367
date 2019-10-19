@@ -2,16 +2,11 @@ package com.masthuggis.boki.model;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 public class AdFactoryTest {
 
     List<String> tags = new ArrayList<>();
@@ -23,7 +18,7 @@ public class AdFactoryTest {
             "title",
             "description",
             123123,
-            Advert.Condition.NEW,
+            Condition.NEW,
             "imageUrl",
             new ArrayList<>(),
             "owner");

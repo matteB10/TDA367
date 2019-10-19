@@ -40,8 +40,6 @@ public interface iBackend {
 
     void writeMessage(String uniqueChatID, Map<String, Object> messageMap);
 
-    void setUsername(String username, SuccessCallback successCallback);
-
     void signOut();
 
     void addBackendObserver(BackendObserver backendObserver);

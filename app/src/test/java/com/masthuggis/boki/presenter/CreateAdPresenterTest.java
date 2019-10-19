@@ -209,6 +209,11 @@ public class CreateAdPresenterTest {
         public void setTags(List<String> tags) { }
 
         @Override
+        public void toggleCondition(String id) {
+
+        }
+
+        @Override
         public void displayNotFoundToast(String toast) {
 
         }

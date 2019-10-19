@@ -18,10 +18,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
- * UserRepository is a repository which is used for retrieving information related to the user of the application.
- * Information like current user, current users chats, messages, etc.
+ * Class providing the functionality to convert data from backend into objects to be used
+ * by the domain-layer of the application.
+ * Data is fetched through the iBackend interface.
+ * For methods that are delegating, check the class which is delegated to for comments.
  */
+
 public class UserRepository {
 
     private iBackend backend;
@@ -54,8 +58,13 @@ public class UserRepository {
         backend.userSignUpAndSignIn(email, password, username, successCallback, failureCallback);
     }
 
-
-    void getUser(userCallback userCallback) {
+    /**
+     * Calls method from backend to get current user.
+     * On callback from backend method call creates a new user which is used in model.
+     *
+     * @param userCallback callback used to return a user after and the conversion to user is done.
+     */
+    void getCurrentUser(userCallback userCallback) {
         backend.getUser(dataMap -> {
 
             iUser user = UserFactory.createUser(dataMap.get("email").toString(), dataMap.get("username").toString(), dataMap.get("userID").toString());
@@ -68,31 +77,58 @@ public class UserRepository {
         return backend.isUserSignedIn();
     }
 
+    /**
+     * Creates on callback from backend by using a factory for the chats. Uses helper methods to get the information
+     * needed from the backend to get all needed parameters for creating chats.
+     * @param userID current user ID.
+     * @param chatCallback callback used to return a list of chats.
+     */
     void getUserChats(String userID, chatCallback chatCallback) {
         backend.getUserChats(userID, chatMap -> {
             List<iChat> chatList = new ArrayList<>();
             for (Map<String, Object> map : chatMap) {
                 List<iUser> userList = new ArrayList<>();
-                createUser(map.get("userOneID").toString(), newUser -> {
-                    userList.add(newUser);
-                    createUser(map.get("userTwoID").toString(), newUser1 -> {
-                        userList.add(newUser1);
-                        chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString()
-                                , userList.get(0), userList.get(1), map.get("advertID").toString(), map.get("imageURL").toString(), (boolean) map.get("isActive")));
-                        if (chatList.size() == chatMap.size()) {
-                            chatCallback.onCallback(chatList);
-                        }
-                    });
+                createUsersForChat(map.get("userOneID").toString(), map.get("userTwoID").toString(), userList, () -> {
+                    chatList.add(ChatFactory.createChat(map.get("uniqueChatID").toString()
+                            , userList.get(0), userList.get(1), map.get("advertID").toString(), map.get("imageURL").toString(), (boolean) map.get("isActive")));
+                    if (chatList.size() == chatMap.size()) {
+                        chatCallback.onCallback(chatList);
+                    }
                 });
-
             }
         }, errorMessage -> chatCallback.onCallback(new ArrayList<>()));
     }
 
-    private void createUser(String userID, userCallback userCallback) {
-        backend.getUserFromID(userID, dataMap -> userCallback.onCallback(UserFactory.createUser(dataMap.get("email").toString(), dataMap.get("username").toString(), dataMap.get("userID").toString())));
+    /**
+     * Helper method to get two users from database needed to create a chat.
+     * @param userIDOne user id of participant one.
+     * @param userIDTwo user id of participant two.
+     * @param users list to add the created users to.
+     * @param successCallback callback to tell method caller to proceed on success.
+     */
+    private void createUsersForChat(String userIDOne, String userIDTwo, List<iUser> users, SuccessCallback successCallback) {
+        fetchUserFromDB(userIDOne, users, () -> fetchUserFromDB(userIDTwo, users, successCallback::onSuccess));
     }
 
+    /**
+     * Helper method to get create a user from database.
+     * @param userID id of user to fetch.
+     * @param users list to add new user to.
+     * @param successCallback tells method caller to proceed on success.
+     */
+    private void fetchUserFromDB(String userID, List<iUser> users, SuccessCallback successCallback) {
+        backend.getUserFromID(userID, dataMap -> {
+            users.add((UserFactory.createUser(dataMap.get("email").toString(), dataMap.get("username").toString(), dataMap.get("userID").toString())));
+            successCallback.onSuccess();
+        });
+    }
+
+    /**
+     * Calls backend to fetch information needed to fetch messages. Adds created messages to a list
+     * which it then returns through a messagesCallback.
+     * @param uniqueChatID id needed for backend to find correct chat.
+     * @param messagesCallback used to return a list of messages when fetch is done.
+     */
     public void getMessages(String uniqueChatID, messagesCallback messagesCallback) {
         List<iMessage> messages = new ArrayList<>();
 
@@ -120,10 +156,6 @@ public class UserRepository {
         backend.writeMessage(uniqueChatID, messageMap);
     }
 
-    private void setUsername(String username, SuccessCallback successCallback) {
-        backend.setUsername(username, successCallback);
-    }
-
     void signOut() {
         backend.signOut();
     }
@@ -133,7 +165,7 @@ public class UserRepository {
     }
 
     void deleteIDFromFavourites(String id, String favouriteID) {
-        backend.deleteIDFromFavourites(id,favouriteID);
+        backend.deleteIDFromFavourites(id, favouriteID);
     }
 }
 

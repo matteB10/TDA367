@@ -13,8 +13,9 @@ public class BackendFactory {
 
     public static iBackend createBackend() {
         if (backend == null) {
-            backend= new BackendDataHandler();
+            backend = new BackendDataHandler();
         }
+
             return backend;
         }
 

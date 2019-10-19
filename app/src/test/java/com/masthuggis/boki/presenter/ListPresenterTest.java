@@ -7,16 +7,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.model.AdFactory;
-import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.Condition;
 import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.model.sorting.SortManager;
 import com.masthuggis.boki.view.ListView;
 import com.masthuggis.boki.view.PullToRefreshCallback;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.junit.Before;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -41,9 +40,9 @@ public class ListPresenterTest {
 
         Mockito.doNothing().when(databaseMock);
 
-        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Advert.Condition.GOOD,"", new ArrayList<>(),null));
-        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Advert.Condition.GOOD,"", new ArrayList<>(),null));
-        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Advert.Condition.GOOD,"", new ArrayList<>(),null));
+        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
+        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
+        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
     }
 
     @Test
@@ -53,7 +52,7 @@ public class ListPresenterTest {
 
 
     class MockPresenter extends ListPresenter {
-        public MockPresenter(ListPresenterView view, DataModel dataModel) {
+        MockPresenter(ListPresenterView view, DataModel dataModel) {
             super(view, dataModel);
         }
 
