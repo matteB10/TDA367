@@ -2,21 +2,22 @@ package com.masthuggis.boki.presenter;
 
 import android.view.View;
 
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.Condition;
 import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.view.ChatFragment;
 import com.masthuggis.boki.view.ListView;
-import com.masthuggis.boki.view.PullToRefreshCallback;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,27 +30,45 @@ public class ListPresenterTest {
     private ListPresenterView view;
     private boolean onCreateHeaderCalled;
     private boolean onCreateNoResultsFoundCalled;
-    @Mock private DataModel databaseMock;
-    private List<Advertisement> testData;
+    private List<Advertisement> testData = new ArrayList<>();
+
+    @Mock
+    private ListView fragmentMock;
+    @Mock
+    private DataModel databaseMock;
+    @Mock
+    private ChatFragment chatFragmentMock;
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Before
     public void before() {
-        onCreateHeaderCalled = false;
-        onCreateNoResultsFoundCalled = false;
-        presenter = new MockPresenter(new MockView(), DependencyInjector.injectDataModel());
+        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
+        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
+        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
 
-        Mockito.doNothing().when(databaseMock);
+        Mockito.when(databaseMock.getAdsFromCurrentUser()).thenReturn(testData);
+    }
 
-        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
-        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
-        testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
+    private void init() {
+        /*
+        //        Mockito.doNothing().when(chatFragmentMock).showUserChats(null);
+        Mockito.doNothing().when(chatFragmentMock).hideLoadingScreen();
+        Mockito.when(databaseMock.getUserChats()).thenReturn(userChats);
+        //      Mockito.doNothing().when(databaseMock).addChatObserver(null);
+        addMessagesToChats(userChats);
+        when(databaseMock.getUserID()).thenReturn("");
+         */
     }
 
     @Test
-    public void testNumAdvertsIsCorrect() {
-        assertEquals(presenter.getItemCount(), testData.size());
-    }
+    public void testNumDataItemsIsCorrectWhenLoaded() {
+        presenter = new ProfilePresenter(fragmentMock, databaseMock);
 
+        presenter.updateData();
+
+        assertEquals(testData.size(), presenter.getItemCount());
+    }
 
     class MockPresenter extends ListPresenter {
         MockPresenter(ListPresenterView view, DataModel dataModel) {
@@ -73,7 +92,6 @@ public class ListPresenterTest {
     }
 
     class MockView extends ListView {
-
         @Override
         protected View onCreateHeaderLayout() {
             onCreateHeaderCalled = true;
@@ -88,22 +106,6 @@ public class ListPresenterTest {
 
         @Override
         protected RecyclerView.Adapter getAdapter() {
-            return null;
-        }
-
-        @Override
-        protected RecyclerView.LayoutManager getLayoutManager() {
-            return null;
-        }
-
-        @Override
-        protected RecyclerView.ItemDecoration getSpacingDecorator() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        protected PullToRefreshCallback optionalPullToRefreshHandler() {
             return null;
         }
     }
