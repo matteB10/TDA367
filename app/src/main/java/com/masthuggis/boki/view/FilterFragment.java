@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.utils.FilterPresenter;
+import com.masthuggis.boki.presenter.FilterPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 
 import java.util.ArrayList;

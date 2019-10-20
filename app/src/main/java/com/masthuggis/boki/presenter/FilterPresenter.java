@@ -1,4 +1,6 @@
-package com.masthuggis.boki.utils;
+package com.masthuggis.boki.presenter;
+
+import com.masthuggis.boki.utils.Filter;
 
 import java.util.List;
 
