@@ -22,7 +22,7 @@ public class SearchHelper {
     public static List<Advertisement> search(String query, List<Advertisement> advertisements) {
         List<Advertisement> searchRes = new ArrayList<>(); //new list with search results
         String queryStr = query.toLowerCase().trim();
-        hasActiveSearch = query.length() != 0; //if empty query, activeSearch set to 0.
+        hasActiveSearch = query.length() > 0; //if empty query, activeSearch set to 0.
 
         if (advertisements != null) {
             performSearch(searchRes, queryStr, advertisements);

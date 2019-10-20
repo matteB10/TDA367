@@ -1,28 +1,24 @@
 package com.masthuggis.boki.view;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TableRow;
-
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.masthuggis.boki.R;
 
 import com.masthuggis.boki.utils.StylingHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TagHelper extends AppCompatActivity {
+public class TagHelper {
 
+    /*
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-    }
+    }*/
 
     /**
      * Creates a list with buttons from a list of strings.

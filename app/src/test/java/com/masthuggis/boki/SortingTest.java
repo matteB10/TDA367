@@ -1,28 +1,24 @@
 package com.masthuggis.boki;
 
-import androidx.test.runner.AndroidJUnit4;
 
-import com.masthuggis.boki.backend.MockRepository;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.utils.sorting.SortFactory;
 import com.masthuggis.boki.utils.sorting.SortStrategy;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(AndroidJUnit4.class)
 public class SortingTest {
     private List<Advertisement> adverts = new ArrayList<>();
 
     @Before
     public void before() {
-        adverts = MockRepository.getInstance().getLocalJSONAds();
+        adverts = MockRepository.getInstance().getTestAds();
     }
 
     private void sort(SortStrategy strategy) {
@@ -33,7 +29,7 @@ public class SortingTest {
     public void testAlphabeticalSortingIsCorrect() {
         sort(SortFactory.getAlphabeticalSorting());
 
-        assertEquals(adverts.get(0).getTitle().toLowerCase(), "arikitektur");
+        assertEquals(adverts.get(0).getTitle().toLowerCase(), "arkitektur");
         assertEquals(adverts.get(1).getTitle().toLowerCase(), "calculus");
         assertEquals(adverts.get(2).getTitle().toLowerCase(), "clean code");
         assertEquals(adverts.get(3).getTitle().toLowerCase(), "design");
@@ -50,7 +46,7 @@ public class SortingTest {
         assertEquals(adverts.get(2).getTitle().toLowerCase(), "design");
         assertEquals(adverts.get(3).getTitle().toLowerCase(), "clean code");
         assertEquals(adverts.get(4).getTitle().toLowerCase(), "calculus");
-        assertEquals(adverts.get(5).getTitle().toLowerCase(), "arikitektur");
+        assertEquals(adverts.get(5).getTitle().toLowerCase(), "arkitektur");
     }
 
     @Test
@@ -75,7 +71,7 @@ public class SortingTest {
 
         assertEquals(adverts.get(0).getTitle().toLowerCase(), "clean code");
         assertEquals(adverts.get(1).getTitle().toLowerCase(), "design");
-        assertEquals(adverts.get(2).getTitle().toLowerCase(), "arikitektur");
+        assertEquals(adverts.get(2).getTitle().toLowerCase(), "arkitektur");
         assertEquals(adverts.get(3).getTitle().toLowerCase(), "linjär algebra");
         assertEquals(adverts.get(4).getTitle().toLowerCase(), "calculus");
         assertEquals(adverts.get(5).getTitle().toLowerCase(), "diskret");

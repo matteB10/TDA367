@@ -2,11 +2,14 @@ package com.masthuggis.boki;
 
 import com.masthuggis.boki.utils.FormHelper;
 
-import static org.junit.Assert.*;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.File;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class FormHelperTest {
 
@@ -61,6 +64,17 @@ public class FormHelperTest {
 
         assertTrue(fm.isValidPrice("350"));
         assertTrue(fm.isValidPrice("0"));
+
+        try {
+            String name = new File(".").getCanonicalPath();
+            System.out.println("Test " + name);
+            File file = new File(name, "/" + "mookBooks.json");
+            System.out.println(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("jävla skit");
+        }
     }
+
 
 }
