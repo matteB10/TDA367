@@ -1,12 +1,12 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.model.AdFactory;
-import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.Condition;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.CurrentTimeHelper;
 import com.masthuggis.boki.utils.FormHelper;
+import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
@@ -77,12 +77,7 @@ public class CreateAdPresenter {
         view.setDescription(advertisement.getDescription());
         view.setImageUrl(advertisement.getImageUrl());
         view.setTags(advertisement.getTags());
-        setCondition();
-    }
-
-    private void setCondition(){
-        String id = advertisement.getCondition().toString();
-        view.toggleCondition(id);
+        view.setCondition(advertisement.getCondition(),true);
     }
 
     /**Method called when the title edit view is changed, to save the
@@ -138,7 +133,7 @@ public class CreateAdPresenter {
      */
     public void userDefTagsChanged(String tag) {
         if (isTagSelected(tag)) {
-            view.displayUserTagButton(tag);
+            view.displayNewUserTagButton(tag);
         } else {
             view.removeUserTagButton(tag);
         }
@@ -152,6 +147,14 @@ public class CreateAdPresenter {
         return advertisement.isNewTag(tag);
     }
 
+
+    /** Checks if condition aldready is selected
+     * @return true if tag is selected
+     */
+    private boolean isNewCondition(int condition) {
+        return advertisement.getCondition() != StylingHelper.getConditionFromView(condition);
+    }
+
     /**
      * Updates Advert when condition changed, changes
      * styling of changed condition button in view.
@@ -159,7 +162,7 @@ public class CreateAdPresenter {
      */
     public void conditionChanged(int condition) {
         advertisement.setCondition(condition);
-        //view.styleConditionButtonPressed(condition);
+        view.setCondition(advertisement.getCondition(),isNewCondition(condition));
         view.enablePublishButton(allFieldsValid());
         view.enableSaveButton(allFieldsValid());
 
@@ -236,11 +239,9 @@ public class CreateAdPresenter {
 
         void enableSaveButton(boolean b);
 
-        void styleConditionButtonPressed(int condition);
-
         void setPreDefTagSelected(String tag, boolean isPressed);
 
-        void displayUserTagButton(String tag);
+        void displayNewUserTagButton(String tag);
 
         void removeUserTagButton(String tag);
 
@@ -248,7 +249,7 @@ public class CreateAdPresenter {
 
         void setTags(List<String> tags);
 
-        void toggleCondition(String id);
+        void setCondition(Condition id, boolean pressed);
 
         void displayNotFoundToast(String toast);
     }

@@ -186,16 +186,13 @@ public class CreateAdPresenterTest {
         public void enableSaveButton(boolean b) {
 
         }
-        @Override
-        public void styleConditionButtonPressed(int condition) {
 
-        }
         @Override
         public void setPreDefTagSelected(String tag, boolean isPressed) {
 
         }
         @Override
-        public void displayUserTagButton(String tag) {
+        public void displayNewUserTagButton(String tag) {
 
         }
         @Override
@@ -209,9 +206,10 @@ public class CreateAdPresenterTest {
         public void setTags(List<String> tags) { }
 
         @Override
-        public void toggleCondition(String id) {
+        public void setCondition(Condition id, boolean pressed) {
 
         }
+
 
         @Override
         public void displayNotFoundToast(String toast) {

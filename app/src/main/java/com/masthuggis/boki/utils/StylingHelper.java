@@ -39,21 +39,45 @@ public class StylingHelper {
 
     }
 
-    public static int getConditionDrawable(Condition condition) {
+    public static int getConditionDrawable(Condition condition, boolean isPressed) {
         int drawable = 0;
         switch (condition) {
             case NEW:
-                drawable = R.drawable.button_new_condition;
+                if (isPressed) {
+                    drawable = R.drawable.button_new_condition_checked;
+                } else {
+                    drawable = R.drawable.button_new_condition;
+                }
                 break;
             case GOOD:
-                drawable = R.drawable.button_good_condition;
+                if (isPressed) {
+                    drawable = R.drawable.button_good_condition_checked;
+                } else {
+                    drawable = R.drawable.button_good_condition;
+                }
                 break;
             case OK:
-                drawable = R.drawable.button_ok_condition;
+                if (isPressed) {
+                    drawable = R.drawable.button_ok_condition_checked;
+                } else {
+                    drawable = R.drawable.button_ok_condition;
+                }
                 break;
         }
         return drawable;
+    }
 
+    public static Condition getConditionFromView(int conditionButton) {
+        switch (conditionButton) {
+            case R.id.conditionGoodButton:
+                return Condition.GOOD;
+            case R.id.conditionNewButton:
+                return Condition.NEW;
+            case R.id.conditionOkButton:
+                return Condition.OK;
+            default:
+                return Condition.UNDEFINED;
+        }
     }
 
     /**

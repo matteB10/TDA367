@@ -19,8 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +28,7 @@ import androidx.core.content.FileProvider;
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
+import com.masthuggis.boki.model.Condition;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
@@ -39,9 +38,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * An acitivity for creating a new advertisement
@@ -102,7 +99,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setPriceListener();
         setDescriptionListener();
         setPublishAdListener();
-        setRadioGroupListener();
         setPreDefTagsListeners();
         setUserTagTextFieldListener();
         setDeleteBtnListener();
@@ -117,23 +113,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             deleteAdButton.setVisibility(View.GONE);
             saveAdButton.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void styleConditionButtonPressed(int conditionButtonPressed) {
-        Button conditionButton = new Button(this);
-        switch (conditionButtonPressed) {
-            case R.string.conditionNew:
-                conditionButton = findViewById(R.id.conditionNewButton);
-                break;
-            case R.string.conditionGood:
-                conditionButton = findViewById(R.id.conditionGoodButton);
-                break;
-            case R.string.conditionOk:
-                conditionButton = findViewById(R.id.conditionOkButton);
-                break;
-        }
-        conditionButton.setElevation(StylingHelper.getDPToPixels(this, 4));
     }
 
     /**
@@ -302,81 +281,17 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     //Tags----------------------------------------------------------
 
     /**
-     * Reads predefined subject strings from resources,
-     *
-     * @return all strings in a list.
-     */
-    private List<String> getPreDefTagStrings() {
-        String[] strArr = getResources().getStringArray(R.array.preDefSubjectTags);
-        return Arrays.asList(strArr);
-    }
-
-    /**
-     * Creates a list with buttons from a list of strings.
-     *
-     * @param strTags, list of button text strings
-     * @return a list of buttons
-     */
-    private List<Button> createPreDefTagButtons(List<String> strTags) {
-        List<Button> btnList = new ArrayList<>();
-        for (String str : strTags) {
-            Button btn = createTagButton(str, false);
-            btnList.add(btn);
-        }
-        return btnList;
-    }
-
-    /**
-     * Create a tag button with correct styling
-     *
-     * @param text
-     * @return a button
-     */
-    private Button createTagButton(String text, boolean isSelected) {
-        Button b = new Button(this);
-        b.setText(text);
-        StylingHelper.setTagButtonStyling(b, isSelected);
-        return b;
-    }
-
-    /**
-     * @param tags         a list of buttons
-     * @param parentLayout the layout in which buttons will be placed
-     */
-    private void populateTagsLayout(List<Button> tags, ViewGroup parentLayout) {
-        for (Button btn : tags) {
-            ViewGroup tableRow = getCurrentTagRow(parentLayout.getId());
-            tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
-        }
-    }
-
-    /**
-     * Method to check if row is full
-     *
-     * @param tableRow the row to be checked
-     * @return true if row is full
-     */
-    private boolean rowFull(TableRow tableRow) {
-        return (tableRow.getChildCount() % 3 == 0 && tableRow.getChildCount() != 0);
-    }
-
-    /**
      * Called in onCreate, create tag buttons and add them to the view
      */
     private void displayPreDefTagButtons() {
         LinearLayout preDefTagsLayout = findViewById(R.id.preDefTagsLinearLayout);
-        List<Button> tagButtons = createPreDefTagButtons(getPreDefTagStrings());
-        preDefTagButtons = tagButtons;
-        populateTagsLayout(tagButtons, preDefTagsLayout);
+        preDefTagButtons = TagHelper.createPreDefTagButtons(this);
+        TagHelper.displayTagButtons(preDefTagsLayout,new ArrayList<>(preDefTagButtons),this);
     }
 
     @Override
     public void setPreDefTagSelected(String tag, boolean isSelected) {
-        for (Button btn : preDefTagButtons) {
-            if (btn.getText().equals(tag)) {
-                StylingHelper.setTagButtonStyling(btn, isSelected);
-            }
-        }
+        TagHelper.styleSelectedTag(tag,new ArrayList<>(preDefTagButtons),isSelected);
     }
 
     /**
@@ -386,12 +301,12 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      * @param tag
      */
     @Override
-    public void displayUserTagButton(String tag) {
-        Button btn = createTagButton(tag, true);
+    public void displayNewUserTagButton(String tag) {
+        Button btn = TagHelper.createTagButton(tag, true, this);
         userDefTagButtons.add(btn);
-        ViewGroup currentUserTagTableRow = getCurrentTagRow(R.id.tagsLinearLayout);
+        ViewGroup userTagsLayout = findViewById(R.id.tagsLinearLayout);
         setUserDefTagsListener(btn);
-        currentUserTagTableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
+        TagHelper.displayTagButtons(userTagsLayout,new ArrayList<>(userDefTagButtons),this);
     }
 
     /**
@@ -410,24 +325,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         updateUserDefTags();
     }
 
-    /**
-     * Returns first not filled row in a layout given as parameter,
-     * or a new row if all rows are filled or layout has no rows.
-     * @param parentViewID
-     * @return a new TableRow
-     */
-    private ViewGroup getCurrentTagRow(int parentViewID) {
-        ViewGroup parentLayout = findViewById(parentViewID);
-        int noOfRows = parentLayout.getChildCount();
-        for (int i = 0; i < noOfRows; i++) {
-            if (!(rowFull((TableRow) parentLayout.getChildAt(i)))) {
-                return (TableRow) parentLayout.getChildAt(i);
-            }
-        }
-        ViewGroup tr = new TableRow(this);
-        parentLayout.addView(tr, StylingHelper.getTableRowLayoutParams(this));
-        return tr;
-    }
 
     /**
      * Used to update tags layout correctly if a tag
@@ -435,8 +332,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      */
     private void updateUserDefTags() {
         ViewGroup parentLayout = findViewById(R.id.tagsLinearLayout);
-        clearLayout(parentLayout);
-        populateTagsLayout(userDefTagButtons, parentLayout);
+        TagHelper.clearLayout(parentLayout);
+        TagHelper.populateTagsLayout(new ArrayList<>(userDefTagButtons), parentLayout,this);
     }
 
     /**
@@ -445,41 +342,14 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      * @param btnText, the button text
      * @return a button if btnText matches the text of a button
      */
-    private Button getButtonFromText(String btnText, List<Button> buttons) throws NoSuchElementException {
+    private Button getButtonFromText(String btnText, List<Button> buttons){
         try {
-            for (Button btn : buttons) {
-                if (btn.getText().toString().equals(btnText)) {
-                    return btn;
-                }
-            }
-            throw new NoSuchElementException();
+           return TagHelper.getButtonWithText(btnText,buttons);
 
-        } catch (NoSuchElementException e) {
-            Toast.makeText(getApplicationContext(), "Ingen knapp med detta namn hittas tyvärr, prova uppdatera vyn.", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.errorToastCreateAd), Toast.LENGTH_SHORT).show();
         }
         return null;
-    }
-
-    /**
-     * Checks if tag is preDef or userDef
-     * @param tag
-     * @return
-     */
-    private boolean isPreDefTag(String tag) {
-        List<String> preDefTags = getPreDefTagStrings();
-        return (preDefTags.contains(tag));
-    }
-
-    /**
-     * Clear rows in layout from children
-     */
-    private void clearLayout(ViewGroup layout) {
-        ViewGroup tr;
-        int noOfRows = layout.getChildCount();
-        for (int i = 0; i < noOfRows; i++) {
-            tr = (TableRow) layout.getChildAt(i);
-            tr.removeAllViews();
-        }
     }
 
     //Listeners-----------------------------------------------------
@@ -514,23 +384,14 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         finish();
     }
 
-    private void setRadioGroupListener() {
-        RadioGroup group = findViewById(R.id.conditionRadioGroup);
-        group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                presenter.conditionChanged(checkedId);
-            }
-        });
-    }
 
     /**
-     * Called when a radiobutton is checked. Updates the listener.
-     *
+     * Called when a radiobutton is clicked.
      * @param view is the specific button that is checked.
-     */
+     **/
+
     public void onRadioButtonClicked(View view) {
-        setRadioGroupListener();
+        presenter.conditionChanged(view.getId());
     }
 
     private void setImageViewListener() {
@@ -665,28 +526,34 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     @Override
     public void setTags(List<String> tags) {
         for (String str : tags) {
-            if (isPreDefTag(str)) {
+            if (TagHelper.isPreDefTag(str,this)) {
                 setPreDefTagSelected(str, true); //if str is preDefTag, style as selected
             } else {
-                displayUserTagButton(str);
+                displayNewUserTagButton(str);
             }
         }
     }
 
     @Override
-    public void toggleCondition(String id){
+    public void setCondition(Condition id, boolean pressed){
         RadioButton conditionNew = findViewById(R.id.conditionNewButton);
         RadioButton conditionGood = findViewById(R.id.conditionGoodButton);
         RadioButton conditionOk = findViewById(R.id.conditionOkButton);
         switch (id) {
-            case "NEW":
-                conditionNew.toggle();
+            case NEW:
+                conditionNew.setBackgroundResource(StylingHelper.getConditionDrawable(id,true));
+                conditionGood.setBackgroundResource(StylingHelper.getConditionDrawable(Condition.GOOD,false));
+                conditionOk.setBackgroundResource(StylingHelper.getConditionDrawable(Condition.OK,false));
                 break;
-            case "GOOD":
-                conditionGood.toggle();
+            case GOOD:
+                conditionGood.setBackgroundResource(StylingHelper.getConditionDrawable(id,true));
+                conditionNew.setBackgroundResource(StylingHelper.getConditionDrawable(Condition.NEW,false));
+                conditionOk.setBackgroundResource(StylingHelper.getConditionDrawable(Condition.OK,false));
                 break;
-            case "OK":
-                conditionOk.toggle();
+            case OK:
+                conditionOk.setBackgroundResource(StylingHelper.getConditionDrawable(id,true));
+                conditionNew.setBackgroundResource(StylingHelper.getConditionDrawable(Condition.NEW,false));
+                conditionGood.setBackgroundResource(StylingHelper.getConditionDrawable(Condition.GOOD,false));
                 break;
         }
     }

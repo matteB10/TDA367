@@ -96,6 +96,8 @@
     <string name="toastUpdatedAd">Din annons är uppdaterad</string>
     <string name="toastCreatedAd">Din annons är upplagd</string>
 
+    <string name="errorToastCreateAd">"Ingen tag med detta namn kan hittas, testa att uppdatera vyn."</string>
+
 
     <!--- filter activity -->
     <string name="filter">Filtrera</string>

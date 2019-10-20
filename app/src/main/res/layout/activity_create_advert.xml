@@ -204,42 +204,45 @@
 
                         <RadioButton
                             android:id="@+id/conditionNewButton"
-                            android:layout_width="100dp"
-                            android:layout_height="50dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:layout_marginStart="30dp"
                             android:layout_marginTop="0dp"
-                            android:background="@drawable/button_new_condition"
-                            android:button="@android:drawable/btn_radio"
-                            android:gravity="center"
+                            android:button="@null"
                             android:onClick="onRadioButtonClicked"
+                            android:background="@drawable/button_new_condition"
+                            android:gravity="center"
                             android:text="@string/conditionNew"
                             android:textColor="@color/colorWhite" />
 
                         <RadioButton
                             android:id="@+id/conditionGoodButton"
-                            android:layout_width="100dp"
-                            android:layout_height="50dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:layout_marginStart="30dp"
+                            android:checked="true"
                             android:layout_marginTop="0dp"
+                            android:button="@null"
+                            android:onClick="onRadioButtonClicked"
                             android:background="@drawable/button_good_condition"
-                            android:button="@android:drawable/btn_radio"
                             android:gravity="center"
                             android:text="@string/conditionGood"
                             android:textColor="@color/colorWhite"
-                            android:onClick="onRadioButtonClicked" />
+                             />
 
                         <RadioButton
                             android:id="@+id/conditionOkButton"
-                            android:layout_width="100dp"
-                            android:layout_height="50dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:layout_marginStart="30dp"
                             android:layout_marginTop="0dp"
+                            android:button="@null"
+                            android:onClick="onRadioButtonClicked"
                             android:background="@drawable/button_ok_condition"
-                            android:button="@android:drawable/btn_radio"
                             android:gravity="center"
                             android:text="@string/conditionOk"
                             android:textColor="@color/colorWhite"
-                            android:onClick="onRadioButtonClicked"/>
+                            />
 
                     </RadioGroup>
 

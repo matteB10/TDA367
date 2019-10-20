@@ -56,7 +56,7 @@ public class DetailsPresenter {
     }
 
     private void setCondition() {
-        int drawable = StylingHelper.getConditionDrawable(advertisement.getCondition());
+        int drawable = StylingHelper.getConditionDrawable(advertisement.getCondition(),false);
         int text = StylingHelper.getConditionText(advertisement.getCondition());
         view.setCondition(text, drawable);
     }

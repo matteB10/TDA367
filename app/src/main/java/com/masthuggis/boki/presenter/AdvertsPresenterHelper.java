@@ -23,7 +23,7 @@ public class AdvertsPresenterHelper {
     }
 
     private static void setCondition(Advertisement a, ThumbnailView thumbnailView) {
-        int drawable = StylingHelper.getConditionDrawable(a.getCondition());
+        int drawable = StylingHelper.getConditionDrawable(a.getCondition(),false);
         int text = StylingHelper.getConditionText(a.getCondition());
         thumbnailView.setCondition(text, drawable);
     }

@@ -19,7 +19,7 @@ public class FilterPresenter {
         } else {
             filter.removeTag(tag);
         }
-        view.addTag(tag, !isSelected(tag));
+        view.addTagToFilters(tag, !isSelected(tag));
     }
 
     public List<String> getPreDefTags() {
@@ -63,14 +63,14 @@ public class FilterPresenter {
     }
     private void setSelectedTags(){
         for(String tag : filter.getTags()){
-            view.addTag(tag,true);
+            view.addTagToFilters(tag,true);
         }
     }
 
 
     public interface View {
 
-        void addTag(String tag, boolean isSelected);
+        void addTagToFilters(String tag, boolean isSelected);
 
         void setMaxPrice(int i);
 
