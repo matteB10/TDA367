@@ -114,6 +114,7 @@
 
     //Errors
     <string name="noAdvertFoundDetailsPresenter">"Hittar ingen annons med denna beskrivning."</string>
+    <string name="removedChats">\" har tagit bort annonsen ni diskuterat, er konversation kommer att arkiveras.\"</string>
 
 
 </resources>

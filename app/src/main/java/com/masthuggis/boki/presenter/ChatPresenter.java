@@ -99,6 +99,10 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
     @Override
     public void onChatUpdated() {
         super.updateData();
+        checkIfChatsAreActive();
+        sortChatsAccordingToLastMessageSent(getData());
+        view.updateThumbnails();
+
     }
 
     public void onDestroy() {
