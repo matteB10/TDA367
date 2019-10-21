@@ -14,17 +14,14 @@ import org.mockito.junit.MockitoRule;
 import static org.mockito.Mockito.*;
 
 public class ValidatorPresentersTest {
-    @Mock
-    private ValidatorView viewMock;
-    @Mock
-    private DataModel dataMock;
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
+    @Mock private ValidatorView viewMock;
+    @Mock private DataModel dataMock;
     private SignInPresenter signInPresenter;
     private SignUpPresenter signUpPresenter;
     @Mock SignUpActivity signUpActivityMock;
     @Mock SignInActivity signInActivity;
 
+    @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Test
     public void whenBadInputIsGivenUserIsNotSignedUp() {
@@ -61,7 +58,7 @@ public class ValidatorPresentersTest {
     public void whenGoodInputIsGivenUserIsSignedIn() {
         signInPresenter = new SignInPresenter(signInActivity, dataMock);
 
-        signInPresenter.onSignInButtonPressed("", "password");
+        signInPresenter.onSignInButtonPressed("valid@email.com", "password");
 
         verify(signInActivity, times(0)).accessGranted();
         verify(dataMock).signIn(anyString(), anyString(), any(), any());
