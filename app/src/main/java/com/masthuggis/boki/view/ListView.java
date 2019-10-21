@@ -178,7 +178,7 @@ public abstract class ListView extends Fragment implements ListPresenterView {
     @Override
     public void showDetailsScreen(String id) {
         Intent intent = new Intent(getContext(), DetailsActivity.class);
-        intent.putExtra("advertID", id);
+        intent.putExtra(getString(R.string.keyForAdvert), id);
         startActivity(intent);
     }
 

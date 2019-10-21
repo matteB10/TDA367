@@ -1,6 +1,5 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.StylingHelper;
@@ -14,13 +13,12 @@ import java.util.List;
  * <p>
  * It is the layer between the view and model and should therefore
  */
-
-
 public class DetailsPresenter {
     private View view;
     private Advertisement advertisement;
     private DataModel dataModel;
-    private boolean isValid;
+    private boolean advertExists;
+    private boolean contactOwnerButtonClickedOnceBefore = false;
 
     public DetailsPresenter(View view, String advertID, DataModel dataModel) {
         this.dataModel = dataModel;
@@ -28,11 +26,10 @@ public class DetailsPresenter {
         this.advertisement = this.dataModel.getAdFromAdID(advertID);
         if (advertisement == null) {
             view.nothingToDisplay("Hittar ingen annons, var vänlig uppdatera vyn.");
-            isValid = false;
+            advertExists = false;
             return;
-
         } else {
-            isValid = true;
+            advertExists = true;
         }
         setupView();
 
@@ -62,24 +59,14 @@ public class DetailsPresenter {
     }
 
     private void createNewChat() {
-
         if (advertisement.getUniqueOwnerID().equals(dataModel.getUserID())) {
-            view.showToast();
+            view.showCanNotSendMessageToHimselfToast();
             return;
         }
-        //public void createNewChat(String uniqueOwnerID,String advertID, stringCallback stringCallback,String receiverUsername) {
-
 
         dataModel.createNewChat(advertisement.getUniqueOwnerID(), dataModel.getUserID(), advertisement.getUniqueID(),
-                advertisement.getImageUrl(), new stringCallback() {
-                    @Override
-                    public void onCallback(java.lang.String chatID) {
-                        view.openChat(chatID);
-
-                    }
-                });
+                advertisement.getImageUrl(), chatID -> view.openChat(chatID));
     }
-
 
     private void openChat(String chatID) {
         view.openChat(chatID);
@@ -94,8 +81,8 @@ public class DetailsPresenter {
         view.showEditView(uniqueID);
     }
 
-    public void contactOwnerBtnClicked(String btnText) {
-        if (btnText.equals("Starta chatt")) {
+    public void contactOwnerBtnClicked() {
+        if (contactOwnerButtonClickedOnceBefore) {
             String chatID = dataModel.findChatID(advertisement.getUniqueID());
             if (chatID != null) {
                 openChat(chatID);
@@ -105,15 +92,17 @@ public class DetailsPresenter {
         } else {
             view.setOwnerButtonText("Starta chatt");
         }
+
+        contactOwnerButtonClickedOnceBefore = true;
     }
 
     public void onFavouritesIconPressed() {
         if (currentAdvertIsFavourite()) {
             dataModel.removeFromFavourites(advertisement);
-            view.setNotFavouriteIcon();
+            view.setIsNotAFavouriteIcon();
         } else {
             dataModel.addToFavourites(advertisement);
-            view.setFavouriteIcon();
+            view.setIsAFavouriteIcon();
         }
     }
 
@@ -121,17 +110,17 @@ public class DetailsPresenter {
         if (isUserOwner()) {
             view.hideFavouriteIcon();
         } else if (currentAdvertIsFavourite()) {
-            view.setFavouriteIcon();
+            view.setIsAFavouriteIcon();
         } else {
-            view.setNotFavouriteIcon();
+            view.setIsNotAFavouriteIcon();
         }
     }
 
     private boolean currentAdvertIsFavourite() {
         return dataModel.isAFavourite(advertisement);
     }
-    public boolean isValid(){
-        return isValid;
+    public boolean advertExists(){
+        return advertExists;
     }
 
     public interface View {
@@ -149,15 +138,15 @@ public class DetailsPresenter {
 
         void openChat(String chatID);
 
-        void showToast();
+        void showCanNotSendMessageToHimselfToast();
 
         void showEditView(String uniqueID);
 
         void setOwnerButtonText(String content);
 
-        void setFavouriteIcon();
+        void setIsAFavouriteIcon();
 
-        void setNotFavouriteIcon();
+        void setIsNotAFavouriteIcon();
 
         void hideFavouriteIcon();
 
@@ -165,6 +154,4 @@ public class DetailsPresenter {
 
         void setCondition(int condition, int color);
     }
-
-
 }

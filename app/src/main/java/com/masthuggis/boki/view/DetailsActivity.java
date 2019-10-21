@@ -30,8 +30,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     private DetailsPresenter presenter;
     private Button contactOwnerButton;
     private ImageView favouritesIcon;
-    private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,25 +37,29 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         setContentView(R.layout.activity_details);
         favouritesIcon = findViewById(R.id.favouritesIcon);
         Intent intent = getIntent();
-        String advertID = intent.getExtras().getString("advertID");
+        String advertID = intent.getExtras().getString(getString(R.string.keyForAdvert));
+
         if (advertID != null) {
             presenter = new DetailsPresenter(this, advertID, DependencyInjector.injectDataModel());
         }
-        if (presenter.isValid()) {
-            contactOwnerButton = findViewById(R.id.contactOwnerButton);
-            contactOwnerButton.setOnClickListener(view -> {
-                if (canProceedWithTapAction()) {
-                    presenter.contactOwnerBtnClicked(contactOwnerButton.getText().toString()); //Should the logic be based off this string?
-                }
-            });
-            Button changeAd = findViewById(R.id.changeAdButton);
-            changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
-            setUpFavouriteIcon();
-            setVisibilityOnButtons();
-        }
 
+        if (presenter.advertExists()) {
+            setupUI();
+        }
     }
 
+    private void setupUI() {
+        contactOwnerButton = findViewById(R.id.contactOwnerButton);
+        contactOwnerButton.setOnClickListener(view -> {
+            if (canProceedWithTapAction()) {
+                presenter.contactOwnerBtnClicked();
+            }
+        });
+        Button changeAd = findViewById(R.id.changeAdButton);
+        changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
+        setUpFavouriteIcon();
+        setVisibilityOnButtons();
+    }
 
     @Override
     public void setName(String name) {
@@ -117,7 +119,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
 
-    public void showToast() {
+    public void showCanNotSendMessageToHimselfToast() {
         Context context = getApplicationContext();
         CharSequence text = "Du kan inte skicka meddelanden till dig själv.";
         int duration = Toast.LENGTH_LONG;
@@ -139,7 +141,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     @Override
     public void showEditView(String uniqueID) {
         Intent intent = new Intent(DetailsActivity.this, CreateAdActivity.class);
-        intent.putExtra("advertID", uniqueID);
+        intent.putExtra(getString(R.string.keyForAdvert), uniqueID);
         startActivity(intent);
     }
 
@@ -149,13 +151,13 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
     @Override
-    public void setFavouriteIcon() {
+    public void setIsAFavouriteIcon() {
         Drawable favouriteIcon = ContextCompat.getDrawable(this, R.drawable.heart_filled_vector);
         favouritesIcon.setImageDrawable(favouriteIcon);
     }
 
     @Override
-    public void setNotFavouriteIcon() {
+    public void setIsNotAFavouriteIcon() {
         Drawable notFavouriteIcon = ContextCompat.getDrawable(this, R.drawable.heart_outline_vector);
         favouritesIcon.setImageDrawable(notFavouriteIcon);
     }

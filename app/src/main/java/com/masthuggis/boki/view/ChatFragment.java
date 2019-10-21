@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -80,7 +79,7 @@ public class ChatFragment extends ListView implements ChatPresenter.View {
     @Override
     public void displayToast(String displayName) {
         Context context = getContext();
-        CharSequence text = displayName + " har tagit bort annonsen ni diskuterat, er konversation kommer att arkiveras.";
+        CharSequence text = displayName + getString(R.string.removedChats);
         int duration = Toast.LENGTH_LONG;
 
         Toast toast = Toast.makeText(context, text, duration);

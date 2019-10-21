@@ -4,6 +4,8 @@ import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.Condition;
 import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.utils.ClickDelayHelper;
+import com.masthuggis.boki.view.FavoritesFragment;
 import com.masthuggis.boki.view.ListView;
 
 import org.junit.Before;
@@ -18,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class ListPresenterTest {
 
@@ -28,6 +32,10 @@ public class ListPresenterTest {
     private ListView fragmentMock;
     @Mock
     private DataModel databaseMock;
+    @Mock
+    private ListPresenter presenterMock;
+    @Mock
+    private ClickDelayHelper clickDelayHelper;
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
@@ -98,16 +106,12 @@ public class ListPresenterTest {
 
     @Test
     public void testThatNoDataFoundLayoutIsSetWhenThereIsNoData() {
-        /*
-        createTestData();
         Mockito.when(databaseMock.getUserFavourites()).thenReturn(emptyList());
-        FavoritesFragment fragment = new FavoritesFragment();
-        presenter = new FavoritesPresenter(fragment, databaseMock);
+        presenter = new FavoritesPresenter(fragmentMock, databaseMock);
 
-        presenter.updateData(testData, false);
+        presenter.updateData();
 
-        verify(fragment, times(1)).showNoThumbnailsAvailableScreen();
-         */
+        verify(fragmentMock, times(1)).showNoThumbnailsAvailableScreen();
     }
 
     @Test
@@ -133,18 +137,14 @@ public class ListPresenterTest {
     }
 
     @Test
-    public void testThatBindingViewsIsCalledSameTimeAsDataSize() {
-        /*
+    public void testThatDetailsViewIsNotShownWhenRowIsPressedWhenNoDataIsAvailable() {
         createTestData();
-        //Mockito.when(databaseMock.getUserFavourites()).thenReturn(testData);
-        //Mockito.doReturn(null).when(presenterMock)
-        //Mockito.doNothing().when(presenterMock).
-        Mockito.when(presenterMock.getData()).thenReturn(testData);
+        Mockito.when(databaseMock.getUserFavourites()).thenReturn(emptyList());
+        presenter = new FavoritesPresenter(fragmentMock, databaseMock);
 
-        presenterMock.getData();
+        presenter.onRowPressed(testData.get(0).getUniqueID());
 
-        verify(presenterMock, times(6)).onBindThumbnailViewAtPosition(0, null);
-         */
+        verify(fragmentMock, times(0)).showDetailsScreen("");
     }
 
 }

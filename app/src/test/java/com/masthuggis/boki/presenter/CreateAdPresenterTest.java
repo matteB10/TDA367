@@ -1,5 +1,6 @@
 package com.masthuggis.boki.presenter;
 
+import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.Condition;
@@ -15,6 +16,8 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static com.masthuggis.boki.model.Condition.GOOD;
 import static com.masthuggis.boki.model.Condition.NEW;
@@ -23,6 +26,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Tests basic funtionality of CreateAdPresenter
@@ -39,8 +45,22 @@ public class CreateAdPresenterTest {
     private DataModel databaseMock;
     @Mock
     private CreateAdActivity mockView;
+
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
+
+    private List<Advertisement> tenAds = new ArrayList<>();
+
+    private List<Advertisement> generateAds() {
+        for (int i = 0; i < 9; i++) {
+            tenAds.add(AdFactory.createAd("datePublished",
+                    "uniqueOwner", "id", "title " + i,
+                    "", 100, Condition.GOOD, null, Collections.singletonList(""), "owner"));
+        }
+        return tenAds;
+    }
+
+    ;
 
     Advertisement advertisement = new Advert(
             "datePublished",
@@ -63,16 +83,23 @@ public class CreateAdPresenterTest {
 
     //--------------------------------------------------------------------------
 
+    private void addAdToList(Advertisement ad) {
+        tenAds.add(ad);
+    }
+
     @Test
     public void testSaveAdvert() {
-        doNothing().when(databaseMock).saveAdvert(null, advertisement);
-        assertEquals(databaseMock.getAdFromAdID("id"),advertisement);
+        CreateAdPresenter createAdPresenter = mock(CreateAdPresenter.class);
+        doNothing().when(createAdPresenter).saveAdvert();
+
+
+        //assertEquals(databaseMock.getAdFromAdID("id"),advertisement);
     }
 
     @Test
     public void testDeleteAdvert() {
         doNothing().when(databaseMock).saveAdvert(null, advertisement);
-        doNothing().when(databaseMock).removeExistingAdvert(advertisement.getUniqueID(),advertisement.getUniqueOwnerID());
+        doNothing().when(databaseMock).removeExistingAdvert(advertisement.getUniqueID(), advertisement.getUniqueOwnerID());
         assertFalse(databaseMock.getAdFromAdID("id").equals(advertisement));
     }
 
@@ -81,26 +108,27 @@ public class CreateAdPresenterTest {
         advertisement.setTitle("updated title");
         advertisement.setPrice(100);
         advertisement.setDescription("updated description");
-        doNothing().when(databaseMock).saveAdvert(null, advertisement);
+        //doNothing().when(databaseMock).saveAdvert(null, advertisement);
         doNothing().when(databaseMock).updateAd(null, advertisement);
 
-        assertEquals(advertisement.getTitle(), databaseMock.getAdFromAdID("id").getTitle());
+        assertEquals(advertisement.getTitle(), "updated title");
+        //verify(databaseMock, times(1)).);
+
     }
 
     @Test
     public void testTitleChanged() {
-        presenter.titleChanged("new title");
-        assertTrue(presenter.getAdvertisement().getTitle().equals("new title"));
-
+        String title = "new Title";
+        doNothing().when(presenter).titleChanged(title);
+        verify(advertisement, times(1)).setTitle(title);
     }
 
     @Test
     public void testPriceChanged() {
-        presenter.priceChanged("800000");
-        assertEquals(0, presenter.getAdvertisement().getPrice());
+        String price = "300";
+        verify(advertisement, times(1)).setPrice(300);
 
-        presenter.priceChanged("300");
-        assertEquals(300, presenter.getAdvertisement().getPrice());
+
     }
 
     @Test
@@ -188,8 +216,5 @@ public class CreateAdPresenterTest {
         presenter.titleChanged(""); //empty title is not valid value, should disable savebutton
         assertEquals(false,booleanCapture.getValue());
     }
-
-
-
 
 }

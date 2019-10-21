@@ -1,7 +1,6 @@
 package com.masthuggis.boki.model;
 
 import com.masthuggis.boki.backend.BackendFactory;
-import com.masthuggis.boki.backend.Repository;
 import com.masthuggis.boki.backend.RepositoryFactory;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.MarkedAsFavouriteCallback;
@@ -11,7 +10,6 @@ import com.masthuggis.boki.backend.callbacks.chatCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.backend.iRepository;
-import com.masthuggis.boki.model.observers.AdvertisementObserver;
 import com.masthuggis.boki.model.observers.BackendObserver;
 import com.masthuggis.boki.model.observers.ChatObserver;
 import com.masthuggis.boki.model.observers.MessagesObserver;
@@ -29,8 +27,6 @@ public class DataModel implements BackendObserver {
     private List<Advertisement> allAds = new ArrayList<>();
 
     private final List<ChatObserver> chatObservers = new ArrayList<>();
-    private final List<AdvertisementObserver> marketAdvertisementObservers = new ArrayList<>();
-    private final List<AdvertisementObserver> userAdvertisementObservers = new ArrayList<>();
     private final List<MessagesObserver> messagesObservers = new ArrayList<>();
     private iRepository repository;
 
@@ -82,24 +78,12 @@ public class DataModel implements BackendObserver {
         }
     }
 
-    public List<ChatObserver> getChatObservers() {
-        return this.chatObservers;
-    }
-
     public void addChatObserver(ChatObserver chatObserver) {
         this.chatObservers.add(chatObserver);
     }
 
     public void addMessagesObserver(MessagesObserver messagesObserver) {
         this.messagesObservers.add(messagesObserver);
-    }
-
-    public void addMarketAdvertisementObserver(AdvertisementObserver advertisementObserver) {
-        this.marketAdvertisementObservers.add(advertisementObserver);
-    }
-
-    public void addUserAdvertisementObserver(AdvertisementObserver advertisementObserver) {
-        this.userAdvertisementObservers.add(advertisementObserver);
     }
 
     public void removeChatObserver(ChatObserver chatObserver) {
@@ -109,11 +93,6 @@ public class DataModel implements BackendObserver {
     public void removeMessagesObserver(MessagesObserver messagesObserver) {
         this.messagesObservers.remove(messagesObserver);
     }
-
-    public void removeAdvertisementObserver(AdvertisementObserver advertisementObserver) {
-        this.marketAdvertisementObservers.remove(advertisementObserver);
-    }
-
 
     private void notifyChatObservers() {
         for (ChatObserver chatObserver : chatObservers) {
@@ -127,22 +106,9 @@ public class DataModel implements BackendObserver {
         }
     }
 
-    private void notifyMarketAdvertisementObservers() {
-        for (AdvertisementObserver advertisementObserver : marketAdvertisementObservers) {
-            advertisementObserver.onAdvertisementsUpdated();
-        }
-    }
-
-    private void notifyUserAdvertisementObservers() {
-        for (AdvertisementObserver advertisementObserver : userAdvertisementObservers) {
-            advertisementObserver.onAdvertisementsUpdated();
-        }
-    }
-
     public void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
         repository.signIn(email, password, () -> successCallback.onSuccess(), failureCallback);
     }
-
 
     public Advertisement getAdFromAdID(String ID) {
         for (Advertisement ad : allAds) {
@@ -150,7 +116,7 @@ public class DataModel implements BackendObserver {
                 return ad;
 
         }
-        return null; //TODO Fix a better solution to handle NPExc....
+        return null;
     }
 
     public List<Advertisement> getAdsFromCurrentUser() {
@@ -225,18 +191,6 @@ public class DataModel implements BackendObserver {
     private void deleteIDFromFavourites(String id, String favouriteID) {
         repository.deleteIDFromFavourites(id, favouriteID);
     }
-
-
-    private List<Advertisement> retrieveAdsFromUserID(List<Advertisement> adverts) {
-        List<Advertisement> userAds = new ArrayList<>();
-        for (Advertisement ad : adverts) {
-            if (ad.getUniqueOwnerID().equals(user.getId()))
-                userAds.add(ad);
-        }
-        user.setAdverts(userAds);
-        return userAds;
-    }
-
 
     private void initialAdvertFetch(SuccessCallback successCallback) {
         repository.initialAdvertFetch(advertisements -> {

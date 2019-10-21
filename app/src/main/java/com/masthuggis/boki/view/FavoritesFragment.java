@@ -44,7 +44,7 @@ public class FavoritesFragment extends ListView {
     @Override
     public void showDetailsScreen(String id) {
         Intent intent = new Intent(getContext(), DetailsActivity.class);
-        intent.putExtra("advertID", id);
+        intent.putExtra(getString(R.string.keyForAdvert), id);
         intent.putExtra("fromFavourites", true);
         startActivity(intent);
     }

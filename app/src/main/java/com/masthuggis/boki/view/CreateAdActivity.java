@@ -75,7 +75,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
         /**If there is an existing ad, and user wants to edit*/
         if (intent.getExtras() != null) {
-            String advertID = intent.getExtras().getString("advertID");
+            String advertID = intent.getExtras().getString(getString(R.string.keyForAdvert));
             presenter.setAd(advertID);
             presenter.setUpView();
         }
