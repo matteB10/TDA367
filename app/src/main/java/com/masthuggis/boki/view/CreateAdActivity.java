@@ -391,7 +391,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      **/
 
     public void onRadioButtonClicked(View view) {
-        presenter.conditionChanged(view.getId());
+        presenter.conditionChanged(StylingHelper.getConditionFromView(view.getId()));
     }
 
     private void setImageViewListener() {

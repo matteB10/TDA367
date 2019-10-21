@@ -13,10 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 
 public class FavoritesPresenterTest {
@@ -65,7 +61,7 @@ public class FavoritesPresenterTest {
 
         @Override
         public void setCondition(int condition, int color) {
-            advertisement.setCondition(condition);
+
         }
     };
 

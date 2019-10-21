@@ -28,13 +28,6 @@ public class FilterPresenter {
         return preDefTags;
     }
 
-    public List<String> getActiveTags() {
-        return filter.getTags();
-    }
-
-    public int getMaxPrice() {
-        return filter.getMaxPrice();
-    }
 
     public void maxPriceChanged(int i) {
         filter.setMaxPrice(i);

@@ -1,8 +1,5 @@
 package com.masthuggis.boki.model;
 
-import com.masthuggis.boki.R;
-
-
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -145,18 +142,14 @@ public class AdvertTest {
         Advertisement ad = new Advert("datePublished", "uniqueOwnerID", "advertID", "title",
                 "description", 123, Condition.OK, "imageUrl", tags, "owner");
         assert (ad.getCondition() == Condition.OK);
-        ad.setCondition(R.string.conditionNew);
+        ad.setCondition(Condition.NEW);
         assert (ad.getCondition() == Condition.NEW);
-        ad.setCondition(R.string.conditionGood);
+        ad.setCondition(Condition.GOOD);
         assert (ad.getCondition() == Condition.GOOD);
-        ad.setCondition(R.string.conditionOk);
+        ad.setCondition(Condition.OK);
         assert (ad.getCondition() == Condition.OK);
-        ad.setCondition(123123123);
+        ad.setCondition(Condition.OK);
         assert (ad.getCondition() == Condition.UNDEFINED);
-        ad.setCondition(0);
-        assert (ad.getCondition() == Condition.UNDEFINED);
-        ad.setCondition(R.string.conditionOk);
-        assert (ad.getCondition() == Condition.OK);
     }
 
     @Test
@@ -164,9 +157,9 @@ public class AdvertTest {
         Advertisement ad = new Advert("datePublished", "uniqueOwnerID", "advertID", "title",
                 "description", 123, Condition.OK, "imageUrl", tags, "owner");
         assert (ad.isValidCondition());
-        ad.setCondition(0);
-        assert (!ad.isValidCondition());
-        ad.setCondition(R.string.conditionGood);
+        //ad.setCondition(0);
+       // assert (!ad.isValidCondition());
+        ad.setCondition(Condition.NEW);
         assert (ad.isValidCondition());
     }
 

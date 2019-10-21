@@ -6,7 +6,6 @@ import com.masthuggis.boki.model.Condition;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.CurrentTimeHelper;
 import com.masthuggis.boki.utils.FormHelper;
-import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
@@ -148,21 +147,14 @@ public class CreateAdPresenter {
     }
 
 
-    /** Checks if condition aldready is selected
-     * @return true if tag is selected
-     */
-    private boolean isNewCondition(int condition) {
-        return advertisement.getCondition() != StylingHelper.getConditionFromView(condition);
-    }
-
     /**
      * Updates Advert when condition changed, changes
      * styling of changed condition button in view.
      * @param condition, string res condition
      */
-    public void conditionChanged(int condition) {
+    public void conditionChanged(Condition condition) {
+        view.setCondition(condition,advertisement.isNewCondition(condition));
         advertisement.setCondition(condition);
-        view.setCondition(advertisement.getCondition(),isNewCondition(condition));
         view.enablePublishButton(allFieldsValid());
         view.enableSaveButton(allFieldsValid());
 
@@ -196,7 +188,7 @@ public class CreateAdPresenter {
     }
 
     //Getter mainly for testing purpose---------------------------------------------------
-    public Advertisement getAdvertisement() {
+    Advertisement getAdvertisement() {
         return advertisement;
     }
 
@@ -208,8 +200,8 @@ public class CreateAdPresenter {
         return advertisement.getTitle();
     }
 
-    public String getCondition() {
-        return advertisement.getCondition().toString();
+    public Condition getCondition() {
+        return advertisement.getCondition();
     }
 
     public String getDescription() {
@@ -223,6 +215,7 @@ public class CreateAdPresenter {
     public List<String> getTags() {
         return advertisement.getTags();
     }
+
 
 
     public interface View {

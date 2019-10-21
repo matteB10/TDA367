@@ -33,11 +33,13 @@ public interface Advertisement {
 
     void toggleTag(String tag);
 
-    void setCondition(int condition);
+    void setCondition(Condition condition);
 
     void setDatePublished(String datePublished);
 
     boolean isNewTag(String tag);
+
+    boolean isNewCondition(Condition condition);
 
     boolean isValidCondition();
     String getOwner();

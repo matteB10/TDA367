@@ -1,26 +1,28 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.R;
-import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.Condition;
 import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.view.CreateAdActivity;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
+import static com.masthuggis.boki.model.Condition.GOOD;
+import static com.masthuggis.boki.model.Condition.NEW;
+import static com.masthuggis.boki.model.Condition.UNDEFINED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doNothing;
 
 /**
  * Tests basic funtionality of CreateAdPresenter
@@ -29,11 +31,14 @@ import static org.junit.Assert.assertTrue;
 
 
 public class CreateAdPresenterTest {
+    CreateAdPresenter presenter;
+    ArgumentCaptor<Boolean> booleanCapture;
 
-    CreateAdPresenter presenter = new CreateAdPresenter(new MockView(),
-            DependencyInjector.injectDataModel());
+
     @Mock
     private DataModel databaseMock;
+    @Mock
+    private CreateAdActivity mockView;
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
@@ -44,22 +49,30 @@ public class CreateAdPresenterTest {
             "title",
             "description",
             123123,
-            Condition.NEW,
-            null,
+            NEW,
+            "imgUrl",
             new ArrayList<>(),
             "owner");
+
+
+    @Before
+    public void before() {
+        presenter = new CreateAdPresenter(mockView, databaseMock);
+        booleanCapture = ArgumentCaptor.forClass(Boolean.class);
+    }
+
     //--------------------------------------------------------------------------
 
     @Test
     public void testSaveAdvert() {
-        Mockito.doNothing().when(databaseMock).saveAdvert(null, advertisement);
+        doNothing().when(databaseMock).saveAdvert(null, advertisement);
         assertEquals(databaseMock.getAdFromAdID("id"),advertisement);
     }
 
     @Test
     public void testDeleteAdvert() {
-        Mockito.doNothing().when(databaseMock).saveAdvert(null, advertisement);
-        Mockito.doNothing().when(databaseMock).removeExistingAdvert(advertisement.getUniqueID(),advertisement.getUniqueOwnerID());
+        doNothing().when(databaseMock).saveAdvert(null, advertisement);
+        doNothing().when(databaseMock).removeExistingAdvert(advertisement.getUniqueID(),advertisement.getUniqueOwnerID());
         assertFalse(databaseMock.getAdFromAdID("id").equals(advertisement));
     }
 
@@ -68,8 +81,8 @@ public class CreateAdPresenterTest {
         advertisement.setTitle("updated title");
         advertisement.setPrice(100);
         advertisement.setDescription("updated description");
-        Mockito.doNothing().when(databaseMock).saveAdvert(null, advertisement);
-        Mockito.doNothing().when(databaseMock).updateAd(null, advertisement);
+        doNothing().when(databaseMock).saveAdvert(null, advertisement);
+        doNothing().when(databaseMock).updateAd(null, advertisement);
 
         assertEquals(advertisement.getTitle(), databaseMock.getAdFromAdID("id").getTitle());
     }
@@ -125,95 +138,58 @@ public class CreateAdPresenterTest {
 
     @Test
     public void testConditionChanged() {
-        assertEquals(Condition.UNDEFINED, presenter.getAdvertisement().getCondition());
-        presenter.conditionChanged(R.string.conditionGood);
+        ArgumentCaptor<Condition> conditionArgumentCaptor = ArgumentCaptor.forClass(Condition.class);
 
-        assertEquals(Condition.GOOD, presenter.getAdvertisement().getCondition());
-        presenter.conditionChanged(R.string.conditionNew);
+        doNothing().when(mockView).setCondition(conditionArgumentCaptor.capture(),booleanCapture.capture());
 
-        assertEquals(Condition.NEW, presenter.getAdvertisement().getCondition());
+        assertEquals(UNDEFINED, presenter.getCondition()); //on startup, condition not set
+
+        presenter.conditionChanged(GOOD); //when presenter/model is updated, view is updated as well
+        assertEquals(GOOD,conditionArgumentCaptor.getValue());
+        assertEquals(true,booleanCapture.getValue());
+        assertEquals(GOOD, presenter.getCondition()); //check that presenter also returns correct value
+
+        presenter.conditionChanged(GOOD); //if same condition button clicked again, changes status from selected in view
+        assertEquals(GOOD,conditionArgumentCaptor.getValue());
+        assertEquals(false, booleanCapture.getValue());
+        assertEquals(UNDEFINED,presenter.getCondition()); //check that presenter also returns correct value
+
+        presenter.conditionChanged(NEW);
+        assertEquals(NEW, presenter.getCondition());
     }
 
 
     @Test
     public void testEnablePublishButton() {
-        MockView view = new MockView();
-        CreateAdPresenter presenter = view.getPresenter();
+
+        doNothing().when(mockView).enablePublishButton(booleanCapture.capture());
         presenter.priceChanged("10");
         presenter.titleChanged("hej");
-        presenter.conditionChanged(R.string.conditionGood);
-        assertTrue(view.getPublishButtonEnabled());
+        presenter.conditionChanged(GOOD);
+        presenter.imageChanged();
+        //if all fields valid in presenter, enablePublishButton method is called in view
+        assertEquals(true, booleanCapture.getValue());
 
-        //if no title is given, button should be disabled
-        presenter.titleChanged("");
-        assertFalse(view.getPublishButtonEnabled());
+        presenter.titleChanged(""); //empty title is not valid value, should disable publishbutton
+        assertEquals(false,booleanCapture.getValue());
+
+    }
+    @Test
+    public void testEnableSaveButton() {
+
+        doNothing().when(mockView).enableSaveButton(booleanCapture.capture());
+        presenter.priceChanged("10");
+        presenter.titleChanged("hej");
+        presenter.conditionChanged(NEW);
+        presenter.imageChanged();
+        //if all fields valid in presenter, enableSaveButton method is called in view
+        assertEquals(true, booleanCapture.getValue());
+
+        presenter.titleChanged(""); //empty title is not valid value, should disable savebutton
+        assertEquals(false,booleanCapture.getValue());
     }
 
 
-    //-----------------------------------------------------------------------
-    class MockView implements CreateAdPresenter.View {
-        CreateAdPresenter presenter;
-        boolean publishButtonEnabled = false;
-
-        MockView() {
-            presenter = new CreateAdPresenter(this, DependencyInjector.injectDataModel());
-        }
-
-        private CreateAdPresenter getPresenter() { return presenter; }
-
-        private boolean getPublishButtonEnabled() { return publishButtonEnabled; }
-
-        @Override
-        public void setTitle(String name) {
-        }
-        @Override
-        public void setPrice(long price) {
-
-        }
-        @Override
-        public void setImageUrl(String url) {
-
-        }
-        @Override
-        public void setDescription(String description) {
-
-        }
-        @Override
-        public void enablePublishButton(boolean isEnabled) {
-
-        }
-        @Override
-        public void enableSaveButton(boolean b) {
-
-        }
-
-        @Override
-        public void setPreDefTagSelected(String tag, boolean isPressed) {
-
-        }
-        @Override
-        public void displayNewUserTagButton(String tag) {
-
-        }
-        @Override
-        public void removeUserTagButton(String tag) {
-
-        }
-        @Override
-        public File getCurrentImageFile() { return null; }
-
-        @Override
-        public void setTags(List<String> tags) { }
-
-        @Override
-        public void setCondition(Condition id, boolean pressed) {
-
-        }
 
 
-        @Override
-        public void displayNotFoundToast(String toast) {
-
-        }
-    }
 }

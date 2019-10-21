@@ -1,6 +1,5 @@
 package com.masthuggis.boki.model;
 
-import com.masthuggis.boki.R;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.util.ArrayList;
@@ -128,24 +127,31 @@ public class Advert implements Advertisement {
     }
 
 
+    public boolean isNewCondition(Condition condition) {
+        return this.condition != condition;
+
+    }
+
     /**
      * @param condition, string given from view, representing a condition
      */
     @Override
-    public void setCondition(int condition) {
-        switch (condition) {
-            case R.id.conditionNewButton:
-                this.condition = Condition.NEW;
-                break;
-            case R.id.conditionGoodButton:
-                this.condition = Condition.GOOD;
-                break;
-            case R.id.conditionOkButton:
-                this.condition = Condition.OK;
-                break;
-            default:
+    public void setCondition(Condition condition) {
+        if(isNewCondition(condition)) {
+            switch (condition) {
+                case NEW:
+                    this.condition = Condition.NEW;
+                    break;
+                case GOOD:
+                    this.condition = Condition.GOOD;
+                    break;
+                case OK:
+                    this.condition = Condition.OK;
+                    break;
+                }
+            }
+            else{
                 this.condition = Condition.UNDEFINED;
-                break;
         }
     }
 
