@@ -1,6 +1,5 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.utils.StylingHelper;
@@ -14,8 +13,6 @@ import java.util.List;
  * <p>
  * It is the layer between the view and model and should therefore
  */
-
-
 public class DetailsPresenter {
     private View view;
     private Advertisement advertisement;
@@ -62,24 +59,14 @@ public class DetailsPresenter {
     }
 
     private void createNewChat() {
-
         if (advertisement.getUniqueOwnerID().equals(dataModel.getUserID())) {
             view.showToast();
             return;
         }
-        //public void createNewChat(String uniqueOwnerID,String advertID, stringCallback stringCallback,String receiverUsername) {
-
 
         dataModel.createNewChat(advertisement.getUniqueOwnerID(), dataModel.getUserID(), advertisement.getUniqueID(),
-                advertisement.getImageUrl(), new stringCallback() {
-                    @Override
-                    public void onCallback(java.lang.String chatID) {
-                        view.openChat(chatID);
-
-                    }
-                });
+                advertisement.getImageUrl(), chatID -> view.openChat(chatID));
     }
-
 
     private void openChat(String chatID) {
         view.openChat(chatID);
@@ -165,6 +152,4 @@ public class DetailsPresenter {
 
         void setCondition(int condition, int color);
     }
-
-
 }

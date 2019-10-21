@@ -88,7 +88,7 @@ public class ChatPresenterTest {
 
     @Test
     public void onCreateTest() {
-        userChats =userChats();
+        userChats = userChats();
         initMockPresenter();
 
         initMockRemoveChats();
