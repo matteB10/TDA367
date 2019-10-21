@@ -45,7 +45,9 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
             presenter = new DetailsPresenter(this, advertID, DependencyInjector.injectDataModel());
         }
 
-        setupUI();
+        if (presenter.advertExists()) {
+            setupUI();
+        }
     }
 
     private void setupUI() {
