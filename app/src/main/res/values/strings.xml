@@ -76,6 +76,8 @@
     <string name="loading">Laddar...</string>
     <string name="search">Search</string>
 
+    <string name="keyForAdvert">advertID</string>
+
     <string name="putExtraToastKey">toast</string>
     <string name="noFavoritesFound">Du har inga favoriter sparade ännu. För att spara en favorit gå in på en annons och tryck på hjärtat.</string>
     <string name="noAdvertsInMarketFound">Det finns inga annonser att visa. Har du möjligen aktiverat för många filter?</string>

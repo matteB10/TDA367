@@ -39,7 +39,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         setContentView(R.layout.activity_details);
         favouritesIcon = findViewById(R.id.favouritesIcon);
         Intent intent = getIntent();
-        String advertID = intent.getExtras().getString("advertID");
+        String advertID = intent.getExtras().getString(getString(R.string.keyForAdvert));
 
         if (advertID != null) {
             presenter = new DetailsPresenter(this, advertID, DependencyInjector.injectDataModel());
@@ -174,7 +174,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     @Override
     public void showEditView(String uniqueID) {
         Intent intent = new Intent(DetailsActivity.this, CreateAdActivity.class);
-        intent.putExtra("advertID", uniqueID);
+        intent.putExtra(getString(R.string.keyForAdvert), uniqueID);
         startActivity(intent);
     }
 
