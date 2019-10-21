@@ -32,8 +32,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     private DetailsPresenter presenter;
     private Button contactOwnerButton;
     private ImageView favouritesIcon;
-    private long lastTimeThumbnailWasClicked = System.currentTimeMillis();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,24 +40,26 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         favouritesIcon = findViewById(R.id.favouritesIcon);
         Intent intent = getIntent();
         String advertID = intent.getExtras().getString("advertID");
+
         if (advertID != null) {
             presenter = new DetailsPresenter(this, advertID, DependencyInjector.injectDataModel());
         }
-        if (presenter.isValid()) {
-            contactOwnerButton = findViewById(R.id.contactOwnerButton);
-            contactOwnerButton.setOnClickListener(view -> {
-                if (canProceedWithTapAction()) {
-                    presenter.contactOwnerBtnClicked();
-                }
-            });
-            Button changeAd = findViewById(R.id.changeAdButton);
-            changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
-            setUpFavouriteIcon();
-            setVisibilityOnButtons();
-        }
 
+        setupUI();
     }
 
+    private void setupUI() {
+        contactOwnerButton = findViewById(R.id.contactOwnerButton);
+        contactOwnerButton.setOnClickListener(view -> {
+            if (canProceedWithTapAction()) {
+                presenter.contactOwnerBtnClicked();
+            }
+        });
+        Button changeAd = findViewById(R.id.changeAdButton);
+        changeAd.setOnClickListener(view -> presenter.onChangedAdBtnPressed());
+        setUpFavouriteIcon();
+        setVisibilityOnButtons();
+    }
 
     @Override
     public void setName(String name) {

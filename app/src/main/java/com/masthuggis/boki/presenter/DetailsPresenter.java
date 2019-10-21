@@ -17,7 +17,7 @@ public class DetailsPresenter {
     private View view;
     private Advertisement advertisement;
     private DataModel dataModel;
-    private boolean isValid;
+    private boolean advertExists;
     private boolean contactOwnerButtonClickedOnceBefore = false;
 
     public DetailsPresenter(View view, String advertID, DataModel dataModel) {
@@ -26,11 +26,10 @@ public class DetailsPresenter {
         this.advertisement = this.dataModel.getAdFromAdID(advertID);
         if (advertisement == null) {
             view.nothingToDisplay("Hittar ingen annons, var vänlig uppdatera vyn.");
-            isValid = false;
+            advertExists = false;
             return;
-
         } else {
-            isValid = true;
+            advertExists = true;
         }
         setupView();
 
@@ -120,8 +119,8 @@ public class DetailsPresenter {
     private boolean currentAdvertIsFavourite() {
         return dataModel.isAFavourite(advertisement);
     }
-    public boolean isValid(){
-        return isValid;
+    public boolean advertExists(){
+        return advertExists;
     }
 
     public interface View {
