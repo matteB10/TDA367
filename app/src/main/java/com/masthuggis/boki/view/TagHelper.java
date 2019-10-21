@@ -13,9 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TagHelper {
-
-
+class TagHelper {
 
 
     /**
@@ -32,7 +30,7 @@ public class TagHelper {
      * @param tag
      * @return
      */
-    public static boolean isPreDefTag(String tag, Context context) {
+     static boolean isPreDefTag(String tag, Context context) {
         List<String> preDefTags = getPreDefTagStrings(context);
         return (preDefTags.contains(tag));
     }
@@ -43,7 +41,7 @@ public class TagHelper {
      * @param strTags, list of button text strings
      * @return a list of buttons
      */
-    public static List<Button> createTagButtons(List<String> strTags, Context context, boolean isSelected) {
+     static List<Button> createTagButtons(List<String> strTags, Context context, boolean isSelected) {
         List<Button> btnList = new ArrayList<>();
         for (String str : strTags) {
             Button btn = createTagButton(str, isSelected, context);
@@ -57,7 +55,7 @@ public class TagHelper {
      *
      * @return a list of buttons
      */
-    public static List<Button> createPreDefTagButtons(Context context) {
+     static List<Button> createPreDefTagButtons(Context context) {
         List<String> preDefTagString = getPreDefTagStrings(context);
         List<Button> btnList = new ArrayList<>();
         for (String str : preDefTagString) {
@@ -73,10 +71,10 @@ public class TagHelper {
      * @param text
      * @return a button
      */
-     static Button createTagButton(String text, boolean isSelected, Context context) {
+      static Button createTagButton(String text, boolean isSelected, Context context) {
         Button b = new Button(context);
         b.setText(text);
-        StylingHelper.setTagButtonStyling(b, isSelected);
+        StylingHelper.setTagButtonStyling(b, isSelected, context);
         return b;
     }
     /**
@@ -84,7 +82,7 @@ public class TagHelper {
      * return button from list if its text matches the given string.
      */
 
-    public static Button getButtonWithText(String text, List<Button> buttons) {
+     static Button getButtonWithText(String text, List<Button> buttons) {
         for (Button btn : buttons) {
             if (btn.getText().toString().equals(text)) {
                 return btn;
@@ -96,7 +94,7 @@ public class TagHelper {
      * @param tags         a list of buttons
      * @param parentLayout the layout in which buttons will be placed
      */
-    public static void populateTagsLayout(List<Button> tags, ViewGroup parentLayout, Context context) {
+     static void populateTagsLayout(List<Button> tags, ViewGroup parentLayout, Context context) {
         for (Button btn : tags) {
             TableRow tableRow = getCurrentTagRow(parentLayout, context);
             tableRow.addView(btn, getTableRowChildLayoutParams(context));
@@ -106,7 +104,7 @@ public class TagHelper {
      * @param tags         a list of Strings
      * @param parentLayout the layout in which tag buttons will be placed
      */
-    public static void displayTags(List<String> tags, ViewGroup parentLayout, Context context, boolean isSelected) {
+    static void displayTags(List<String> tags, ViewGroup parentLayout, Context context, boolean isSelected) {
         List<Button> tagButtons = createTagButtons(tags,context,isSelected);
         populateTagsLayout(tagButtons,parentLayout,context);
     }
@@ -136,18 +134,11 @@ public class TagHelper {
         parentLayout.addView(tr, getTableRowLayoutParams(context));
         return tr;
     }
-    public static  void styleSelectedTag(String tag, List<Button> tagButtons, boolean isSelected) {
-        for (Button btn : tagButtons) {
-            if (btn.getText().equals(tag)) {
-                StylingHelper.setTagButtonStyling(btn, isSelected);
-            }
-        }
-    }
 
     /**
      * Clear rows in layout from children
      */
-    public static void clearLayout(ViewGroup layout) {
+     static void clearLayout(ViewGroup layout) {
         ViewGroup tr;
         int noOfRows = layout.getChildCount();
         for (int i = 0; i < noOfRows; i++) {
@@ -158,7 +149,7 @@ public class TagHelper {
     /**
      * @return specified layout parameters for tag tableRows
      */
-    public static TableLayout.LayoutParams getTableRowLayoutParams(Context context) {
+     static TableLayout.LayoutParams getTableRowLayoutParams(Context context) {
         int rowHeight = (int) StylingHelper.getDPToPixels(context, 20);
         TableLayout.LayoutParams layoutParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, rowHeight, 1);
         layoutParams.setMargins(0, 0, 0, 8);
@@ -168,7 +159,7 @@ public class TagHelper {
     /**
      * @return specified layout parameters for tag items in tableRows
      */
-    public static TableRow.LayoutParams getTableRowChildLayoutParams(Context context) {
+     static TableRow.LayoutParams getTableRowChildLayoutParams(Context context) {
         TableRow.LayoutParams rowLayoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
         rowLayoutParams.setMarginEnd(6);
         return rowLayoutParams;

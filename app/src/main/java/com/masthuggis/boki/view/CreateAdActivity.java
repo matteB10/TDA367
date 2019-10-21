@@ -28,7 +28,7 @@ import androidx.core.content.FileProvider;
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
-import com.masthuggis.boki.model.Condition;
+import com.masthuggis.boki.utils.Condition;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
 import com.masthuggis.boki.utils.StylingHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
@@ -291,7 +291,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     @Override
     public void setPreDefTagSelected(String tag, boolean isSelected) {
-        TagHelper.styleSelectedTag(tag,new ArrayList<>(preDefTagButtons),isSelected);
+        for(Button btn : preDefTagButtons){
+            if(btn.getText().equals(tag)){
+                StylingHelper.setTagButtonStyling(btn,isSelected, this);
+            }
+        }
     }
 
     /**

@@ -53,7 +53,7 @@ public class FilterPresenterTest {
         ArgumentCaptor<Boolean> booleanCaptor = ArgumentCaptor.forClass(Boolean.class);
 
         doNothing().when(filterFragmentMock).setMaxPrice(integerArgumentCaptor.capture());
-        doNothing().when(filterFragmentMock).addTagToFilters(stringCaptor.capture(),booleanCaptor.capture());
+        doNothing().when(filterFragmentMock).setUpFilters(stringCaptor.capture(),booleanCaptor.capture());
 
         Filter.getInstance().setMaxPrice(50);
         Filter.getInstance().setTags(new ArrayList<>());

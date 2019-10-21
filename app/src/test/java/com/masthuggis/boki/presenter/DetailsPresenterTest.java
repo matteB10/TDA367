@@ -2,7 +2,7 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.model.Condition;
+import com.masthuggis.boki.utils.Condition;
 import com.masthuggis.boki.model.DataModel;
 
 import org.junit.Before;

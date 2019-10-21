@@ -1,5 +1,6 @@
 package com.masthuggis.boki.model;
 
+import com.masthuggis.boki.utils.Condition;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.util.ArrayList;

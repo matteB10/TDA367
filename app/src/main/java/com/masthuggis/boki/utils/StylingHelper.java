@@ -4,9 +4,7 @@ package com.masthuggis.boki.utils;
 import android.content.Context;
 import android.widget.Button;
 
-import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.R;
-import com.masthuggis.boki.model.Condition;
 
 /**
  * Helper class for styling components programmatically
@@ -113,14 +111,14 @@ public class StylingHelper {
      * @param btn the button to be styled
      */
 
-    public static void setTagButtonStyling(Button btn, boolean isSelected) {
+    public static void setTagButtonStyling(Button btn, boolean isSelected, Context context) {
         if (isSelected) {
             btn.setBackgroundResource(R.drawable.subject_tag_shape_pressed);
         } else {
             btn.setBackgroundResource(R.drawable.subject_tag_shape_normal);
         }
         btn.setTextSize(12);
-        btn.setTextColor(Boki.getAppContext().getColor(R.color.colorGreyDark));
+        btn.setTextColor(context.getResources().getColor(R.color.colorGreyDark));
         btn.setElevation(4);
     }
 

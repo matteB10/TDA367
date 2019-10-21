@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Abstract class to be used by views wanting to display a list of adverts.
+ * Abstract class to be used by views wanting to display a list of content.
  */
 public abstract class ListView extends Fragment implements ListPresenterView {
     private View view;

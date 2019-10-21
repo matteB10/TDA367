@@ -2,7 +2,7 @@ package com.masthuggis.boki;
 
 import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.model.Condition;
+import com.masthuggis.boki.utils.Condition;
 
 import java.util.ArrayList;
 import java.util.List;

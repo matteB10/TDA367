@@ -3,7 +3,7 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.model.Condition;
+import com.masthuggis.boki.utils.Condition;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.view.CreateAdActivity;
 
@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.masthuggis.boki.model.Condition.GOOD;
-import static com.masthuggis.boki.model.Condition.NEW;
-import static com.masthuggis.boki.model.Condition.UNDEFINED;
+import static com.masthuggis.boki.utils.Condition.GOOD;
+import static com.masthuggis.boki.utils.Condition.NEW;
+import static com.masthuggis.boki.utils.Condition.UNDEFINED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

@@ -3,9 +3,8 @@ package com.masthuggis.boki.backend;
 import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.AdFactory;
-import com.masthuggis.boki.model.Advert;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.model.Condition;
+import com.masthuggis.boki.utils.Condition;
 import com.masthuggis.boki.model.observers.BackendObserver;
 
 import java.io.File;

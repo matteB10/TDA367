@@ -1,5 +1,7 @@
 package com.masthuggis.boki.model;
 
+import com.masthuggis.boki.utils.Condition;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.junit.MockitoJUnit;
