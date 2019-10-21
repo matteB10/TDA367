@@ -18,6 +18,7 @@ public class DetailsPresenter {
     private Advertisement advertisement;
     private DataModel dataModel;
     private boolean isValid;
+    private boolean contactOwnerButtonClickedOnceBefore = false;
 
     public DetailsPresenter(View view, String advertID, DataModel dataModel) {
         this.dataModel = dataModel;
@@ -81,8 +82,8 @@ public class DetailsPresenter {
         view.showEditView(uniqueID);
     }
 
-    public void contactOwnerBtnClicked(String btnText) {
-        if (btnText.equals("Starta chatt")) {
+    public void contactOwnerBtnClicked() {
+        if (contactOwnerButtonClickedOnceBefore) {
             String chatID = dataModel.findChatID(advertisement.getUniqueID());
             if (chatID != null) {
                 openChat(chatID);
@@ -92,6 +93,8 @@ public class DetailsPresenter {
         } else {
             view.setOwnerButtonText("Starta chatt");
         }
+
+        contactOwnerButtonClickedOnceBefore = true;
     }
 
     public void onFavouritesIconPressed() {

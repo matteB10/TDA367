@@ -72,7 +72,7 @@ public class DetailsPresenterTest {
         createAd();
         initPresenter();
 
-        presenter.contactOwnerBtnClicked("");
+        presenter.contactOwnerBtnClicked();
 
         verify(viewMock, times(1)).setOwnerButtonText(any());
     }
@@ -82,8 +82,8 @@ public class DetailsPresenterTest {
         createAd();
         initPresenter();
 
-        presenter.contactOwnerBtnClicked("");
-        presenter.contactOwnerBtnClicked("");
+        presenter.contactOwnerBtnClicked();
+        presenter.contactOwnerBtnClicked();
 
         verify(viewMock, times(1)).setOwnerButtonText(any());
     }

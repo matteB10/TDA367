@@ -49,7 +49,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
             contactOwnerButton = findViewById(R.id.contactOwnerButton);
             contactOwnerButton.setOnClickListener(view -> {
                 if (canProceedWithTapAction()) {
-                    presenter.contactOwnerBtnClicked(contactOwnerButton.getText().toString()); //Should the logic be based off this string?
+                    presenter.contactOwnerBtnClicked();
                 }
             });
             Button changeAd = findViewById(R.id.changeAdButton);
