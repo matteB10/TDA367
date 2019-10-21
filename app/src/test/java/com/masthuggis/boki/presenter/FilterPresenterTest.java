@@ -6,11 +6,15 @@ import com.masthuggis.boki.view.FilterFragment;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doNothing;
 
 public class FilterPresenterTest {
     FilterPresenter presenter;
@@ -44,7 +48,19 @@ public class FilterPresenterTest {
     }
     @Test
     public void testSetUp(){
+        ArgumentCaptor<Integer> integerArgumentCaptor = ArgumentCaptor.forClass(Integer.class);
+        ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Boolean> booleanCaptor = ArgumentCaptor.forClass(Boolean.class);
+
+        doNothing().when(filterFragmentMock).setMaxPrice(integerArgumentCaptor.capture());
+        doNothing().when(filterFragmentMock).addTagToFilters(stringCaptor.capture(),booleanCaptor.capture());
+
+        Filter.getInstance().setMaxPrice(50);
+        Filter.getInstance().setTags(new ArrayList<>());
         presenter.setUpView();
+
+        assertEquals("",stringCaptor.getValue());
+        assertEquals(50,(long) integerArgumentCaptor.getValue());
     }
 
 

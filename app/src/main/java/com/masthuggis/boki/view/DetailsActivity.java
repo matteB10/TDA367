@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +20,6 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.DetailsPresenter;
 import com.masthuggis.boki.utils.ClickDelayHelper;
-import com.masthuggis.boki.utils.StylingHelper;
 
 import java.util.List;
 
@@ -108,16 +106,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     @Override
     public void setTags(List<String> tags) {
         LinearLayout parentLayout = findViewById(R.id.detailsTagsTableLayout);
-        TableRow tableRow = new TableRow(this);
-        Button btn;
-
-        for (String str : tags) {
-            btn = createTagButton(str, true);
-            tableRow = getTableRow(tableRow, parentLayout);
-            tableRow.setLayoutParams(StylingHelper.getTableRowLayoutParams(this));
-            tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(this));
-        }
-        parentLayout.addView(tableRow);
+        TagHelper.displayTags(tags,parentLayout,this,true);
     }
 
     @Override
@@ -127,28 +116,6 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         startActivity(intent);
     }
 
-    /**
-     * Private method trying to resolve if a tableRow with tags is filled and
-     * if a new one should be created.
-     *
-     * @param tableRow     the current tableRow
-     * @param parentLayout width of parent layout
-     * @return param tableRow or new tableRow object depending on
-     */
-    private TableRow getTableRow(TableRow tableRow, LinearLayout parentLayout) {
-        if (tableRow.getChildCount() % 3 == 0) {
-            parentLayout.addView(tableRow);
-            return new TableRow(this);
-        }
-        return tableRow;
-    }
-
-    private Button createTagButton(String buttonText, boolean isSelected) {
-        Button btn = new Button(this);
-        btn.setText(buttonText);
-        StylingHelper.setTagButtonStyling(btn, isSelected);
-        return btn;
-    }
 
     public void showToast() {
         Context context = getApplicationContext();

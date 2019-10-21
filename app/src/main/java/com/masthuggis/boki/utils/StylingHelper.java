@@ -3,8 +3,6 @@ package com.masthuggis.boki.utils;
 
 import android.content.Context;
 import android.widget.Button;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 
 import com.masthuggis.boki.Boki;
 import com.masthuggis.boki.R;
@@ -108,24 +106,6 @@ public class StylingHelper {
         return R.drawable.disabled_primary_button;
     }
 
-    /**
-     * @return specified layout parameters for tag tableRows
-     */
-    public static TableLayout.LayoutParams getTableRowLayoutParams(Context context) {
-        int rowHeight = (int) getDPToPixels(context, 20);
-        TableLayout.LayoutParams layoutParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, rowHeight, 1);
-        layoutParams.setMargins(0, 0, 0, 8);
-        return layoutParams;
-    }
-
-    /**
-     * @return specified layout parameters for tag items in tableRows
-     */
-    public static TableRow.LayoutParams getTableRowChildLayoutParams(Context context) {
-        TableRow.LayoutParams rowLayoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
-        rowLayoutParams.setMarginEnd(6);
-        return rowLayoutParams;
-    }
 
     /**
      * Sets styling of a tagButton

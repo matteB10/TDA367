@@ -3,6 +3,7 @@ package com.masthuggis.boki.view;
 import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import com.masthuggis.boki.R;
@@ -42,10 +43,10 @@ public class TagHelper {
      * @param strTags, list of button text strings
      * @return a list of buttons
      */
-    public static List<Button> createTagButtons(List<String> strTags, Context context) {
+    public static List<Button> createTagButtons(List<String> strTags, Context context, boolean isSelected) {
         List<Button> btnList = new ArrayList<>();
         for (String str : strTags) {
-            Button btn = createTagButton(str, false, context);
+            Button btn = createTagButton(str, isSelected, context);
             btnList.add(btn);
         }
         return btnList;
@@ -72,7 +73,7 @@ public class TagHelper {
      * @param text
      * @return a button
      */
-    public static Button createTagButton(String text, boolean isSelected, Context context) {
+     static Button createTagButton(String text, boolean isSelected, Context context) {
         Button b = new Button(context);
         b.setText(text);
         StylingHelper.setTagButtonStyling(b, isSelected);
@@ -98,8 +99,16 @@ public class TagHelper {
     public static void populateTagsLayout(List<Button> tags, ViewGroup parentLayout, Context context) {
         for (Button btn : tags) {
             TableRow tableRow = getCurrentTagRow(parentLayout, context);
-            tableRow.addView(btn, StylingHelper.getTableRowChildLayoutParams(context));
+            tableRow.addView(btn, getTableRowChildLayoutParams(context));
         }
+    }
+    /**
+     * @param tags         a list of Strings
+     * @param parentLayout the layout in which tag buttons will be placed
+     */
+    public static void displayTags(List<String> tags, ViewGroup parentLayout, Context context, boolean isSelected) {
+        List<Button> tagButtons = createTagButtons(tags,context,isSelected);
+        populateTagsLayout(tagButtons,parentLayout,context);
     }
 
     /**
@@ -112,22 +121,19 @@ public class TagHelper {
         return (tableRow.getChildCount() % 3 == 0 && tableRow.getChildCount() != 0);
     }
 
-    public static void displayTagButtons(ViewGroup layout, List<Button> tagButtons, Context context) {
-        ViewGroup tagsLayout = layout;
-        populateTagsLayout(tagButtons, tagsLayout, context);
-    }
-
 
     private static TableRow getCurrentTagRow(ViewGroup parentView, Context context) {
         ViewGroup parentLayout = parentView;
         int noOfRows = parentLayout.getChildCount();
         for (int i = 0; i < noOfRows; i++) {
             if (!(rowFull((TableRow) parentLayout.getChildAt(i)))) {
-                return (TableRow) parentLayout.getChildAt(i);
+                TableRow tr = (TableRow) parentLayout.getChildAt(i);
+                tr.setLayoutParams(TagHelper.getTableRowLayoutParams(context));
+                return tr;
             }
         }
         TableRow tr = new TableRow(context);
-        parentLayout.addView(tr, StylingHelper.getTableRowLayoutParams(context));
+        parentLayout.addView(tr, getTableRowLayoutParams(context));
         return tr;
     }
     public static  void styleSelectedTag(String tag, List<Button> tagButtons, boolean isSelected) {
@@ -148,5 +154,23 @@ public class TagHelper {
             tr = (TableRow) layout.getChildAt(i);
             tr.removeAllViews();
         }
+    }
+    /**
+     * @return specified layout parameters for tag tableRows
+     */
+    public static TableLayout.LayoutParams getTableRowLayoutParams(Context context) {
+        int rowHeight = (int) StylingHelper.getDPToPixels(context, 20);
+        TableLayout.LayoutParams layoutParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, rowHeight, 1);
+        layoutParams.setMargins(0, 0, 0, 8);
+        return layoutParams;
+    }
+
+    /**
+     * @return specified layout parameters for tag items in tableRows
+     */
+    public static TableRow.LayoutParams getTableRowChildLayoutParams(Context context) {
+        TableRow.LayoutParams rowLayoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
+        rowLayoutParams.setMarginEnd(6);
+        return rowLayoutParams;
     }
 }

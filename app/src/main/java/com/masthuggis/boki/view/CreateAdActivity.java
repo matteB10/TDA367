@@ -286,7 +286,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void displayPreDefTagButtons() {
         LinearLayout preDefTagsLayout = findViewById(R.id.preDefTagsLinearLayout);
         preDefTagButtons = TagHelper.createPreDefTagButtons(this);
-        TagHelper.displayTagButtons(preDefTagsLayout,new ArrayList<>(preDefTagButtons),this);
+        TagHelper.populateTagsLayout(new ArrayList<>(preDefTagButtons),preDefTagsLayout,this);
     }
 
     @Override
@@ -304,9 +304,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     public void displayNewUserTagButton(String tag) {
         Button btn = TagHelper.createTagButton(tag, true, this);
         userDefTagButtons.add(btn);
-        ViewGroup userTagsLayout = findViewById(R.id.tagsLinearLayout);
         setUserDefTagsListener(btn);
-        TagHelper.displayTagButtons(userTagsLayout,new ArrayList<>(userDefTagButtons),this);
+        updateUserDefTags();
     }
 
     /**

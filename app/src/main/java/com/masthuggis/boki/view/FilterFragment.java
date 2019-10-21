@@ -45,8 +45,9 @@ public class FilterFragment extends Fragment implements FilterPresenter.View {
      */
     private void initTags() {
         presenter.setPreDefTags(Arrays.asList(getResources().getStringArray(R.array.preDefSubjectTags))); //set pre def tags in presenter
-        tags = TagHelper.createTagButtons(presenter.getPreDefTags(), getContext());
-        TagHelper.displayTagButtons(view.findViewById(R.id.filterTagsLinearLayout), new ArrayList<>(tags), getContext());
+        tags = TagHelper.createTagButtons(presenter.getPreDefTags(), getContext(),false);
+        TagHelper.clearLayout(view.findViewById(R.id.filterTagsLinearLayout));
+        TagHelper.populateTagsLayout(new ArrayList<>(tags),view.findViewById(R.id.filterTagsLinearLayout), getContext());
     }
 
     /**
