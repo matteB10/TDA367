@@ -152,7 +152,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         return btn;
     }
 
-    public void showToast() {
+    public void showCanNotSendMessageToHimselfToast() {
         Context context = getApplicationContext();
         CharSequence text = "Du kan inte skicka meddelanden till dig själv.";
         int duration = Toast.LENGTH_LONG;
@@ -184,13 +184,13 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
     @Override
-    public void setFavouriteIcon() {
+    public void setIsAFavouriteIcon() {
         Drawable favouriteIcon = ContextCompat.getDrawable(this, R.drawable.heart_filled_vector);
         favouritesIcon.setImageDrawable(favouriteIcon);
     }
 
     @Override
-    public void setNotFavouriteIcon() {
+    public void setIsNotAFavouriteIcon() {
         Drawable notFavouriteIcon = ContextCompat.getDrawable(this, R.drawable.heart_outline_vector);
         favouritesIcon.setImageDrawable(notFavouriteIcon);
     }

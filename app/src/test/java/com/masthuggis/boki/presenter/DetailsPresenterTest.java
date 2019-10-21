@@ -16,6 +16,7 @@ import org.mockito.junit.MockitoRule;
 import java.util.ArrayList;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -78,6 +79,29 @@ public class DetailsPresenterTest {
     }
 
     @Test
+    public void whenContactOwnerIsPressedOnceChatIsNotOpened() {
+        Mockito.when(databaseMock.findChatID(any())).thenReturn(id);
+        createAd();
+        initPresenter();
+
+        presenter.contactOwnerBtnClicked();
+
+        verify(viewMock, times(0)).openChat(any());
+    }
+
+    @Test
+    public void whenContactOwnerIsPressedTwiceChatIsOpened() {
+        Mockito.when(databaseMock.findChatID(any())).thenReturn(id);
+        createAd();
+        initPresenter();
+
+        presenter.contactOwnerBtnClicked();
+        presenter.contactOwnerBtnClicked();
+
+        verify(viewMock).openChat(advert.getUniqueID());
+    }
+
+    @Test
     public void ifContactOwnerIsPressedFTwiceButtonTextShouldChangeOnce() {
         createAd();
         initPresenter();
@@ -87,4 +111,58 @@ public class DetailsPresenterTest {
 
         verify(viewMock, times(1)).setOwnerButtonText(any());
     }
+
+    @Test
+    public void whenEditAdIsPressedViewIsNotified() {
+        createAd();
+        initPresenter();
+
+        presenter.onChangedAdBtnPressed();
+
+        verify(viewMock, times(1)).showEditView(any());
+    }
+
+    @Test
+    public void whenAFavoriteIsAdded() {
+        createAd();
+        initPresenter();
+        Mockito.when(databaseMock.isAFavourite(advert)).thenReturn(false);
+
+        presenter.onFavouritesIconPressed();
+
+        verify(viewMock, atLeastOnce()).setIsAFavouriteIcon();
+        verify(databaseMock, times(1)).addToFavourites(advert);
+    }
+
+    @Test
+    public void whenAFavoriteIsRemoved() {
+        createAd();
+        initPresenter();
+        Mockito.when(databaseMock.isAFavourite(advert)).thenReturn(true);
+
+        presenter.onFavouritesIconPressed();
+
+        verify(viewMock, atLeastOnce()).setIsNotAFavouriteIcon();
+        verify(databaseMock, times(1)).removeFromFavourites(advert);
+    }
+
+    @Test
+    public void whenUserIsOwnerFavoriteButtonIsHidden() {
+        Mockito.when(databaseMock.isUserOwner(any())).thenReturn(true);
+        createAd();
+        initPresenter();
+
+        verify(viewMock, atLeastOnce()).hideFavouriteIcon();
+    }
+
+    @Test
+    public void whenUserIsNotOwnerFavoriteButtonIsShown() {
+        Mockito.when(databaseMock.isUserOwner(any())).thenReturn(false);
+        createAd();
+        initPresenter();
+
+        verify(viewMock, times(0)).hideFavouriteIcon();
+    }
+
+
 }

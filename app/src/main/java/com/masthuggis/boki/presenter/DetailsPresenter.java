@@ -60,7 +60,7 @@ public class DetailsPresenter {
 
     private void createNewChat() {
         if (advertisement.getUniqueOwnerID().equals(dataModel.getUserID())) {
-            view.showToast();
+            view.showCanNotSendMessageToHimselfToast();
             return;
         }
 
@@ -99,10 +99,10 @@ public class DetailsPresenter {
     public void onFavouritesIconPressed() {
         if (currentAdvertIsFavourite()) {
             dataModel.removeFromFavourites(advertisement);
-            view.setNotFavouriteIcon();
+            view.setIsNotAFavouriteIcon();
         } else {
             dataModel.addToFavourites(advertisement);
-            view.setFavouriteIcon();
+            view.setIsAFavouriteIcon();
         }
     }
 
@@ -110,9 +110,9 @@ public class DetailsPresenter {
         if (isUserOwner()) {
             view.hideFavouriteIcon();
         } else if (currentAdvertIsFavourite()) {
-            view.setFavouriteIcon();
+            view.setIsAFavouriteIcon();
         } else {
-            view.setNotFavouriteIcon();
+            view.setIsNotAFavouriteIcon();
         }
     }
 
@@ -138,15 +138,15 @@ public class DetailsPresenter {
 
         void openChat(String chatID);
 
-        void showToast();
+        void showCanNotSendMessageToHimselfToast();
 
         void showEditView(String uniqueID);
 
         void setOwnerButtonText(String content);
 
-        void setFavouriteIcon();
+        void setIsAFavouriteIcon();
 
-        void setNotFavouriteIcon();
+        void setIsNotAFavouriteIcon();
 
         void hideFavouriteIcon();
 
