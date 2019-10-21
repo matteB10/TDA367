@@ -13,6 +13,8 @@ import android.widget.ImageView;
 
 import androidx.core.content.FileProvider;
 
+import com.bumptech.glide.Glide;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -71,6 +73,10 @@ public class ImageHandler {
 
     public File getCurrentImageFile() {
         return currentImageFile;
+    }
+
+    public void onImageUpdated(String url) {
+        Glide.with(activity).load(url).into(imageViewDisplay);
     }
 
     /**

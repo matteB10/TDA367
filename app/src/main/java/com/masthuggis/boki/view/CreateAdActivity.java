@@ -1,14 +1,7 @@
 package com.masthuggis.boki.view;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -16,28 +9,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
-import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.model.Condition;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
 import com.masthuggis.boki.utils.ImageHandler;
 import com.masthuggis.boki.utils.StylingHelper;
-import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,7 +125,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent); //TODO check here to see what fragment was the previous one, maybe
+        startActivity(intent);
         finish();
     }
 
@@ -381,8 +367,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     @Override
     public void setImageUrl(String url) {
-        ImageView imageView = (ImageView) findViewById(R.id.addImageView);
-        Glide.with(this).load(url).into(imageView);
+        imageHandler.onImageUpdated(url);
     }
 
     @Override
