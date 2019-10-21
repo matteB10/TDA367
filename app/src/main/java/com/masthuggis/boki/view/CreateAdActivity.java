@@ -1,14 +1,7 @@
 package com.masthuggis.boki.view;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -16,27 +9,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
-import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.model.Condition;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
+import com.masthuggis.boki.utils.ImageHandler;
 import com.masthuggis.boki.utils.StylingHelper;
-import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,19 +34,17 @@ import java.util.List;
 
 public class CreateAdActivity extends AppCompatActivity implements CreateAdPresenter.View {
 
-
-    static final int REQUEST_IMAGE_CAPTURE = 1;
     private List<Button> preDefTagButtons = new ArrayList<>();
     private List<Button> userDefTagButtons = new ArrayList<>();
     private CreateAdPresenter presenter;
-    private File currentImageFile;
-    private ImageView imageViewDisplay;
     private EditText title;
     private EditText price;
     private EditText description;
     private Button publishAdButton;
     private Button saveAdButton;
     private Button deleteAdButton;
+
+    private ImageHandler imageHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +57,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setListeners();
         setUpView();
 
+        imageHandler = new ImageHandler(this, findViewById(R.id.addImageView));
 
         /**If there is an existing ad, and user wants to edit*/
         if (intent.getExtras() != null) {
@@ -94,7 +80,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     private void setListeners() {
-        setImageViewListener();
         setTitleListener();
         setPriceListener();
         setDescriptionListener();
@@ -140,43 +125,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent); //TODO check here to see what fragment was the previous one, maybe
+        startActivity(intent);
         finish();
-    }
-
-
-    /**
-     * Sends a request to the operating system for the application's use of the device's camera
-     */
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            try {
-                currentImageFile = createImageFile();
-            } catch (Exception i) {
-                System.out.println("error creating file");
-                i.printStackTrace();
-            }
-            if (currentImageFile != null) {
-                Uri imageURI = FileProvider.getUriForFile(this, "com.masthuggis.boki.fileprovider",
-                        currentImageFile);
-                System.out.println(imageURI);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
-        }
-    }
-
-    /**
-     * Creates an empty file and specifies unique file name.
-     *
-     * @throws IOException if image creation fails
-     */
-    private File createImageFile() throws IOException {
-        String photoFileName = "IMG_" + UniqueIdCreator.getUniqueID();
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(photoFileName, ".jpg", storageDir);
-        return image;
     }
 
     /**
@@ -184,98 +134,14 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        imageViewDisplay = findViewById(R.id.addImageView);
-
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) { //When image has been taken
-            compressAndRotateImage();
+        if (imageHandler.onActivityResult(requestCode, resultCode)) {
             presenter.imageChanged();
         }
     }
 
-    /**
-     * Compresses the size of the image taken by the user, checks if rotation is necessary and, if so, rotates the image to portrait mode
-     * Also sets the image held by the ImageView shown to the user to the compressed and rotated image
-     */
-    private void compressAndRotateImage() {
-        try {
-            Bitmap initialBitmap = BitmapFactory.decodeFile(currentImageFile.getPath());
-            Bitmap rotatedImage = rotateImageIfRequired(initialBitmap, currentImageFile.getAbsolutePath());
-            Bitmap finalBitmap = compressBitmap(rotatedImage);
-            setImageView(finalBitmap); //Set compressed and scaled image so user sees actual result
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * @param input the bitmap that should be compressed
-     * @return a bitmap of the same image, but compressed
-     * @throws IOException if the path used to create an OutputStream isn't valid
-     */
-    private Bitmap compressBitmap(Bitmap input) throws IOException {
-        BitmapFactory.Options imageOptions = new BitmapFactory.Options();
-        imageOptions.inJustDecodeBounds = true;
-        Bitmap scaled = Bitmap.createScaledBitmap(input, 1024, 1024, false);
-        OutputStream out = new FileOutputStream(currentImageFile.getPath());
-        scaled.compress(Bitmap.CompressFormat.JPEG, 80, out); //Compresses bitmap and writes result to currentImage's path
-        return BitmapFactory.decodeFile(currentImageFile.getPath());
-    }
-
-
-    /**
-     *
-     * @param imageBitmap the Bitmap to be rotated
-     * @param imagePath the path to the image taken, used in order to determine how much rotation is needed
-     * @return a bitmap of the rotated image
-     * @throws IOException if the supplied image path is invalid
-     */
-    private Bitmap rotateImageIfRequired(Bitmap imageBitmap, String imagePath) throws IOException {
-        int rotationDegrees = getRotationDegrees(imagePath);
-        return rotateImage(imageBitmap, rotationDegrees);
-    }
-
-    /**
-     *
-     * @param imagePath path to the image taken by the user, holds metadata about its orientation
-     * @return the degrees of rotation needed for picture to be oriented in portrait mode
-     * @throws IOException if supplied image path is invalid
-     */
-    private int getRotationDegrees(String imagePath) throws IOException {
-        ExifInterface exifInterface = new ExifInterface(imagePath);
-        int orientationTag = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-        switch (orientationTag) {
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                return 90;
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                return 180;
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                return 270;
-            default:
-                return 0;
-
-        }
-    }
-
-    /**
-     * @param image the bitmap to be rotated
-     * @param degrees the degrees of rotation
-     * @return a rotated bitmap of the same image as was given as input
-     */
-    private Bitmap rotateImage(Bitmap image, int degrees) {
-        if (degrees == 0) {
-            return image;
-        }
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degrees);
-        return Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
-    }
-
+    @Override
     public File getCurrentImageFile() {
-        return this.currentImageFile;
-    }
-
-    private void setImageView(Bitmap bitmap) {
-        imageViewDisplay.setImageBitmap(bitmap);
+        return imageHandler.getCurrentImageFile();
     }
 
     //Tags----------------------------------------------------------
@@ -323,7 +189,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         userDefTagButtons.remove(btn);
         updateUserDefTags();
     }
-
 
     /**
      * Used to update tags layout correctly if a tag
@@ -391,12 +256,6 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     public void onRadioButtonClicked(View view) {
         presenter.conditionChanged(StylingHelper.getConditionFromView(view.getId()));
-    }
-
-    private void setImageViewListener() {
-        imageViewDisplay = findViewById(R.id.addImageView);
-        imageViewDisplay.setOnClickListener(view -> dispatchTakePictureIntent());
-
     }
 
     private void setTitleListener() {
@@ -508,8 +367,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
 
     @Override
     public void setImageUrl(String url) {
-        ImageView imageView = (ImageView) findViewById(R.id.addImageView);
-        Glide.with(this).load(url).into(imageView);
+        imageHandler.onImageUpdated(url);
     }
 
     @Override

@@ -60,8 +60,6 @@ public class CreateAdPresenterTest {
         return tenAds;
     }
 
-    ;
-
     Advertisement advertisement = new Advert(
             "datePublished",
             "uniqueOwnerID",
@@ -95,7 +93,7 @@ public class CreateAdPresenterTest {
 
         //assertEquals(databaseMock.getAdFromAdID("id"),advertisement);
     }
-    
+
     @Test
     public void testUpdateAdvert() {
         advertisement.setTitle("updated title");
