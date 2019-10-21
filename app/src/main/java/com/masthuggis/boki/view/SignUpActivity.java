@@ -12,8 +12,10 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.SignUpPresenter;
 
+import java.util.Optional;
 
-public class SignUpActivity extends AppCompatActivity implements SignUpPresenter.View {
+
+public class SignUpActivity extends AppCompatActivity implements ValidatorView, SignUpPresenter.View {
     private SignUpPresenter presenter = new SignUpPresenter(this, DependencyInjector.injectDataModel());
 
     @Override
@@ -56,20 +58,22 @@ public class SignUpActivity extends AppCompatActivity implements SignUpPresenter
     }
 
     @Override
-    public void showSignInScreen() {
-        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
-    public void showSignUpFailedMessage(String errorMessage) {
-        Toast toast = Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG);
+    public void showAccessFailedMessage(String message) {
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
         toast.show();
     }
 
     @Override
-    public void signedIn() {
+    public void accessGranted() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void showSignInScreen() {
+        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

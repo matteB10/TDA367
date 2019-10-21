@@ -12,14 +12,11 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.SignInPresenter;
 
-public class SignInActivity extends AppCompatActivity implements SignInPresenter.View {
+public class SignInActivity extends AppCompatActivity implements ValidatorView, SignInPresenter.View {
     private SignInPresenter presenter = new SignInPresenter(this, DependencyInjector.injectDataModel());
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
         super.onStart();
         setContentView(R.layout.activity_signin);
@@ -38,11 +35,9 @@ public class SignInActivity extends AppCompatActivity implements SignInPresenter
     }
 
     private void setUpBtns() {
-        //Button for signing in
         Button btnSignIn = findViewById(R.id.signInButton);
         btnSignIn.setOnClickListener(view -> presenter.onSignInButtonPressed(getEmail(), getPassword()));
 
-        //Button to create new user
         Button btnSignUp = findViewById(R.id.signUpButton);
         btnSignUp.setOnClickListener(view -> presenter.onSignUpButtonPressed());
     }
@@ -61,18 +56,19 @@ public class SignInActivity extends AppCompatActivity implements SignInPresenter
     public void showSignUpScreen() {
         Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override
-    public void signInSuccess() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
-    public void showSignInFailedMessage(String errorMessage) {
-        Toast toast = Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG);
+    public void showAccessFailedMessage(String message) {
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
         toast.show();
     }
 
+    @Override
+    public void accessGranted() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

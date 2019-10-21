@@ -1,36 +1,30 @@
 package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.model.DataModel;
-import com.masthuggis.boki.utils.FormHelper;
+import com.masthuggis.boki.view.ValidatorView;
 
-public class SignInPresenter {
-    private View view;
+import java.util.ArrayList;
+import java.util.List;
+
+public class SignInPresenter<T extends ValidatorView & SignInPresenter.View> {
+    private ValidatorPresenter validator;
+    private T view;
     private DataModel dataModel;
-    public SignInPresenter(View view, DataModel dataModel) {
-        this.dataModel=dataModel;
-        this.view = view;
 
+    public SignInPresenter(T view, DataModel dataModel) {
+        this.dataModel = dataModel;
+        this.view = view;
+        validator = new ValidatorPresenter(view);
     }
 
     public void onSignInButtonPressed(String email, String password) {
-        if (anyFieldIsBadlyFormatted(email, password)) {
-            view.showSignInFailedMessage("Felaktig inmatning. Skrev du verkligen rätt?");
-            return;
+        List<String> dataToBeProcessed = new ArrayList<>();
+        dataToBeProcessed.add(email);
+        dataToBeProcessed.add(password);
+
+        if (validator.onAccessRequested(dataToBeProcessed, "Felaktig inmatning. Skrev du verkligen rätt?")) {
+            dataModel.signIn(email, password, this.view::accessGranted, error -> view.showAccessFailedMessage(error));
         }
-        dataModel.signIn(email, password, this::onSignInSuccess, errorMessage -> onSignInFailed(errorMessage));
-    }
-
-    private boolean anyFieldIsBadlyFormatted(String email, String password) {
-        FormHelper fh = FormHelper.getInstance();
-        return !fh.isValidEmail(email) || email.isEmpty() || password.isEmpty();
-    }
-
-    private void onSignInSuccess() {
-        view.signInSuccess();
-    }
-
-    private void onSignInFailed(String errorMessage) {
-        view.showSignInFailedMessage(errorMessage);
     }
 
     public void onSignUpButtonPressed() {
@@ -39,7 +33,5 @@ public class SignInPresenter {
 
     public interface View {
         void showSignUpScreen();
-        void signInSuccess();
-        void showSignInFailedMessage(String errorMessage);
     }
 }

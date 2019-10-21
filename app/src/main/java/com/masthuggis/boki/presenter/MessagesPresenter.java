@@ -24,6 +24,7 @@ public class MessagesPresenter implements MessagesObserver {
         this.chatID = chatID;
         this.dataModel.addMessagesObserver(this);
         chat = this.dataModel.findChatByID(chatID);
+
         if (chat != null) {
             messages = chat.getMessages();
             if (messages != null || messages.size() > 0) {
