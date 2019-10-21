@@ -21,6 +21,7 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
     public ChatPresenter(T view, DataModel dataModel) {
         super(view, dataModel);
         this.view = view;
+        updateData();
         checkIfChatsAreActive();
         this.dataModel.addChatObserver(this);
     }
@@ -38,7 +39,7 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
     @Override
     public void onBindThumbnailViewAtPosition(int position, ChatThumbnailView dataView) {
         List<iChat> chats = getCurrentDisplayedData();
-        if (chats == null || chats.size() < position) {
+        if (chats == null || chats.size() < position || chats.size() == 0) {
             return;
         }
         iChat c = chats.get(position);
@@ -76,7 +77,7 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
             return "";
         }
         String str = Long.toString(l);
-        if (str.length() > 12) {
+        if (str.length() != 12) {
             return "Invalid time format.";
         }
         char[] cArr = str.toCharArray();

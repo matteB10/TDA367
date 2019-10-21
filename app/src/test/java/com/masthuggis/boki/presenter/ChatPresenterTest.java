@@ -5,6 +5,7 @@ import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.MessageFactory;
 import com.masthuggis.boki.model.UserFactory;
 import com.masthuggis.boki.model.iChat;
+import com.masthuggis.boki.model.iMessage;
 import com.masthuggis.boki.model.iUser;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 import com.masthuggis.boki.view.ChatFragment;
@@ -36,8 +37,13 @@ public class ChatPresenterTest {
     public MockitoRule mockitoRule = MockitoJUnit.rule();
     @Mock
     ChatThumbnailView holder;
+    @Mock
+    ChatPresenter mockPresenter;
+    @Mock
+    ListPresenter mockListPresenter;
 
     private List<iChat> userChats = userChats();
+
 
     private List<iUser> generate10Users() {
         List<iUser> tenUsers = new ArrayList<>();
@@ -123,22 +129,31 @@ public class ChatPresenterTest {
         }
     }
 
-  /*  @Test
+    @Test
     public void onFormatTimeLastMessageSent() {
-        userChats = userChats();
         initMockPresenter();
+        List<iUser> users = generate10Users();
+        List<iChat> chatWithBadFormatting = new ArrayList<>();
+        chatWithBadFormatting.add(ChatFactory.createChat("chatid",users.get(0),users.get(1),"adid","url",true));
+        List<iMessage> messageListWithBadNumberFormat = new ArrayList<>();
+        messageListWithBadNumberFormat.add(MessageFactory.createMessage("message", 123, "senderID"));
+        chatWithBadFormatting.get(0).setMessages(messageListWithBadNumberFormat);
+
+
+        when(databaseMock.getUserChats()).thenReturn(chatWithBadFormatting);
         ChatPresenter presenter = new ChatPresenter(chatFragmentMock, databaseMock);
-        for(int i=0;i<userChats.size();i++){
-            presenter.bindViewHolderAtPosition(i,holder);
-            holder.
-        }
-        presenter.bindViewHolderAtPosition(0, holder);
+        mockPresenter.onBindThumbnailViewAtPosition(0, holder);
+        presenter.updateData();
+        presenter.onBindThumbnailViewAtPosition(0, holder);
+        verify(holder, times(1)).setDateTextView("Invalid time format.");
 
-
-
-
-        presenter.
-
+        messageListWithBadNumberFormat.clear();
+        iMessage messageWithGoodFormat = MessageFactory.createMessage("Message",191021120159L,"senderID");
+        messageListWithBadNumberFormat.add(messageWithGoodFormat);
+        presenter.onBindThumbnailViewAtPosition(0,holder);
+        verify(holder,times(1)).setDateTextView("12.01.59 21/10 - 19");
     }
-*/
+
+
+
 }
