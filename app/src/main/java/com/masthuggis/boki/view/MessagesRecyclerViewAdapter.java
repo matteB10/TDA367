@@ -109,10 +109,6 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
         public void setChatID(String chatID) {
             this.chatID = chatID;
         }
-       /* public void setDisabled(){
-            backgroundLayout.setBackgroundResource(R.drawable.card_background_grey);
-
-        }*/
     }
 
 

@@ -35,12 +35,9 @@ public class MessagesActivity extends AppCompatActivity implements MessagesPrese
         scrollView = findViewById(R.id.scrollView);
 
         this.presenter = new MessagesPresenter(this, chatID, DependencyInjector.injectDataModel());
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.sendMessage(messageArea.getText().toString());
-                messageArea.setText("");
-            }
+        sendButton.setOnClickListener(v -> {
+            presenter.sendMessage(messageArea.getText().toString());
+            messageArea.setText("");
         });
 
     }

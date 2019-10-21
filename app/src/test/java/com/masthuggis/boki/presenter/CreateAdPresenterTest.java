@@ -60,8 +60,6 @@ public class CreateAdPresenterTest {
         return tenAds;
     }
 
-    ;
-
     Advertisement advertisement = new Advert(
             "datePublished",
             "uniqueOwnerID",
@@ -97,13 +95,6 @@ public class CreateAdPresenterTest {
     }
 
     @Test
-    public void testDeleteAdvert() {
-        doNothing().when(databaseMock).saveAdvert(null, advertisement);
-        doNothing().when(databaseMock).removeExistingAdvert(advertisement.getUniqueID(), advertisement.getUniqueOwnerID());
-        assertFalse(databaseMock.getAdFromAdID("id").equals(advertisement));
-    }
-
-    @Test
     public void testUpdateAdvert() {
         advertisement.setTitle("updated title");
         advertisement.setPrice(100);
@@ -113,21 +104,6 @@ public class CreateAdPresenterTest {
 
         assertEquals(advertisement.getTitle(), "updated title");
         //verify(databaseMock, times(1)).);
-
-    }
-
-    @Test
-    public void testTitleChanged() {
-        String title = "new Title";
-        doNothing().when(presenter).titleChanged(title);
-        verify(advertisement, times(1)).setTitle(title);
-    }
-
-    @Test
-    public void testPriceChanged() {
-        String price = "300";
-        verify(advertisement, times(1)).setPrice(300);
-
 
     }
 
@@ -186,22 +162,6 @@ public class CreateAdPresenterTest {
         assertEquals(NEW, presenter.getCondition());
     }
 
-
-    @Test
-    public void testEnablePublishButton() {
-
-        doNothing().when(mockView).enablePublishButton(booleanCapture.capture());
-        presenter.priceChanged("10");
-        presenter.titleChanged("hej");
-        presenter.conditionChanged(GOOD);
-        presenter.imageChanged();
-        //if all fields valid in presenter, enablePublishButton method is called in view
-        assertEquals(true, booleanCapture.getValue());
-
-        presenter.titleChanged(""); //empty title is not valid value, should disable publishbutton
-        assertEquals(false,booleanCapture.getValue());
-
-    }
     @Test
     public void testEnableSaveButton() {
 
