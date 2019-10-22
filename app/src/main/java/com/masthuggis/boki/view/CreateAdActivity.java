@@ -64,6 +64,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
             String advertID = intent.getExtras().getString(getString(R.string.keyForAdvert));
             presenter.setAd(advertID);
             presenter.setUpView();
+            presenter.imageTaken();
         }
     }
 

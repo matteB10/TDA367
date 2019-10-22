@@ -223,9 +223,6 @@ public class CreateAdPresenter {
         this.imageTaken = true;
     }
 
-    public boolean isImageTaken() {
-        return this.imageTaken;
-    }
 
     public interface View {
 
