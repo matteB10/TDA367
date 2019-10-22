@@ -1,6 +1,8 @@
 package com.masthuggis.boki;
 
+import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.utils.Condition;
 import com.masthuggis.boki.utils.SearchHelper;
 
 import org.junit.Before;
@@ -17,8 +19,13 @@ public class SearchTest {
 
     @Before
     public void before() {
-        ads = MockRepository.getTestAds();
         searchRes = new ArrayList<>();
+
+        ads.add(AdFactory.createAd( "22/10/19:13:16:00", "UniqueOwnerID", "UniqueAdID", "Kemi","", 300, Condition.GOOD,"", new ArrayList<>(),null));
+        ads.add(AdFactory.createAd( "22/10/19:10:16:00", "UniqueOwnerID", "UniqueAdID", "Calculus","", 490, Condition.GOOD,"", new ArrayList<>(),null));
+        ads.add(AdFactory.createAd( "22/10/19:10:15:00", "UniqueOwnerID", "UniqueAdID", "Diskret matematik","", 299, Condition.GOOD,"", new ArrayList<>(),null));
+        ads.add(AdFactory.createAd( "22/10/19:10:15:00", "UniqueOwnerID", "UniqueAdID", "Clean code","", 199, Condition.GOOD,"", new ArrayList<>(),null));
+        ads.add(AdFactory.createAd( "22/10/19:10:15:00", "UniqueOwnerID", "UniqueAdID", "Linjär algebra","", 400, Condition.GOOD,"", new ArrayList<>(),null));
     }
 
     /**
@@ -42,8 +49,9 @@ public class SearchTest {
     public void testGetMatchedTitle() {
         String query = "Calculus";
         searchRes = SearchHelper.search(query,ads);
-        assertEquals(1,searchRes.size());
+        assertEquals(1, searchRes.size());
     }
+
     /**
      * Test if a known book is added to searchRes when searched,
      * should not be case sensitive
@@ -66,8 +74,6 @@ public class SearchTest {
         String query = "C";
         searchRes = SearchHelper.search(query,ads);
         assertEquals(2, searchRes.size());
-
-
     }
 
     /**
@@ -99,14 +105,14 @@ public class SearchTest {
     @Test
     public void testFilterTags(){
         List<String> filters = new ArrayList<>();
-        filters.add("Arkitektur");
-        filters.add("DESIGN");
-        filters.add("kemi");
+        filters.add("code");
+        filters.add("algebra");
+        filters.add("matematik");
         searchRes = SearchHelper.filters(500,filters,ads);
         assertEquals(3,searchRes.size());
-        assertEquals("Arkitektur",searchRes.get(0).getTitle());
-        assertEquals("Design", searchRes.get(1).getTitle());
-        assertEquals("Linjär Algebra",searchRes.get(2).getTitle());
+        assertEquals("Clean code",searchRes.get(0).getTitle());
+        assertEquals("Linjär algebra", searchRes.get(1).getTitle());
+        assertEquals("Diskret matematik",searchRes.get(2).getTitle());
     }
 
 
