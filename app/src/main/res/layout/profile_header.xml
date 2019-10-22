@@ -12,6 +12,7 @@
         android:text="@string/logOut"
         android:textSize="12sp"
         android:visibility="visible"
+        android:background="@drawable/secondary_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
