@@ -17,9 +17,11 @@ public interface iUser {
 
     List<Advertisement> getAdverts();
 
-    String getChatIDFromAdID(String adID);
     void addFavourite(Advertisement advertisement);
+
     void removeFavourite(Advertisement advertisement);
+
     void setFavourites(List<Advertisement> advertisements);
+
     List<Advertisement> getFavourites();
 }

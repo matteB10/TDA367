@@ -242,7 +242,6 @@ public class DataModel{
         Map<String, String> adIDAndUserID = new HashMap<>();
         adIDAndUserID.put("adID", adID);
         adIDAndUserID.put("userID", userID);
-        List<String> chatIDs = new ArrayList<>();
         for (iChat chat : user.getChats()) {
             Map<String, String> map = new HashMap<>();
             if (chat.getAdID().equals(adID)) {
@@ -252,7 +251,6 @@ public class DataModel{
                 chatReceiverAndUserIDMap.add(map);
             }
         }
-        user.getChatIDFromAdID(adID);
         repository.deleteAd(chatReceiverAndUserIDMap, adIDAndUserID);
     }
 
