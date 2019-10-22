@@ -68,7 +68,6 @@ public class HomeFragment extends ListView implements AdapterView.OnItemSelected
     /**
      * Adds a listener for when the user performs a searchPerformed, reacts to when enter key is pressed
      * makes the keyboard disappear then calls on the presenter to perform the searchPerformed with given input
-     *
      * @param view
      */
     private void setupSearchField(View view) {
