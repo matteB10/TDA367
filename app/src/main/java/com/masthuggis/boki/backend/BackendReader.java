@@ -78,7 +78,14 @@ class BackendReader {
      */
     void fetchCurrentUser(DBMapCallback dbMapCallback) {
         String userID = auth.getCurrentUser().getUid();
-        userPath.document(userID).addSnapshotListener((documentSnapshot, e) -> dbMapCallback.onCallBack(documentSnapshot.getData()));
+        userPath.document(userID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@androidx.annotation.Nullable DocumentSnapshot documentSnapshot, @androidx.annotation.Nullable FirebaseFirestoreException e) {
+                if (documentSnapshot != null) {
+                    dbMapCallback.onCallBack(documentSnapshot.getData());
+                }
+            }
+        });
     }
 
     /**
@@ -91,7 +98,9 @@ class BackendReader {
         userPath.document(userID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@androidx.annotation.Nullable DocumentSnapshot documentSnapshot, @androidx.annotation.Nullable FirebaseFirestoreException e) {
-                dbMapCallback.onCallBack(documentSnapshot.getData());
+                if (documentSnapshot != null) {
+                    dbMapCallback.onCallBack(documentSnapshot.getData());
+                }
             }
         });
     }
@@ -200,6 +209,7 @@ class BackendReader {
         userPath.document(userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot user = task.getResult();
+                assert user != null;
                 dbMapCallback.onCallBack(user.getData());
             }
         });
@@ -216,6 +226,11 @@ class BackendReader {
     void attachMessagesSnapshotListener(String uniqueChatID, DBCallback messageCallback) {
         chatPath.document(uniqueChatID).collection("messages").addSnapshotListener((queryDocumentSnapshots, e) -> {
             List<Map<String, Object>> messageMap = new ArrayList<>();
+            if (queryDocumentSnapshots == null || queryDocumentSnapshots.size() <= 0) {
+                notifyChatObservers();
+                notifyMessagesObserver();
+                return;
+            }
             for (QueryDocumentSnapshot querySnapshot : queryDocumentSnapshots) {
                 messageMap.add(querySnapshot.getData());
             }
