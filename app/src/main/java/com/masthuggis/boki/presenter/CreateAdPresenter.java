@@ -23,6 +23,7 @@ public class CreateAdPresenter {
     private View view;
     private boolean validPrice;
     private DataModel dataModel;
+    private boolean imageTaken;
 
 
     public CreateAdPresenter(View view, DataModel dataModel) {
@@ -30,6 +31,7 @@ public class CreateAdPresenter {
         advertisement = AdFactory.createAd("", dataModel.getUserID(), UniqueIdCreator.getUniqueID(), "", "",
                 0, Condition.UNDEFINED, "", new ArrayList<>(), dataModel.getUserDisplayName());
         this.view = view;
+        imageTaken = false;
     }
 
     /**
@@ -164,6 +166,7 @@ public class CreateAdPresenter {
      * Checks if publish button should be enabled when image has changed
      */
     public void imageChanged() {
+        imageTaken = true;
         view.enablePublishButton(allFieldsValid());
         view.enableSaveButton(allFieldsValid());
     }
@@ -175,7 +178,7 @@ public class CreateAdPresenter {
      */
     private boolean allFieldsValid() {
         boolean valid = advertisement.getTitle().length() > 2 && validPrice && advertisement.isValidCondition() &&
-                (view.getCurrentImageFile() != null || advertisement.getImageUrl() != null);
+                (imageTaken);
         return (valid);
     }
 
@@ -216,7 +219,13 @@ public class CreateAdPresenter {
         return advertisement.getTags();
     }
 
+    public void imageTaken() {
+        this.imageTaken = true;
+    }
 
+    public boolean isImageTaken() {
+        return this.imageTaken;
+    }
 
     public interface View {
 
