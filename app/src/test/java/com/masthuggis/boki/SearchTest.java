@@ -15,8 +15,6 @@ public class SearchTest {
     List<Advertisement> ads = new ArrayList<>();
     List<Advertisement> searchRes;
 
-
-
     @Before
     public void before() {
         ads = MockRepository.getTestAds();

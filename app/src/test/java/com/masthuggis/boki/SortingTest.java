@@ -1,7 +1,9 @@
 package com.masthuggis.boki;
 
 
+import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.utils.Condition;
 import com.masthuggis.boki.utils.sorting.SortFactory;
 import com.masthuggis.boki.utils.sorting.SortStrategy;
 
@@ -18,7 +20,9 @@ public class SortingTest {
 
     @Before
     public void before() {
-        adverts = MockRepository.getTestAds();
+        adverts.add(AdFactory.createAd( "22/10/19:13:16:00", "UniqueOwnerID", "UniqueAdID", "ABC","", 300, Condition.GOOD,"", new ArrayList<>(),null));
+        adverts.add(AdFactory.createAd( "22/10/19:10:16:00", "UniqueOwnerID", "UniqueAdID", "QYZ","", 490, Condition.GOOD,"", new ArrayList<>(),null));
+        adverts.add(AdFactory.createAd( "22/10/19:10:15:00", "UniqueOwnerID", "UniqueAdID", "DEF","", 299, Condition.GOOD,"", new ArrayList<>(),null));
     }
 
     private void sort(SortStrategy strategy) {
@@ -29,51 +33,42 @@ public class SortingTest {
     public void testAlphabeticalSortingIsCorrect() {
         sort(SortFactory.getAlphabeticalSorting());
 
-        assertEquals(adverts.get(0).getTitle().toLowerCase(), "arkitektur");
-        assertEquals(adverts.get(1).getTitle().toLowerCase(), "calculus");
-        assertEquals(adverts.get(2).getTitle().toLowerCase(), "clean code");
-        assertEquals(adverts.get(3).getTitle().toLowerCase(), "design");
-        assertEquals(adverts.get(4).getTitle().toLowerCase(), "diskret");
-        assertEquals(adverts.get(5).getTitle().toLowerCase(), "linjär algebra");
+        assertEquals(adverts.get(0).getTitle().toLowerCase(), "abc");
+        assertEquals(adverts.get(1).getTitle().toLowerCase(), "def");
+        assertEquals(adverts.get(2).getTitle().toLowerCase(), "qyz");
     }
 
     @Test
     public void testReverseAlphabeticalSortingIsCorrect() {
         sort(SortFactory.getReversedAlphabeticalSorting());
 
-        assertEquals(adverts.get(0).getTitle().toLowerCase(), "linjär algebra");
-        assertEquals(adverts.get(1).getTitle().toLowerCase(), "diskret");
-        assertEquals(adverts.get(2).getTitle().toLowerCase(), "design");
-        assertEquals(adverts.get(3).getTitle().toLowerCase(), "clean code");
-        assertEquals(adverts.get(4).getTitle().toLowerCase(), "calculus");
-        assertEquals(adverts.get(5).getTitle().toLowerCase(), "arkitektur");
+        assertEquals(adverts.get(0).getTitle().toLowerCase(), "qyz");
+        assertEquals(adverts.get(1).getTitle().toLowerCase(), "def");
+        assertEquals(adverts.get(2).getTitle().toLowerCase(), "abc");
     }
 
     @Test
     public void testHighestPriceSortingIsCorrect() {
         sort(SortFactory.getHighestPriceSorting());
 
-        assertEquals(Long.toString(adverts.get(0).getPrice()), "450");
-        assertEquals(Long.toString(adverts.get(adverts.size()-1).getPrice()), "180");
+        assertEquals(Long.toString(adverts.get(0).getPrice()), "490");
+        assertEquals(Long.toString(adverts.get(adverts.size()-1).getPrice()), "299");
     }
 
     @Test
     public void testLowestPriceSortingIsCorrect() {
         sort(SortFactory.getLowestPriceSorting());
 
-        assertEquals(Long.toString(adverts.get(0).getPrice()), "180");
-        assertEquals(Long.toString(adverts.get(adverts.size()-1).getPrice()), "450");
+        assertEquals(Long.toString(adverts.get(0).getPrice()), "299");
+        assertEquals(Long.toString(adverts.get(adverts.size()-1).getPrice()), "490");
     }
 
     @Test
     public void testLatestPublishedSortingIsCorrect() {
         sort(SortFactory.getLatestPublishedSorting());
 
-        assertEquals(adverts.get(0).getTitle().toLowerCase(), "clean code");
-        assertEquals(adverts.get(1).getTitle().toLowerCase(), "design");
-        assertEquals(adverts.get(2).getTitle().toLowerCase(), "arkitektur");
-        assertEquals(adverts.get(3).getTitle().toLowerCase(), "linjär algebra");
-        assertEquals(adverts.get(4).getTitle().toLowerCase(), "calculus");
-        assertEquals(adverts.get(5).getTitle().toLowerCase(), "diskret");
+        assertEquals(adverts.get(0).getTitle().toLowerCase(), "abc");
+        assertEquals(adverts.get(1).getTitle().toLowerCase(), "qyz");
+        assertEquals(adverts.get(2).getTitle().toLowerCase(), "def");
     }
 }

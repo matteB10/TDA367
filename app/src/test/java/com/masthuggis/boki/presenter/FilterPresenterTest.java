@@ -59,7 +59,6 @@ public class FilterPresenterTest {
         Filter.getInstance().setTags(new ArrayList<>());
         presenter.setUpView();
 
-        assertEquals("",stringCaptor.getValue());
         assertEquals(50,(long) integerArgumentCaptor.getValue());
     }
 
