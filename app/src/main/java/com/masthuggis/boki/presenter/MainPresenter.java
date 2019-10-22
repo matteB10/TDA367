@@ -11,11 +11,11 @@ public class MainPresenter {
         this.dataModel = dataModel;
     }
 
-    public void init(boolean favouriteNav) {
+    public void init(boolean shouldNavigateToFavoriteScreen) {
         view.hideBottomNavBar();
         if (dataModel.isLoggedIn()) {
             dataModel.initUser(() -> {
-                if (favouriteNav) {
+                if (shouldNavigateToFavoriteScreen) {
                     view.showFavouritesScreen();
                 } else {
                     view.showMainScreen();
