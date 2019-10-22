@@ -100,6 +100,8 @@ public class ChatPresenterTest {
         initMockRemoveChats();
         ChatPresenter presenter = new ChatPresenter(chatFragmentMock, databaseMock);
 
+        presenter.onChatUpdated();
+
         assert (userChats.size() == 3);
         verify(chatFragmentMock, times(1)).displayToast("displayname1");
         verify(chatFragmentMock, times(1)).displayToast("displayname3");
