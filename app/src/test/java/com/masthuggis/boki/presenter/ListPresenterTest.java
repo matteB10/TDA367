@@ -31,18 +31,9 @@ public class ListPresenterTest {
     private ListView fragmentMock;
     @Mock
     private DataModel databaseMock;
-    @Mock
-    private ListPresenter presenterMock;
-    @Mock
-    private ClickDelayHelper clickDelayHelper;
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
-
-    @Before
-    public void before() {
-
-    }
-
+    
     private void createTestData() {
         testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
         testData.add(AdFactory.createAd("170101200000", "UniqueOwnerID", "UniqueAdID", "Title1","", 490, Condition.GOOD,"", new ArrayList<>(),null));
