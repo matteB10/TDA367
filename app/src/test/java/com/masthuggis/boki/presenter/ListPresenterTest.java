@@ -33,7 +33,7 @@ public class ListPresenterTest {
     private DataModel databaseMock;
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
-    
+
     private void createTestData() {
         testData.add(AdFactory.createAd("190101200000", "UniqueOwnerID", "UniqueAdID", "Title","", 300, Condition.GOOD,"", new ArrayList<>(),null));
         testData.add(AdFactory.createAd("170101200000", "UniqueOwnerID", "UniqueAdID", "Title1","", 490, Condition.GOOD,"", new ArrayList<>(),null));

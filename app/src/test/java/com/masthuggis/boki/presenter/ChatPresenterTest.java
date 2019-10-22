@@ -23,6 +23,8 @@ import org.mockito.stubbing.Answer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.masthuggis.boki.presenter.ChatMessagesHelper.addMessagesToChats;
+import static com.masthuggis.boki.presenter.ChatMessagesHelper.generate10Users;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,16 +45,6 @@ public class ChatPresenterTest {
     ListPresenter mockListPresenter;
 
     private List<iChat> userChats = userChats();
-
-
-    private List<iUser> generate10Users() {
-        List<iUser> tenUsers = new ArrayList<>();
-        for (int i = 0; i < 9; i++) {
-            tenUsers.add(UserFactory.createUser("mail" + i + "@mail.se", "displayname" + i, "userid" + i));
-        }
-        return tenUsers;
-
-    }
 
     private List<iChat> userChats() {
         List<iUser> tenUsers = generate10Users();
@@ -77,21 +69,6 @@ public class ChatPresenterTest {
         userChats = newChatList;
     }
 
-    private void addMessagesToChats(List<iChat> chats) {
-        // hhMMss DDmmYY
-        String str = "191016133503";
-        long l = Long.parseLong(str);
-        int i = 0;
-        for (iChat chat : chats) {
-            chat.setMessages(new ArrayList<>());
-            for (int j = 0; j < 5; j++) {
-                chat.getMessages().add(MessageFactory.createMessage("meddelande" + i, l + j, "jag" + i));
-                l++;
-                i++;
-            }
-        }
-    }
-
     @Test
     public void onCreateTest() {
         userChats = userChats();
@@ -110,11 +87,9 @@ public class ChatPresenterTest {
     }
 
     private void initMockPresenter() {
-        //        Mockito.doNothing().when(chatFragmentMock).showUserChats(null);
         Mockito.doNothing().when(chatFragmentMock).hideLoadingScreen();
         Mockito.when(databaseMock.getUserChats()).thenReturn(userChats);
-        //      Mockito.doNothing().when(databaseMock).addChatObserver(null);
-        addMessagesToChats(userChats);
+        addMessagesToChats(userChats, 5);
         when(databaseMock.getUserID()).thenReturn("");
     }
 
