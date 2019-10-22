@@ -18,8 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
-import com.masthuggis.boki.utils.Condition;
 import com.masthuggis.boki.presenter.CreateAdPresenter;
+import com.masthuggis.boki.utils.Condition;
 import com.masthuggis.boki.utils.ImageHandler;
 import com.masthuggis.boki.utils.StylingHelper;
 
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An acitivity for creating a new advertisement
+ * An acitivity for creating a new or editing an advertisement
  * with user input.
  */
 

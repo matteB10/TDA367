@@ -19,7 +19,7 @@ public class SearchTest {
 
     @Before
     public void before() {
-        ads = MockRepository.getInstance().getTestAds();
+        ads = MockRepository.getTestAds();
         searchRes = new ArrayList<>();
     }
 

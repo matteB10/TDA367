@@ -18,7 +18,7 @@ public class SortingTest {
 
     @Before
     public void before() {
-        adverts = MockRepository.getInstance().getTestAds();
+        adverts = MockRepository.getTestAds();
     }
 
     private void sort(SortStrategy strategy) {

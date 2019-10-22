@@ -16,7 +16,7 @@ public class HomeFragmentTest {
         HomePresenter.View view = createHomeView();
         HomePresenter presenter = new HomePresenter(view, DependencyInjector.injectDataModel());
 
-        int numItems = MockRepository.getInstance().getLocalJSONAds().size();
+        int numItems = ;
 
         assertEquals(presenter.getItemCount(), numItems);
     }

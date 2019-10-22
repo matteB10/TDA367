@@ -7,87 +7,19 @@ import com.masthuggis.boki.utils.Condition;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Mock class with hard coded books for testing purpose
+ */
 
-public class MockRepository {
-    private List<Advertisement> adverts = new ArrayList<>();
-    private static MockRepository instance;
+ public class MockRepository {
+    private static List<Advertisement> adverts = new ArrayList<>();
 
-    private MockRepository() {
+    public static List<Advertisement> getTestAds() {
         createMockBooks();
-    }
-
-
-    public static MockRepository getInstance() {
-        if (instance == null)
-            instance = new MockRepository();
-        return instance;
-    }
-
-    public List<Advertisement> getTestAds() {
         return new ArrayList<>(adverts);
     }
-/*
-    private void getMockDataOfAllAds() {
-        try {
-            JSONObject booksObject;
-            JSONArray booksArray = booksObject.getJSONArray("books"); //Array in json file must be named "books"
-            for (int i = 0; i < booksArray.length(); i++) {
-                //Needs some way to create a book from the data that is fetched from each JSON-object
-                createBookWithoutTags(booksArray.getJSONObject(i));
-            }
-        } catch (JSONException exception) {
-            exception.printStackTrace();
-        }
-    }
 
-    private Advertisement createBookWithoutTags(JSONObject object) {
-        String title, date;
-        int price;
-        List<String> strTags = new ArrayList<>();
-        Advert.Condition condition;
-        try { //Should use a factory-method instead
-            title = object.getString("title");
-            price = object.getInt("price");
-            date = object.getString("date");
-            String conditionString = object.getString("condition");
-            condition = Advert.Condition.valueOf(conditionString); //Necessary step as it otherwise tries to cast a String into a Condition
-
-            JSONArray tags = (JSONArray) object.get("tags");
-            System.out.print("tags:");
-            for (int i = 0; i < tags.length(); i++) {
-                strTags.add(tags.getJSONObject(i).toString());
-            }
-
-            Advertisement ad = AdFactory.createAd(date, "UniqueOwnerID", "UniqueAdID", title, "", price, condition, "", strTags, null);
-            adverts.add(ad);
-            return ad;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    /*
-    private void getMockJsonObj() {
-        JSONParser jsonParser = new JSONParser();
-        try {
-            ClassLoader cl = getClass().getClassLoader();
-            File file = new File(cl.getResource("app/src/test/java/com/masthuggis/boki/mockBooks.json").getFile());
-            Object object = jsonParser.parse(new FileReader(file));
-
-            JSONObject jsonObject = (JSONObject) object;
-            JSONArray booksArray = jsonObject.getJSONArray("books");
-
-            for (int i = 0; i < booksArray.length(); i++) {
-                //Needs some way to create a book from the data that is fetched from each JSON-object
-                createBookWithoutTags(booksArray.getJSONObject(i));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
-
-    private void createMockBooks() {
+    private static void createMockBooks() {
         List<String> tags = new ArrayList<>();
         tags.add("IT/Data");
         adverts.add(AdFactory.createAd("01/01/18 10:12:55", "UniqueOwnerID", "AdID", "Diskret",

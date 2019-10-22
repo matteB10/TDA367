@@ -13,7 +13,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".Boki"
         android:allowBackup="true"
         android:configChanges="orientation"
         android:icon="@mipmap/boki_launcher"

@@ -1,10 +1,9 @@
 package com.masthuggis.boki.presenter;
 
-import com.masthuggis.boki.model.AdFactory;
-import com.masthuggis.boki.model.Advert;
+import com.masthuggis.boki.MockRepository;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.utils.Condition;
 import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.utils.Condition;
 import com.masthuggis.boki.view.CreateAdActivity;
 
 import org.junit.Before;
@@ -15,20 +14,14 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static com.masthuggis.boki.utils.Condition.GOOD;
 import static com.masthuggis.boki.utils.Condition.NEW;
-import static com.masthuggis.boki.utils.Condition.UNDEFINED;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 /**
  * Tests basic funtionality of CreateAdPresenter
@@ -39,6 +32,7 @@ import static org.mockito.Mockito.verify;
 public class CreateAdPresenterTest {
     CreateAdPresenter presenter;
     ArgumentCaptor<Boolean> booleanCapture;
+    List<Advertisement> ads;
 
 
     @Mock
@@ -49,53 +43,27 @@ public class CreateAdPresenterTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    private List<Advertisement> tenAds = new ArrayList<>();
-
-    private List<Advertisement> generateAds() {
-        for (int i = 0; i < 9; i++) {
-            tenAds.add(AdFactory.createAd("datePublished",
-                    "uniqueOwner", "id", "title " + i,
-                    "", 100, Condition.GOOD, null, Collections.singletonList(""), "owner"));
-        }
-        return tenAds;
-    }
-
-    Advertisement advertisement = new Advert(
-            "datePublished",
-            "uniqueOwnerID",
-            "id",
-            "title",
-            "description",
-            123123,
-            NEW,
-            "imgUrl",
-            new ArrayList<>(),
-            "owner");
-
 
     @Before
     public void before() {
         presenter = new CreateAdPresenter(mockView, databaseMock);
         booleanCapture = ArgumentCaptor.forClass(Boolean.class);
+        ads = MockRepository.getTestAds();
     }
 
     //--------------------------------------------------------------------------
 
-    private void addAdToList(Advertisement ad) {
-        tenAds.add(ad);
-    }
 
     @Test
     public void testSaveAdvert() {
         CreateAdPresenter createAdPresenter = mock(CreateAdPresenter.class);
         doNothing().when(createAdPresenter).saveAdvert();
 
-
-        //assertEquals(databaseMock.getAdFromAdID("id"),advertisement);
     }
 
     @Test
     public void testUpdateAdvert() {
+        Advertisement advertisement = ads.get(0); //get one advert
         advertisement.setTitle("updated title");
         advertisement.setPrice(100);
         advertisement.setDescription("updated description");
@@ -146,20 +114,16 @@ public class CreateAdPresenterTest {
 
         doNothing().when(mockView).setCondition(conditionArgumentCaptor.capture(),booleanCapture.capture());
 
-        assertEquals(UNDEFINED, presenter.getCondition()); //on startup, condition not set
 
         presenter.conditionChanged(GOOD); //when presenter/model is updated, view is updated as well
         assertEquals(GOOD,conditionArgumentCaptor.getValue());
         assertEquals(true,booleanCapture.getValue());
-        assertEquals(GOOD, presenter.getCondition()); //check that presenter also returns correct value
+
 
         presenter.conditionChanged(GOOD); //if same condition button clicked again, changes status from selected in view
         assertEquals(GOOD,conditionArgumentCaptor.getValue());
         assertEquals(false, booleanCapture.getValue());
-        assertEquals(UNDEFINED,presenter.getCondition()); //check that presenter also returns correct value
 
-        presenter.conditionChanged(NEW);
-        assertEquals(NEW, presenter.getCondition());
     }
 
     @Test
