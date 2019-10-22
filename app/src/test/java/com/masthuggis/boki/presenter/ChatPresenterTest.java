@@ -156,6 +156,34 @@ public class ChatPresenterTest {
         verify(holder,times(1)).setDateTextView("12.01.59 21/10 - 19");
     }
 
+    @Test
+    public void whenChatPressedMessagesShouldBeOpenedForValidChatID() {
+        String validID = "validID";
+        List<iUser> tenUsers = generate10Users();
+        List<iChat> chat = new ArrayList<>();
+        chat.add(ChatFactory.createChat(validID, tenUsers.get(0), tenUsers.get(1), "", "123", true));
+        Mockito.when(databaseMock.getUserChats()).thenReturn(chat);
+        ChatPresenter presenter = new ChatPresenter(chatFragmentMock, databaseMock);
 
+        presenter.updateData();
+        presenter.onRowPressed(validID);
+
+        verify(chatFragmentMock).showMessagesScreen(validID);
+    }
+
+    @Test
+    public void whenChatPressedMessagesShouldNotBeOpenedForInValidChatID() {
+        String invalidID = "validID";
+        List<iUser> tenUsers = generate10Users();
+        List<iChat> chat = new ArrayList<>();
+        chat.add(ChatFactory.createChat(invalidID, tenUsers.get(0), tenUsers.get(1), "", "123", true));
+        Mockito.when(databaseMock.getUserChats()).thenReturn(chat);
+        ChatPresenter presenter = new ChatPresenter(chatFragmentMock, databaseMock);
+
+        presenter.updateData();
+        presenter.onRowPressed(invalidID);
+
+        verify(chatFragmentMock).showMessagesScreen(invalidID);
+    }
 
 }
