@@ -16,7 +16,8 @@ import com.google.firebase.storage.UploadTask;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
-import com.masthuggis.boki.model.observers.BackendObserver;
+import com.masthuggis.boki.model.observers.ChatObserver;
+import com.masthuggis.boki.model.observers.MessagesObserver;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
@@ -41,7 +42,8 @@ class BackendWriter {
     private StorageReference mainRef = storage.getReference();
     private StorageReference imagesRef = mainRef.child("images");
     private FirebaseAuth auth = FirebaseAuth.getInstance();
-    private final List<BackendObserver> backendObservers;
+    private final List<ChatObserver> chatObservers;
+    private final List<MessagesObserver> messagesObservers;
     private CollectionReference advertPath;
     private CollectionReference chatPath;
     private CollectionReference userPath;
@@ -49,20 +51,26 @@ class BackendWriter {
     /**
      * The single constructor of the class which needs a list of backendobservers to make sure it updates the current backendobservers correctly.
      *
-     * @param backendObservers
      */
 
-    BackendWriter(List<BackendObserver> backendObservers) {
+    BackendWriter(List<ChatObserver> chatObservers, List<MessagesObserver> messagesObservers) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         advertPath = db.collection("market");
         chatPath = db.collection("chats");
         userPath = db.collection("users");
-        this.backendObservers = backendObservers;
+        this.chatObservers = chatObservers;
+        this.messagesObservers=messagesObservers;
     }
 
     private void notifyChatObservers() {
-        for (BackendObserver backendObserver : backendObservers) {
-            backendObserver.onChatsChanged();
+        for (ChatObserver chatObserver: chatObservers) {
+            chatObserver.onChatUpdated();
+        }
+    }
+
+    private void notifyMessagesObserver() {
+        for (MessagesObserver messagesObserver: messagesObservers) {
+            messagesObserver.onMessagesChanged();
         }
     }
 
@@ -385,6 +393,7 @@ class BackendWriter {
 
     /**
      * Deletes the reference to the chat from the users myConversations directory
+     *
      * @param userID
      * @param chatID
      */

@@ -5,7 +5,8 @@ import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
-import com.masthuggis.boki.model.observers.BackendObserver;
+import com.masthuggis.boki.model.observers.ChatObserver;
+import com.masthuggis.boki.model.observers.MessagesObserver;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,17 +24,27 @@ public class BackendDataHandler implements iBackend {
      * Contains a List of backendObservers which it injects into both BackendReader and BackendWriter to make sure model keeps up to date with the newest
      * data. See documentation considering specific methods in respective class.
      */
-    private final List<BackendObserver> backendObservers = new ArrayList<>();
-    private final BackendReader backendReader = new BackendReader(backendObservers);
-    private final BackendWriter backendWriter = new BackendWriter(backendObservers);
-    public void addBackendObserver(BackendObserver backendObserver) {
-        this.backendObservers.add(backendObserver);
+
+    private final List<ChatObserver> chatObservers = new ArrayList<>();
+    private final List<MessagesObserver> messagesObservers = new ArrayList<>();
+    private final BackendReader backendReader = BackendFactory.createBackendReader(chatObservers,messagesObservers);
+    private final BackendWriter backendWriter = BackendFactory.createBackendWriter(chatObservers,messagesObservers);
+
+    public void addChatObserver(ChatObserver chatObserver) {
+        this.chatObservers.add(chatObserver);
     }
 
-    public void removeBackendObserver(BackendObserver backendObserver) {
-        this.backendObservers.remove(backendObserver);
+    public void addMessagesObserver(MessagesObserver messagesObserver) {
+        this.messagesObservers.add(messagesObserver);
     }
 
+    public void removeChatObserver(ChatObserver chatObserver) {
+        this.chatObservers.remove(chatObserver);
+    }
+
+    public void removeMessagesObserver(MessagesObserver messagesObserver) {
+        this.messagesObservers.remove(messagesObserver);
+    }
 
     public void writeAdvertToFirebase(File imageFile, Map<String, Object> data) {
         backendWriter.writeAdvertToFirebase(imageFile, data);
@@ -110,8 +121,6 @@ public class BackendDataHandler implements iBackend {
         backendReader.attachMessagesSnapshotListener(uniqueChatID, messageCallback);
     }
 
-
-
     public void signOut() {
         backendWriter.signOut();
     }
@@ -120,14 +129,10 @@ public class BackendDataHandler implements iBackend {
         backendWriter.deleteAd(chatReceiverAndUserIDMap, adIDAndUserID);
 
     }
-
-
     @Override
     public void removeChat(String userID, String chatID) {
         backendWriter.removeChat(userID, chatID);
     }
-
-
     @Override
     public void updateAdToFirebase(File imageFile, Map<String, Object> dataMap) {
         backendWriter.updateAdToFirebase(imageFile, dataMap);

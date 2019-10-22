@@ -19,7 +19,8 @@ import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
-import com.masthuggis.boki.model.observers.BackendObserver;
+import com.masthuggis.boki.model.observers.ChatObserver;
+import com.masthuggis.boki.model.observers.MessagesObserver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,9 @@ class BackendReader {
     private StorageReference mainRef = storage.getReference();
     private StorageReference imagesRef = mainRef.child("images"); //Reference to storage location of images
     private FirebaseAuth auth = FirebaseAuth.getInstance();
-    private final List<BackendObserver> backendObservers;
+    private final List<ChatObserver> chatObservers;
+    private final List<MessagesObserver> messagesObservers;
+
     private CollectionReference advertPath;
     private CollectionReference chatPath;
     private CollectionReference userPath;
@@ -48,25 +51,26 @@ class BackendReader {
     /**
      * The single constructor of the class which needs a list of backendobservers to make sure it updates the current backendobservers correctly.
      *
-     * @param backendObservers
+     *
      */
-    BackendReader(List<BackendObserver> backendObservers) {
+    BackendReader(List<ChatObserver> chatObservers, List<MessagesObserver> messagesObservers) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         advertPath = db.collection("market");
         chatPath = db.collection("chats");
         userPath = db.collection("users");
-        this.backendObservers = backendObservers;
+        this.chatObservers = chatObservers;
+        this.messagesObservers=messagesObservers;
     }
 
     private void notifyChatObservers() {
-        for (BackendObserver backendObserver : backendObservers) {
-            backendObserver.onChatsChanged();
+        for (ChatObserver chatObserver: chatObservers) {
+            chatObserver.onChatUpdated();
         }
     }
 
     private void notifyMessagesObserver() {
-        for (BackendObserver backendObserver : backendObservers) {
-            backendObserver.onMessagesChanged();
+        for (MessagesObserver messagesObserver: messagesObservers) {
+            messagesObserver.onMessagesChanged();
         }
     }
 

@@ -5,7 +5,6 @@ import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.utils.Condition;
-import com.masthuggis.boki.model.observers.BackendObserver;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -110,14 +109,6 @@ class AdvertRepository {
         backend.deleteAd(chatReceiverAndUserIDMap, adIDAndUserID);
     }
 
-
-    void addBackendObserver(BackendObserver backendObserver) {
-        backend.addBackendObserver(backendObserver);
-    }
-
-    void removeBackendObserver(BackendObserver backendObserver) {
-        backend.removeBackendObserver(backendObserver);
-    }
 
     void addToFavourites(String adID, String userID) {
         backend.addAdToFavourites(adID, userID);

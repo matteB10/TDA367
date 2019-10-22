@@ -10,6 +10,8 @@ import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.backend.callbacks.userCallback;
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.observers.BackendObserver;
+import com.masthuggis.boki.model.observers.ChatObserver;
+import com.masthuggis.boki.model.observers.MessagesObserver;
 
 import java.io.File;
 import java.util.HashMap;
@@ -48,13 +50,6 @@ public class Repository implements iRepository {
         advertRepository.deleteAd(chatReceiverAndUserIDMap, adIDAndUserID);
     }
 
-    public void addBackendObserver(BackendObserver backendObserver) {
-        advertRepository.addBackendObserver(backendObserver);
-    }
-
-    public void removeBackendObserver(BackendObserver backendObserver) {
-        advertRepository.removeBackendObserver(backendObserver);
-    }
 
     public void addToFavourites(String adID, String userID) {
         advertRepository.addToFavourites(adID, userID);
@@ -91,6 +86,27 @@ public class Repository implements iRepository {
     @Override
     public void updateAdvert(File imageFile, Advertisement ad) {
         advertRepository.updateAdvert(imageFile, ad);
+
+    }
+
+    @Override
+    public void addChatObserver(ChatObserver chatObserver) {
+        userRepository.addChatObserver(chatObserver);
+    }
+
+    @Override
+    public void removeChatObserver(ChatObserver chatObserver) {
+        userRepository.removeChatObserver(chatObserver);
+    }
+
+    @Override
+    public void removeMessagesObserver(MessagesObserver messagesObserver) {
+        userRepository.removeMessagesObserver(messagesObserver);
+    }
+
+    @Override
+    public void addMessagesObserver(MessagesObserver messagesObserver) {
+        userRepository.addMessagesObserver(messagesObserver);
 
     }
 

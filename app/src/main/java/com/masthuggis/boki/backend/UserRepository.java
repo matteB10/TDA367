@@ -12,6 +12,8 @@ import com.masthuggis.boki.model.UserFactory;
 import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.model.iMessage;
 import com.masthuggis.boki.model.iUser;
+import com.masthuggis.boki.model.observers.ChatObserver;
+import com.masthuggis.boki.model.observers.MessagesObserver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -166,6 +168,22 @@ public class UserRepository {
 
     void deleteIDFromFavourites(String id, String favouriteID) {
         backend.deleteIDFromFavourites(id, favouriteID);
+    }
+
+    void addChatObserver(ChatObserver chatObserver) {
+        backend.addChatObserver(chatObserver);
+    }
+
+    void removeChatObserver(ChatObserver chatObserver) {
+        backend.removeChatObserver(chatObserver);
+    }
+
+    void removeMessagesObserver(MessagesObserver messagesObserver) {
+        backend.removeMessagesObserver(messagesObserver);
+    }
+
+    void addMessagesObserver(MessagesObserver messagesObserver) {
+        backend.addMessagesObserver(messagesObserver);
     }
 }
 

@@ -1,6 +1,7 @@
 package com.masthuggis.boki.backend;
 
-import com.masthuggis.boki.model.observers.BackendObserver;
+import com.masthuggis.boki.model.observers.ChatObserver;
+import com.masthuggis.boki.model.observers.MessagesObserver;
 
 import java.util.List;
 
@@ -19,11 +20,11 @@ public class BackendFactory {
             return backend;
         }
 
-        public static BackendReader createBackendReader(List<BackendObserver> backendObservers) {
-            return new BackendReader(backendObservers);
+        static BackendReader createBackendReader(List<ChatObserver> chatObservers, List<MessagesObserver> messagesObservers) {
+            return new BackendReader(chatObservers,messagesObservers);
         }
 
-        public static BackendWriter createBackendWriter(List<BackendObserver> backendObservers) {
-            return new BackendWriter(backendObservers);
+        public static BackendWriter createBackendWriter(List<ChatObserver> chatObservers, List<MessagesObserver> messagesObservers) {
+            return new BackendWriter(chatObservers,messagesObservers);
         }
     }

@@ -10,7 +10,6 @@ import com.masthuggis.boki.backend.callbacks.chatCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.backend.iRepository;
-import com.masthuggis.boki.model.observers.BackendObserver;
 import com.masthuggis.boki.model.observers.ChatObserver;
 import com.masthuggis.boki.model.observers.MessagesObserver;
 
@@ -20,14 +19,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DataModel implements BackendObserver {
+public class DataModel{
 
     private static DataModel instance;
     private iUser user;
     private List<Advertisement> allAds = new ArrayList<>();
 
-    private final List<ChatObserver> chatObservers = new ArrayList<>();
-    private final List<MessagesObserver> messagesObservers = new ArrayList<>();
+
     private iRepository repository;
 
     private DataModel() {
@@ -43,9 +41,10 @@ public class DataModel implements BackendObserver {
 
     private void initBackend() {
         repository = RepositoryFactory.createRepository(BackendFactory.createBackend());
-        repository.addBackendObserver(this);
         attachAdvertsObserver();
     }
+
+
 
 
     /**
@@ -78,33 +77,7 @@ public class DataModel implements BackendObserver {
         }
     }
 
-    public void addChatObserver(ChatObserver chatObserver) {
-        this.chatObservers.add(chatObserver);
-    }
 
-    public void addMessagesObserver(MessagesObserver messagesObserver) {
-        this.messagesObservers.add(messagesObserver);
-    }
-
-    public void removeChatObserver(ChatObserver chatObserver) {
-        this.chatObservers.remove(chatObserver);
-    }
-
-    public void removeMessagesObserver(MessagesObserver messagesObserver) {
-        this.messagesObservers.remove(messagesObserver);
-    }
-
-    private void notifyChatObservers() {
-        for (ChatObserver chatObserver : chatObservers) {
-            chatObserver.onChatUpdated();
-        }
-    }
-
-    private void notifyMessagesObserver() {
-        for (MessagesObserver messagesObserver : messagesObservers) {
-            messagesObserver.onMessagesChanged();
-        }
-    }
 
     public void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
         repository.signIn(email, password, () -> successCallback.onSuccess(), failureCallback);
@@ -303,20 +276,11 @@ public class DataModel implements BackendObserver {
         repository.signUp(email, password, username, () -> successCallback.onSuccess(), failureCallback);
     }
 
-    @Override
-    public void onMessagesChanged() {
-        notifyMessagesObserver();
-    }
 
-    @Override
-    public void onChatsChanged() {
-        notifyChatObservers();
-    }
 
     private void getMessages(String uniqueChatID, messagesCallback messagesCallback) {
         repository.getMessages(uniqueChatID, messagesList -> {
             messagesCallback.onCallback(messagesList);
-            notifyMessagesObserver();
         });
     }
 
@@ -365,4 +329,18 @@ public class DataModel implements BackendObserver {
         return null;
     }
 
-}
+    public void addChatObserver(ChatObserver chatObserver) {
+        repository.addChatObserver(chatObserver);
+    }
+
+    public void removeChatObserver(ChatObserver chatObserver) {
+        repository.removeChatObserver(chatObserver);
+    }
+
+    public void addMessagesObserver(MessagesObserver messagesObserver) {
+        repository.addMessagesObserver(messagesObserver);
+    }
+
+    public void removeMessagesObserver(MessagesObserver messagesObserver) {
+        repository.removeMessagesObserver(messagesObserver);
+    }}

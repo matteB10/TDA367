@@ -5,7 +5,8 @@ import com.masthuggis.boki.backend.callbacks.DBMapCallback;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
-import com.masthuggis.boki.model.observers.BackendObserver;
+import com.masthuggis.boki.model.observers.ChatObserver;
+import com.masthuggis.boki.model.observers.MessagesObserver;
 
 import java.io.File;
 import java.util.List;
@@ -24,7 +25,7 @@ public interface iBackend {
 
     void removeAdFromFavourites(String adID, String userID);
 
-    void getFavouriteIDs(String userID,DBMapCallback dbMapCallback);
+    void getFavouriteIDs(String userID, DBMapCallback dbMapCallback);
 
     void deleteIDFromFavourites(String id, String favouriteID);
 
@@ -42,13 +43,17 @@ public interface iBackend {
 
     void signOut();
 
-    void addBackendObserver(BackendObserver backendObserver);
+    void addChatObserver(ChatObserver chatObserver);
+
+    void removeChatObserver(ChatObserver chatObserver);
+
+    void addMessagesObserver(MessagesObserver messagesObserver);
+
+    void removeMessagesObserver(MessagesObserver messagesObserver);
 
     void initialAdvertFetch(DBCallback dbCallback);
 
     void attachMarketListener(DBCallback DBCallback);
-
-    void removeBackendObserver(BackendObserver backendObserver);
 
     boolean isUserSignedIn();
 
