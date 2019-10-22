@@ -21,8 +21,6 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
     public ChatPresenter(T view, DataModel dataModel) {
         super(view, dataModel);
         this.view = view;
-        updateData();
-        checkIfChatsAreActive();
         this.dataModel.addChatObserver(this);
     }
 

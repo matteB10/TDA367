@@ -26,12 +26,12 @@ import java.util.List;
  *
  */
 public class ChatFragment extends ListView implements ChatPresenter.View {
-    private ChatPresenter presenter;
+    private ChatPresenter<ChatFragment> presenter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.presenter = new ChatPresenter<>(this, DependencyInjector.injectDataModel());
         View v = super.onCreateView(inflater, container, savedInstanceState);
-        this.presenter = new ChatPresenter(this, DependencyInjector.injectDataModel());
         setupRecyclerView();
         presenter.updateData();
         return v;
