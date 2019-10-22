@@ -85,7 +85,7 @@ public abstract class ListPresenter<T, U> implements IListPresenter<U> {
     /**
      * Get data currently showed in view
      */
-    protected List<T> getCurrentDisplayedData() {
+    List<T> getCurrentDisplayedData() {
         return data;
     }
 
