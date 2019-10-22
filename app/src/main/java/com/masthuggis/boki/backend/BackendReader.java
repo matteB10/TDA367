@@ -2,7 +2,11 @@ package com.masthuggis.boki.backend;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -128,10 +132,14 @@ class BackendReader {
         advertPath.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<Map<String, Object>> advertsData = new ArrayList<>();
-                for (DocumentSnapshot advertData : task.getResult().getDocuments()) {
-                    advertsData.add(advertData.getData());
+                if (task.getResult() == null || task.getResult().getDocuments().size() == 0) {
+                    dbCallback.onCallBack(advertsData);
+                } else {
+                    for (DocumentSnapshot advertData : task.getResult().getDocuments()) {
+                        advertsData.add(advertData.getData());
+                    }
+                    BackendReader.this.updateAdvertsDataListWithImgUrl(advertsData, dbCallback::onCallBack);
                 }
-                updateAdvertsDataListWithImgUrl(advertsData, dbCallback::onCallBack);
             }
         });
     }
@@ -144,26 +152,23 @@ class BackendReader {
      * @param DBCallback returns all information about advertisements through a callback when the fetch is done.
      */
     void attachMarketListener(DBCallback DBCallback) {
-        advertPath.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@androidx.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @androidx.annotation.Nullable FirebaseFirestoreException e) { //Runs every time change happens i market
-                if (e != null) { //Can't attach listener, is path correct to firebase?
-                    Log.w(TAG, "Listen failed", e);
-                    return;
-                }
-                if (queryDocumentSnapshots.size() == 0) {
-                    List<Map<String, Object>> newList = new ArrayList<>();
-                    DBCallback.onCallBack(newList);
-                    return;
-                }
-                List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
-                List<Map<String, Object>> advertDataList = new ArrayList<>();
-                for (DocumentSnapshot snapshot : adverts) {
-                    Map<String, Object> toBeAdded = snapshot.getData();
-                    advertDataList.add(toBeAdded);
-                }
-                BackendReader.this.updateAdvertsDataListWithImgUrl(advertDataList, DBCallback::onCallBack);
+        advertPath.addSnapshotListener((queryDocumentSnapshots, e) -> { //Runs every time change happens i market
+            if (e != null) { //Can't attach listener, is path correct to firebase?
+                Log.w(TAG, "Listen failed", e);
+                return;
             }
+            if (queryDocumentSnapshots.size() == 0) {
+                List<Map<String, Object>> newList = new ArrayList<>();
+                DBCallback.onCallBack(newList);
+                return;
+            }
+            List<DocumentSnapshot> adverts = queryDocumentSnapshots.getDocuments();
+            List<Map<String, Object>> advertDataList = new ArrayList<>();
+            for (DocumentSnapshot snapshot : adverts) {
+                Map<String, Object> toBeAdded = snapshot.getData();
+                advertDataList.add(toBeAdded);
+            }
+            BackendReader.this.updateAdvertsDataListWithImgUrl(advertDataList, DBCallback::onCallBack);
         });
     }
 
@@ -294,10 +299,7 @@ class BackendReader {
                 if (chatDataList.size() == queryDocumentSnapshots.size()) {
                     successCallback.onSuccess();
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@Nullable Exception e) {
-                }
+            }).addOnFailureListener(e -> {
             });
         }
 
