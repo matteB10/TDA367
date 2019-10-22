@@ -32,16 +32,21 @@ public final class HomePresenter extends ListPresenter<Advertisement, ThumbnailV
     @Override
     public List<Advertisement> getData() {
         if (getCurrentDisplayedData().size() == 0 && !SearchHelper.isActiveSearch()) {
-            if (!SearchHelper.isActiveFilters())
-                return new ArrayList<>(dataModel.getAllAdverts());
+            if (!SearchHelper.isActiveFilters()) {
+                return allAdvertsAvailable();
+            }
+        }
 
-        }
         if (SearchHelper.isActiveFilters()) {
-            return applyFilters(new ArrayList<>(dataModel.getAllAdverts()));
+            return applyFilters(allAdvertsAvailable());
         }
+
         return getCurrentDisplayedData();
     }
 
+    private List<Advertisement> allAdvertsAvailable() {
+        return new ArrayList<>(dataModel.getAllAdverts());
+    }
 
     /**
      * When a search is performed it will display all the available adverts if the search field
