@@ -44,9 +44,6 @@ public class DataModel{
         attachAdvertsObserver();
     }
 
-
-
-
     /**
      * Initializes all fields in the User-object of the application with data gotten from firebase with the corresponding userID
      * Is a must to call each init-related method in the callback of the previous one to make sure that all methods are
@@ -73,14 +70,16 @@ public class DataModel{
 
     private void initMessages() {
         for (iChat chat : user.getChats()) {
-            getMessages(chat.getChatID(), messagesList -> chat.setMessages(messagesList));
+            getMessages(chat.getChatID(), chat::setMessages);
         }
     }
 
-
+    private void getMessages(String uniqueChatID, messagesCallback messagesCallback) {
+        repository.getMessages(uniqueChatID, messagesCallback);
+    }
 
     public void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
-        repository.signIn(email, password, () -> successCallback.onSuccess(), failureCallback);
+        repository.signIn(email, password, successCallback, failureCallback);
     }
 
     public Advertisement getAdFromAdID(String ID) {
@@ -271,15 +270,7 @@ public class DataModel{
 
     public void signUp(String email, String password, String username, SuccessCallback
             successCallback, FailureCallback failureCallback) {
-        repository.signUp(email, password, username, () -> successCallback.onSuccess(), failureCallback);
-    }
-
-
-
-    private void getMessages(String uniqueChatID, messagesCallback messagesCallback) {
-        repository.getMessages(uniqueChatID, messagesList -> {
-            messagesCallback.onCallback(messagesList);
-        });
+        repository.signUp(email, password, username, successCallback, failureCallback);
     }
 
     /**
@@ -309,7 +300,7 @@ public class DataModel{
     }
 
     private void fetchUserChats(String userID, chatCallback chatCallback) {
-        repository.getUserChats(userID, chatsList -> chatCallback.onCallback(chatsList));
+        repository.getUserChats(userID, chatCallback);
     }
 
     public void removeChat(String userID, String chatID) {
