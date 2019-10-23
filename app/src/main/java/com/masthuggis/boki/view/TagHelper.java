@@ -149,7 +149,7 @@ class TagHelper {
     /**
      * @return specified layout parameters for tag tableRows
      */
-     static TableLayout.LayoutParams getTableRowLayoutParams(Context context) {
+     private static TableLayout.LayoutParams getTableRowLayoutParams(Context context) {
         int rowHeight = (int) StylingHelper.getDPToPixels(context, 20);
         TableLayout.LayoutParams layoutParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, rowHeight, 1);
         layoutParams.setMargins(0, 0, 0, 8);
@@ -159,7 +159,7 @@ class TagHelper {
     /**
      * @return specified layout parameters for tag items in tableRows
      */
-     static TableRow.LayoutParams getTableRowChildLayoutParams(Context context) {
+     private static TableRow.LayoutParams getTableRowChildLayoutParams(Context context) {
         TableRow.LayoutParams rowLayoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
         rowLayoutParams.setMarginEnd(6);
         return rowLayoutParams;

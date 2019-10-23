@@ -106,12 +106,7 @@ public class HomeFragment extends ListView implements AdapterView.OnItemSelected
 
     private void setFilterButtonListener(View view) {
         Button filterButton = view.findViewById(R.id.homeFilterButton);
-        filterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startFilterFragment();
-            }
-        });
+        filterButton.setOnClickListener(view1 -> startFilterFragment());
     }
 
     private void hideKeyboard() {

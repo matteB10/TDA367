@@ -17,4 +17,6 @@ public class CurrentTimeHelper {
         Calendar calendar = Calendar.getInstance();
         return Long.parseLong(dateFormat.format(calendar.getTime()));
     }
+
+
 }

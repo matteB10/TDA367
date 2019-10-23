@@ -119,9 +119,9 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
 
-    public void showCanNotSendMessageToHimselfToast() {
+    public void showCanNotSendMessageToYourselfToast() {
         Context context = getApplicationContext();
-        CharSequence text = "Du kan inte skicka meddelanden till dig själv.";
+        CharSequence text = getString(R.string.cantSendMessageToYourself);
         int duration = Toast.LENGTH_LONG;
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
@@ -167,8 +167,8 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
     @Override
-    public void nothingToDisplay(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    public void nothingToDisplay() {
+        Toast.makeText(getApplicationContext(), getString(R.string.noAdFoundDetailsView), Toast.LENGTH_LONG).show();
         super.onBackPressed();
 
         finish();

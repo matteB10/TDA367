@@ -64,7 +64,7 @@ public class DetailsPresenterTest {
         setNoAd();
         initPresenter();
 
-        verify(viewMock, times(1)).nothingToDisplay(any());
+        verify(viewMock, times(1)).nothingToDisplay();
         verify(viewMock, times(0)).setName(any());
     }
 

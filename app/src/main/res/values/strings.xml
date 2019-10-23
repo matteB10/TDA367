@@ -108,7 +108,8 @@
     <!-- no sorting display string -->
     <string name="pickSorting">Välj sortering..</string>
 
-
+   <string name="noAdFoundDetailsView">"Hittar ingen annons, var vänlig uppdatera vyn."</string>
+    <string name="cantSendMessageToYourself">"Du kan inte skicka meddelanden till dig själv."</string>
 
 
 

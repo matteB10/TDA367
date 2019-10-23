@@ -25,7 +25,8 @@ public class DetailsPresenter {
         this.view = view;
         this.advertisement = this.dataModel.getAdFromAdID(advertID);
         if (advertisement == null) {
-            view.nothingToDisplay("Hittar ingen annons, var vänlig uppdatera vyn.");
+
+            view.nothingToDisplay();
             advertExists = false;
             return;
         } else {
@@ -60,7 +61,7 @@ public class DetailsPresenter {
 
     private void createNewChat() {
         if (advertisement.getUniqueOwnerID().equals(dataModel.getUserID())) {
-            view.showCanNotSendMessageToHimselfToast();
+            view.showCanNotSendMessageToYourselfToast();
             return;
         }
 
@@ -138,7 +139,7 @@ public class DetailsPresenter {
 
         void openChat(String chatID);
 
-        void showCanNotSendMessageToHimselfToast();
+        void showCanNotSendMessageToYourselfToast();
 
         void showEditView(String uniqueID);
 
@@ -150,7 +151,7 @@ public class DetailsPresenter {
 
         void hideFavouriteIcon();
 
-        void nothingToDisplay(String message);
+        void nothingToDisplay();
 
         void setCondition(int condition, int color);
     }
