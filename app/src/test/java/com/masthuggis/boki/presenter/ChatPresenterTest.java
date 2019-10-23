@@ -44,19 +44,7 @@ public class ChatPresenterTest {
     @Mock
     ListPresenter mockListPresenter;
 
-    private List<iChat> userChats = userChats();
-
-    private List<iChat> userChats() {
-        List<iUser> tenUsers = generate10Users();
-        List<iChat> userChats = new ArrayList<>();
-        boolean isActive;
-        for (int i = 0; i < 5; i++) {
-            isActive = i % 2 == 0;
-            iChat chat = ChatFactory.createChat(UniqueIdCreator.getUniqueID(), tenUsers.get(i), tenUsers.get(i + 1), "uniqueAdID1", "123", isActive);
-            userChats.add(chat);
-        }
-        return userChats;
-    }
+    private List<iChat> userChats = ChatMessagesHelper.generateUserChats();
 
     private void removeInactiveChatsFromUserChats() {
         List<iChat> newChatList = new ArrayList<>();
@@ -71,7 +59,7 @@ public class ChatPresenterTest {
 
     @Test
     public void onCreateTest() {
-        userChats = userChats();
+        userChats = ChatMessagesHelper.generateUserChats();
         initMockPresenter();
 
         initMockRemoveChats();
