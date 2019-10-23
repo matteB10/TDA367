@@ -24,7 +24,7 @@ public class BackendFactory {
             return new BackendReader(chatObservers,messagesObservers);
         }
 
-        static BackendWriter createBackendWriter(List<ChatObserver> chatObservers, List<MessagesObserver> messagesObservers) {
-            return new BackendWriter(chatObservers,messagesObservers);
+        static BackendWriter createBackendWriter(List<ChatObserver> chatObservers) {
+            return new BackendWriter(chatObservers);
         }
     }

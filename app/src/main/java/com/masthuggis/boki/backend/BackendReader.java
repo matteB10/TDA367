@@ -2,11 +2,6 @@ package com.masthuggis.boki.backend;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -18,19 +13,17 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.masthuggis.boki.backend.callbacks.DBCallback;
-import com.masthuggis.boki.backend.callbacks.DBMapCallback;
-import com.masthuggis.boki.backend.callbacks.FailureCallback;
-import com.masthuggis.boki.backend.callbacks.SuccessCallback;
-import com.masthuggis.boki.backend.callbacks.stringCallback;
+import com.masthuggis.boki.model.callbacks.DBCallback;
+import com.masthuggis.boki.model.callbacks.DBMapCallback;
+import com.masthuggis.boki.model.callbacks.FailureCallback;
+import com.masthuggis.boki.model.callbacks.SuccessCallback;
+import com.masthuggis.boki.model.callbacks.stringCallback;
 import com.masthuggis.boki.model.observers.ChatObserver;
 import com.masthuggis.boki.model.observers.MessagesObserver;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Nullable;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 

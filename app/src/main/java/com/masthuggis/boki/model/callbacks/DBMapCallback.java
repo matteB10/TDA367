@@ -1,4 +1,4 @@
-package com.masthuggis.boki.backend.callbacks;
+package com.masthuggis.boki.model.callbacks;
 
 import java.util.Map;
 

@@ -1,7 +1,7 @@
 package com.masthuggis.boki.model;
 
-import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
-import com.masthuggis.boki.backend.callbacks.advertisementCallback;
+import com.masthuggis.boki.model.callbacks.FavouriteIDsCallback;
+import com.masthuggis.boki.model.callbacks.advertisementCallback;
 import com.masthuggis.boki.backend.iBackend;
 import com.masthuggis.boki.utils.Condition;
 
