@@ -48,10 +48,18 @@ public class ImageHandler {
         return false;
     }
 
+    public File getCurrentImageFile() {
+        return currentImageFile;
+    }
+
+    public void onImageUpdated(String url) {
+        Glide.with(activity).load(url).into(imageViewDisplay);
+    }
+
     /**
      * Sends a request to the operating system for the application's use of the device's camera
      */
-    public void dispatchTakePictureIntent() {
+    private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
@@ -69,14 +77,6 @@ public class ImageHandler {
                 activity.startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
-    }
-
-    public File getCurrentImageFile() {
-        return currentImageFile;
-    }
-
-    public void onImageUpdated(String url) {
-        Glide.with(activity).load(url).into(imageViewDisplay);
     }
 
     /**
