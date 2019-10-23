@@ -46,6 +46,7 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
         dataView.setUserTextView(c.getReceiverName(dataModel.getUserID()));
         dataView.setChatID(c.getChatID());
         dataView.setMessageImageView(c.getImageURL());
+        hideChatsWithoutMessages(c,dataView);
     }
 
     private void checkIfChatsAreActive() {
@@ -54,6 +55,14 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
                 view.displayToast(chat.getReceiverName(dataModel.getUserID()));
                 dataModel.removeChat(dataModel.getUserID(), chat.getChatID());
             }
+        }
+    }
+
+    private void hideChatsWithoutMessages(iChat chat,ChatThumbnailView dataView){
+        if(chat.getMessages()== null || chat.getMessages().size()<=0){
+            dataView.hide();
+        }else{
+            dataView.show();
         }
     }
 

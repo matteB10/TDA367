@@ -109,6 +109,16 @@ public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRe
         public void setChatID(String chatID) {
             this.chatID = chatID;
         }
+
+        @Override
+        public void hide() {
+            this.itemView.setVisibility(View.INVISIBLE);
+        }
+
+        @Override
+        public void show() {
+            this.itemView.setVisibility(View.VISIBLE);
+        }
     }
 
 

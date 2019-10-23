@@ -8,4 +8,8 @@ public interface ChatThumbnailView {
     void setMessageImageView(String messageImageView);
 
     void setChatID(String chatID);
+
+    void hide();
+
+    void show();
 }
