@@ -16,13 +16,19 @@ import java.util.Map;
 /**
  *
  * Class which delegates work to either BackendReader or BackendWriter depending on which method call.
+ * Used by DataModel
  *
  */
 public class BackendDataHandler implements iBackend {
 
     /**
-     * Contains a List of backendObservers which it injects into both BackendReader and BackendWriter to make sure model keeps up to date with the newest
+     * Responsible for delegating methods to either BackendReader or BackendWriter depending
+     * on which method is called.
+     * Contains a List of chatObservers and a List of messagesObservers. It injects chatObservers and messages
+     * Observers to BackendReader and chatObservers to BackendWriter.
+     * This is done to make sure the model keeps up to date with the newest
      * data. See documentation considering specific methods in respective class.
+     * Written by masthuggis
      */
 
     private final List<ChatObserver> chatObservers = new ArrayList<>();

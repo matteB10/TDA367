@@ -11,7 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.SignInPresenter;
-
+/**
+ *
+ * Used by MainActivity, ProfileFragment and SignUpActivity.
+ * Written by masthuggis
+ */
 public class SignInActivity extends AppCompatActivity implements ValidatorView, SignInPresenter.View {
     private SignInPresenter presenter = new SignInPresenter(this, DependencyInjector.injectDataModel());
 

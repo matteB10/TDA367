@@ -28,7 +28,9 @@ import java.util.Map;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 /**
- * BackendWriter is a Java class which communicates with the backend database through reading only. The database used currently is Googles Firebase Firestore.
+ * BackendWriter is a Java class which communicates with the backend database through reading only.
+ * The database used currently is Googles Firebase Firestore.
+ * Written by masthuggis
  */
 
 class BackendReader {

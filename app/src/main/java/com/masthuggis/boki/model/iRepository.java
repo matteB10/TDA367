@@ -1,4 +1,9 @@
 package com.masthuggis.boki.model;
+/**
+ *
+ * Used by DataModel,Repository, RepositoryFactory
+ * Written by masthuggis
+ */
 
 import com.masthuggis.boki.model.callbacks.FailureCallback;
 import com.masthuggis.boki.model.callbacks.FavouriteIDsCallback;

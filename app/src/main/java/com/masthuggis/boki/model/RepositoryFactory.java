@@ -2,6 +2,10 @@ package com.masthuggis.boki.model;
 
 import com.masthuggis.boki.backend.iBackend;
 
+/**
+ * Used by Repository and DataModel.
+ * Written by masthuggis
+ */
 class RepositoryFactory {
 
     static iRepository createRepository(iBackend backend) {

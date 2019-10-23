@@ -11,6 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ *
+ * Used by MessagesActivity.
+ * Written by masthuggis
+ */
 public class MessagesPresenter implements MessagesObserver {
     private View view;
     private iChat chat;

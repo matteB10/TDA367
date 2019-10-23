@@ -8,7 +8,13 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-class HightPriceSorting implements SortStrategy {
+/**
+ *
+ * Used by SortFactory.
+
+ * Written by masthuggis
+ */
+class HighestPriceSorting implements SortStrategy {
 
     private static final String NAME = "Högsta pris";
 

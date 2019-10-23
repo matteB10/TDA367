@@ -5,7 +5,10 @@ import com.masthuggis.boki.utils.Condition;
 import java.util.List;
 
 /**
- * Factory class for creating Advertisements. Provides a few ways to create new Advertisements.
+ *
+ * Factory class for creating Advertisements.
+ * Used by CreateAdPresenter and AdvertRepository.
+ * Written by masthuggis
  */
 public class AdFactory {
 

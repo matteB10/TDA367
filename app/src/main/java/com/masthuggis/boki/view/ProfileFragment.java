@@ -19,6 +19,8 @@ import com.masthuggis.boki.utils.ViewCreator;
 /**
  * Profile page used for displaying the adverts that the user have published. Also have an settings
  * button to navigate to the app-wide settings.
+ * Used by MainActivity.
+ * Written by masthuggis.
  */
 public class ProfileFragment extends ListView implements ProfilePresenter.View {
     private ProfilePresenter presenter;

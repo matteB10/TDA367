@@ -1,7 +1,11 @@
 package com.masthuggis.boki.utils;
 
 import java.util.UUID;
-
+/**
+ *
+ * Used by BackendWriter, CreateAdPresenter and ImageHandler
+ * Written by masthuggis
+ */
 public class UniqueIdCreator {
 
 
@@ -9,8 +13,7 @@ public class UniqueIdCreator {
 
 
     public static String getUniqueID(){
-        String uniqueID = UUID.randomUUID().toString();
-        return uniqueID;
+        return UUID.randomUUID().toString();
     }
 
 }

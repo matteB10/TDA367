@@ -4,6 +4,11 @@ import com.masthuggis.boki.utils.Filter;
 
 import java.util.List;
 
+/**
+ *
+ * Used by FilterFragment.
+ * Written by masthuggis
+ */
 public class FilterPresenter {
 
     private View view;

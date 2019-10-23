@@ -4,6 +4,8 @@ import java.util.regex.Pattern;
 
 /**
  * Helper class for form logic.
+ * Used by CreateAdPresenter and SearchHelper.
+ * Written by masthuggis.
  */
 
 public class FormHelper{

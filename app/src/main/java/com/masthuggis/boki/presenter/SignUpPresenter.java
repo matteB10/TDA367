@@ -9,6 +9,8 @@ import java.util.List;
 /**
  * Presenter dealing the sign up logic.
  * @param <T>
+ * Used by SignUpActivity
+ *     Written by masthuggis
  */
 public class SignUpPresenter<T extends ValidatorView & SignUpPresenter.View> {
     private ValidatorPresenter validator;

@@ -13,6 +13,8 @@ import java.util.List;
  * It is an observer of the market so it can update its data
  * accordingly.
  * @param <T>
+ * Used by ProfileFragment.
+ * Written by masthuggis
  */
 public final class ProfilePresenter<T extends ListPresenterView & ProfilePresenter.View> extends ListPresenter<Advertisement, ThumbnailView> {
 

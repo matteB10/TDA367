@@ -13,7 +13,11 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.FavoritesPresenter;
 import com.masthuggis.boki.utils.ViewCreator;
-
+/**
+ *
+ * Used by MainActivity.
+ * Written by masthuggis
+ */
 public class FavoritesFragment extends ListView {
 
     private FavoritesPresenter presenter;

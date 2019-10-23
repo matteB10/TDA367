@@ -6,6 +6,12 @@ import com.masthuggis.boki.view.ValidatorView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Used by SignInActivity
+ * Written by masthuggis
+ *
+ *
+ */
 public class SignInPresenter<T extends ValidatorView & SignInPresenter.View> {
     private ValidatorPresenter validator;
     private T view;

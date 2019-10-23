@@ -9,6 +9,9 @@ import java.util.List;
  * Singleton that defines what sorting options that are available. Clients get the name of the
  * available sort options, the number of sort options and perform sorting. Client must display
  * the sort options in the same order in order for it to function properly.
+ * Used by FavoritesPresenter, HomePresenter andProfilePresenter.
+ * written by masthuggis.
+ *
  */
 public class SortManager {
     private static SortManager instance;

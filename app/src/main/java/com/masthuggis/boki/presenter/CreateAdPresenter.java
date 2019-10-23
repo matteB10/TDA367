@@ -15,11 +15,13 @@ import java.util.List;
 /**
  * Presenter class handling the createAdActivity. Validates input from
  * user and saves in textfields if activity is temporary terminated.
+ * Used by CreateAdActivity
+ * Written by masthuggis
  */
 
 public class CreateAdPresenter {
 
-    private static Advertisement advertisement;
+    private Advertisement advertisement;
     private View view;
     private boolean validPrice;
     private DataModel dataModel;

@@ -6,7 +6,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+/**
+ *
+ * Used by SortFactory.
 
+ * Written by masthuggis
+ */
 class ReversedAlphabeticalSorting implements SortStrategy {
     private static final String NAME = "Omvänt Alfabetisk (Ö-A)";
 

@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 
 /**
  * ChatPresenter is the presenter class for the view called ChatFragment.
+ * Used by ChatFragment and MessagesRecyclerViewAdapter
+ * Written by masthuggis
  */
 public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> extends ListPresenter<iChat, ChatThumbnailView> implements ChatObserver {
 

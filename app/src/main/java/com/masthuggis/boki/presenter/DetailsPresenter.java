@@ -2,6 +2,7 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.utils.ClickDelayHelper;
 import com.masthuggis.boki.utils.StylingHelper;
 
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.List;
  * Validates input from the user to
  * <p>
  * It is the layer between the view and model and should therefore
+ * Used by DetailsActivity.
+ * Written by masthuggis
  */
 public class DetailsPresenter {
     private View view;
@@ -124,6 +127,9 @@ public class DetailsPresenter {
         return advertExists;
     }
 
+    public boolean canProceedWithTapAction() {
+        return ClickDelayHelper.canProceedWithTapAction();
+    }
     public interface View {
         void setName(String name);
 

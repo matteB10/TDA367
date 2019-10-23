@@ -21,6 +21,8 @@ import java.util.Map;
  * by the domain-layer of the application.
  * Data is fetched through the iBackend interface.
  * For methods that are delegating, check the class which is delegated to for comments.
+ * Used by Repository and RepositoryFactory.
+ * Written by masthuggis
  */
 
  class UserRepository {

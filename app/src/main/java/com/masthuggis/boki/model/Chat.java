@@ -6,6 +6,8 @@ import java.util.List;
  * Chat is a java class implementing the iChat interface for the sake of abstraction. Chat is the container of messages which
  * are being sent between two users. The chat contains an advertisementID to make sure that two users can only have one chat considering
  * one specific advertisement.
+ * Used by ChatFactory
+ * Written by masthuggis
  */
 
 public class Chat implements iChat {

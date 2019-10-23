@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Used by SortFactory.
+ * Written by masthuggis
+ */
 class AlphabeticalSorting implements SortStrategy {
     private static final String NAME = "Alfabetisk (A-Ö)";
 

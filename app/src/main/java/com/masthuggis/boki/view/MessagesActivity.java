@@ -15,7 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.MessagesPresenter;
-
+/**
+ *
+ * Used by ChatFragment and DetailsActivity.
+ * Written by masthuggis
+ */
 public class MessagesActivity extends AppCompatActivity implements MessagesPresenter.View {
     private MessagesPresenter presenter;
 

@@ -16,6 +16,8 @@ import java.util.List;
  * Presenter handling the home/start view. It handles a view that implements both ListPresenterView
  * interface. It displays all the market adverts with the option to sort and search.
  * It is an observer of the market so it can update its data accordingly.
+ * Used by HomeFragment.
+ * Written by masthuggis
  */
 public final class HomePresenter extends ListPresenter<Advertisement, ThumbnailView> {
 

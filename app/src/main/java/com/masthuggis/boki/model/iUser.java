@@ -1,4 +1,9 @@
 package com.masthuggis.boki.model;
+/**
+ *
+ * Used by Chat,ChatFactory,DataModel, User, userCallback,UserRepository
+ * Written by masthuggis
+ */
 
 import java.util.List;
 

@@ -10,6 +10,8 @@ import java.util.List;
  * Abstract presenter containing the common logic of presenters showing a list of data. Template
  * method pattern is used to make the concrete implementations able to implement their unique
  * way to get data and sort.
+ * Used by ChatPresenter, FavoritesPresenter, HomePresenter and ProfilePresenter
+ * Written by masthuggis
  */
 public abstract class ListPresenter<T, U> implements IListPresenter<U> {
 

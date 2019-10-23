@@ -1,5 +1,9 @@
 package com.masthuggis.boki.model;
-
+/**
+ *
+ * Used by MessageFactory.
+ * Written by masthuggis
+ */
 public class Message implements iMessage {
     private String message;
     private long timeSent;

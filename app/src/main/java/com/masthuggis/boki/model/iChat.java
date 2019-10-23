@@ -2,6 +2,12 @@ package com.masthuggis.boki.model;
 
 import java.util.List;
 
+/**
+ *
+ * Used by Chat, chatCallback, ChatFactory, ChatPresenter,
+ * DataModel, iUser,MessagesPresenter, User, UserRepository
+ * Written by masthuggis
+ */
 public interface iChat {
     List<iMessage> getMessages();
 

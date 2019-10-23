@@ -17,6 +17,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *
+ * Used by ChatPresenter,CreateAdPresenter, DependencyInjector, DetailsPresenter
+ * FavouritesPresenter,HomePresenter,ListPresenter, MainPresenter,
+ * MessagesPresenter,ProfilePresenter, SignUpPresenter, SignInPresenter
+ * Written by masthuggis
+ */
 public class DataModel {
 
     private static DataModel instance;

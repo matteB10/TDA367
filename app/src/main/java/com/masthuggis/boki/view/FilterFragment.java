@@ -19,7 +19,11 @@ import com.masthuggis.boki.utils.StylingHelper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+/**
+ *
+ * Used by HomeFragment.
+ * Written by masthuggis
+ */
 public class FilterFragment extends Fragment implements FilterPresenter.View {
 
     private FilterPresenter presenter;

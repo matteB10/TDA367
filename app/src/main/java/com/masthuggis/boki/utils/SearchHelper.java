@@ -7,6 +7,9 @@ import java.util.List;
 
 /**
  * Helper class managing searching ads with an input searchPerformed string.
+ * Used by HomePresenter.
+ *
+ * Written by masthuggis.
  */
 
 public class SearchHelper {

@@ -6,6 +6,13 @@ import java.util.List;
 
 /**
  * Interface defining common functionality of Advertisements.
+ * Implemented by Adverts.
+ * Used by Adverts, AdvertsPresenterHelper , CreateAdPresenter,DataModel,
+ * DetailsPresenter,FavouritesPresenter
+ * HomePresenter, iRepository, iUser,Repository,ReversedAlphabeticalSorting,
+ * SearchHelper,User
+ *
+ * *Written by masthuggis
  */
 public interface Advertisement {
 

@@ -12,6 +12,11 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A public interface implemented by the BackendDataHandler. Used by DataModel.
+ * Should be implemented by a class which somehow communicates with the database.
+ * Written by masthuggis
+ */
 public interface iBackend {
     void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID);
 

@@ -19,12 +19,13 @@ import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.DetailsPresenter;
-import com.masthuggis.boki.utils.ClickDelayHelper;
 
 import java.util.List;
 
 /**
  * The view showing details of a specific advertisement.
+ * Used by FavoritesFragment and ListView.
+ * Written by masthuggis.
  */
 public class DetailsActivity extends AppCompatActivity implements DetailsPresenter.View {
     private DetailsPresenter presenter;
@@ -51,7 +52,7 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     private void setupUI() {
         contactOwnerButton = findViewById(R.id.contactOwnerButton);
         contactOwnerButton.setOnClickListener(view -> {
-            if (canProceedWithTapAction()) {
+            if (presenter.canProceedWithTapAction()) {
                 presenter.contactOwnerBtnClicked();
             }
         });
@@ -198,7 +199,5 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
         startActivity(intent);
     }
 
-    public boolean canProceedWithTapAction() {
-        return ClickDelayHelper.canProceedWithTapAction();
-    }
+
 }

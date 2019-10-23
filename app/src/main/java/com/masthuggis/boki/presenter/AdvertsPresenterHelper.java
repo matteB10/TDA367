@@ -6,6 +6,11 @@ import com.masthuggis.boki.view.ThumbnailView;
 
 import java.util.List;
 
+/**
+ *
+ * Used by FavouritesPresenter,HomePresenter and ProfilePresenter.
+ * Written by masthuggis
+ */
 public class AdvertsPresenterHelper {
     public static void onBindThumbnailViewAtPosition(int position, ThumbnailView thumbnailView, List<Advertisement> adverts) {
         if (requestedPositionIsTooLarge(position, adverts)) {

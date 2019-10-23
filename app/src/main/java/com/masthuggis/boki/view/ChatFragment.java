@@ -23,7 +23,8 @@ import java.util.List;
 
 /**
  * Fragment for displaying active chats of the current user.
- *
+ * Used by MainActivity.
+ * Written by masthuggis.
  */
 public class ChatFragment extends ListView implements ChatPresenter.View {
     private ChatPresenter<ChatFragment> presenter;

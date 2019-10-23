@@ -14,7 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.IListPresenter;
-
+/**
+ *
+ * Used by HomeFragment, FavoritesFragment and ProfileFragment.
+ * Written by masthuggis
+ */
 public class ProductsRecyclerViewAdapter extends RecyclerView.Adapter<ProductsRecyclerViewAdapter.ViewHolder> {
 
     private IListPresenter presenter;

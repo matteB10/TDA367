@@ -2,6 +2,11 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.model.DataModel;
 
+/**
+ *
+ * Used by MainActivity.
+ * Written by masthuggis
+ */
 public class MainPresenter {
     private View view;
     private DataModel dataModel;

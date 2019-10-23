@@ -3,7 +3,11 @@ package com.masthuggis.boki.utils;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
+/**
+ *
+ * Used by CreateAdPresenter and MessagesPresenter
+ * Written by masthuggis
+ */
 public class CurrentTimeHelper {
 
     public static String getCurrentTime() {

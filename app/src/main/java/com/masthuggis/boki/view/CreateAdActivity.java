@@ -30,6 +30,8 @@ import java.util.List;
 /**
  * An acitivity for creating a new or editing an advertisement
  * with user input.
+ * Used by DetailsActivity, MainActivity and ProfileFragment.
+ * Written by masthuggis.
  */
 public class CreateAdActivity extends AppCompatActivity implements CreateAdPresenter.View {
 

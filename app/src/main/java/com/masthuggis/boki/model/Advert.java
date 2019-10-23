@@ -5,9 +5,11 @@ import com.masthuggis.boki.utils.Condition;
 import java.util.List;
 
 /**
- * Represents an Advert.
- * Only required fields are a User object and a date when advert was created.
- * All other information gathered from object being sold.
+ * Represents an Advert, implements Advertisement interface.
+ * Contains all fields relevant to represent an advertisement.
+ * Used by AdFactory to create new objects. All other interaction
+ * with this class is done through the implemented interface.
+ * Written by masthuggis
  */
 public class Advert implements Advertisement {
 

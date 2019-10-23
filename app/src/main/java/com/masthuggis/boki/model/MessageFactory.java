@@ -2,6 +2,8 @@ package com.masthuggis.boki.model;
 
 /**
  * Factory for creating objects of the iMessage-type.
+ * Used by UserRepository
+ * Written by masthuggis
  */
 
 public class MessageFactory {

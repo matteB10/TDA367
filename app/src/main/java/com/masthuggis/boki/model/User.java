@@ -3,6 +3,10 @@ package com.masthuggis.boki.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Used by UserFactory.
+ * Written by masthuggis
+ */
 public class User implements iUser {
     private String email;
     private String displayname;

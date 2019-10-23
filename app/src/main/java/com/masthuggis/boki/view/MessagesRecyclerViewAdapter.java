@@ -13,7 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.ChatPresenter;
-
+/**
+ *
+ * Used by ChatFragment.
+ * Written by masthuggis
+ */
 public class MessagesRecyclerViewAdapter extends RecyclerView.Adapter<MessagesRecyclerViewAdapter.ViewHolder> {
     private Context mContext;
     /**

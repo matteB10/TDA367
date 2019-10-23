@@ -8,6 +8,9 @@ import com.masthuggis.boki.R;
 
 /**
  * Helper class for styling components programmatically
+ * Used by AdvertsPresenterHelper, CreateAdActivity, DetailsPresenter,
+ * FilterFragment and TagHelper.
+ * Written by masthuggis.
  */
 
 

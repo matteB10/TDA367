@@ -12,7 +12,11 @@ import com.masthuggis.boki.utils.StylingHelper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+/**
+ *
+ * Used by CreateAdActivity, DetailsActivity, FilterFragment and TagHelper.
+ * Written by masthuggis
+ */
 class TagHelper {
 
 

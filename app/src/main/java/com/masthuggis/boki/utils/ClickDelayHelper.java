@@ -1,9 +1,12 @@
 package com.masthuggis.boki.utils;
-
+/**
+ *
+ * Used by ChatPresenter, DetailsPresenter and ListPresenter
+ *
+ * Written by masthuggis
+ */
 public class ClickDelayHelper {
     private static long lastTimeThumbnailWasClicked = System.currentTimeMillis();
-    private static final long MIN_THUMBNAIL_CLICK_TIME_INTERVAL = 300;
-
     private static final long MIN_CLICK_TIME_INTERVAL = 300;
 
 
@@ -14,8 +17,5 @@ public class ClickDelayHelper {
         lastTimeThumbnailWasClicked = now;
         return canProceed;
     }
-    private static boolean tapActionWasNotTooFast() {
-        long elapsedTimeSinceLastClick = System.currentTimeMillis() - lastTimeThumbnailWasClicked;
-        return elapsedTimeSinceLastClick > MIN_THUMBNAIL_CLICK_TIME_INTERVAL;
-    }
+
 }

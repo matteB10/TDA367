@@ -15,7 +15,10 @@ import java.util.Map;
  * Class providing the functionality to convert data from backend into objects to be used
  * by the domain-layer of the application.
  * Data is fetched through the iBackend interface.
- * For methods that are delegating, check the class which is delegated to for comments.
+ *
+ *For methods that are delegating, check the class which is delegated to for comments.
+ * Used by Repository,RepositoryFactory
+ *Written by masthuggis
  */
 class AdvertRepository {
 

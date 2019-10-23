@@ -1,5 +1,9 @@
 package com.masthuggis.boki.utils.sorting;
-
+/**
+ *
+ * Used by SortManager
+ * Written by masthuggis
+ */
 final public class SortFactory {
 
     public static SortStrategy getAlphabeticalSorting() {
@@ -7,7 +11,7 @@ final public class SortFactory {
     }
 
     public static SortStrategy getHighestPriceSorting() {
-        return new HightPriceSorting();
+        return new HighestPriceSorting();
     }
 
     public static SortStrategy getLatestPublishedSorting() {

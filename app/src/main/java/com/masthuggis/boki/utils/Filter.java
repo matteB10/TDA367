@@ -2,7 +2,11 @@ package com.masthuggis.boki.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ *
+ * Used by FilterPresenter and HomePresenter.
+ * Written by masthuggis
+ */
 public class Filter {
 
     private List<String> tags = new ArrayList<>();

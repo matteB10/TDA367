@@ -24,6 +24,8 @@ import static android.app.Activity.RESULT_OK;
 
 /**
  * Handles image processing logic. For example when taking a picture, downscaling and rotating it.
+ * Used by CreateAdActivity.
+ * Written by masthuggis.
  */
 public class ImageHandler {
     private Activity activity;

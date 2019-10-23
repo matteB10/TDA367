@@ -7,7 +7,10 @@ import java.util.List;
 
 public class BackendFactory {
     /**
-     * Factory for creating iBackend. Used to return the same backend for consistency without making the backend a singleton.
+     * Factory responsible for creating objects in the backend-package. Used to return the same iBackend for consistency without
+     * making the iBackend a singleton.
+     * Used by DataModel and BackendDataHandler.
+      * Written by masthuggis
      */
 
     private static iBackend backend;
@@ -16,7 +19,6 @@ public class BackendFactory {
         if (backend == null) {
             backend = new BackendDataHandler();
         }
-
             return backend;
         }
 

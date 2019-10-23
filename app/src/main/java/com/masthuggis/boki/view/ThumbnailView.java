@@ -4,6 +4,9 @@ package com.masthuggis.boki.view;
 /**
  * An abstraction of what a thumbnail view needs to know in order to render an advert. With
  * this middle layer the view will not know about the model.
+ * User by AdvertsPresenterHelper, FavoritesPresenter, HomePresenter,
+ * ProductsRecyclerViewAdapter and ProfilePresenter.
+ * Written by masthuggis.
  */
 public interface ThumbnailView {
     void setTitle(String name);

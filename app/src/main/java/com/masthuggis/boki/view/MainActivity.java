@@ -16,6 +16,8 @@ import com.masthuggis.boki.presenter.MainPresenter;
 /**
  * MainActivity is the primary view of the application. This is where the application will take you on launch.
  * Its main purpose is to handle the different tabs.
+ * Used by CreateAdActivity, DetailsActivity, SignInActivity and SignUpActivity.
+ * Written by masthuggis.
  */
 public class MainActivity extends AppCompatActivity implements MainPresenter.View{
     private MainPresenter presenter;

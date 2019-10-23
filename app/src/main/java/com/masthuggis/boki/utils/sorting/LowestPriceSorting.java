@@ -6,7 +6,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
+/**
+ *
+ * Used by SortFactory.
+ * Written by masthuggis
+ */
 class LowestPriceSorting implements SortStrategy {
     private static final String NAME = "Lägsta pris";
 

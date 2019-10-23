@@ -4,7 +4,11 @@ import com.masthuggis.boki.view.ValidatorView;
 
 import java.util.List;
 
-
+/**
+ *
+ * Used by SignInPresenter and SignUpPresenter.
+ * Written by masthuggis
+ */
 class ValidatorPresenter {
     private ValidatorView view;
 
