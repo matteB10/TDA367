@@ -53,16 +53,16 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:19.1.0'
 
 
-    //Mockito
+    // Mockito and PowerMock for testing
     dependencies {
-        // ... more entries
         testImplementation 'junit:junit:4.12'
-
-        // required if you want to use Mockito for unit tests
-        testImplementation 'org.mockito:mockito-core:2.7.22'
-        // required if you want to use Mockito for Android tests
-        androidTestImplementation 'org.mockito:mockito-android:2.7.22'
+        testImplementation "org.mockito:mockito-core:2.7.22"
+        testImplementation 'org.powermock:powermock-module-junit4:1.7.0RC2',
+                'org.powermock:powermock-api-mockito2:1.7.0RC2'
     }
+
+    testImplementation 'junit:junit:4.12'
+
 
 }
 apply plugin: 'com.google.gms.google-services'
