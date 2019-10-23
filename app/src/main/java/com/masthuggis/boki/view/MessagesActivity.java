@@ -42,26 +42,44 @@ public class MessagesActivity extends AppCompatActivity implements MessagesPrese
 
     }
 
+    public void addSentMessageBox(String messageText) {
+        TextView textView = createMessageTextView(messageText);
+        createMessageBox(Gravity.RIGHT, textView);
+        addMessagesBoxToLayout(textView);
+
+    }
 
     @Override
-    public void addMessageBox(String messageText, boolean sentByCurrentUser) {
-        TextView textView = new TextView(MessagesActivity.this);
-        textView.setTextSize(14);
-        textView.setText(messageText);
+    public void addReceivedMessageBox(String messageText) {
+        TextView textView = createMessageTextView(messageText);
+        createMessageBox(Gravity.LEFT, textView);
+        addMessagesBoxToLayout(textView);
+    }
 
-        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp2.weight = 1.0f;
-        if (!sentByCurrentUser) {
-            lp2.gravity = Gravity.LEFT;
-            textView.setBackgroundResource(R.drawable.incoming_speech_bubble);
-        } else {
-            lp2.gravity = Gravity.RIGHT;
-            textView.setBackgroundResource(R.drawable.outgoing_speech_bubble);
-        }
-        textView.setLayoutParams(lp2);
+    private void addMessagesBoxToLayout(TextView textView) {
         layout.addView(textView);
         scrollView.fullScroll(View.FOCUS_DOWN);
     }
+
+    private TextView createMessageTextView(String messageText) {
+        TextView textView = new TextView(MessagesActivity.this);
+        textView.setTextSize(14);
+        textView.setText(messageText);
+        return textView;
+    }
+
+    private void createMessageBox(int gravity, TextView tv) {
+        LinearLayout.LayoutParams innerLayout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        innerLayout.weight = 1.0f;
+        innerLayout.gravity = gravity;
+        if (gravity == Gravity.LEFT) {
+            tv.setBackgroundResource(R.drawable.outgoing_speech_bubble);
+        } else {
+            tv.setBackgroundResource(R.drawable.incoming_speech_bubble);
+        }
+        tv.setLayoutParams(innerLayout);
+    }
+
 
     @Override
     public void update() {

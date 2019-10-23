@@ -44,7 +44,10 @@ public class MessagesPresenterTest {
 
         presenter = new MessagesPresenter(activityMock, chatID, databaseMock);
 
-        Mockito.verify(activityMock, times(numMessagesToAdd)).addMessageBox(anyString(), anyBoolean());
+        Mockito.verify(activityMock, times(numMessagesToAdd)).addReceivedMessageBox(anyString());
+        Mockito.verify(activityMock, times(0)).addSentMessageBox(anyString());
+
+
     }
 
     @Test
@@ -54,7 +57,9 @@ public class MessagesPresenterTest {
 
         presenter = new MessagesPresenter(activityMock, chatID, databaseMock);
 
-        Mockito.verify(activityMock, times(numMessagesToAdd)).addMessageBox(anyString(), anyBoolean());
+        Mockito.verify(activityMock, times(numMessagesToAdd)).addSentMessageBox(anyString());
+        Mockito.verify(activityMock, times(numMessagesToAdd)).addReceivedMessageBox(anyString());
+
     }
 
     @Test
@@ -65,7 +70,8 @@ public class MessagesPresenterTest {
         presenter = new MessagesPresenter(activityMock, chatID, databaseMock);
         presenter.sendMessage("Valid message text");
 
-        Mockito.verify(activityMock, times(numMessagesToAdd + 1)).addMessageBox(anyString(), anyBoolean());
+        Mockito.verify(activityMock, times( 1)).addSentMessageBox(anyString());
+
         Mockito.verify(databaseMock).sendMessage(anyString(), any());
     }
 
@@ -77,7 +83,7 @@ public class MessagesPresenterTest {
         presenter = new MessagesPresenter(activityMock, chatID, databaseMock);
         presenter.sendMessage("");
 
-        Mockito.verify(activityMock, times(numMessagesToAdd)).addMessageBox(anyString(), anyBoolean());
+        Mockito.verify(activityMock, times(numMessagesToAdd)).addReceivedMessageBox(anyString());
         Mockito.verify(databaseMock, times(0)).sendMessage(anyString(), any());
     }
 

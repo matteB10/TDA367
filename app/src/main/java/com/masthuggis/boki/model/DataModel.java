@@ -3,6 +3,7 @@ package com.masthuggis.boki.model;
 import com.masthuggis.boki.backend.BackendFactory;
 import com.masthuggis.boki.model.callbacks.FailureCallback;
 import com.masthuggis.boki.model.callbacks.MarkedAsFavouriteCallback;
+import com.masthuggis.boki.model.callbacks.SuccessCallback;
 import com.masthuggis.boki.model.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.callbacks.chatCallback;
 import com.masthuggis.boki.model.callbacks.messagesCallback;

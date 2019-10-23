@@ -61,7 +61,11 @@ public class MessagesPresenter implements MessagesObserver {
     }
 
     private void setMessageBox(String messageText, boolean sentByCurrentUser) {
-        view.addMessageBox(messageText, sentByCurrentUser);
+        if (sentByCurrentUser) {
+            view.addSentMessageBox(messageText);
+        } else {
+            view.addReceivedMessageBox(messageText);
+        }
     }
 
     private void onChatUpdated() {
@@ -85,8 +89,11 @@ public class MessagesPresenter implements MessagesObserver {
 
     public interface View {
 
-        void addMessageBox(String messageText, boolean sentByCurrentUser);
 
         void update();
+
+        void addSentMessageBox(String messageText);
+
+        void addReceivedMessageBox(String messageText);
     }
 }
