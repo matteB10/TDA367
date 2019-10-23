@@ -109,11 +109,11 @@ public abstract class ListView extends Fragment implements ListPresenterView {
 
     protected abstract RecyclerView.Adapter getAdapter();
 
-    public void setItemDecorations(List<RecyclerView.ItemDecoration> itemDecorations) {
+    void setItemDecorations(List<RecyclerView.ItemDecoration> itemDecorations) {
         this.itemDecorations = Optional.of(itemDecorations);
     }
 
-    public void setLayoutManager(RecyclerView.LayoutManager layoutManager) {
+    void setLayoutManager(RecyclerView.LayoutManager layoutManager) {
         this.layoutManager = Optional.ofNullable(layoutManager);
     }
 
@@ -123,7 +123,7 @@ public abstract class ListView extends Fragment implements ListPresenterView {
      * activated.
      * @return
      */
-    public void setAndActivatePullToRefreshHandler(PullToRefreshCallback callback) {
+    void setAndActivatePullToRefreshHandler(PullToRefreshCallback callback) {
         SwipeRefreshLayout swipeRefresh = view.findViewById(R.id.pullToRefresh);
         swipeRefresh.setEnabled(true);
         pullToRefreshIsActivated = true;

@@ -52,18 +52,22 @@ public class DataModel{
             successCallback.onSuccess();
             return;
         }
-        initialAdvertFetch(() -> repository.getUser(newUser -> {
-            user = newUser;
-            user.setAdverts(getAdsFromCurrentUser());
-            getFavouritesFromLoggedInUser(advertisements -> {
-                user.setFavourites(advertisements);
-                fetchUserChats(user.getId(), chatsList -> {
-                    user.setChats(chatsList);
-                    initMessages();
-                    successCallback.onSuccess();
+
+        repository.initialAdvertFetch(allAdvertInMarket -> {
+            allAds = allAdvertInMarket;
+            repository.getUser(newUser -> {
+                user = newUser;
+                user.setAdverts(getAdsFromCurrentUser());
+                getFavouritesFromLoggedInUser(advertisements -> {
+                    user.setFavourites(advertisements);
+                    fetchUserChats(user.getId(), chatsList -> {
+                        user.setChats(chatsList);
+                        initMessages();
+                        successCallback.onSuccess();
+                    });
                 });
             });
-        }));
+        });
     }
 
     private void initMessages() {
@@ -160,13 +164,6 @@ public class DataModel{
 
     private void deleteIDFromFavourites(String id, String favouriteID) {
         repository.deleteIDFromFavourites(id, favouriteID);
-    }
-
-    private void initialAdvertFetch(SuccessCallback successCallback) {
-        repository.initialAdvertFetch(advertisements -> {
-            allAds = advertisements;
-            successCallback.onSuccess();
-        });
     }
 
     private void attachAdvertsObserver() {
