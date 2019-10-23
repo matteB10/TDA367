@@ -52,8 +52,8 @@ public class DataModelTest {
     @Before
     public void before() {
         testData.add(AdFactory.createAd( "22/10/19:13:16:00", userID, "UniqueAdID", "ABC","", 300, Condition.GOOD,"", new ArrayList<>(),null));
-        testData.add(AdFactory.createAd( "22/10/19:10:16:00", "UniqueOwnerID", "UniqueAdID", "QYZ","", 490, Condition.GOOD,"", new ArrayList<>(),null));
-        testData.add(AdFactory.createAd( "22/10/19:10:15:00", "UniqueOwnerID", "UniqueAdID", "DEF","", 299, Condition.GOOD,"", new ArrayList<>(),null));
+        testData.add(AdFactory.createAd( "22/10/19:10:16:00", "UniqueOwnerID", "UniqueAdID1", "QYZ","", 490, Condition.GOOD,"", new ArrayList<>(),null));
+        testData.add(AdFactory.createAd( "22/10/19:10:15:00", "UniqueOwnerID", "UniqueAdID2", "DEF","", 299, Condition.GOOD,"", new ArrayList<>(),null));
 
         initDataModel();
     }
@@ -70,7 +70,9 @@ public class DataModelTest {
         setDataModelAdvertsTo(testData);
         setDataModelFavoritesTo(getFavoriteIDsFromTestdata());
         setDataModelUserChatsTo(chats);
+
         dataModel = DataModel.getInstance();
+        dataModel.initUser(() -> {});
     }
 
     private void setDataModelUserTo(iUser user) {
@@ -120,6 +122,7 @@ public class DataModelTest {
     }
 
     /**
+     * NOTE: THIS TEST MUST BE RUN FIRST IN ORDER FOR THE SETUP OF THE SINGLETON DATAMODEL TO WORK PROPERLY.
      * All initialization tests must be done in the same Test function because DataModel is a Singleton
      * which makes separating it into multiple methods difficult.
      */
@@ -128,8 +131,6 @@ public class DataModelTest {
         // Verifies that repository is created and that it is only done once.
         PowerMockito.verifyStatic(Mockito.times(1));
         RepositoryFactory.createRepository(backendMock);
-
-        dataModel.initUser(() -> {});
 
         // Verifies that user is set and uses the correct ID.
         assertEquals(userID, dataModel.getUserID());
@@ -146,5 +147,14 @@ public class DataModelTest {
             iChat chat = chats.get(i);
             assertEquals(chat.getChatID(), chatsArguments.getValue().get(i).getChatID());
         }
+    }
+
+    @Test
+    public void getAdByIDReturnsCorrectAd() {
+        Advertisement testedAd = testData.get(1);
+
+        Advertisement dataModelAd = dataModel.getAdFromAdID(testedAd.getUniqueID());
+
+        assertEquals(testedAd.getUniqueID(), dataModelAd.getUniqueID());
     }
 }
