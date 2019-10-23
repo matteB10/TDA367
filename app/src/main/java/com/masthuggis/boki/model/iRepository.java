@@ -1,4 +1,4 @@
-package com.masthuggis.boki.backend;
+package com.masthuggis.boki.model;
 
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
@@ -8,7 +8,6 @@ import com.masthuggis.boki.backend.callbacks.chatCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.backend.callbacks.userCallback;
-import com.masthuggis.boki.model.Advertisement;
 import com.masthuggis.boki.model.observers.ChatObserver;
 import com.masthuggis.boki.model.observers.MessagesObserver;
 
@@ -17,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public interface iRepository {
+ interface iRepository {
 
     void saveAdvert(File imageFile, Advertisement ad);
 
@@ -25,12 +24,11 @@ public interface iRepository {
 
     void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID);
 
-     void initialAdvertFetch(advertisementCallback advertisementCallback);
-
+    void initialAdvertFetch(advertisementCallback advertisementCallback);
 
     void addToFavourites(String adID, String userID);
 
-    void signIn(String email, String password, SuccessCallback successCallback,
+     void signIn(String email, String password, SuccessCallback successCallback,
                 FailureCallback failureCallback);
 
     void signUp(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback);
@@ -41,7 +39,7 @@ public interface iRepository {
 
     void getMessages(String uniqueChatID, messagesCallback messagesCallback);
 
-    void createNewChat(String uniqueOwnerID, String receiverUsername, String advertID,String imageURL, stringCallback stringCallback);
+    void createNewChat(String uniqueOwnerID, String receiverUsername, String advertID, String imageURL, stringCallback stringCallback);
 
     void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap);
 
@@ -51,8 +49,9 @@ public interface iRepository {
 
     void removeChat(String userID, String chatID);
 
-    void getUserFavourites(String userID,FavouriteIDsCallback favouriteIDsCallback);
-     void removeFromFavourites(String adID, String userID);
+    void getUserFavourites(String userID, FavouriteIDsCallback favouriteIDsCallback);
+
+    void removeFromFavourites(String adID, String userID);
 
     void deleteIDFromFavourites(String id, String favouriteID);
 

@@ -1,9 +1,8 @@
-package com.masthuggis.boki.backend;
+package com.masthuggis.boki.model;
 
 import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.backend.callbacks.advertisementCallback;
-import com.masthuggis.boki.model.AdFactory;
-import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.backend.iBackend;
 import com.masthuggis.boki.utils.Condition;
 
 import java.io.File;
@@ -128,8 +127,6 @@ class AdvertRepository {
 
     /**
      * Adds all data from an advertisement to a map.
-     * @param dataMap
-     * @param advertisement
      */
     private void mapAdData(Map<String, Object> dataMap, Advertisement advertisement) {
         dataMap.put("title", advertisement.getTitle());

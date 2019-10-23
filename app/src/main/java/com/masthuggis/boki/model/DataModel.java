@@ -1,7 +1,6 @@
 package com.masthuggis.boki.model;
 
 import com.masthuggis.boki.backend.BackendFactory;
-import com.masthuggis.boki.backend.RepositoryFactory;
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.MarkedAsFavouriteCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
@@ -9,7 +8,6 @@ import com.masthuggis.boki.backend.callbacks.advertisementCallback;
 import com.masthuggis.boki.backend.callbacks.chatCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
-import com.masthuggis.boki.backend.iRepository;
 import com.masthuggis.boki.model.observers.ChatObserver;
 import com.masthuggis.boki.model.observers.MessagesObserver;
 

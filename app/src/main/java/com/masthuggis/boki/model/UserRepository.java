@@ -1,4 +1,4 @@
-package com.masthuggis.boki.backend;
+package com.masthuggis.boki.model;
 
 import com.masthuggis.boki.backend.callbacks.FailureCallback;
 import com.masthuggis.boki.backend.callbacks.SuccessCallback;
@@ -6,12 +6,7 @@ import com.masthuggis.boki.backend.callbacks.chatCallback;
 import com.masthuggis.boki.backend.callbacks.messagesCallback;
 import com.masthuggis.boki.backend.callbacks.stringCallback;
 import com.masthuggis.boki.backend.callbacks.userCallback;
-import com.masthuggis.boki.model.ChatFactory;
-import com.masthuggis.boki.model.MessageFactory;
-import com.masthuggis.boki.model.UserFactory;
-import com.masthuggis.boki.model.iChat;
-import com.masthuggis.boki.model.iMessage;
-import com.masthuggis.boki.model.iUser;
+import com.masthuggis.boki.backend.iBackend;
 import com.masthuggis.boki.model.observers.ChatObserver;
 import com.masthuggis.boki.model.observers.MessagesObserver;
 
@@ -28,7 +23,7 @@ import java.util.Map;
  * For methods that are delegating, check the class which is delegated to for comments.
  */
 
-public class UserRepository {
+ class UserRepository {
 
     private iBackend backend;
 
