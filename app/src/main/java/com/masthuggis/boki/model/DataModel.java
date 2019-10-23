@@ -210,10 +210,10 @@ public class DataModel {
     }
 
     public List<iChat> getUserChats() {
-        if(user != null) {
+        if (user != null) {
             return user.getChats();
-        }return new ArrayList<>();
-
+        }
+        return new ArrayList<>();
     }
 
     public List<Advertisement> getUserFavourites() {

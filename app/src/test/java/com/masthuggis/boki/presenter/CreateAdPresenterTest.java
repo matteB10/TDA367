@@ -11,6 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
@@ -20,6 +21,7 @@ import static com.masthuggis.boki.utils.Condition.GOOD;
 import static com.masthuggis.boki.utils.Condition.NEW;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 
@@ -52,7 +54,6 @@ public class CreateAdPresenterTest {
     }
 
     //--------------------------------------------------------------------------
-
 
     @Test
     public void testSaveAdvert() {
@@ -128,7 +129,6 @@ public class CreateAdPresenterTest {
 
     @Test
     public void testEnableSaveButton() {
-
         doNothing().when(mockView).enableSaveButton(booleanCapture.capture());
         presenter.priceChanged("10");
         presenter.titleChanged("hej");
@@ -141,4 +141,13 @@ public class CreateAdPresenterTest {
         assertEquals(false,booleanCapture.getValue());
     }
 
+    @Test
+    public void tryingToSetIDThatDoesNotExistShowsNotFoundToast() {
+        String id = "id that does not exist";
+        Mockito.when(databaseMock.getAdFromAdID(id)).thenReturn(null);
+
+        presenter.setAd(id);
+
+        Mockito.verify(mockView).displayNotFoundToast(any());
+    }
 }

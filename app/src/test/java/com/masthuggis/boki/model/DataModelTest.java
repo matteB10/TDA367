@@ -9,6 +9,7 @@ import com.masthuggis.boki.model.callbacks.userCallback;
 import com.masthuggis.boki.presenter.ChatMessagesHelper;
 import com.masthuggis.boki.utils.Condition;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,16 +48,26 @@ public class DataModelTest {
 
     @Before
     public void before() {
-        if (testData == null) {
-            testData = new ArrayList<>();
-            testData.add(AdFactory.createAd( "22/10/19:13:16:00", userID, "UniqueAdID", "ABC","", 300, Condition.GOOD,"", new ArrayList<>(),null));
-            testData.add(AdFactory.createAd( "22/10/19:10:16:00", "UniqueOwnerID", "UniqueAdID1", "QYZ","", 490, Condition.GOOD,"", new ArrayList<>(),null));
-            testData.add(AdFactory.createAd( "22/10/19:10:15:00", "UniqueOwnerID", "UniqueAdID2", "DEF","", 299, Condition.GOOD,"", new ArrayList<>(),null));
+        testData = new ArrayList<>();
+        testData.add(AdFactory.createAd("22/10/19:13:16:00", userID, "UniqueAdID", "ABC", "", 300, Condition.GOOD, "", new ArrayList<>(), null));
+        testData.add(AdFactory.createAd("22/10/19:10:16:00", "UniqueOwnerID", "UniqueAdID1", "QYZ", "", 490, Condition.GOOD, "", new ArrayList<>(), null));
+        testData.add(AdFactory.createAd("22/10/19:10:15:00", "UniqueOwnerID", "UniqueAdID2", "DEF", "", 299, Condition.GOOD, "", new ArrayList<>(), null));
 
-            favorites = createFavoriteAdsFromTestData();
+        favorites = createFavoriteAdsFromTestData();
 
-            initDataModel();
-        }
+        initDataModel();
+    }
+
+    @After
+    public void after() {
+        setDataModelUserChatsTo(emptyList());
+        setDataModelAdvertsTo(emptyList());
+        setDataModelFavoriteIDsTo(emptyList());
+        dataModel.signOut();
+    }
+
+    private ArrayList emptyList() {
+        return new ArrayList();
     }
 
     private void initDataModel() {
@@ -75,7 +86,8 @@ public class DataModelTest {
         setDataModelUserChatsTo(chats);
 
         dataModel = DataModel.getInstance();
-        dataModel.initUser(() -> {});
+        dataModel.initUser(() -> {
+        });
     }
 
     private void setDataModelUserTo(iUser user) {
@@ -112,7 +124,7 @@ public class DataModelTest {
 
     private List<String> getFavoriteIDsFromTestdata() {
         List<String> favoriteIDs = new ArrayList<>();
-        for (Advertisement ad: testData) {
+        for (Advertisement ad : testData) {
             favoriteIDs.add(ad.getUniqueID());
         }
         return favoriteIDs;
@@ -129,19 +141,83 @@ public class DataModelTest {
      * which makes separating it into multiple methods difficult.
      */
     @Test
-    public void testUserInitializationIsCorrect() {
-        // Verifies that repository is created and that it is only done once.
-        PowerMockito.verifyStatic(Mockito.times(1));
-        RepositoryFactory.createRepository(backendMock);
+    public void dataModelMainTests() {
+        repositoryIsCreatedWhenInitialized();
 
-        // Verifies that user is set and uses the correct ID.
-        assertEquals(userID, dataModel.getUserID());
+        userIsSetCorrectlyWhenInitialized();
 
-        // Verifies that user favorites are set and uses correct data.
-        ArgumentCaptor<List<Advertisement>> favoritesArgument = ArgumentCaptor.forClass(List.class);
-        verify(userMock).setFavourites(favoritesArgument.capture());
-        assertEquals(favorites.get(0).getTitle(), favoritesArgument.getValue().get(0).getTitle());
+        userFavoriteIsSetAndUsesCorrectDataWhenInitialized();
 
+        userChatsAreSetAndUsesCorrectDataWhenInitialized();
+
+        Advertisement testedAd = modelAndRepositoryIsUpdatedWhenFavoriteIsAdded();
+
+        adByIDReturnsCorrectAdvert(testedAd);
+
+        removalOdAdvertNotifiesRepository();
+
+        removalOfFavoriteNotifiesModelAndRepository();
+
+        findChatByIDReturnsNullOfNoIDMatches();
+
+        iChat existingChat = findChatByIDReturnsChatWhenChatExists();
+
+        findChatByIDFromAdvertdReturnNullIfNoIDMatches(null, "non-existing id");
+
+        findChatByIDFromAdvertdReturnNullIfNoIDMatches(existingChat.getChatID(), existingChat.getAdID());
+    }
+
+    private void findChatByIDFromAdvertdReturnNullIfNoIDMatches(String o, String s) {
+        // Find chat id from advert returns null if no id matches
+        assertEquals(o, dataModel.findChatID(s));
+    }
+
+    private iChat findChatByIDReturnsChatWhenChatExists() {
+        // Find chat by id returns chat when chat exists
+        iChat existingChat = chats.get(0);
+        iChat comparedChat = dataModel.findChatByID(existingChat.getChatID());
+        assertEquals(existingChat.getChatID(), comparedChat.getChatID());
+        return existingChat;
+    }
+
+    private void findChatByIDReturnsNullOfNoIDMatches() {
+        // Find chat by id returns null if no id matches
+        iChat nullChat = dataModel.findChatByID("non-existing id");
+        assertEquals(null, nullChat);
+    }
+
+    private void removalOfFavoriteNotifiesModelAndRepository() {
+        // Removal of favorite notifies model and repository
+        Advertisement favoriteToBeRemoved = favorites.get(0);
+        dataModel.removeFromFavourites(favoriteToBeRemoved);
+        testData.remove(favoriteToBeRemoved);
+        verify(repositoryMock).removeFromFavourites(favoriteToBeRemoved.getUniqueID(), userID);
+        verify(userMock).removeFavourite(favoriteToBeRemoved);
+    }
+
+    private void removalOdAdvertNotifiesRepository() {
+        // Verifies that removal of advert notifes repository
+        Advertisement adToBeRemoved = testData.get(testData.size()-1);
+        dataModel.removeExistingAdvert(adToBeRemoved.getUniqueID(), userID);
+        testData.remove(adToBeRemoved);
+        verify(repositoryMock).deleteAd(any(), any());
+    }
+
+    private void adByIDReturnsCorrectAdvert(Advertisement testedAd) {
+        // Verifies that AdByID returns correct Advert
+        Advertisement dataModelAd = dataModel.getAdFromAdID(testedAd.getUniqueID());
+        assertEquals(testedAd.getUniqueID(), dataModelAd.getUniqueID());
+    }
+
+    private Advertisement modelAndRepositoryIsUpdatedWhenFavoriteIsAdded() {
+        //Verifies that model and repository is updated when favorite is added
+        Advertisement testedAd = testData.get(1);
+        dataModel.addToFavourites(testedAd);
+        verify(userMock).addFavourite(testedAd);
+        return testedAd;
+    }
+
+    private void userChatsAreSetAndUsesCorrectDataWhenInitialized() {
         // Verifies that user chats are set and uses correct data.
         ArgumentCaptor<List<iChat>> chatsArguments = ArgumentCaptor.forClass(List.class);
         verify(userMock).setChats(chatsArguments.capture());
@@ -151,13 +227,22 @@ public class DataModelTest {
         }
     }
 
-    @Test
-    public void getAdByIDReturnsCorrectAd() {
-        Advertisement testedAd = testData.get(1);
+    private void userFavoriteIsSetAndUsesCorrectDataWhenInitialized() {
+        // Verifies that user favorites are set and uses correct data.
+        ArgumentCaptor<List<Advertisement>> favoritesArgument = ArgumentCaptor.forClass(List.class);
+        verify(userMock).setFavourites(favoritesArgument.capture());
+        assertEquals(favorites.get(0).getTitle(), favoritesArgument.getValue().get(0).getTitle());
+    }
 
-        Advertisement dataModelAd = dataModel.getAdFromAdID(testedAd.getUniqueID());
+    private void userIsSetCorrectlyWhenInitialized() {
+        // Verifies that user is set and uses the correct ID.
+        assertEquals(userID, dataModel.getUserID());
+    }
 
-        assertEquals(testedAd.getUniqueID(), dataModelAd.getUniqueID());
+    private void repositoryIsCreatedWhenInitialized() {
+        // Verifies that repository is created and that it is only done once.
+        PowerMockito.verifyStatic(Mockito.times(1));
+        RepositoryFactory.createRepository(backendMock);
     }
 
     @Test
@@ -185,14 +270,5 @@ public class DataModelTest {
         boolean isAFavorite = dataModel.isAFavourite(testedAd);
 
         assertEquals(false, isAFavorite);
-    }
-
-    @Test
-    public void findChatByIDReturnNullWhenNoChatItExist() {
-        iChat testedChat = ChatMessagesHelper.generateUserChats().get(0);
-
-        iChat dataModelChat = dataModel.findChatByID(testedChat.getChatID());
-
-        assertEquals(null, dataModelChat);
     }
 }
