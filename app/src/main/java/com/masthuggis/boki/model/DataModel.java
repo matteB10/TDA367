@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DataModel{
+public class DataModel {
 
     private static DataModel instance;
     private iUser user;
@@ -45,15 +45,13 @@ public class DataModel{
     }
 
 
-
-
     /**
      * Initializes all fields in the User-object of the application with data gotten from firebase with the corresponding userID
      * Is a must to call each init-related method in the callback of the previous one to make sure that all methods are
      * completed, since a method called first does not always finish first.
      */
     public void initUser(SuccessCallback successCallback) {
-        if(user!=null){
+        if (user != null) {
             successCallback.onSuccess();
             return;
         }
@@ -76,7 +74,6 @@ public class DataModel{
             getMessages(chat.getChatID(), messagesList -> chat.setMessages(messagesList));
         }
     }
-
 
 
     public void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
@@ -207,7 +204,10 @@ public class DataModel{
     }
 
     public List<iChat> getUserChats() {
-        return user.getChats();
+        if(user != null) {
+            return user.getChats();
+        }return new ArrayList<>();
+
     }
 
     public List<Advertisement> getUserFavourites() {
@@ -275,7 +275,6 @@ public class DataModel{
     }
 
 
-
     private void getMessages(String uniqueChatID, messagesCallback messagesCallback) {
         repository.getMessages(uniqueChatID, messagesList -> {
             messagesCallback.onCallback(messagesList);
@@ -341,4 +340,5 @@ public class DataModel{
 
     public void removeMessagesObserver(MessagesObserver messagesObserver) {
         repository.removeMessagesObserver(messagesObserver);
-    }}
+    }
+}

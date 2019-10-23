@@ -63,8 +63,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         if (intent.getExtras() != null) {
             String advertID = intent.getExtras().getString(getString(R.string.keyForAdvert));
             presenter.setAd(advertID);
-            presenter.setUpView();
             presenter.imageTaken();
+            presenter.setUpView();
         }
     }
 
@@ -95,6 +95,7 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     private void setButtonVisibility(boolean editMode) {
         if (editMode) {
             publishAdButton.setVisibility(View.GONE);
+            enableSaveButton(true);
         } else {
             deleteAdButton.setVisibility(View.GONE);
             saveAdButton.setVisibility(View.GONE);
@@ -397,23 +398,23 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     @Override
-    public void setCondition(Condition id, boolean pressed){
+    public void setCondition(Condition condition, boolean pressed){
         RadioButton conditionNew = findViewById(R.id.conditionNewButton);
         RadioButton conditionGood = findViewById(R.id.conditionGoodButton);
         RadioButton conditionOk = findViewById(R.id.conditionOkButton);
-        switch (id) {
+        switch (condition) {
             case NEW:
-                conditionNew.setBackgroundResource(StylingHelper.getConditionDrawable(id,true));
+                conditionNew.setBackgroundResource(StylingHelper.getConditionDrawable(condition,true));
                 conditionGood.setBackgroundResource(StylingHelper.getConditionDrawable(Condition.GOOD,false));
                 conditionOk.setBackgroundResource(StylingHelper.getConditionDrawable(Condition.OK,false));
                 break;
             case GOOD:
-                conditionGood.setBackgroundResource(StylingHelper.getConditionDrawable(id,true));
+                conditionGood.setBackgroundResource(StylingHelper.getConditionDrawable(condition,true));
                 conditionNew.setBackgroundResource(StylingHelper.getConditionDrawable(Condition.NEW,false));
                 conditionOk.setBackgroundResource(StylingHelper.getConditionDrawable(Condition.OK,false));
                 break;
             case OK:
-                conditionOk.setBackgroundResource(StylingHelper.getConditionDrawable(id,true));
+                conditionOk.setBackgroundResource(StylingHelper.getConditionDrawable(condition,true));
                 conditionNew.setBackgroundResource(StylingHelper.getConditionDrawable(Condition.NEW,false));
                 conditionGood.setBackgroundResource(StylingHelper.getConditionDrawable(Condition.GOOD,false));
                 break;
