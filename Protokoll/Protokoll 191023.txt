@@ -1,0 +1,39 @@
+# Meeting Agenda
+
+Group:Masthuggis
+Date: 21/10 - 19
+Chair: Isak Lindgren
+Participants: Arvid Sundbom, Matilda Blomquist, Isak Lindgren
+
+
+## Objectives (5 min) 
+-Sista veckan!
+-Vad ska göras?
+-RAD, SDD, tester och kommentarer.
+-UML.
+-Kontroll av att appen fungerar som vi vill att det ska gå vid presentation.
+
+## Discussion items (35 min)
+
+- RAD:
+Vi börjar med att skriva RAD. Det känns som det större av dokumenten. Målet är att vara färdig med RAD imorgon(tisdag 22/10). 
+Matilda har presentation imorgon i sin andra kurs och kommer inte kunna vara med hela dagen.
+
+- SDD:Arvid och Isak sitter med RAD hela dagen och satsar på att vara färdiga med åtminstone innehållet i RAD för att imorgon tisdag göra färdigt SDD.
+
+- Tester: Joel sitter med tester, försöker prioritera det enklaste först. Dvs. presenters + modell. I mån av tid fortsätter han med att testa DataModel. Är lite svårare då det kräver mockning av både callbacks och eventuellt statiska anrop till Firebase. Bör dock gå med Powermock.
+
+UML: är i det stora hela färdigt enligt Matilda. Kan behöva ses över litegrann. I allmänhet ska inga stora förändringar göras i koden nu.
+
+Inför presentation:
+
+Det vore bra att kunna demonstrera applikationen i realtid med två användare samtidigt så att det går att se att saker uppdateras direkt via Firebase. Detta bör gå lösa antingen med två emulatorer eller någon form av mjukvara så att det går köra telefon. Matilda sätter upp en delad powerpoint på google docs så att det finns. 
+
+I dagsläget verkar appen fungera för att köra igenom alla user stories utan problem. Se till att detta även är läget på fredag innan koden skickas in. Vore jobbigt att komma på fredag kväll att vi skickat in en kodbas som är trasig och inte går att demoa fullständigt.
+
+Code review kommer inte hinnas med. Gör små förändringar där det inte ändrar funktionalitet där det går. Tex. byt ut hårdkodade strängar mot string-resources etc. samt ändra accessmodifiers typ.
+
+
+## Wrap up
+
+ - Nästa möte imorgon 22/10 då alla är på plats, mer noggrann genomgång av resten av veckan då.
