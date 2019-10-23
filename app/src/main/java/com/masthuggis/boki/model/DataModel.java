@@ -244,7 +244,6 @@ public class DataModel {
         for (iChat chat : user.getChats()) {
             Map<String, String> map = new HashMap<>();
             if (chat.getAdID().equals(adID)) {
-
                 map.put("receiverID", chat.getReceiverID(user.getId()));
                 map.put("chatID", chat.getChatID());
                 chatReceiverAndUserIDMap.add(map);

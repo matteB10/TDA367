@@ -6,13 +6,10 @@ import com.masthuggis.boki.model.callbacks.FavouriteIDsCallback;
 import com.masthuggis.boki.model.callbacks.advertisementCallback;
 import com.masthuggis.boki.model.callbacks.chatCallback;
 import com.masthuggis.boki.model.callbacks.userCallback;
-import com.masthuggis.boki.presenter.AdvertsPresenterHelper;
 import com.masthuggis.boki.presenter.ChatMessagesHelper;
 import com.masthuggis.boki.utils.Condition;
 
-import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,9 +23,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
 import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,18 +39,24 @@ public class DataModelTest {
     private iUser userMock;
     @Mock
     private iBackend backendMock;
-    private List<Advertisement> testData = new ArrayList<>();
+    private List<Advertisement> testData;
+    private List<Advertisement> favorites;
     private List<iChat> chats = ChatMessagesHelper.generateUserChats();
     private DataModel dataModel;
     private String userID = "userID";
 
     @Before
     public void before() {
-        testData.add(AdFactory.createAd( "22/10/19:13:16:00", userID, "UniqueAdID", "ABC","", 300, Condition.GOOD,"", new ArrayList<>(),null));
-        testData.add(AdFactory.createAd( "22/10/19:10:16:00", "UniqueOwnerID", "UniqueAdID1", "QYZ","", 490, Condition.GOOD,"", new ArrayList<>(),null));
-        testData.add(AdFactory.createAd( "22/10/19:10:15:00", "UniqueOwnerID", "UniqueAdID2", "DEF","", 299, Condition.GOOD,"", new ArrayList<>(),null));
+        if (testData == null) {
+            testData = new ArrayList<>();
+            testData.add(AdFactory.createAd( "22/10/19:13:16:00", userID, "UniqueAdID", "ABC","", 300, Condition.GOOD,"", new ArrayList<>(),null));
+            testData.add(AdFactory.createAd( "22/10/19:10:16:00", "UniqueOwnerID", "UniqueAdID1", "QYZ","", 490, Condition.GOOD,"", new ArrayList<>(),null));
+            testData.add(AdFactory.createAd( "22/10/19:10:15:00", "UniqueOwnerID", "UniqueAdID2", "DEF","", 299, Condition.GOOD,"", new ArrayList<>(),null));
 
-        initDataModel();
+            favorites = createFavoriteAdsFromTestData();
+
+            initDataModel();
+        }
     }
 
     private void initDataModel() {
@@ -65,10 +66,12 @@ public class DataModelTest {
         Mockito.when(RepositoryFactory.createRepository(any())).thenReturn(repositoryMock);
 
         when(userMock.getId()).thenReturn(userID);
+        when(userMock.getFavourites()).thenReturn(favorites);
+        when(userMock.getChats()).thenReturn(chats);
 
         setDataModelUserTo(userMock);
         setDataModelAdvertsTo(testData);
-        setDataModelFavoritesTo(getFavoriteIDsFromTestdata());
+        setDataModelFavoriteIDsTo(getFavoriteIDsFromTestdata());
         setDataModelUserChatsTo(chats);
 
         dataModel = DataModel.getInstance();
@@ -91,7 +94,7 @@ public class DataModelTest {
         }).when(repositoryMock).initialAdvertFetch(any());
     }
 
-    private void setDataModelFavoritesTo(List<String> ids) {
+    private void setDataModelFavoriteIDsTo(List<String> ids) {
         Mockito.doAnswer(invocation -> {
             FavouriteIDsCallback callback = (FavouriteIDsCallback) invocation.getArguments()[1];
             callback.onCallback(ids);
@@ -115,14 +118,13 @@ public class DataModelTest {
         return favoriteIDs;
     }
 
-    private List<Advertisement> getFavoriteAdsFromTestData() {
+    private List<Advertisement> createFavoriteAdsFromTestData() {
         List<Advertisement> favoriteAds = new ArrayList<>();
         favoriteAds.add(testData.get(0));
         return favoriteAds;
     }
 
     /**
-     * NOTE: THIS TEST MUST BE RUN FIRST IN ORDER FOR THE SETUP OF THE SINGLETON DATAMODEL TO WORK PROPERLY.
      * All initialization tests must be done in the same Test function because DataModel is a Singleton
      * which makes separating it into multiple methods difficult.
      */
@@ -138,7 +140,7 @@ public class DataModelTest {
         // Verifies that user favorites are set and uses correct data.
         ArgumentCaptor<List<Advertisement>> favoritesArgument = ArgumentCaptor.forClass(List.class);
         verify(userMock).setFavourites(favoritesArgument.capture());
-        assertEquals(getFavoriteAdsFromTestData().get(0).getTitle(), favoritesArgument.getValue().get(0).getTitle());
+        assertEquals(favorites.get(0).getTitle(), favoritesArgument.getValue().get(0).getTitle());
 
         // Verifies that user chats are set and uses correct data.
         ArgumentCaptor<List<iChat>> chatsArguments = ArgumentCaptor.forClass(List.class);
@@ -156,5 +158,41 @@ public class DataModelTest {
         Advertisement dataModelAd = dataModel.getAdFromAdID(testedAd.getUniqueID());
 
         assertEquals(testedAd.getUniqueID(), dataModelAd.getUniqueID());
+    }
+
+    @Test
+    public void returnsValidFavorites() {
+        Advertisement testedAd = favorites.get(0);
+
+        Advertisement dataModelAd = dataModel.getUserFavourites().get(0);
+
+        assertEquals(testedAd.getUniqueID(), dataModelAd.getUniqueID());
+    }
+
+    @Test
+    public void isAFavoriteReturnTrueWhenFavoriteExist() {
+        Advertisement testedAd = favorites.get(0);
+
+        boolean isAFavorite = dataModel.isAFavourite(testedAd);
+
+        assertEquals(true, isAFavorite);
+    }
+
+    @Test
+    public void isAFavoriteReturnFalseWhenFavoriteDoesNotExist() {
+        Advertisement testedAd = testData.get(1);
+
+        boolean isAFavorite = dataModel.isAFavourite(testedAd);
+
+        assertEquals(false, isAFavorite);
+    }
+
+    @Test
+    public void findChatByIDReturnNullWhenNoChatItExist() {
+        iChat testedChat = ChatMessagesHelper.generateUserChats().get(0);
+
+        iChat dataModelChat = dataModel.findChatByID(testedChat.getChatID());
+
+        assertEquals(null, dataModelChat);
     }
 }

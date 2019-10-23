@@ -130,16 +130,14 @@ public class HomeFragment extends ListView implements AdapterView.OnItemSelected
         loadFragment(filter);
     }
 
-    private boolean loadFragment(Fragment fragment) {
+    private void loadFragment(Fragment fragment) {
         if (fragment != null) {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().addToBackStack("HomeFragment");
             fragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .commitAllowingStateLoss();
-            return true;
         }
-        return false;
     }
 
     /**
