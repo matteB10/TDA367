@@ -1,9 +1,7 @@
 package com.masthuggis.boki.model;
 
 import com.masthuggis.boki.utils.Condition;
-import com.masthuggis.boki.utils.UniqueIdCreator;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,21 +22,7 @@ public class Advert implements Advertisement {
     private String imageUrl;
     private String owner;
 
-
-    public Advert() {
-        this.datePublished = "";
-        this.uniqueOwnerID = DataModel.getInstance().getUserID();
-        this.uniqueAdID = UniqueIdCreator.getUniqueID();
-        this.title = "";
-        this.description = "";
-        this.price = 0;
-        this.condition = Condition.UNDEFINED;
-        this.tags = new ArrayList<>();
-        this.owner = DataModel.getInstance().getUserDisplayName();
-    }
-
-
-    public Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, String imageUrl, List<String> tags, String owner) {
+    Advert(String datePublished, String uniqueOwnerID, String id, String title, String description, long price, Condition condition, String imageUrl, List<String> tags, String owner) {
         this.datePublished = datePublished;
         this.uniqueOwnerID = uniqueOwnerID;
         this.uniqueAdID = id;
@@ -51,11 +35,9 @@ public class Advert implements Advertisement {
         this.owner = owner;
     }
 
-
     public String getDatePublished() {
         return this.datePublished;
     }
-
 
     @Override
     public String getImageUrl() {
