@@ -1,14 +1,14 @@
-package com.masthuggis.boki.backend;
+package com.masthuggis.boki.model;
 
-import com.masthuggis.boki.backend.callbacks.FailureCallback;
-import com.masthuggis.boki.backend.callbacks.FavouriteIDsCallback;
-import com.masthuggis.boki.backend.callbacks.SuccessCallback;
-import com.masthuggis.boki.backend.callbacks.advertisementCallback;
-import com.masthuggis.boki.backend.callbacks.chatCallback;
-import com.masthuggis.boki.backend.callbacks.messagesCallback;
-import com.masthuggis.boki.backend.callbacks.stringCallback;
-import com.masthuggis.boki.backend.callbacks.userCallback;
-import com.masthuggis.boki.model.Advertisement;
+import com.masthuggis.boki.model.callbacks.FailureCallback;
+import com.masthuggis.boki.model.callbacks.FavouriteIDsCallback;
+import com.masthuggis.boki.model.callbacks.SuccessCallback;
+import com.masthuggis.boki.model.callbacks.advertisementCallback;
+import com.masthuggis.boki.model.callbacks.chatCallback;
+import com.masthuggis.boki.model.callbacks.messagesCallback;
+import com.masthuggis.boki.model.callbacks.stringCallback;
+import com.masthuggis.boki.model.callbacks.userCallback;
+import com.masthuggis.boki.backend.iBackend;
 import com.masthuggis.boki.model.observers.ChatObserver;
 import com.masthuggis.boki.model.observers.MessagesObserver;
 
@@ -22,7 +22,7 @@ import java.util.Map;
  * by the domain-layer of the application.
  * Data is fetched through the iBackend interface.
  */
-public class Repository implements iRepository {
+class Repository implements iRepository {
 
     private AdvertRepository advertRepository;
     private UserRepository userRepository;

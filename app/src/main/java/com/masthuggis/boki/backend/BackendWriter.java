@@ -13,11 +13,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.masthuggis.boki.backend.callbacks.FailureCallback;
-import com.masthuggis.boki.backend.callbacks.SuccessCallback;
-import com.masthuggis.boki.backend.callbacks.stringCallback;
+import com.masthuggis.boki.model.callbacks.FailureCallback;
+import com.masthuggis.boki.model.callbacks.SuccessCallback;
+import com.masthuggis.boki.model.callbacks.stringCallback;
 import com.masthuggis.boki.model.observers.ChatObserver;
-import com.masthuggis.boki.model.observers.MessagesObserver;
 import com.masthuggis.boki.utils.UniqueIdCreator;
 
 import java.io.File;
@@ -43,7 +42,6 @@ class BackendWriter {
     private StorageReference imagesRef = mainRef.child("images");
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private final List<ChatObserver> chatObservers;
-    private final List<MessagesObserver> messagesObservers;
     private CollectionReference advertPath;
     private CollectionReference chatPath;
     private CollectionReference userPath;
@@ -53,24 +51,17 @@ class BackendWriter {
      *
      */
 
-    BackendWriter(List<ChatObserver> chatObservers, List<MessagesObserver> messagesObservers) {
+    BackendWriter(List<ChatObserver> chatObservers) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         advertPath = db.collection("market");
         chatPath = db.collection("chats");
         userPath = db.collection("users");
         this.chatObservers = chatObservers;
-        this.messagesObservers=messagesObservers;
     }
 
     private void notifyChatObservers() {
         for (ChatObserver chatObserver: chatObservers) {
             chatObserver.onChatUpdated();
-        }
-    }
-
-    private void notifyMessagesObserver() {
-        for (MessagesObserver messagesObserver: messagesObservers) {
-            messagesObserver.onMessagesChanged();
         }
     }
 

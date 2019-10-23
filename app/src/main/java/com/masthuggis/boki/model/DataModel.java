@@ -1,15 +1,12 @@
 package com.masthuggis.boki.model;
 
 import com.masthuggis.boki.backend.BackendFactory;
-import com.masthuggis.boki.backend.RepositoryFactory;
-import com.masthuggis.boki.backend.callbacks.FailureCallback;
-import com.masthuggis.boki.backend.callbacks.MarkedAsFavouriteCallback;
-import com.masthuggis.boki.backend.callbacks.SuccessCallback;
-import com.masthuggis.boki.backend.callbacks.advertisementCallback;
-import com.masthuggis.boki.backend.callbacks.chatCallback;
-import com.masthuggis.boki.backend.callbacks.messagesCallback;
-import com.masthuggis.boki.backend.callbacks.stringCallback;
-import com.masthuggis.boki.backend.iRepository;
+import com.masthuggis.boki.model.callbacks.FailureCallback;
+import com.masthuggis.boki.model.callbacks.MarkedAsFavouriteCallback;
+import com.masthuggis.boki.model.callbacks.advertisementCallback;
+import com.masthuggis.boki.model.callbacks.chatCallback;
+import com.masthuggis.boki.model.callbacks.messagesCallback;
+import com.masthuggis.boki.model.callbacks.stringCallback;
 import com.masthuggis.boki.model.observers.ChatObserver;
 import com.masthuggis.boki.model.observers.MessagesObserver;
 
@@ -71,13 +68,17 @@ public class DataModel {
 
     private void initMessages() {
         for (iChat chat : user.getChats()) {
-            getMessages(chat.getChatID(), messagesList -> chat.setMessages(messagesList));
+            getMessages(chat.getChatID(), chat::setMessages);
         }
+    }
+
+    private void getMessages(String uniqueChatID, messagesCallback messagesCallback) {
+        repository.getMessages(uniqueChatID, messagesCallback);
     }
 
 
     public void signIn(String email, String password, SuccessCallback successCallback, FailureCallback failureCallback) {
-        repository.signIn(email, password, () -> successCallback.onSuccess(), failureCallback);
+        repository.signIn(email, password, successCallback, failureCallback);
     }
 
     public Advertisement getAdFromAdID(String ID) {
@@ -271,14 +272,7 @@ public class DataModel {
 
     public void signUp(String email, String password, String username, SuccessCallback
             successCallback, FailureCallback failureCallback) {
-        repository.signUp(email, password, username, () -> successCallback.onSuccess(), failureCallback);
-    }
-
-
-    private void getMessages(String uniqueChatID, messagesCallback messagesCallback) {
-        repository.getMessages(uniqueChatID, messagesList -> {
-            messagesCallback.onCallback(messagesList);
-        });
+        repository.signUp(email, password, username, successCallback, failureCallback);
     }
 
     /**
@@ -308,7 +302,7 @@ public class DataModel {
     }
 
     private void fetchUserChats(String userID, chatCallback chatCallback) {
-        repository.getUserChats(userID, chatsList -> chatCallback.onCallback(chatsList));
+        repository.getUserChats(userID, chatCallback);
     }
 
     public void removeChat(String userID, String chatID) {

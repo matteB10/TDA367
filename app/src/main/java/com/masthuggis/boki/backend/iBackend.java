@@ -1,10 +1,10 @@
 package com.masthuggis.boki.backend;
 
-import com.masthuggis.boki.backend.callbacks.DBCallback;
-import com.masthuggis.boki.backend.callbacks.DBMapCallback;
-import com.masthuggis.boki.backend.callbacks.FailureCallback;
-import com.masthuggis.boki.backend.callbacks.SuccessCallback;
-import com.masthuggis.boki.backend.callbacks.stringCallback;
+import com.masthuggis.boki.model.callbacks.DBCallback;
+import com.masthuggis.boki.model.callbacks.DBMapCallback;
+import com.masthuggis.boki.model.callbacks.FailureCallback;
+import com.masthuggis.boki.model.callbacks.SuccessCallback;
+import com.masthuggis.boki.model.callbacks.stringCallback;
 import com.masthuggis.boki.model.observers.ChatObserver;
 import com.masthuggis.boki.model.observers.MessagesObserver;
 

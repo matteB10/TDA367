@@ -23,9 +23,17 @@ public class ValidatorPresentersTest {
 
     @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 
+    private void initSignUpPresenter() {
+        signUpPresenter = new SignUpPresenter(viewMock, dataMock);
+    }
+
+    private void initSignInPresenter() {
+        signInPresenter = new SignInPresenter(viewMock, dataMock);
+    }
+
     @Test
     public void whenBadInputIsGivenUserIsNotSignedUp() {
-        signUpPresenter = new SignUpPresenter(viewMock, dataMock);
+        initSignUpPresenter();
 
         signUpPresenter.onSignUpButtonPressed("", "123123", "username");
 
@@ -34,7 +42,7 @@ public class ValidatorPresentersTest {
 
     @Test
     public void whenGoodInputIsGivenUserIsSignedUp() {
-        signUpPresenter = new SignUpPresenter(signUpActivityMock, dataMock);
+        initSignUpPresenter();
         String email = "valid@gmail.com";
         String password = "123123";
         String username = "username";
@@ -47,7 +55,7 @@ public class ValidatorPresentersTest {
 
     @Test
     public void whenBadInputIsGivenUserIsNotSignedIn() {
-        signInPresenter = new SignInPresenter(viewMock, dataMock);
+        initSignInPresenter();
 
         signInPresenter.onSignInButtonPressed("", "password");
 
@@ -56,7 +64,7 @@ public class ValidatorPresentersTest {
 
     @Test
     public void whenGoodInputIsGivenUserIsSignedIn() {
-        signInPresenter = new SignInPresenter(signInActivity, dataMock);
+        initSignInPresenter();
 
         signInPresenter.onSignInButtonPressed("valid@email.com", "password");
 

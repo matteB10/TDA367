@@ -31,7 +31,6 @@ import java.util.List;
  * An acitivity for creating a new or editing an advertisement
  * with user input.
  */
-
 public class CreateAdActivity extends AppCompatActivity implements CreateAdPresenter.View {
 
     private List<Button> preDefTagButtons = new ArrayList<>();
