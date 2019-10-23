@@ -40,13 +40,13 @@ public class CreateAdPresenter {
      * @param adID is the individual ID for a specific ad.
      */
     public void setAd(String adID) {
-        try {
-            advertisement = dataModel.getAdFromAdID(adID);
-        } catch (Exception e) {
+        advertisement = dataModel.getAdFromAdID(adID);
+        if (advertisement == null) {
             view.displayNotFoundToast("Det finns ingen annons som matchar denna data.");
             return;
+        } else {
+            validPrice = true;
         }
-        validPrice = true;
     }
 
 
