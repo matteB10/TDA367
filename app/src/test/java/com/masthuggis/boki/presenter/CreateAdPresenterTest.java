@@ -145,9 +145,9 @@ public class CreateAdPresenterTest {
     public void tryingToSetIDThatDoesNotExistShowsNotFoundToast() {
         String id = "id that does not exist";
         Mockito.when(databaseMock.getAdFromAdID(id)).thenReturn(null);
+
         presenter.setAd(id);
 
         Mockito.verify(mockView).displayNotFoundToast(any());
     }
-
 }
