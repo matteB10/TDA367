@@ -1,0 +1,54 @@
+# Meeting Agenda
+
+Group:Masthuggis
+Date: 22/10 - 19
+Chair: Matilda Blomquist
+Participants: Joel Rudsberg, Arvid Sundbom, Matilda Blomquist, Isak Lindgren
+
+
+## Objectives (5 min) 
+
+- Dela upp det sista arbetet
+
+  -Skriva Tester
+  -Skriva RAD och SDD.
+  -Presentation.
+  -Vad gör vi i koden
+  -Code review
+
+## Discussion items (35 min)
+
+- Sammanfoga rapport, vad har vi för punkter?
+	-lägga till sekvensdiagram, kanske för fetchAdvert. Isak fixar
+	-ska vi lägga till en inledning i hela rapporten?
+	-lägga till reflektion/diskussionspunkt
+
+- Tester 
+  Code coverage  :
+	- 69% line coverage i presenters
+	- 90% class, 37% line i model (beror på svårighet att testa datamodel pga firebase).
+	- 80% class, 50% line i utils
+  Fortsätter jobba på detta
+
+
+-Muntlig presentation:
+	- skärmdelning med mobil har vi ej fått att funka. Vi kollar på detta, kommer att gå snabbare än två emulatorer. hittat ett program för detta.
+	- går igenom all funktionalitet från user stories, skriv upp ett flöde. 
+	- lägga upp seriösa bokannonser innan presentationen
+
+-RAD och SDD:
+    	- isak, arvid och matilda satsar på att göra färdigt SDD och RAD till på torsdag.
+      finns mycket som måste kollas igenom, vad ska finnas i RAD/SDD?
+
+-UML
+	- ska vi ta bort metoder? vi behåller metoder i interface men tar bort variabler och metoder i klasser. 
+	- matilda gör klart UML.
+
+-Kod
+	-inga stora förändringar i koden, man får skriva tester och kommentarer. Om man refaktorerar, TESTA ALLT!!! inga nya buggar tack
+	-joel fortsätter skriva test/kolla igenom koden
+	- code review hade varit bra om vi hade haft tid.
+
+
+## Wrap up
+ - Alla jobbar på med sina uppgifter. Allt ska vara klart torsdag kväll.
