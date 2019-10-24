@@ -38,6 +38,10 @@ public class ProfileFragment extends ListView implements ProfilePresenter.View {
         return new ProductsRecyclerViewAdapter(getContext(), presenter);
     }
 
+    /**
+     * Set up the specific header for the profile page
+     * @return the header view
+     */
     @Override
     protected View onCreateHeaderLayout() {
         View header = getLayoutInflater().inflate(R.layout.profile_header, null);
@@ -46,6 +50,11 @@ public class ProfileFragment extends ListView implements ProfilePresenter.View {
         return header;
     }
 
+    /**
+     * Displays a view with information to the user that the user
+     * don´t have any uploaded adverts.
+     * @return the view to be displayed
+     */
     @Override
     protected View onCreateNoResultsFoundLayout() {
         View noResults = getLayoutInflater().inflate(R.layout.profile_no_adverts, null);

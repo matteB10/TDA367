@@ -27,7 +27,7 @@ import com.masthuggis.boki.utils.ViewCreator;
 
 /**
  * Home page displaying all the adverts that have been published to the market.
- * Will also include searchPerformed and sort buttons in the future.
+ * provides a search field to search adverts and a button to start filtering.
  * Used by FilterFragment and MainActivity.
  * Written by masthuggis.
  */
@@ -117,11 +117,17 @@ public class HomeFragment extends ListView implements AdapterView.OnItemSelected
         searchField.clearFocus(); //This and two lines above hides keyboard when searchPerformed is pressed
     }
 
+    /**
+     * Called when user enters text into the search text field
+     */
     private void performSearch() {
         String query = searchField.getText().toString();
         presenter.searchPerformed(query);
     }
 
+    /**
+     * Called when filter button is clicked
+     */
     private void startFilterFragment() {
         Fragment filter = new FilterFragment();
         loadFragment(filter);

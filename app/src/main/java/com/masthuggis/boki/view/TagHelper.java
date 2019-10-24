@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 /**
- *
+ * Helper class handling functionality for displaying tags as button
+ * and dynamically adds them to a view.
  * Used by CreateAdActivity, DetailsActivity, FilterFragment and TagHelper.
  * Written by masthuggis
  */

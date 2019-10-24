@@ -12,7 +12,7 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.SignUpPresenter;
 /**
- *
+ * View allowing the user to login to the application
  * Used by SignInActivity.
  * Written by masthuggis
  */

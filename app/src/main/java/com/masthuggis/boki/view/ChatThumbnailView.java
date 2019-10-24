@@ -1,6 +1,6 @@
 package com.masthuggis.boki.view;
 /**
- *
+ * Interface that represents a chat thumbnail
  * Used by ChatPresenter and MessagesRecyclerViewAdapter.
  * Written by masthuggis
  */
