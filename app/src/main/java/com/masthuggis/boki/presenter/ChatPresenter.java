@@ -36,6 +36,12 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
         return sortChatsAccordingToLastMessageSent(data);
     }
 
+    /**
+     * Binds the thumbnail containing information about a specific chat to the
+     * RecyclerView containing the thumbnail.
+     * @param position The zero-indexed position where thumbnail will be bound.
+     * @param dataView The thumbnail to be bound.
+     */
     @Override
     public void onBindThumbnailViewAtPosition(int position, ChatThumbnailView dataView) {
         List<iChat> chats = getCurrentDisplayedData();
