@@ -17,6 +17,7 @@ import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.MessagesPresenter;
 /**
  * Class containing all visual logic for initializing and displaying the Messages View.
+ * Displays messages between two users, and let the user send new messages.
  * Used by ChatFragment and DetailsActivity.
  * Written by masthuggis
  */
@@ -46,6 +47,10 @@ public class MessagesActivity extends AppCompatActivity implements MessagesPrese
 
     }
 
+    /**
+     * Displays sent messages to the right part of the view
+     * @param messageText the message to be displayed
+     */
     public void addSentMessageBox(String messageText) {
         TextView textView = createMessageTextView(messageText);
         createMessageBox(Gravity.RIGHT, textView);
@@ -53,6 +58,10 @@ public class MessagesActivity extends AppCompatActivity implements MessagesPrese
 
     }
 
+    /**
+     * Displays received messages to the left part of the view
+     * @param messageText the message to be displayed
+     */
     @Override
     public void addReceivedMessageBox(String messageText) {
         TextView textView = createMessageTextView(messageText);

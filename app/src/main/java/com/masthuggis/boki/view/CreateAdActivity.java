@@ -92,7 +92,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         setSaveBtnListener();
     }
 
-
+    /**
+     * Set up correct buttons, depending on if activity is used for
+     * creating or editing an advert.
+     * @param editMode
+     */
     private void setButtonVisibility(boolean editMode) {
         if (editMode) {
             publishAdButton.setVisibility(View.GONE);
@@ -398,6 +402,11 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
         }
     }
 
+    /**
+     * Sets correct pliancy styling of the condition button
+     * @param condition
+     * @param pressed
+     */
     @Override
     public void setCondition(Condition condition, boolean pressed){
         RadioButton conditionNew = findViewById(R.id.conditionNewButton);

@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 /**
  * Class containing functionality for managing tags associated with advertisement.
+ * Handles the functionality for displaying tags as buttons as well as
+ * dynamically adding them to a View.
  * Used by CreateAdActivity, DetailsActivity, FilterFragment and TagHelper.
  * Written by masthuggis
  */

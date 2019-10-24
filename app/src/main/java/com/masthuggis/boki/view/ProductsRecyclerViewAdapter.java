@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.masthuggis.boki.R;
 import com.masthuggis.boki.presenter.IListPresenter;
 /**
- *
+ * RecyclerViewAdapter for products to be displayed in the market.
  * Used by HomeFragment, FavoritesFragment and ProfileFragment.
  * Written by masthuggis
  */

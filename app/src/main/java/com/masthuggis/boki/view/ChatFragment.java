@@ -22,7 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Fragment for displaying active chats of the current user.
+ * Fragment for displaying active chats in a list of the current user. Starts
+ * MessagesActivity if a chat is pressed.
  * Used by MainActivity.
  * Written by masthuggis.
  */

@@ -13,6 +13,7 @@ import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.SignInPresenter;
 /**
  * A Class containing the visual logic behind the application's sign-in-screen.
+ * Allows the User to enter log in to the application.
  * Used by MainActivity, ProfileFragment and SignUpActivity.
  * Written by masthuggis
  */

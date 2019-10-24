@@ -14,7 +14,7 @@ import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.FavoritesPresenter;
 import com.masthuggis.boki.utils.ViewCreator;
 /**
- * View class for showing the favorites part of the graphical interface.
+ * View displaying all users favourite marked adverts in a grid.
  * Used by MainActivity.
  * Written by masthuggis
  */
