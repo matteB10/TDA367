@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 /**
- *
+ * Class containing functionality for managing tags associated with advertisement.
  * Used by CreateAdActivity, DetailsActivity, FilterFragment and TagHelper.
  * Written by masthuggis
  */

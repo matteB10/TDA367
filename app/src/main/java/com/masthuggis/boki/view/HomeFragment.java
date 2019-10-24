@@ -110,6 +110,10 @@ public class HomeFragment extends ListView implements AdapterView.OnItemSelected
         filterButton.setOnClickListener(view1 -> startFilterFragment());
     }
 
+    /**
+     * Hides the android-keyboard shown when user shifts application focus to
+     * some widget that can receive user-input
+     */
     private void hideKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(searchField.getWindowToken(), 0);

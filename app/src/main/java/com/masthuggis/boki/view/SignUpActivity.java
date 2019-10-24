@@ -12,7 +12,7 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.SignUpPresenter;
 /**
- *
+ * A Class containing the visual logic behind the application's sign-up-screen.
  * Used by SignInActivity.
  * Written by masthuggis
  */

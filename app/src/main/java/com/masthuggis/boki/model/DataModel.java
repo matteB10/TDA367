@@ -149,6 +149,12 @@ public class DataModel {
         });
     }
 
+    /**
+     * Iterates over the local list of favourites belonging to the current user on the device.
+     *
+     * @return a boolean of whether or not there exists an advertisement with the same ID as the paramater-advertisement.
+     */
+
     public boolean isAFavourite(Advertisement advertisement) {
         List<Advertisement> userFavourites = user.getFavourites();
         for (Advertisement favourite : userFavourites) {

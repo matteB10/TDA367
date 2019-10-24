@@ -248,7 +248,9 @@ class BackendWriter {
             if (task.isSuccessful()) {
                 deleteID(favouriteID, task);
             } else {
-                //TODO failurecallback
+                if (task.getException() != null) {
+                    task.getException().printStackTrace();
+                }
             }
         });
     }

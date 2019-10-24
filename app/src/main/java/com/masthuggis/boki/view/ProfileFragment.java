@@ -46,6 +46,11 @@ public class ProfileFragment extends ListView implements ProfilePresenter.View {
         return header;
     }
 
+    /**
+     * Creates a View containing no advertisement-objects.
+     * Instead displays a message to the user that they have not uploaded any adverts as of yet.
+     * Also creates a button functioning as a navigational tool to the Create-Advert View.
+     */
     @Override
     protected View onCreateNoResultsFoundLayout() {
         View noResults = getLayoutInflater().inflate(R.layout.profile_no_adverts, null);

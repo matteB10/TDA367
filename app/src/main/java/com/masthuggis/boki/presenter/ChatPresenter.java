@@ -60,6 +60,11 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
         }
     }
 
+    /**
+     * Hides all of the user's chats containing no messages.
+     * Necessary to implement because chats without messages can be created,
+     * but these should never be shown to the user.
+     */
     private void hideChatsWithoutMessages(iChat chat,ChatThumbnailView dataView){
         if(chat.getMessages()== null || chat.getMessages().size()<=0){
             dataView.hide();
@@ -70,6 +75,7 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
 
     /**
      * Depending on which position of the recyclerview is pressed, different messagesScreens are displayed.
+     *
      */
     @Override
     public void onRowPressed(String chatID) {
@@ -82,9 +88,8 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
     }
 
     /**
-     * Used to format the time of the last message sent.
-     * @param l
-     * @return
+     * Used to format the time of the last message sent, displays both time of day and date.
+     * Format used is hh.mm.ss dd/mm - yy.
      */
     private String formatTimeLastMessageSent(long l) {
         if (l == 0) {
@@ -112,7 +117,7 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
     }
 
     /**
-     * Updates chat view when the model is updated.
+     * Updates chat view when the chats in the model are updated.
      */
     @Override
     public void onChatUpdated() {
@@ -128,7 +133,8 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
     }
 
     /**
-     * Makes sure the user cant open multiple chats at the same time by tapping a chat multiple times in a row.
+     * Makes sure the user cant open multiple chats at the same time by
+     * tapping the same chat multiple times in a row.
      */
     public boolean canProceedWithTapAction() {
         return ClickDelayHelper.canProceedWithTapAction();

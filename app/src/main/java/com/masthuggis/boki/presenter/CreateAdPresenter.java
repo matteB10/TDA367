@@ -175,7 +175,7 @@ public class CreateAdPresenter {
     /**
      * Controls that minimal required user input is entered.
      * Valid title is all chars, length is arbitrary
-     * @return
+     * Includes controlling that an image has been taken by the user.
      */
     private boolean allFieldsValid() {
         boolean valid = advertisement.getTitle().length() > 2 && validPrice && advertisement.isValidCondition() &&

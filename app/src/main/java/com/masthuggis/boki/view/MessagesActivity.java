@@ -16,7 +16,7 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.MessagesPresenter;
 /**
- *
+ * Class containing all visual logic for initializing and displaying the Messages View.
  * Used by ChatFragment and DetailsActivity.
  * Written by masthuggis
  */
