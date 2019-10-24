@@ -21,6 +21,11 @@ public class StylingHelper {
     }
 
 
+    /**
+     * Takes in a Condition and returns the string representation
+     * @param condition
+     * @return a string representation for the condition from string.xml
+     */
     public static int getConditionText(Condition condition) {
         int conditionText = 0;
         switch (condition) {

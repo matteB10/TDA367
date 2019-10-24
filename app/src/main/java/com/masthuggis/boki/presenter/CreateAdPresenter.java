@@ -2,8 +2,8 @@ package com.masthuggis.boki.presenter;
 
 import com.masthuggis.boki.model.AdFactory;
 import com.masthuggis.boki.model.Advertisement;
-import com.masthuggis.boki.utils.Condition;
 import com.masthuggis.boki.model.DataModel;
+import com.masthuggis.boki.utils.Condition;
 import com.masthuggis.boki.utils.CurrentTimeHelper;
 import com.masthuggis.boki.utils.FormHelper;
 import com.masthuggis.boki.utils.UniqueIdCreator;
@@ -99,7 +99,7 @@ public class CreateAdPresenter {
      * @param price
      */
     public void priceChanged(String price) {
-        if (FormHelper.getInstance().isValidPrice(price)) {
+        if (FormHelper.isValidPrice(price)) {
             advertisement.setPrice(Integer.parseInt(price));
             validPrice = true;
         } else {

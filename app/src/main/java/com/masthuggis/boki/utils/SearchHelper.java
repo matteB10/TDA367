@@ -44,7 +44,7 @@ public class SearchHelper {
         List<Advertisement> searchRes = new ArrayList<>();
         List<Advertisement> adsToBeSearched = new ArrayList<>(advertisements);
         if (price == 500) {
-            price = FormHelper.getInstance().getValidMaxPrice(); //max price filter is 500+, actual maxPrice getting from formhelper;
+            price = FormHelper.getValidMaxPrice(); //max price filter is 500+, actual maxPrice getting from formhelper;
         }
         if (filters.size() == 0) {
             searchRes = addPriceFilter(adsToBeSearched, price);

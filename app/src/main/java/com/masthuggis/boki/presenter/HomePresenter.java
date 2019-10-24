@@ -30,7 +30,11 @@ public final class HomePresenter extends ListPresenter<Advertisement, ThumbnailV
         setCurrentDisplayedData(applyFilters(dataModel.getAllAdverts()));
     }
 
-
+    /**
+     * Get correct data to update view with, depending on if user has an active search
+     * or active filters.
+     * @return a list of ads to be displayed
+     */
     @Override
     public List<Advertisement> getData() {
         if (getCurrentDisplayedData().size() == 0 && !SearchHelper.isActiveSearch()) {

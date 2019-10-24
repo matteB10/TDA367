@@ -3,7 +3,7 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.model.DataModel;
 
 /**
- *
+ * Controls what view to show when application is started.
  * Used by MainActivity.
  * Written by masthuggis
  */

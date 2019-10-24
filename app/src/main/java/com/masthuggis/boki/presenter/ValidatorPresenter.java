@@ -5,7 +5,7 @@ import com.masthuggis.boki.view.ValidatorView;
 import java.util.List;
 
 /**
- *
+ * Aggregates mutual code used by its subclasses
  * Used by SignInPresenter and SignUpPresenter.
  * Written by masthuggis
  */

@@ -7,7 +7,7 @@ import com.masthuggis.boki.view.ThumbnailView;
 import java.util.List;
 
 /**
- *
+ * Helper class that all presenter showing adverts delegates to.
  * Used by FavouritesPresenter,HomePresenter and ProfilePresenter.
  * Written by masthuggis
  */

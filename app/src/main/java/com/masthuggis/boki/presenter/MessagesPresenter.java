@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- *
+ * Displays messages in a chat
  * Used by MessagesActivity.
  * Written by masthuggis
  */

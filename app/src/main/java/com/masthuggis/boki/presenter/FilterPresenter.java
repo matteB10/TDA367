@@ -5,7 +5,8 @@ import com.masthuggis.boki.utils.Filter;
 import java.util.List;
 
 /**
- *
+ * Handle user input from filter fragment, responsible for setting up the view with correct
+ * values if the user have active filters.
  * Used by FilterFragment.
  * Written by masthuggis
  */
@@ -29,6 +30,10 @@ public class FilterPresenter {
         view.setUpFilters(tag, !isSelected(tag));
     }
 
+    /**
+     * Get current list of available filter tags
+     * @return List of tags
+     */
     public List<String> getPreDefTags() {
         return preDefTags;
     }

@@ -1,8 +1,8 @@
 package com.masthuggis.boki.presenter;
 
 /**
- *
- * Used by ChatPresenter, HomePresenter,ListPresenter, ListView,FavoritesPresenter and ProfilePresenter.
+ * View interface implemented by ListView, handles method to display content in recyclerViews
+ * Used by ChatPresenter, HomePresenter, ListPresenter, FavoritesPresenter and ProfilePresenter.
  * Written by masthuggis
  */
 public interface ListPresenterView {

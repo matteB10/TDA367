@@ -6,8 +6,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -25,55 +23,39 @@ public class FormHelperTest {
 
     @Test
     public void testIsValidNumber() {
-        FormHelper fm = FormHelper.getInstance();
 
-        assertTrue(fm.isValidNumber("123"));
-        assertFalse(fm.isValidNumber("hej123"));
-        assertFalse(fm.isValidNumber("hej"));
+        assertTrue(FormHelper.isValidNumber("123"));
+        assertFalse(FormHelper.isValidNumber("hej123"));
+        assertFalse(FormHelper.isValidNumber("hej"));
     }
 
     @Test
     public void testIsValidEmail() {
-        FormHelper fm = FormHelper.getInstance();
-
-        assertTrue(fm.isValidEmail("matblomq@chalmers.se"));
-        assertTrue(fm.isValidEmail("matblomq@student.chalmers.se"));
-        assertFalse(fm.isValidEmail("m@."));
-        assertFalse(fm.isValidEmail("m@m."));
-        assertFalse(fm.isValidEmail("matilda@se"));
+        assertTrue(FormHelper.isValidEmail("matblomq@chalmers.se"));
+        assertTrue(FormHelper.isValidEmail("matblomq@student.chalmers.se"));
+        assertFalse(FormHelper.isValidEmail("m@."));
+        assertFalse(FormHelper.isValidEmail("m@m."));
+        assertFalse(FormHelper.isValidEmail("kalle@se"));
     }
 
     @Test
     public void testIsValidMobile() {
-        FormHelper fm = FormHelper.getInstance();
-
-        assertTrue(fm.isValidMobile("0722318924"));
-        assertTrue(fm.isValidMobile("072-2318924"));
-        assertFalse(fm.isValidMobile("hej"));
-        assertFalse(fm.isValidMobile("mm121212mm"));
-        assertFalse(fm.isValidMobile("07-0838"));
-        assertFalse(fm.isValidMobile("0-7777777777"));
+        assertTrue(FormHelper.isValidMobile("0722318924"));
+        assertTrue(FormHelper.isValidMobile("072-2318924"));
+        assertFalse(FormHelper.isValidMobile("hej"));
+        assertFalse(FormHelper.isValidMobile("mm121212mm"));
+        assertFalse(FormHelper.isValidMobile("07-0838"));
+        assertFalse(FormHelper.isValidMobile("0-7777777777"));
     }
 
     @Test
     public void testIsValidPrice() {
-        FormHelper fm = FormHelper.getInstance();
 
-        assertFalse(fm.isValidPrice("555555"));
-        assertFalse(fm.isValidPrice("Ogiltigt pris"));
+        assertFalse(FormHelper.isValidPrice("555555"));
+        assertFalse(FormHelper.isValidPrice("Ogiltigt pris"));
 
-        assertTrue(fm.isValidPrice("350"));
-        assertTrue(fm.isValidPrice("0"));
-
-        try {
-            String name = new File(".").getCanonicalPath();
-            System.out.println("Test " + name);
-            File file = new File(name, "/" + "mookBooks.json");
-            System.out.println(file);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("jävla skit");
-        }
+        assertTrue(FormHelper.isValidPrice("350"));
+        assertTrue(FormHelper.isValidPrice("0"));
     }
 
 

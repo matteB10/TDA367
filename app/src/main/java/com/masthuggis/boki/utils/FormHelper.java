@@ -10,8 +10,6 @@ import java.util.regex.Pattern;
 
 public class FormHelper{
 
-    private static FormHelper formHelper;
-
 
     private static final Pattern validDigits = Pattern.compile("[0-9]+");
     private static final Pattern validPrice = Pattern.compile("^[0-9]{1,4}$");
@@ -23,13 +21,6 @@ public class FormHelper{
 
     private FormHelper(){}
 
-
-    public static FormHelper getInstance(){
-        if(formHelper == null){
-            formHelper = new FormHelper();
-        }
-        return formHelper;
-    }
 
 
     /**
@@ -62,7 +53,7 @@ public class FormHelper{
         return validPrice.matcher(input).matches();
     }
 
-    public static int getValidMaxPrice(){
+    static int getValidMaxPrice(){
         return 9999;
     }
 

@@ -23,11 +23,13 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static junit.framework.TestCase.assertEquals;
-import static org.mockito.Mockito.*;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static junit.framework.TestCase.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({RepositoryFactory.class, BackendFactory.class})
