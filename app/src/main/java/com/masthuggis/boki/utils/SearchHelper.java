@@ -40,8 +40,8 @@ public class SearchHelper {
      */
 
     public static List<Advertisement> filters(int price, List<String> filters, List<Advertisement> advertisements) {
-        hasActiveFilters = true; //price filter is always activated if user clicked on filtering screen once
-        List<Advertisement> searchRes = new ArrayList<>();
+        hasActiveFilters = true;
+        List<Advertisement> searchRes;
         List<Advertisement> adsToBeSearched = new ArrayList<>(advertisements);
         if (price == 500) {
             price = FormHelper.getValidMaxPrice(); //max price filter is 500+, actual maxPrice getting from formhelper;

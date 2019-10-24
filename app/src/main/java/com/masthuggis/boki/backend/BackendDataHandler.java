@@ -16,8 +16,9 @@ import java.util.Map;
 /**
  *
  * Class which delegates work to either BackendReader or BackendWriter depending on which method call.
- * Used by DataModel
- *
+ * Used by BackendFactory.
+ * Written by masthuggis
+
  */
 public class BackendDataHandler implements iBackend {
 

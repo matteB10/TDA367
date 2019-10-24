@@ -3,7 +3,9 @@ package com.masthuggis.boki.utils;
 import java.util.ArrayList;
 import java.util.List;
 /**
- *
+ * Helper class which implements Singleton Pattern.
+ * Used to provide a way too keep the state of the filtering
+ * chosen by the user.
  * Used by FilterPresenter and HomePresenter.
  * Written by masthuggis
  */

@@ -66,7 +66,12 @@ public class Chat implements iChat {
         return isActive;
     }
 
-
+    /**
+     * Used to check which Username to display. Compares an ID from the currentUser to
+     * the ids of the users participating in the chat.
+     * @param currentUserID
+     * @return
+     */
     @Override
     public String getReceiverName(String currentUserID) {
 
@@ -86,7 +91,12 @@ public class Chat implements iChat {
     public String getImageURL(){
         return this.imageURL;
     }
-
+    /**
+     * Used to determine who is the receiver and who is the sender in the
+     * chat. This is relative depending which user is currently logged in.
+     * Compares an ID from the currentUser to
+     * the ids of the users participating in the chat.
+     */
     @Override
     public String getReceiverID(String currentUserID) {
         if (!(userOne.getId().equals(currentUserID))) {

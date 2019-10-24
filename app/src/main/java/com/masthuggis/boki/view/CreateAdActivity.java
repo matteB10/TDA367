@@ -432,8 +432,8 @@ public class CreateAdActivity extends AppCompatActivity implements CreateAdPrese
     }
 
     @Override
-    public void displayNotFoundToast(String toast) {
-        Toast.makeText(getApplicationContext(),toast , Toast.LENGTH_SHORT).show();
+    public void displayNotFoundToast() {
+        Toast.makeText(getApplicationContext(),getString(R.string.noAdFoundWithData) , Toast.LENGTH_SHORT).show();
 
     }
 }

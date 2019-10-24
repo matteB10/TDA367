@@ -1,6 +1,11 @@
 package com.masthuggis.boki.model;
 /**
+ * A class which represents a message.
  *
+ * All information needed in this class is when the message was sent,
+ * the contents of the message and a sender id.
+ * Most interactions with this class is done through the iMessage, which is the
+ * interface it implements.
  * Used by MessageFactory.
  * Written by masthuggis
  */

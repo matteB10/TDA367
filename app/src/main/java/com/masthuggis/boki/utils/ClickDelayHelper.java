@@ -1,8 +1,8 @@
 package com.masthuggis.boki.utils;
 /**
- *
+ *  This helper class provides a way to make sure an interaction doesn't
+ *  trigger an action multiple times within a short time span.
  * Used by ChatPresenter, DetailsPresenter and ListPresenter
- *
  * Written by masthuggis
  */
 public class ClickDelayHelper {

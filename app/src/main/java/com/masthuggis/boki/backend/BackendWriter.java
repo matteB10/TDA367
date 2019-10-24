@@ -36,6 +36,7 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 /**
  * BackendWriter is a Java class which communicates with the backend database through writing only.
  * The database used currently is Googles Firebase Firestore.
+ * Used by BackendFactory and BackendDataHandler.
  * Written by masthuggis
  */
 class BackendWriter {
@@ -49,8 +50,8 @@ class BackendWriter {
     private CollectionReference userPath;
 
     /**
-     * The single constructor of the class which needs a list of backendobservers to make sure it updates the current backendobservers correctly.
-     *
+     * The single constructor of the class which needs a list of chatObservers and messagesObservers to make sure
+     * it updates the current observers correctly.
      */
 
     BackendWriter(List<ChatObserver> chatObservers) {
@@ -62,7 +63,7 @@ class BackendWriter {
     }
 
     private void notifyChatObservers() {
-        for (ChatObserver chatObserver: chatObservers) {
+        for (ChatObserver chatObserver : chatObservers) {
             chatObserver.onChatUpdated();
         }
     }
@@ -363,9 +364,10 @@ class BackendWriter {
     void deleteAd(List<Map<String, String>> chatReceiverAndUserIDMap, Map<String, String> adIDAndUserID) {
         String adID = adIDAndUserID.get("adID");
         String userID = adIDAndUserID.get("userID");
-        advertPath.document((adID)).delete();
-        makeReceiverChatInactive(chatReceiverAndUserIDMap, userID);
-
+        if (adID != null) {
+            advertPath.document((adID)).delete();
+            makeReceiverChatInactive(chatReceiverAndUserIDMap, userID);
+        }
     }
 
     /**

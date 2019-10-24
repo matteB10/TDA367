@@ -81,6 +81,11 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
         }
     }
 
+    /**
+     * Used to format the time of the last message sent.
+     * @param l
+     * @return
+     */
     private String formatTimeLastMessageSent(long l) {
         if (l == 0) {
             return "";
@@ -96,6 +101,9 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
     }
 
     private List<iChat> sortChatsAccordingToLastMessageSent(List<iChat> chats) {
+        if(chats==null){
+            return new ArrayList<>();
+        }
         List<iChat> sorted = new ArrayList<>(chats).stream()
                 .sorted((adOne, adTwo) -> ((int) (adOne.timeLastMessageSent() - adTwo.timeLastMessageSent())))
                 .collect(Collectors.toList());
