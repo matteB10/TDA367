@@ -9,10 +9,6 @@ import java.util.List;
 
 /**
  * DetailsPresenter is the presenter class for the view called DetailsActivity.
- * <p>
- * Validates input from the user to
- * <p>
- * It is the layer between the view and model and should therefore
  * Used by DetailsActivity.
  * Written by masthuggis
  */
@@ -62,6 +58,9 @@ public class DetailsPresenter {
         view.setCondition(text, drawable);
     }
 
+    /**
+     * Creates new chat with the owner of the advertisement.
+     */
     private void createNewChat() {
         if (advertisement.getUniqueOwnerID().equals(dataModel.getUserID())) {
             view.showCanNotSendMessageToYourselfToast();
@@ -80,6 +79,9 @@ public class DetailsPresenter {
         return dataModel.isUserOwner(advertisement);
     }
 
+    /**
+     * Tells the view to open the editview.
+     */
     public void onChangedAdBtnPressed() {
         String uniqueID = advertisement.getUniqueID();
         view.showEditView(uniqueID);
@@ -94,7 +96,7 @@ public class DetailsPresenter {
                 createNewChat();
             }
         } else {
-            view.setOwnerButtonText("Starta chatt");
+            view.setOwnerButtonText();
         }
 
         contactOwnerButtonClickedOnceBefore = true;
@@ -127,6 +129,10 @@ public class DetailsPresenter {
         return advertExists;
     }
 
+    /**
+     * Used to make sure a user cant open multiple views of the same type by tapping a button.
+     * @return
+     */
     public boolean canProceedWithTapAction() {
         return ClickDelayHelper.canProceedWithTapAction();
     }
@@ -149,7 +155,7 @@ public class DetailsPresenter {
 
         void showEditView(String uniqueID);
 
-        void setOwnerButtonText(String content);
+        void setOwnerButtonText();
 
         void setIsAFavouriteIcon();
 

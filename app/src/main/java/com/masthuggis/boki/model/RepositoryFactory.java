@@ -3,6 +3,7 @@ package com.masthuggis.boki.model;
 import com.masthuggis.boki.backend.iBackend;
 
 /**
+ * Used to create objects of Repository-types.
  * Used by Repository and DataModel.
  * Written by masthuggis
  */

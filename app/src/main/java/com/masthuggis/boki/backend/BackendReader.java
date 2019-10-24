@@ -1,7 +1,5 @@
 package com.masthuggis.boki.backend;
 
-import android.util.Log;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -25,11 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 /**
- * BackendWriter is a Java class which communicates with the backend database through reading only.
+ * BackendReaderis a Java class which communicates with the backend database through reading only.
  * The database used currently is Googles Firebase Firestore.
+ * Used by BackendFactory and BackendDataHandler.
  * Written by masthuggis
  */
 
@@ -48,7 +46,8 @@ class BackendReader {
     private CollectionReference userPath;
 
     /**
-     * The single constructor of the class which needs a list of backendobservers to make sure it updates the current backendobservers correctly.
+     * The single constructor of the class which needs a list of chatObservers and messagesObservers to make sure
+     * it updates the current observers correctly.
      *
      *
      */
@@ -149,7 +148,6 @@ class BackendReader {
     void attachMarketListener(DBCallback DBCallback) {
         advertPath.addSnapshotListener((queryDocumentSnapshots, e) -> { //Runs every time change happens i market
             if (e != null) { //Can't attach listener, is path correct to firebase?
-                Log.w(TAG, "Listen failed", e);
                 return;
             }
             if (queryDocumentSnapshots.size() == 0) {
@@ -163,7 +161,7 @@ class BackendReader {
                 Map<String, Object> toBeAdded = snapshot.getData();
                 advertDataList.add(toBeAdded);
             }
-            BackendReader.this.updateAdvertsDataListWithImgUrl(advertDataList, DBCallback::onCallBack);
+            BackendReader.this.updateAdvertsDataListWithImgUrl(advertDataList, DBCallback);
         });
     }
 
@@ -256,7 +254,6 @@ class BackendReader {
         userPath.document(userID).collection("myConversations").addSnapshotListener((queryDocumentSnapshots, e) -> {
             List<Map<String, Object>> chatDataList = new ArrayList<>();
             if (e != null) {
-                Log.w(TAG, "Listen failed.", e);
                 return;
             }
             if (queryDocumentSnapshots == null || queryDocumentSnapshots.size() <= 0) {

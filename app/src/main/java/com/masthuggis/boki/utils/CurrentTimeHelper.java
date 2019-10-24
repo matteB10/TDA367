@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 /**
  *
+ * Used to create proper ways to display the current time.
+ * Provides a way to get the current time both as a long and a string.
  * Used by CreateAdPresenter and MessagesPresenter
  * Written by masthuggis
  */

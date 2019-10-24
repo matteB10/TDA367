@@ -159,14 +159,16 @@ public class DataModel {
         return false;
     }
 
-
+    /**
+     * Checks if an ad still exists or not. If it doesn't the chat is removed from the current
+     * users list of favourites.
+     */
     private boolean adStillExists(String favouriteID) {
         for (Advertisement advertisement : allAds) {
             if (advertisement.getUniqueID().equals(favouriteID)) {
                 return true;
             }
         }
-        //If this is reached, no existing advertisement has the ID that is stored under user favourites in database
         deleteIDFromFavourites(user.getId(), favouriteID);
         return false;
     }
@@ -242,7 +244,15 @@ public class DataModel {
         return null;
     }
 
-
+    /**
+     * Removes an advertisement from the database.
+     * Puts the necessary information into maps to send to the backend to
+     * make sure the advertisement is both removed from the database
+     * and notifies all users currently engaged in conversations
+     * about the removal of the discussed advertisement.
+     * @param adID Id of the advertisement.
+     * @param userID ID of the owner of the advertisement.
+     */
     public void removeExistingAdvert(String adID, String userID) {
         List<Map<String, String>> chatReceiverAndUserIDMap = new ArrayList<>();
         Map<String, String> adIDAndUserID = new HashMap<>();

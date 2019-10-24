@@ -13,8 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A public interface implemented by the BackendDataHandler. Used by DataModel.
+ * A public interface implemented by the BackendDataHandler.
  * Should be implemented by a class which somehow communicates with the database.
+ * Used by BackendFactory, UserRepository, AdvertRepository and RepositoryFactory.
  * Written by masthuggis
  */
 public interface iBackend {

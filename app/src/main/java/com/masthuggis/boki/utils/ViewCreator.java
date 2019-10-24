@@ -4,7 +4,8 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 /**
- *
+ * A helper class which helps views to create new components used
+ * in displaying an interface.
  * Used by ChatFragment, FavoritesFragment, HomeFragment and ProfileFragment.
  * Written by masthuggis
  */

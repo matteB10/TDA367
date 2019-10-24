@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- *
+ * Part of a Strategy Pattern. Provides a way to sort by lates published.
  * Used by SortFactory.
 
  * Written by masthuggis

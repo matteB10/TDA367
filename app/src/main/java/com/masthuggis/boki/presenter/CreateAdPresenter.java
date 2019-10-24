@@ -44,8 +44,7 @@ public class CreateAdPresenter {
     public void setAd(String adID) {
         advertisement = dataModel.getAdFromAdID(adID);
         if (advertisement == null) {
-            view.displayNotFoundToast("Det finns ingen annons som matchar denna data.");
-            return;
+            view.displayNotFoundToast();
         } else {
             validPrice = true;
         }
@@ -252,7 +251,7 @@ public class CreateAdPresenter {
 
         void setCondition(Condition id, boolean pressed);
 
-        void displayNotFoundToast(String toast);
+        void displayNotFoundToast();
     }
 
 }

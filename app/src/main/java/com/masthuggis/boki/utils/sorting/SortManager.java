@@ -39,7 +39,7 @@ public class SortManager {
     }
 
     public String[] getSortOptions() {
-        String arr[] = new String[sortStrategies.size()];
+        String[] arr = new String[sortStrategies.size()];
         for (int i = 0; i < sortStrategies.size(); i++) {
             arr[i] = sortStrategies.get(i).getName();
         }

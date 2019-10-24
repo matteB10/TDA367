@@ -5,11 +5,10 @@ import com.masthuggis.boki.model.Advertisement;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- *
+ * Part of a Strategy Pattern. Provides a way to sort by highest price
  * Used by SortFactory.
 
  * Written by masthuggis
@@ -25,12 +24,7 @@ class HighestPriceSorting implements SortStrategy {
         }
 
         return new ArrayList<>(adverts).stream()
-                .sorted(Comparator.comparing(new Function<Advertisement, Long>() {
-                    @Override
-                    public Long apply(Advertisement advertisement) {
-                        return advertisement.getPrice();
-                    }
-                }).reversed())
+                .sorted(Comparator.comparing(Advertisement::getPrice).reversed())
                 .collect(Collectors.toList());
     }
 

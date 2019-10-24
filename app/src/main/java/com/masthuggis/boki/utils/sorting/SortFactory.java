@@ -1,6 +1,6 @@
 package com.masthuggis.boki.utils.sorting;
 /**
- *
+ * Factory class for different kinds of SortStrategies.
  * Used by SortManager
  * Written by masthuggis
  */

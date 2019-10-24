@@ -147,8 +147,8 @@ public class DetailsActivity extends AppCompatActivity implements DetailsPresent
     }
 
     @Override
-    public void setOwnerButtonText(String content) {
-        contactOwnerButton.setText(content);
+    public void setOwnerButtonText() {
+        contactOwnerButton.setText(getString(R.string.startChat));
     }
 
     @Override

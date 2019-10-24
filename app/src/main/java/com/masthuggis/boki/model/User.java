@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * User is a class which represents the user of the application.
+ * Most interaction with this class is done through the interface iUser, which
+ * it implements.
  * Used by UserFactory.
  * Written by masthuggis
  */

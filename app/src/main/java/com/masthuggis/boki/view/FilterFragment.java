@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 /**
- *
+ * View for displaying the interface for filtering in the application.
  * Used by HomeFragment.
  * Written by masthuggis
  */
