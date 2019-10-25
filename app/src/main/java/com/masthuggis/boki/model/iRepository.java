@@ -1,7 +1,8 @@
 package com.masthuggis.boki.model;
 /**
  *
- * Used by DataModel,Repository, RepositoryFactory
+ * Used by DataModel, Repository, RepositoryFactory
+ * Defines the public interface of the system's Repository
  * Written by masthuggis
  */
 

@@ -12,7 +12,8 @@ import com.masthuggis.boki.R;
 import com.masthuggis.boki.injectors.DependencyInjector;
 import com.masthuggis.boki.presenter.SignInPresenter;
 /**
- *
+ * A Class containing the visual logic behind the application's sign-in-screen.
+ * Allows the User to enter log in to the application.
  * Used by MainActivity, ProfileFragment and SignUpActivity.
  * Written by masthuggis
  */
@@ -38,6 +39,10 @@ public class SignInActivity extends AppCompatActivity implements ValidatorView, 
         return password.getText().toString();
     }
 
+    /**
+     * Initializes the visual presentation of all Buttons in the view
+     * Also connects the Buttons to the presenter of the Activity via OnClickListeners
+     */
     private void setUpBtns() {
         Button btnSignIn = findViewById(R.id.signInButton);
         btnSignIn.setOnClickListener(view -> presenter.onSignInButtonPressed(getEmail(), getPassword()));

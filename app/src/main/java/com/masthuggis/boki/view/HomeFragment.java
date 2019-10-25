@@ -27,6 +27,7 @@ import com.masthuggis.boki.utils.ViewCreator;
 
 /**
  * Home page displaying all the adverts that have been published to the market.
+ * provides a search field to search adverts and a button to start filtering.
  * Used by FilterFragment and MainActivity.
  * Written by masthuggis.
  */
@@ -110,17 +111,27 @@ public class HomeFragment extends ListView implements AdapterView.OnItemSelected
         filterButton.setOnClickListener(view1 -> startFilterFragment());
     }
 
+    /**
+     * Hides the android-keyboard shown when user shifts application focus to
+     * some widget that can receive user-input
+     */
     private void hideKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
         searchField.clearFocus(); //This and two lines above hides keyboard when searchPerformed is pressed
     }
 
+    /**
+     * Called when user enters text into the search text field
+     */
     private void performSearch() {
         String query = searchField.getText().toString();
         presenter.searchPerformed(query);
     }
 
+    /**
+     * Called when filter button is clicked
+     */
     private void startFilterFragment() {
         Fragment filter = new FilterFragment();
         loadFragment(filter);

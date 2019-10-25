@@ -37,7 +37,7 @@ public class DetailsPresenter {
     }
 
     /**
-     * @setupView Provides a way for the view to show the values of the model. Is called from the single
+     * Provides a way for the view to show the values of the model. Is called from the single
      * constructor of the class.
      */
     private void setupView() {
@@ -87,6 +87,11 @@ public class DetailsPresenter {
         view.showEditView(uniqueID);
     }
 
+    /**
+     * Checks if the current user already has an active chat associated with the advertisement.
+     * If so, the method finds and opens the already existing chat.
+     * Otherwise it creates and opens a new chat.
+     */
     public void contactOwnerBtnClicked() {
         if (contactOwnerButtonClickedOnceBefore) {
             String chatID = dataModel.findChatID(advertisement.getUniqueID());
@@ -102,6 +107,12 @@ public class DetailsPresenter {
         contactOwnerButtonClickedOnceBefore = true;
     }
 
+    /**
+     * Updates the current advertisement to be marked as a favourite if not already marked as such,
+     * if so it removes the advertisement from the users favourites.
+     * Also updates the favourite-icon in the DetailsView to correctly represent if the
+     * advertisement is a favourite or not.
+     */
     public void onFavouritesIconPressed() {
         if (currentAdvertIsFavourite()) {
             dataModel.removeFromFavourites(advertisement);
@@ -112,6 +123,10 @@ public class DetailsPresenter {
         }
     }
 
+    /**
+     * Initializes the favourite-icon according to if the current advertisement
+     * is part of the users favourites or not.
+     */
     public void setUpFavouriteIcon() {
         if (isUserOwner()) {
             view.hideFavouriteIcon();
@@ -131,7 +146,6 @@ public class DetailsPresenter {
 
     /**
      * Used to make sure a user cant open multiple views of the same type by tapping a button.
-     * @return
      */
     public boolean canProceedWithTapAction() {
         return ClickDelayHelper.canProceedWithTapAction();

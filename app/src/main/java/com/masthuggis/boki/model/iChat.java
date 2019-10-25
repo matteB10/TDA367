@@ -3,7 +3,7 @@ package com.masthuggis.boki.model;
 import java.util.List;
 
 /**
- *
+ * An interface defining the basic functionality of a chat
  * Used by Chat, chatCallback, ChatFactory, ChatPresenter,
  * DataModel, iUser,MessagesPresenter, User, UserRepository
  * Written by masthuggis

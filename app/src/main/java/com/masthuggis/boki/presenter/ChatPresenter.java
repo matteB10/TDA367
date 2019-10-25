@@ -36,6 +36,12 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
         return sortChatsAccordingToLastMessageSent(data);
     }
 
+    /**
+     * Binds the thumbnail containing information about a specific chat to the
+     * RecyclerView containing the thumbnail.
+     * @param position The zero-indexed position where thumbnail will be bound.
+     * @param dataView The thumbnail to be bound.
+     */
     @Override
     public void onBindThumbnailViewAtPosition(int position, ChatThumbnailView dataView) {
         List<iChat> chats = getCurrentDisplayedData();
@@ -59,11 +65,15 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
             }
         }
     }
-
-    private void hideChatsWithoutMessages(iChat chat, ChatThumbnailView dataView) {
-        if (chat.getMessages() == null || chat.getMessages().size() <= 0) {
+    /**
+     * Hides all of the user's chats containing no messages.
+     * Necessary to implement because chats without messages can be created,
+     * but these should never be shown to the user.
+     */
+    private void hideChatsWithoutMessages(iChat chat,ChatThumbnailView dataView){
+        if(chat.getMessages()== null || chat.getMessages().size()<=0){
             dataView.hide();
-        } else {
+        }else{
             dataView.show();
         }
     }
@@ -82,10 +92,8 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
     }
 
     /**
-     * Used to format the time of the last message sent.
-     *
-     * @param l
-     * @return
+     * Used to format the time of the last message sent, displays both time of day and date.
+     * Format used is hh.mm.ss dd/mm - yy.
      */
     private String formatTimeLastMessageSent(long l) {
         if (l == 0) {
@@ -113,7 +121,7 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
     }
 
     /**
-     * Updates chat view when the model is updated.
+     * Updates chat view when the chats in the model are updated.
      */
     @Override
     public void onChatUpdated() {
@@ -127,7 +135,8 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
     }
 
     /**
-     * Makes sure the user cant open multiple chats at the same time by tapping a chat multiple times in a row.
+     * Makes sure the user cant open multiple chats at the same time by
+     * tapping the same chat multiple times in a row.
      */
     public boolean canProceedWithTapAction() {
         return ClickDelayHelper.canProceedWithTapAction();

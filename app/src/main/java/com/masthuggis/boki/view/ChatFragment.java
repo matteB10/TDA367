@@ -22,7 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Fragment for displaying active chats of the current user.
+ * Fragment for displaying active chats in a list of the current user. Starts
+ * MessagesActivity if a chat is pressed.
  * Used by MainActivity.
  * Written by masthuggis.
  */
@@ -38,6 +39,10 @@ public class ChatFragment extends ListView implements ChatPresenter.View {
         return v;
     }
 
+    /**
+     * Initializes the RecyclerView which makes out the visual column holding the Chat-objects
+     * The layout of the objects held in this RecyclerView is defined by the GridSpacingItemDecoration
+     */
     private void setupRecyclerView() {
         List<RecyclerView.ItemDecoration> decorations = new ArrayList<>();
         decorations.add(new GridSpacingItemDecoration(1, 25, true));
@@ -68,7 +73,6 @@ public class ChatFragment extends ListView implements ChatPresenter.View {
 
     /**
      * Displays the messages screen of the chosen chat.
-     *
      */
     @Override
     public void showMessagesScreen(String chatID) {
@@ -77,6 +81,11 @@ public class ChatFragment extends ListView implements ChatPresenter.View {
         startActivity(intent);
     }
 
+    /**
+     * Displays a pop-up message called a Toast containing a message that the
+     * advertisement associated with the Chat in question has been deleted.
+     * @param displayName A String containing the name of the other user participating in the Chat
+     */
     @Override
     public void displayToast(String displayName) {
         Context context = getContext();

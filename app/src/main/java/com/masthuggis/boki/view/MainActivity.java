@@ -34,6 +34,9 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         displayToastMessageIfRequestWasReceived();
     }
 
+    /**
+     * Controls and displays a toast message if passed with the intent.
+     */
     private void displayToastMessageIfRequestWasReceived() {
         String toastKey = getString(R.string.putExtraToastKey);
         if (getIntent() != null && getIntent().getExtras() != null) {
@@ -139,14 +142,6 @@ public class MainActivity extends AppCompatActivity implements MainPresenter.Vie
         }
         return false;
     }
-
-    /*
-    @Override
-    public void onFiltersChanged(Bundle args) {
-        Fragment fragment = new HomeFragment();
-        fragment.setArguments(args);
-        loadFragment(fragment);
-    }*/
 
 }
 
