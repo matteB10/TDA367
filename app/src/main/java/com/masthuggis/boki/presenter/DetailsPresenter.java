@@ -67,7 +67,7 @@ public class DetailsPresenter {
             return;
         }
 
-        dataModel.createNewChat(advertisement.getUniqueOwnerID(), dataModel.getUserID(), advertisement.getUniqueID(),
+        dataModel.createNewChat(advertisement.getUniqueOwnerID(), advertisement.getOwner(), advertisement.getUniqueID(),
                 advertisement.getImageUrl(), chatID -> view.openChat(chatID));
     }
 

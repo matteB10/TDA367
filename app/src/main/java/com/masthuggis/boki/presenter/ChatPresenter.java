@@ -131,7 +131,9 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
     public void onChatUpdated() {
         super.updateData();
         checkIfChatsAreActive();
-        view.updateThumbnails();
+        if(getData().size()<=0){
+            view.hideRecyclerView();
+        }
     }
 
     public void onDestroy() {
@@ -150,5 +152,6 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
         void showMessagesScreen(String chatID);
 
         void displayToast(String displayName);
+        void hideRecyclerView();
     }
 }

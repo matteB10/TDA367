@@ -43,7 +43,7 @@ public interface iBackend {
 
     void getMessages(String uniqueChatID, DBCallback messageCallback);
 
-    void createNewChat(String adOwnerID, String adBuyerID, String advertID, String imageURL, stringCallback stringCallback);
+     void createNewChat(String adOwnerID, String otherUserID, String advertID,String adOwnerUsername,String otherUsername, String imageURL, stringCallback stringCallback);
 
     void writeMessage(String uniqueChatID, Map<String, Object> messageMap);
 
@@ -65,7 +65,6 @@ public interface iBackend {
 
     void userSignUpAndSignIn(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback);
 
-    void getUserFromID(String userID, DBMapCallback dbMapCallback);
 
     boolean marketListenerSet();
 }
