@@ -176,33 +176,31 @@ class BackendWriter {
                             });
                         }
                     } else {
-                        //TODO FAILURE CALLBACK
+                        if (task.getException() != null) {
+                            task.getException().printStackTrace();
+                        }
                     }
                 });
     }
 
     /**
      * Helper method which uploads given image to Firebase Storage.
-     *
-     * @param imageFile
-     * @param uniqueAdID
-     * @param successCallback
+     * Images are stored under the Storage-module of Firebase.
+     * The local path of every image in the Storage-bucket is images/"uniqueAdID"
+     * where the uniqueAdID is the unique ID generated for every advertisement.
+     * @param imageFile The File to be uploaded to Firebase Storage
+     * @param uniqueAdID The unique ID of the associated advertisement
+     * @param successCallback Callback used to handle the asynchronous behaviour of the database.
      */
-
-    //TODO ARVID KOMMENTARER HÄR PLS.
     private void uploadImageToFirebase(File imageFile, String uniqueAdID, SuccessCallback successCallback) {
         try {
             InputStream uploadStream = new FileInputStream(imageFile);
             UploadTask uploadTask = imagesRef.child(uniqueAdID).putStream(uploadStream);
-            //Handle errors here
             uploadTask.addOnSuccessListener(taskSnapshot -> {
                 successCallback.onSuccess();
 
-            }).addOnFailureListener(Throwable::printStackTrace).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@Nonnull Exception e) {
+            }).addOnFailureListener(Throwable::printStackTrace).addOnFailureListener(e -> {
 
-                }
             });
         } catch (FileNotFoundException exception) {
             exception.printStackTrace();
@@ -210,7 +208,14 @@ class BackendWriter {
     }
 
     /**
-     * Removes an advertisement from the user storage in Firebase Firestore through using the userID and advertID
+     * Removes an advertisement from the users favourites in Cloud Firestore
+     * through using the userID and advertID.
+     *
+     * @param adID The unique ID of the advertisement to be removed, used for finding the
+     *             advertisement's location in Firestore.
+     *
+     * @param userID The unique user-ID of the owner of the advertisement that is to be deleted,
+     *               also necessary in order to locate the advertisement to be deleted.
      */
     void removeAdFromFavourites(String adID, String userID) {
         userPath.document(userID).get().addOnCompleteListener(task -> {
@@ -221,7 +226,7 @@ class BackendWriter {
     }
 
     /**
-     * Adds an advertisement to the user storage in Firebase Firestore through using the userID and advertID.
+     * Adds an advertisement to the user storage in Cloud Firestore through using the userID and advertID.
      * First tries to update an already existing list of adverts in the users favourites directory. Throws a NPEx
      * if it doesn't already exists. Catch block then creates a new list and then adds the initial ad as a favourite.
      */
@@ -289,6 +294,16 @@ class BackendWriter {
         writeChatAndMessageData(adOwnerID, otherUserID, stringCallback, uniqueChatID, chatMap, messagesMap);
     }
 
+    /**
+     * Helper method for writing the data associated with a chat to the Cloud Firestore database.
+     * @param adOwnerID The user-ID of the owner of the advertisement the chat was created through
+     * @param otherUserID The user-ID of the user that is trying to contact the advert-owner.
+     * @param stringCallback The callback used in order to return the unique Chat-ID of the created Chat.
+     * @param uniqueChatID The unique ID beloning to the chat that has been created.
+     * @param chatMap A data-map containing meta-information about the chat.
+     * @param messagesMap A data-map containing the information needed in order to send messages
+     *                    between the two users participating in the chat.
+     */
     private void writeChatAndMessageData(String adOwnerID, String otherUserID, stringCallback stringCallback, String uniqueChatID, Map<String, Object> chatMap, Map<String, Object> messagesMap) {
         DocumentReference dfSender = userPath.document(otherUserID).collection("myConversations").document(uniqueChatID);
         DocumentReference dfReceiver = userPath.document(adOwnerID).collection("myConversations").document(uniqueChatID);
