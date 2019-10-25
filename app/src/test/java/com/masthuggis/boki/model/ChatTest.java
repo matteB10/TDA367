@@ -3,7 +3,6 @@ package com.masthuggis.boki.model;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
@@ -26,7 +25,8 @@ public class ChatTest {
     public void testTimeLastMessageSent() {
         when(databaseMock.getUserID()).thenReturn("userID");
 
-        Chat chat = new Chat("123123123",null,null,"31321321","imageURL",true);
+        Chat chat = new Chat("123123123","userOneID","userTwoID","userOneUsername"
+                ,"userTwoUsername","uniqueAdID","imageURL",true);
         chat.setMessages(new ArrayList<>());
         chat.getMessages().add(new Message("meddelande", 123123, "senderID"));
         chat.getMessages().add(new Message("meddelande2", 123, "senderID2"));
@@ -35,11 +35,11 @@ public class ChatTest {
 
     @Test
     public void testGetReceiverName() {
-        iUser currentUser = UserFactory.createUser("email","MyDisplayName","currentUserID");
-        iUser receiverUser = UserFactory.createUser("email2","receiverUser","receiverUserID");
+        iUser currentUser = UserFactory.createUser("email","userOneUsername","userOneID");
+        iUser receiverUser = UserFactory.createUser("email2","userTwoUsername","userTwoID");
 
-        Chat chat = new Chat("uniqueChatID", currentUser, receiverUser,"123321321123","imageURL", true);
-
+        Chat chat = new Chat("123123123","userOneID","userTwoID","userOneUsername"
+                ,"userTwoUsername","uniqueAdID","imageURL",true);
         when(databaseMock.getUserID()).thenReturn(currentUser.getId());
         when(databaseMock.getUserDisplayName()).thenReturn(currentUser.getDisplayName());
 

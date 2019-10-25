@@ -28,7 +28,8 @@ public class MessagesPresenterTest {
     private MessagesPresenter presenter;
     private int numMessagesToAdd = 0;
     private String chatID = "chatID";
-    private iChat chat = ChatFactory.createChat(chatID, ChatMessagesHelper.generate10Users().get(0), ChatMessagesHelper.generate10Users().get(1), "uniqueAdID1", "123", true);
+    private iChat chat = ChatFactory.createChat(chatID, "senderID","receiverID","senderUsername","receiverUsername"
+            , "uniqueAdID1", "123", true);
 
     private void setup() {
         Mockito.when(databaseMock.findChatByID(chatID)).thenReturn(chat);

@@ -3,11 +3,9 @@ package com.masthuggis.boki.presenter;
 import com.masthuggis.boki.model.ChatFactory;
 import com.masthuggis.boki.model.DataModel;
 import com.masthuggis.boki.model.MessageFactory;
-import com.masthuggis.boki.model.UserFactory;
 import com.masthuggis.boki.model.iChat;
 import com.masthuggis.boki.model.iMessage;
 import com.masthuggis.boki.model.iUser;
-import com.masthuggis.boki.utils.UniqueIdCreator;
 import com.masthuggis.boki.view.ChatFragment;
 import com.masthuggis.boki.view.ChatThumbnailView;
 
@@ -68,8 +66,8 @@ public class ChatPresenterTest {
         presenter.onChatUpdated();
 
         assert (userChats.size() == 3);
-        verify(chatFragmentMock, times(1)).displayToast("displayname1");
-        verify(chatFragmentMock, times(1)).displayToast("displayname3");
+        verify(chatFragmentMock, times(1)).displayToast("senderUsername1");
+        verify(chatFragmentMock, times(1)).displayToast("senderUsername3");
         assert (userChats.get(0).getMessages().get(0).getTimeSent() < userChats.get(0).getMessages().get(1).getTimeSent());
 
     }
@@ -99,7 +97,8 @@ public class ChatPresenterTest {
         initMockPresenter();
         List<iUser> users = generate10Users();
         List<iChat> chatWithBadFormatting = new ArrayList<>();
-        chatWithBadFormatting.add(ChatFactory.createChat("chatid",users.get(0),users.get(1),"adid","url",true));
+        chatWithBadFormatting.add(ChatFactory.createChat("chatid","senderID","receiverID","senderUsername","receiverUsername",
+                "adid","url",true));
         List<iMessage> messageListWithBadNumberFormat = new ArrayList<>();
         messageListWithBadNumberFormat.add(MessageFactory.createMessage("message", 123, "senderID"));
         chatWithBadFormatting.get(0).setMessages(messageListWithBadNumberFormat);
@@ -124,7 +123,7 @@ public class ChatPresenterTest {
         String validID = "validID";
         List<iUser> tenUsers = generate10Users();
         List<iChat> chat = new ArrayList<>();
-        chat.add(ChatFactory.createChat(validID, tenUsers.get(0), tenUsers.get(1), "", "123", true));
+        chat.add(ChatFactory.createChat(validID, "senderID","receiverID","senderUsername","receiverUsername", "", "123", true));
         Mockito.when(databaseMock.getUserChats()).thenReturn(chat);
         ChatPresenter presenter = new ChatPresenter(chatFragmentMock, databaseMock);
 
@@ -139,7 +138,8 @@ public class ChatPresenterTest {
         String invalidID = "validID";
         List<iUser> tenUsers = generate10Users();
         List<iChat> chat = new ArrayList<>();
-        chat.add(ChatFactory.createChat(invalidID, tenUsers.get(0), tenUsers.get(1), "", "123", true));
+        chat.add(ChatFactory.createChat(invalidID, "senderID","receiverID","senderUsername",
+                "receiverUsername","uniqueAdID", "", true));
         Mockito.when(databaseMock.getUserChats()).thenReturn(chat);
         ChatPresenter presenter = new ChatPresenter(chatFragmentMock, databaseMock);
 

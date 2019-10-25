@@ -146,7 +146,6 @@ public abstract class ListView extends Fragment implements ListPresenterView {
             setupList();
         } else {
             recyclerViewAdapter.notifyDataSetChanged();
-            //  recyclerView.setVisibillity(View.VISIBLE);
         }
     }
 
@@ -158,7 +157,7 @@ public abstract class ListView extends Fragment implements ListPresenterView {
     public void showNoThumbnailsAvailableScreen() {
         noAdvertsFoundContainer.setVisibility(View.VISIBLE);
         if (recyclerView != null) {
-            recyclerView.setVisibility(View.INVISIBLE);
+          //  recyclerView.setVisibility(View.INVISIBLE);
         }
         if (pullToRefreshIsActivated) {
             view.findViewById(R.id.pullToRefresh).setVisibility(View.INVISIBLE);
@@ -206,5 +205,9 @@ public abstract class ListView extends Fragment implements ListPresenterView {
     public void hideLoadingScreen() {
         ProgressBar progressBar = view.findViewById(R.id.advertsViewProgressbar);
         progressBar.setVisibility(View.GONE);
+    }
+
+    protected void hideRecyclerView(){
+        recyclerView.setVisibility(View.INVISIBLE);
     }
 }
