@@ -333,8 +333,8 @@ class BackendWriter {
      */
     private Map<String, Object> prepareMessagesMap(String adOwnerID, String otherUserID,String userOneUsername,String userTwoUsername, String advertID, String imageURL) {
         Map<String, Object> messagesMap = new HashMap<>();
-        messagesMap.put("userOneID", otherUserID);
-        messagesMap.put("userTwoID", adOwnerID);
+        messagesMap.put("userOneID", adOwnerID);
+        messagesMap.put("userTwoID", otherUserID);
         messagesMap.put("advertID", advertID);
         messagesMap.put("imageURL", imageURL);
         messagesMap.put("userOneUsername",userOneUsername);
