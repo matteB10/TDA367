@@ -123,8 +123,8 @@ class Repository implements iRepository {
         userRepository.getMessages(uniqueChatID, messagesCallback);
     }
 
-    public void createNewChat(String adOwnerID, String adBuyerID, String advertID, String imageURL, stringCallback stringCallback) {
-        userRepository.createNewChat(adOwnerID, adBuyerID, advertID, imageURL, stringCallback);
+    public void createNewChat(String adOwnerID, String adBuyerID, String advertID,String adOwnerUsername,String adBuyerUsername, String imageURL, stringCallback stringCallback) {
+        userRepository.createNewChat(adOwnerID, adBuyerID, advertID,adOwnerUsername,adBuyerUsername, imageURL, stringCallback);
     }
 
     public void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap) {

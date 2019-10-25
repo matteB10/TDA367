@@ -45,7 +45,7 @@ import java.util.Map;
 
     void getMessages(String uniqueChatID, messagesCallback messagesCallback);
 
-    void createNewChat(String uniqueOwnerID, String receiverUsername, String advertID, String imageURL, stringCallback stringCallback);
+     void createNewChat(String adOwnerID, String adBuyerID, String advertID,String adOwnerUsername,String adBuyerUsername, String imageURL, stringCallback stringCallback);
 
     void writeMessage(String uniqueChatID, HashMap<String, Object> messageMap);
 

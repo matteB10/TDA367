@@ -282,10 +282,10 @@ class BackendWriter {
      * @param stringCallback Returns a string as a callback, which in this case is the unique ID of the chat.
      */
 
-    void createNewChat(String adOwnerID, String otherUserID, String advertID, String imageURL, stringCallback stringCallback) {
+    void createNewChat(String adOwnerID, String otherUserID, String advertID,String adOwnerName,String otherUsername, String imageURL, stringCallback stringCallback) {
         String uniqueChatID = UniqueIdCreator.getUniqueID();
         Map<String, Object> chatMap = prepareChatMap(uniqueChatID);
-        Map<String, Object> messagesMap = prepareMessagesMap(adOwnerID, otherUserID, advertID, imageURL);
+        Map<String, Object> messagesMap = prepareMessagesMap(adOwnerID,otherUserID,adOwnerName,otherUsername, advertID, imageURL);
         writeChatAndMessageData(adOwnerID, otherUserID, stringCallback, uniqueChatID, chatMap, messagesMap);
     }
 
@@ -331,12 +331,14 @@ class BackendWriter {
      * @param imageURL
      * @return
      */
-    private Map<String, Object> prepareMessagesMap(String adOwnerID, String otherUserID, String advertID, String imageURL) {
+    private Map<String, Object> prepareMessagesMap(String adOwnerID, String otherUserID,String userOneUsername,String userTwoUsername, String advertID, String imageURL) {
         Map<String, Object> messagesMap = new HashMap<>();
         messagesMap.put("userOneID", otherUserID);
         messagesMap.put("userTwoID", adOwnerID);
         messagesMap.put("advertID", advertID);
         messagesMap.put("imageURL", imageURL);
+        messagesMap.put("userOneUsername",userOneUsername);
+        messagesMap.put("userTwoUsername",userTwoUsername);
         return messagesMap;
     }
 

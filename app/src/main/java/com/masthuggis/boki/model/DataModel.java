@@ -232,9 +232,9 @@ public class DataModel {
     }
 
 
-    public void createNewChat(String adOwnerID, String adBuyerID, String
+    public void createNewChat(String adOwnerID, String adOwnerUsername,String
             advertID, String imageURL, stringCallback stringCallback) {
-        repository.createNewChat(adOwnerID, adBuyerID, advertID, imageURL, stringCallback);
+        repository.createNewChat(adOwnerID, user.getId(), advertID,adOwnerUsername,user.getDisplayName(), imageURL, stringCallback);
     }
 
     public void sendMessage(String uniqueChatID, HashMap<String, Object> messageMap) {
