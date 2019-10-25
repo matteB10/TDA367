@@ -17,7 +17,8 @@ public class ChatMessagesHelper {
         boolean isActive;
         for (int i = 0; i < 5; i++) {
             isActive = i % 2 == 0;
-            iChat chat = ChatFactory.createChat(UniqueIdCreator.getUniqueID(), tenUsers.get(i), tenUsers.get(i + 1), "uniqueAdID" + i, "123", isActive);
+            iChat chat = ChatFactory.createChat(UniqueIdCreator.getUniqueID(), "senderID"+i,"receiverID"+i,"senderUsername"+i
+                    ,"receiverUsername"+i, "uniqueAdID" + i, "123", isActive);
             userChats.add(chat);
         }
         return userChats;

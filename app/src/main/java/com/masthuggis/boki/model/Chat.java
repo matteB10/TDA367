@@ -14,15 +14,19 @@ public class Chat implements iChat {
     private List<iMessage> messages;
     private String chatID;
     private String uniqueAdID;
-    private iUser userOne;
-    private iUser userTwo;
+    private String userOneID;
+    private String userTwoID;
+    private String userOneUsername;
+    private String userTwoUsername;
     private boolean isActive;
     private String imageURL;
 
 
-    Chat(String uniqueChatID, iUser userOne, iUser userTwo, String uniqueAdID,String imageURL, boolean isActive) {
-        this.userOne = userOne;
-        this.userTwo = userTwo;
+    Chat(String uniqueChatID, String userOneID, String userTwoID,String userOneUsername,String userTwoUsername, String uniqueAdID,String imageURL, boolean isActive) {
+        this.userOneID = userOneID;
+        this.userTwoID= userTwoID;
+        this.userOneUsername = userOneUsername;
+        this.userTwoUsername = userTwoUsername;
         this.chatID = uniqueChatID;
         this.uniqueAdID = uniqueAdID;
         this.isActive = isActive;
@@ -75,10 +79,10 @@ public class Chat implements iChat {
     @Override
     public String getReceiverName(String currentUserID) {
 
-        if (!(userOne.getId().equals(currentUserID))) {
-            return userOne.getDisplayName();
+        if (!(userOneID.equals(currentUserID))) {
+            return userOneUsername;
         } else {
-            return userTwo.getDisplayName();
+            return userTwoUsername;
         }
     }
 
@@ -99,10 +103,10 @@ public class Chat implements iChat {
      */
     @Override
     public String getReceiverID(String currentUserID) {
-        if (!(userOne.getId().equals(currentUserID))) {
-            return userOne.getId();
+        if (!(userOneID.equals(currentUserID))) {
+            return userOneID;
         } else {
-            return userTwo.getId();
+            return userTwoID;
         }
     }
 }

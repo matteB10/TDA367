@@ -82,8 +82,8 @@ public class BackendDataHandler implements iBackend {
     }
 
 
-    public void createNewChat(String adOwnerID, String otherUserID, String advertID, String imageURL, stringCallback stringCallback) {
-        backendWriter.createNewChat(adOwnerID, otherUserID, advertID, imageURL, stringCallback);
+    public void createNewChat(String adOwnerID, String otherUserID, String advertID,String adOwnerUsername,String otherUsername, String imageURL, stringCallback stringCallback) {
+        backendWriter.createNewChat(adOwnerID, otherUserID, advertID,adOwnerUsername,otherUsername, imageURL, stringCallback);
     }
 
     @Override
@@ -108,11 +108,6 @@ public class BackendDataHandler implements iBackend {
     public void userSignUpAndSignIn(String email, String password, String username, SuccessCallback successCallback, FailureCallback failureCallback) {
         backendWriter.userSignUpAndSignIn(email, password, username, successCallback, failureCallback);
 
-    }
-
-    @Override
-    public void getUserFromID(String userID, DBMapCallback dbMapCallback) {
-        backendReader.fetchUserFromID(userID, dbMapCallback);
     }
 
     @Override
