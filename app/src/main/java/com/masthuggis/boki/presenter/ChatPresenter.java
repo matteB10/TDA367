@@ -109,6 +109,10 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
         return st;
     }
 
+    /**
+     * @param chats The list containing the chats to be sorted
+     * @return A sorted list of chats, sorted with the chat with the most recent message first
+     */
     private List<iChat> sortChatsAccordingToLastMessageSent(List<iChat> chats) {
         if (chats == null) {
             return new ArrayList<>();

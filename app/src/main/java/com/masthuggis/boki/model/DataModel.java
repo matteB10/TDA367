@@ -116,7 +116,8 @@ public class DataModel {
     }
 
     /**
-     * @return A list containing all advertisements the current user has as favourites in the backend
+     * Returns a list containing all advertisements the current user has as favourites in the backend,
+     * does so via the parameter-callback
      */
     private void getFavouritesFromLoggedInUser(advertisementCallback advertisementCallback) {
         if (allAds.size() == 0) {

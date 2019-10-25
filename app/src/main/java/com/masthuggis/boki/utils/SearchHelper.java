@@ -159,9 +159,9 @@ public class SearchHelper {
     }
 
     /**
-     * @param searchRes
-     * @param query
-     * @param ads
+     * Searches a given list of adverts.
+     * Checks if the tags of each adverts matches the provided search query
+     * @param
      */
 
     private static List<Advertisement> searchContainsTags(List<Advertisement> searchRes, String query, List<Advertisement> ads) {
