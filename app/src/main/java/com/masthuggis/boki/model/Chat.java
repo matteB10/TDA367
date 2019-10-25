@@ -80,9 +80,9 @@ public class Chat implements iChat {
     public String getReceiverName(String currentUserID) {
 
         if (!(userOneID.equals(currentUserID))) {
-            return userTwoUsername;
-        } else {
             return userOneUsername;
+        } else {
+            return userTwoUsername;
         }
     }
 
