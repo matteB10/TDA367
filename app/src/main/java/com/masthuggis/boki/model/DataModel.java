@@ -173,7 +173,7 @@ public class DataModel {
      * Checks if an ad still exists or not. If it doesn't the chat is removed from the current
      * users list of favourites.
      */
-    private boolean adStillExists(String favouriteID) {
+    public boolean adStillExists(String favouriteID) {
         for (Advertisement advertisement : allAds) {
             if (advertisement.getUniqueID().equals(favouriteID)) {
                 return true;

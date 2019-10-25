@@ -1,5 +1,7 @@
 package com.masthuggis.boki.backend;
 
+import androidx.annotation.Nullable;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -210,13 +212,23 @@ class BackendReader {
      *                      when fetch is done.
      */
     void fetchFavouriteIDS(String userID, DBMapCallback dbMapCallback) {
-        userPath.document(userID).get().addOnCompleteListener(task -> {
+        userPath.document(userID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+                if (e == null && snapshot.getData() != null) {
+                    dbMapCallback.onCallBack(snapshot.getData());
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
+        /*userPath.document(userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot user = task.getResult();
                 assert user != null;
                 dbMapCallback.onCallBack(user.getData());
             }
-        });
+        });*/
     }
 
     /**

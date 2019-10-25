@@ -19,8 +19,28 @@ public class FavoritesPresenter extends ListPresenter<Advertisement, ThumbnailVi
         this.view = view;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Advertisement> getData() {
-        return super.dataModel.getUserFavourites(); //User held by datamodel here is a different object
+        removeDeletedFavourites(dataModel.getUserFavourites());
+        return dataModel.getUserFavourites();
+        /*List<Advertisement> userFavourites = dataModel.getUserFavourites();
+        for (Advertisement advertisement : userFavourites) {
+            if (!dataModel.adStillExists(advertisement.getUniqueID())) {
+                dataModel.removeExistingAdvert(advertisement.getUniqueID(),advertisement.getUniqueOwnerID());
+            }
+        }
+        return super.dataModel.getUserFavourites(); //User held by datamodel here is a different object*/
+    }
+
+    private void removeDeletedFavourites(List<Advertisement> uncheckedFavourites) {
+        for (Advertisement advertisement : uncheckedFavourites) {
+            if (!dataModel.adStillExists(advertisement.getUniqueID())) {
+                dataModel.removeFromFavourites(advertisement);
+            }
+        }
     }
 
     @Override
