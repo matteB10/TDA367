@@ -143,6 +143,11 @@ class AdvertRepository {
         dataMap.put("advertOwner", advertisement.getOwner());
     }
 
+
+
+    boolean marketListenerSet() {
+        return backend.marketListenerSet();
+    }
 }
 
 

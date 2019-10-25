@@ -34,7 +34,7 @@ public class ChatFragment extends ListView implements ChatPresenter.View {
         this.presenter = new ChatPresenter<>(this, DependencyInjector.injectDataModel());
         View v = super.onCreateView(inflater, container, savedInstanceState);
         setupRecyclerView();
-        presenter.updateData();
+        presenter.onChatUpdated();
         return v;
     }
 

@@ -40,7 +40,7 @@ class BackendReader {
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private final List<ChatObserver> chatObservers;
     private final List<MessagesObserver> messagesObservers;
-
+    private boolean marketListenerSet = false;
     private CollectionReference advertPath;
     private CollectionReference chatPath;
     private CollectionReference userPath;
@@ -147,7 +147,8 @@ class BackendReader {
      */
     void attachMarketListener(DBCallback DBCallback) {
         advertPath.addSnapshotListener((queryDocumentSnapshots, e) -> { //Runs every time change happens i market
-            if (e != null) { //Can't attach listener, is path correct to firebase?
+            if (e != null) {
+                marketListenerSet = false;
                 return;
             }
             if (queryDocumentSnapshots.size() == 0) {
@@ -161,6 +162,7 @@ class BackendReader {
                 Map<String, Object> toBeAdded = snapshot.getData();
                 advertDataList.add(toBeAdded);
             }
+            marketListenerSet = true;
             BackendReader.this.updateAdvertsDataListWithImgUrl(advertDataList, DBCallback);
         });
     }
@@ -295,5 +297,9 @@ class BackendReader {
             });
         }
 
+    }
+
+    boolean marketListenerSet() {
+        return this.marketListenerSet;
     }
 }

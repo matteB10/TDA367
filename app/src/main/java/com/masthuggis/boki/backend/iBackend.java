@@ -67,4 +67,5 @@ public interface iBackend {
 
     void getUserFromID(String userID, DBMapCallback dbMapCallback);
 
+    boolean marketListenerSet();
 }

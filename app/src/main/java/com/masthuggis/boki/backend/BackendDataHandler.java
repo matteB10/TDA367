@@ -115,6 +115,11 @@ public class BackendDataHandler implements iBackend {
         backendReader.fetchUserFromID(userID, dbMapCallback);
     }
 
+    @Override
+    public boolean marketListenerSet() {
+        return backendReader.marketListenerSet();
+    }
+
     public void getUser(DBMapCallback dbMapCallback) {
         backendReader.fetchCurrentUser(dbMapCallback);
     }

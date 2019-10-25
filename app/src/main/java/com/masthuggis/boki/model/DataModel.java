@@ -72,6 +72,9 @@ public class DataModel {
                         user.setChats(chatsList);
                         initMessages();
                         successCallback.onSuccess();
+                        if(!repository.marketListenerSet()){
+                            attachAdvertsObserver();
+                        }
                     });
                 });
             });

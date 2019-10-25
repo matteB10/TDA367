@@ -123,6 +123,7 @@ public abstract class ListView extends Fragment implements ListPresenterView {
      * Gives the concrete implementation the option to provide an action, and therefor activate
      * the pull-to-refresh behavior. If this method is not called pull-to-refresh will not be
      * activated.
+     *
      * @return
      */
     void setAndActivatePullToRefreshHandler(PullToRefreshCallback callback) {
@@ -145,6 +146,7 @@ public abstract class ListView extends Fragment implements ListPresenterView {
             setupList();
         } else {
             recyclerViewAdapter.notifyDataSetChanged();
+            //  recyclerView.setVisibillity(View.VISIBLE);
         }
     }
 
@@ -155,6 +157,9 @@ public abstract class ListView extends Fragment implements ListPresenterView {
     @Override
     public void showNoThumbnailsAvailableScreen() {
         noAdvertsFoundContainer.setVisibility(View.VISIBLE);
+        if (recyclerView != null) {
+            recyclerView.setVisibility(View.INVISIBLE);
+        }
         if (pullToRefreshIsActivated) {
             view.findViewById(R.id.pullToRefresh).setVisibility(View.INVISIBLE);
         }

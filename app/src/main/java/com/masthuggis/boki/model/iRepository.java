@@ -69,4 +69,6 @@ import java.util.Map;
     void removeMessagesObserver(MessagesObserver messagesObserver);
 
     void addMessagesObserver(MessagesObserver messagesObserver);
-}
+
+    boolean marketListenerSet();
+ }

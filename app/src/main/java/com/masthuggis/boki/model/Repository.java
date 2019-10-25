@@ -113,6 +113,11 @@ class Repository implements iRepository {
 
     }
 
+    @Override
+    public boolean marketListenerSet() {
+        return advertRepository.marketListenerSet();
+    }
+
 
     public void getMessages(String uniqueChatID, messagesCallback messagesCallback) {
         userRepository.getMessages(uniqueChatID, messagesCallback);

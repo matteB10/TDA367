@@ -48,7 +48,7 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
         dataView.setUserTextView(c.getReceiverName(dataModel.getUserID()));
         dataView.setChatID(c.getChatID());
         dataView.setMessageImageView(c.getImageURL());
-        hideChatsWithoutMessages(c,dataView);
+        hideChatsWithoutMessages(c, dataView);
     }
 
     private void checkIfChatsAreActive() {
@@ -60,10 +60,10 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
         }
     }
 
-    private void hideChatsWithoutMessages(iChat chat,ChatThumbnailView dataView){
-        if(chat.getMessages()== null || chat.getMessages().size()<=0){
+    private void hideChatsWithoutMessages(iChat chat, ChatThumbnailView dataView) {
+        if (chat.getMessages() == null || chat.getMessages().size() <= 0) {
             dataView.hide();
-        }else{
+        } else {
             dataView.show();
         }
     }
@@ -83,6 +83,7 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
 
     /**
      * Used to format the time of the last message sent.
+     *
      * @param l
      * @return
      */
@@ -101,7 +102,7 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
     }
 
     private List<iChat> sortChatsAccordingToLastMessageSent(List<iChat> chats) {
-        if(chats==null){
+        if (chats == null) {
             return new ArrayList<>();
         }
         List<iChat> sorted = new ArrayList<>(chats).stream()
@@ -118,9 +119,7 @@ public class ChatPresenter<T extends ListPresenterView & ChatPresenter.View> ext
     public void onChatUpdated() {
         super.updateData();
         checkIfChatsAreActive();
-        sortChatsAccordingToLastMessageSent(getData());
         view.updateThumbnails();
-
     }
 
     public void onDestroy() {

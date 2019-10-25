@@ -96,7 +96,7 @@
     <string name="toastUpdatedAd">Din annons är uppdaterad</string>
     <string name="toastCreatedAd">Din annons är upplagd</string>
 
-    <string name="errorToastCreateAd">"Ingen tag med detta namn kan hittas, testa att uppdatera vyn."</string>
+    <string name="errorToastCreateAd">Ingen tag med detta namn kan hittas, testa att uppdatera vyn.</string>
 
 
     <!--- filter activity -->
@@ -108,16 +108,16 @@
     <!-- no sorting display string -->
     <string name="pickSorting">Välj sortering..</string>
 
-   <string name="noAdFoundDetailsView">"Hittar ingen annons, var vänlig uppdatera vyn."</string>
-    <string name="cantSendMessageToYourself">"Du kan inte skicka meddelanden till dig själv."</string>
+   <string name="noAdFoundDetailsView">Hittar ingen annons, var vänlig uppdatera vyn.</string>
+    <string name="cantSendMessageToYourself">Du kan inte skicka meddelanden till dig själv.</string>
 
 
 
     //Errors
-    <string name="noAdvertFoundDetailsPresenter">"Hittar ingen annons med denna beskrivning."</string>
-    <string name="removedChats">\" har tagit bort annonsen ni diskuterat, er konversation kommer att arkiveras.\"</string>
-    <string name="noAdFoundWithData">\"Det finns ingen annons som matchar denna data.\"</string>
-    <string name="startChat">\"Starta chatt\"</string>
+    <string name="noAdvertFoundDetailsPresenter">Hittar ingen annons med denna beskrivning.</string>
+    <string name="removedChats">  har tagit bort annonsen ni diskuterat, er konversation kommer att arkiveras.</string>
+    <string name="noAdFoundWithData">Det finns ingen annons som matchar denna data.</string>
+    <string name="startChat">Starta chatt</string>
 
 
 </resources>
