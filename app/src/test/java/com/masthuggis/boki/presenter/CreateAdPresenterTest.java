@@ -21,7 +21,6 @@ import static com.masthuggis.boki.utils.Condition.GOOD;
 import static com.masthuggis.boki.utils.Condition.NEW;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 
@@ -148,6 +147,6 @@ public class CreateAdPresenterTest {
 
         presenter.setAd(id);
 
-        Mockito.verify(mockView).displayNotFoundToast(any());
+        Mockito.verify(mockView).displayNotFoundToast();
     }
 }

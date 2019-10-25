@@ -8,7 +8,7 @@ public class UserFactoryTest {
 
     @Test
     public void testCreateUser() {
-        User testUser = UserFactory.createUser(user.getEmail(),user.getDisplayName(),user.getId());
+        iUser testUser = UserFactory.createUser(user.getEmail(),user.getDisplayName(),user.getId());
         assert (user.getEmail().equals(testUser.getEmail()));
         assert (user.getDisplayName().equals(testUser.getDisplayName()));
         assert (user.getId().equals(testUser.getId()));

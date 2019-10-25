@@ -75,7 +75,7 @@ public class DetailsPresenterTest {
 
         presenter.contactOwnerBtnClicked();
 
-        verify(viewMock, times(1)).setOwnerButtonText(any());
+        verify(viewMock, times(1)).setOwnerButtonText();
     }
 
     @Test
@@ -109,7 +109,7 @@ public class DetailsPresenterTest {
         presenter.contactOwnerBtnClicked();
         presenter.contactOwnerBtnClicked();
 
-        verify(viewMock, times(1)).setOwnerButtonText(any());
+        verify(viewMock, times(1)).setOwnerButtonText();
     }
 
     @Test
